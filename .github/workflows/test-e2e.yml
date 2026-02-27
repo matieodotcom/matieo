@@ -1,0 +1,41 @@
+name: E2E Tests — PR to main
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - name: Install frontend deps
+        run: npm ci
+        working-directory: frontend
+
+      - name: Install Playwright + browsers
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+        working-directory: e2e
+
+      - name: Run E2E tests
+        run: npx playwright test
+        working-directory: e2e
+        env:
+          E2E_BASE_URL: http://localhost:5173
+          VITE_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7

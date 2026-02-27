@@ -1,0 +1,31 @@
+# Environment files - NEVER commit these
+.env
+.env.local
+.env.production
+.env.staging
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.local
+.env.mcp
+claude_desktop_config.json
+.mcp.json.local

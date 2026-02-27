@@ -1,0 +1,46 @@
+name: Deploy Frontend — Production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build (production)
+        working-directory: frontend
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+          VITE_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          VITE_CLOUDINARY_UPLOAD_PRESET: ${{ secrets.PROD_CLOUDINARY_UPLOAD_PRESET }}
+          VITE_API_BASE_URL: ${{ secrets.PROD_API_BASE_URL }}
+          VITE_APP_ENV: production
+        run: npm run build
+
+      # Deploy to Hostinger production via FTP
+      - name: Deploy to Hostinger (prod)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          username: ${{ secrets.HOSTINGER_FTP_USER_PROD }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD_PROD }}
+          local-dir: frontend/dist/
+          server-dir: /public_html/       # Adjust to your Hostinger prod root

@@ -1,0 +1,176 @@
+## render.yaml — MATIEO Infrastructure as Code
+## 4 services: API + ML × (dev + prod)
+## Render reads this file automatically when connected to the repo.
+## Docs: https://render.com/docs/blueprint-spec
+
+services:
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # PRODUCTION — branch: main
+  # ════════════════════════════════════════════════════════════════════════════
+
+  # ── Node.js API (prod) ───────────────────────────────────────────────────────
+  - type: web
+    name: matieo-api
+    runtime: node
+    region: singapore
+    plan: starter
+    branch: main
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/server.js
+    healthCheckPath: /health
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: SUPABASE_URL
+        sync: false                      # Prod Supabase project URL
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false                      # Prod service role key
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_FOLDER_PREFIX
+        value: matieo/prod
+      - key: ML_SERVICE_URL
+        fromService:
+          name: matieo-ml
+          type: web
+          property: host
+      - key: ML_SERVICE_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false                      # https://matieo.com (your Hostinger prod domain)
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+
+    autoDeploy: true
+
+  # ── Python ML Service (prod) ─────────────────────────────────────────────────
+  - type: web
+    name: matieo-ml
+    runtime: python
+    region: singapore
+    plan: starter
+    branch: main
+    rootDir: ml-service
+    buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
+    startCommand: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    healthCheckPath: /health
+
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: SUPABASE_URL
+        sync: false                      # Prod Supabase project URL
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NODE_API_SECRET
+        sync: false                      # Same value as matieo-api ML_SERVICE_SECRET
+      - key: ALLOWED_ORIGINS
+        fromService:
+          name: matieo-api
+          type: web
+          property: host
+
+    autoDeploy: true
+
+    disk:
+      name: ml-models-prod
+      mountPath: /models
+      sizeGB: 1
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # DEVELOPMENT — branch: dev
+  # ════════════════════════════════════════════════════════════════════════════
+
+  # ── Node.js API (dev) ────────────────────────────────────────────────────────
+  - type: web
+    name: matieo-api-dev
+    runtime: node
+    region: singapore
+    plan: starter
+    branch: dev
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/server.js
+    healthCheckPath: /health
+
+    envVars:
+      - key: NODE_ENV
+        value: development
+      - key: PORT
+        value: 3001
+      - key: SUPABASE_URL
+        sync: false                      # Dev Supabase project URL
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false                      # Dev service role key
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_FOLDER_PREFIX
+        value: matieo/dev
+      - key: ML_SERVICE_URL
+        fromService:
+          name: matieo-ml-dev
+          type: web
+          property: host
+      - key: ML_SERVICE_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false                      # https://dev.matieo.com (Hostinger dev subdomain)
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 200                       # More lenient in dev
+
+    autoDeploy: true
+
+  # ── Python ML Service (dev) ──────────────────────────────────────────────────
+  - type: web
+    name: matieo-ml-dev
+    runtime: python
+    region: singapore
+    plan: starter
+    branch: dev
+    rootDir: ml-service
+    buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
+    startCommand: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    healthCheckPath: /health
+
+    envVars:
+      - key: APP_ENV
+        value: development
+      - key: PORT
+        value: 8000
+      - key: SUPABASE_URL
+        sync: false                      # Dev Supabase project URL
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NODE_API_SECRET
+        sync: false                      # Same value as matieo-api-dev ML_SERVICE_SECRET
+      - key: ALLOWED_ORIGINS
+        fromService:
+          name: matieo-api-dev
+          type: web
+          property: host
+
+    autoDeploy: true
+
+    disk:
+      name: ml-models-dev
+      mountPath: /models
+      sizeGB: 1
