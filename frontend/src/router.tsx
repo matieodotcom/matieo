@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import LandingPage from '@/pages/landing/LandingPage'
+import FeaturesPage from '@/pages/features/FeaturesPage'
 import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
@@ -41,6 +42,12 @@ const router = createBrowserRouter([
   {
     path: '/reset-password',
     element: <ResetPasswordPage />,
+  },
+
+  // Features
+  {
+    path: '/features',
+    element: <FeaturesPage />,
   },
 
   // Public memorial

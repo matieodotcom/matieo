@@ -16,7 +16,7 @@ const NAV_LINKS = [
   { label: 'Memorials', to: '/app/memorials' },
   { label: 'Obituary', to: '/obituary' },
   { label: 'Insights', to: '/app/analytics' },
-  { label: 'Features', to: '/#features' },
+  { label: 'Features', to: '/features' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
 ] as const

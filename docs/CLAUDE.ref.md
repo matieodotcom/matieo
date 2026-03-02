@@ -647,6 +647,7 @@ CLOUDINARY_API_SECRET
 | Page | Route | Status | Spec file |
 |------|-------|--------|-----------|
 | Landing | `/` | ✅ Complete | docs/pages/landing.md |
+| Features | `/features` | ✅ Complete | docs/pages/features.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ✅ Complete | docs/pages/auth.md |
