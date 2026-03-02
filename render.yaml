@@ -14,12 +14,7 @@ services:
     name: matieo-api
     runtime: node
     region: singapore
-    plan: starter
-    branch: main
-    rootDir: backend
-    buildCommand: npm install && npm run build
-    startCommand: node dist/server.js
-    healthCheckPath: /health
+    plan: free
 
     envVars:
       - key: NODE_ENV
@@ -59,7 +54,7 @@ services:
     name: matieo-ml
     runtime: python
     region: singapore
-    plan: starter
+    plan: free
     branch: main
     rootDir: ml-service
     buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
@@ -85,11 +80,6 @@ services:
 
     autoDeploy: true
 
-    disk:
-      name: ml-models-prod
-      mountPath: /models
-      sizeGB: 1
-
   # ════════════════════════════════════════════════════════════════════════════
   # DEVELOPMENT — branch: dev
   # ════════════════════════════════════════════════════════════════════════════
@@ -99,7 +89,7 @@ services:
     name: matieo-api-dev
     runtime: node
     region: singapore
-    plan: starter
+    plan: free
     branch: dev
     rootDir: backend
     buildCommand: npm install && npm run build
@@ -144,7 +134,7 @@ services:
     name: matieo-ml-dev
     runtime: python
     region: singapore
-    plan: starter
+    plan: free
     branch: dev
     rootDir: ml-service
     buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
@@ -169,8 +159,3 @@ services:
           property: host
 
     autoDeploy: true
-
-    disk:
-      name: ml-models-dev
-      mountPath: /models
-      sizeGB: 1
