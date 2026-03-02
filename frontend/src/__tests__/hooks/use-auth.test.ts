@@ -201,6 +201,75 @@ describe('useSignUp', () => {
   })
 })
 
+describe('useSignIn', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('calls signInWithPassword with email and password', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: {} as never, session: {} as never },
+      error: null,
+    })
+
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
+      email: 'jane@example.com',
+      password: 'password123',
+    })
+  })
+
+  it('sets error state on wrong credentials (no toast)', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Invalid login credentials' } as never,
+    })
+
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('password', 'wrongpass')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.error).toBe('Invalid login credentials')
+    })
+    expect(toast.success).not.toHaveBeenCalled()
+  })
+
+  it('does not call signInWithPassword when Zod validation fails', async () => {
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.signInWithPassword).not.toHaveBeenCalled()
+  })
+
+  it('isPending=false initially', async () => {
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+    expect(result.current.isPending).toBe(false)
+  })
+})
+
 describe('useGoogleAuth', () => {
   beforeEach(() => vi.clearAllMocks())
 

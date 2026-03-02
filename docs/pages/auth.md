@@ -1,4 +1,4 @@
-## Status: ✅ Complete (Sign Up) | ⬜ Not started (Sign In, Forgot Password)
+## Status: ✅ Complete (Sign Up, Sign In) | ⬜ Not started (Forgot Password)
 
 # Auth Pages Spec
 
@@ -6,7 +6,7 @@
 | Page | Route | Status |
 |------|-------|--------|
 | Sign Up | `/signup` | ✅ Complete |
-| Sign In | `/signin` | ⬜ Not started |
+| Sign In | `/signin` | ✅ Complete |
 | Forgot Password | `/forgot-password` | ⬜ Not started |
 
 ---
@@ -77,8 +77,37 @@ File: `src/__tests__/pages/signup.test.tsx` — **15 tests passing**
 
 ---
 
-## Sign In (`/signin`)
-> ⬜ Not yet built. Will follow same split-panel layout (left 45% form / right 55% bg-neutral-50).
+## Sign In (`/signin`) — ✅ Complete
+
+### Layout
+Split panel — no Navbar or Footer.
+- Left `w-[45%]`: white form panel
+- Right `flex-1`: `bg-neutral-50` product mockup panel (hidden on mobile)
+
+### Left panel
+1. Logo (concentric-circle mark + MATIEO in brand blue) → links to `/`
+2. `<h1>` "Sign in"
+3. Subtitle "Welcome back! Please enter your details."
+4. React Hook Form with Zod:
+   - Email Address (`id="email"`, Mail icon left)
+   - Password (`id="password"`, Lock icon left + Eye/EyeOff toggle right)
+5. "Forgot Password?" right-aligned link → `/forgot-password`
+6. Submit: "Sign In" (primary button, full-width)
+7. `<ErrorMessage>` for auth errors below submit
+8. "Login with Google" (gray bg, Google G icon)
+9. Divider "or"
+10. "Create New Account" → `/signup` (secondary link styled as button)
+11. Terms of Service + Privacy Policy
+12. "© 2026 MATIEO" footer
+
+### Hook: `useSignIn`
+- Zod schema: `email (valid)`, `password (min 1)`
+- Calls `supabase.auth.signInWithPassword({ email, password })`
+- Success → `navigate('/app')`
+- Error → `error` state → `<ErrorMessage>` below submit (no toast)
+
+### Tests
+File: `src/__tests__/pages/signin.test.tsx` — **16 tests passing**
 
 ## Forgot Password (`/forgot-password`)
 > ⬜ Not yet built. Centered card, full-page white, logo top-center.

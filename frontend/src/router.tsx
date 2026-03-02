@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import LandingPage from '@/pages/landing/LandingPage'
+import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
   // Auth
   {
     path: '/signin',
-    element: <Placeholder name="Sign In" />,
+    element: <SignInPage />,
   },
   {
     path: '/signup',

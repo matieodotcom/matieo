@@ -569,7 +569,7 @@ CLOUDINARY_API_SECRET
 | Page | Route | Status | Spec file |
 |------|-------|--------|-----------|
 | Landing | `/` | ✅ Complete | docs/pages/landing.md |
-| Sign In | `/signin` | ⬜ Not started | docs/pages/auth.md |
+| Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ⬜ Not started | docs/pages/auth.md |
 | Analytics Dashboard | `/app/analytics` | ⬜ Not started | docs/pages/analytics.md |

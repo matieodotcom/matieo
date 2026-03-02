@@ -9,6 +9,13 @@ import { toast } from '@/lib/toast'
 
 // ── Schemas ───────────────────────────────────────────────────────────────────
 
+const signInSchema = z.object({
+  email: z.string().email('Enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
+})
+
+type SignInFormValues = z.infer<typeof signInSchema>
+
 const signUpSchema = z
   .object({
     firstName: z.string().min(1, 'First name is required'),
@@ -105,6 +112,45 @@ export function useSignUp() {
     error,
     emailSent,
     submittedEmail: form.getValues('email'),
+  }
+}
+
+// ── useSignIn ─────────────────────────────────────────────────────────────────
+
+export function useSignIn() {
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  const form = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: { email: '', password: '' },
+  })
+
+  const onSubmit = async (values: SignInFormValues) => {
+    setIsPending(true)
+    setError(null)
+
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
+    })
+
+    setIsPending(false)
+
+    if (authError) {
+      setError(authError.message)
+      return
+    }
+
+    navigate('/app')
+  }
+
+  return {
+    form,
+    onSubmit: form.handleSubmit(onSubmit),
+    isPending,
+    error,
   }
 }
 
