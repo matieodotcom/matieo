@@ -4,12 +4,10 @@ import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/toast'
 import { useAuthStore } from '@/store/authStore'
 
-// We need react-router for useSignOut
 vi.mock('@/lib/toast', () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
 }))
 
-// Import hooks after mocks are set up
 const getModule = () => import('@/hooks/use-auth')
 
 describe('useAuthListener', () => {
@@ -111,9 +109,12 @@ describe('useSignUp', () => {
     const { result } = renderHook(() => useSignUp())
 
     act(() => {
-      result.current.form.setValue('fullName', 'Jane Smith')
+      result.current.form.setValue('firstName', 'Jane')
+      result.current.form.setValue('lastName', 'Smith')
       result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('confirmEmail', 'jane@example.com')
       result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
     })
 
     await act(async () => {
@@ -138,9 +139,12 @@ describe('useSignUp', () => {
     const { result } = renderHook(() => useSignUp())
 
     act(() => {
-      result.current.form.setValue('fullName', 'Jane Smith')
+      result.current.form.setValue('firstName', 'Jane')
+      result.current.form.setValue('lastName', 'Smith')
       result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('confirmEmail', 'jane@example.com')
       result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
     })
 
     await act(async () => {
@@ -158,12 +162,42 @@ describe('useSignUp', () => {
     const { useSignUp } = await getModule()
     const { result } = renderHook(() => useSignUp())
 
-    // Submit with empty values (defaults) — Zod should reject
     await act(async () => {
       await result.current.onSubmit({ preventDefault: () => {} } as never)
     })
 
     expect(supabase.auth.signUp).not.toHaveBeenCalled()
+  })
+
+  it('passes full_name as firstName + lastName to supabase', async () => {
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: null,
+    } as never)
+
+    const { useSignUp } = await getModule()
+    const { result } = renderHook(() => useSignUp())
+
+    act(() => {
+      result.current.form.setValue('firstName', 'Jane')
+      result.current.form.setValue('lastName', 'Smith')
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('confirmEmail', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.signUp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          data: { full_name: 'Jane Smith' },
+        }),
+      })
+    )
   })
 })
 

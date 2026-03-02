@@ -9,11 +9,23 @@ import { toast } from '@/lib/toast'
 
 // ── Schemas ───────────────────────────────────────────────────────────────────
 
-const signUpSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  email: z.string().email('Enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-})
+const signUpSchema = z
+  .object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Enter a valid email address'),
+    confirmEmail: z.string(),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.confirmEmail === data.email, {
+    message: 'Email addresses do not match',
+    path: ['confirmEmail'],
+  })
+  .refine((data) => data.confirmPassword === data.password, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
 
 type SignUpFormValues = z.infer<typeof signUpSchema>
 
@@ -31,13 +43,13 @@ export function useAuthListener() {
     })
 
     // Subscribe to auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
-      }
-    )
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
 
     return () => subscription.unsubscribe()
   }, [setUser, setSession, setLoading])
@@ -52,7 +64,14 @@ export function useSignUp() {
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { fullName: '', email: '', password: '' },
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      confirmEmail: '',
+      password: '',
+      confirmPassword: '',
+    },
   })
 
   const onSubmit = async (values: SignUpFormValues) => {
@@ -63,7 +82,7 @@ export function useSignUp() {
       email: values.email,
       password: values.password,
       options: {
-        data: { full_name: values.fullName },
+        data: { full_name: `${values.firstName} ${values.lastName}` },
         emailRedirectTo: window.location.origin + '/',
       },
     })
@@ -75,7 +94,7 @@ export function useSignUp() {
       return
     }
 
-    toast.success(`Check your inbox! We've sent a verification link to ${values.email}`)
+    toast.success(`Verification link sent to ${values.email}`)
     setEmailSent(true)
   }
 

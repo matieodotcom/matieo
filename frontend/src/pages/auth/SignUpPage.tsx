@@ -1,10 +1,22 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, UserCheck, BarChart2, Shield } from 'lucide-react'
+import { Eye, EyeOff, CheckCircle } from 'lucide-react'
 import { useSignUp, useGoogleAuth } from '@/hooks/use-auth'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
-// ── Google SVG icon ───────────────────────────────────────────────────────────
+// ── Logo icon (concentric-circle mark) ───────────────────────────────────────
+
+function LogoMark() {
+  return (
+    <div className="w-9 h-9 rounded-full bg-brand-secondary flex items-center justify-center flex-shrink-0">
+      <div className="w-[22px] h-[22px] rounded-full border-[2.5px] border-white/40 flex items-center justify-center">
+        <div className="w-[9px] h-[9px] rounded-full bg-white" />
+      </div>
+    </div>
+  )
+}
+
+// ── Google G icon ─────────────────────────────────────────────────────────────
 
 function GoogleIcon() {
   return (
@@ -29,57 +41,82 @@ function GoogleIcon() {
   )
 }
 
-// ── Benefits panel data ───────────────────────────────────────────────────────
+// ── Product mockup (right panel) ──────────────────────────────────────────────
 
-const BENEFITS = [
-  {
-    icon: UserCheck,
-    heading: 'Preserve every memory',
-    description: 'Create beautiful memorials that honour your loved ones and keep their stories alive for future generations.',
-  },
-  {
-    icon: BarChart2,
-    heading: 'Insights that matter',
-    description: 'Explore mortality data trends, patterns, and analytics to gain a deeper understanding of life and loss.',
-  },
-  {
-    icon: Shield,
-    heading: 'Private and secure',
-    description: 'Your data is protected with enterprise-grade security. Share only what you choose, with who you choose.',
-  },
-]
-
-// ── EmailSentState ────────────────────────────────────────────────────────────
-
-function EmailSentState({
-  email,
-  onResend,
-  isPending,
-}: {
-  email: string
-  onResend: () => void
-  isPending: boolean
-}) {
+function AppMockup() {
   return (
-    <div className="text-center py-4">
-      <div className="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-        <CheckCircle size={28} className="text-green-500" />
+    <div className="relative w-full max-w-lg">
+      {/* Tablet frame */}
+      <div className="rounded-2xl bg-white border border-neutral-200 shadow-xl overflow-hidden">
+        {/* Mockup top bar */}
+        <div className="bg-white border-b border-neutral-100 px-4 py-3 flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-brand-secondary" />
+            <span className="text-xs font-bold text-brand-secondary tracking-tight">MATIEO</span>
+          </div>
+          <div className="flex-1 bg-neutral-100 rounded-full h-5" />
+        </div>
+        {/* Mockup content */}
+        <div className="p-4 bg-neutral-50">
+          <div className="bg-white rounded-xl border border-neutral-100 p-4 mb-3">
+            <p className="text-xs font-semibold text-neutral-700 mb-3">Memorial Gallery</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-lg overflow-hidden">
+                  <div className="h-16 bg-neutral-200" />
+                  <div className="pt-2 space-y-1">
+                    <div className="h-2 bg-neutral-200 rounded w-3/4" />
+                    <div className="h-1.5 bg-neutral-100 rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Stats row */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-white rounded-xl border border-neutral-100 p-3">
+              <div className="h-2 bg-neutral-100 rounded w-1/2 mb-2" />
+              <div className="h-5 bg-brand-primaryLight rounded w-2/3" />
+            </div>
+            <div className="bg-white rounded-xl border border-neutral-100 p-3">
+              <div className="h-2 bg-neutral-100 rounded w-1/2 mb-2" />
+              <div className="h-5 bg-brand-primaryLight rounded w-2/3" />
+            </div>
+          </div>
+        </div>
       </div>
-      <h2 className="text-xl font-semibold text-brand-secondary mb-2">Verify your email</h2>
-      <p className="text-sm text-neutral-500 mb-1">
-        We've sent a verification link to
-      </p>
-      <p className="text-sm font-medium text-brand-secondary mb-6">{email}</p>
-      <p className="text-xs text-neutral-400 mb-4">
-        Didn't receive it? Check your spam folder or
-      </p>
-      <button
-        onClick={onResend}
-        disabled={isPending}
-        className="text-sm text-brand-primary font-medium hover:underline disabled:opacity-50"
-      >
-        {isPending ? 'Resending…' : 'Resend email'}
-      </button>
+      {/* Floating phone frame */}
+      <div className="absolute -bottom-4 -left-6 w-28 rounded-2xl bg-white border border-neutral-200 shadow-xl overflow-hidden">
+        <div className="bg-brand-primary px-2 py-2">
+          <div className="h-1.5 bg-white/30 rounded w-2/3 mb-1" />
+          <div className="h-3 bg-white rounded w-1/2" />
+        </div>
+        <div className="p-2 space-y-1.5">
+          <div className="h-2 bg-neutral-100 rounded" />
+          <div className="h-2 bg-neutral-100 rounded w-4/5" />
+          <div className="h-6 bg-brand-primaryLight rounded mt-2" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── VerificationBanner ────────────────────────────────────────────────────────
+
+function VerificationBanner({ email }: { email: string }) {
+  return (
+    <div
+      role="status"
+      className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3"
+    >
+      <CheckCircle size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
+      <div>
+        <p className="text-sm font-semibold text-green-800">Verification link sent</p>
+        <p className="text-xs text-green-700 mt-0.5">
+          Please verify your email. We have sent a link to{' '}
+          <span className="font-medium">{email}</span>.
+        </p>
+      </div>
     </div>
   )
 }
@@ -88,14 +125,9 @@ function EmailSentState({
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const {
-    form,
-    onSubmit,
-    isPending,
-    error,
-    emailSent,
-    submittedEmail,
-  } = useSignUp()
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  const { form, onSubmit, isPending, error, emailSent, submittedEmail } = useSignUp()
   const { handleGoogleAuth, isPending: googlePending, error: googleError } = useGoogleAuth()
 
   const {
@@ -108,121 +140,151 @@ export default function SignUpPage() {
   return (
     <main className="min-h-screen flex">
       {/* ── Left: Form panel ── */}
-      <div className="w-full md:w-[45%] flex flex-col justify-center px-8 md:px-16 py-12 bg-white">
+      <div className="w-full md:w-[45%] flex flex-col px-10 md:px-16 py-10 bg-white">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 mb-8 self-start">
-          <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-xs font-bold tracking-tight">M</span>
-          </div>
-          <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
+        <Link to="/" className="flex items-center gap-2 mb-10 self-start">
+          <LogoMark />
+          <span className="text-brand-primary font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 
-        {emailSent ? (
-          <EmailSentState
-            email={submittedEmail}
-            onResend={onSubmit}
-            isPending={isPending}
-          />
-        ) : (
-          <>
-            <h1 className="text-2xl font-semibold text-brand-secondary mb-1">
-              Create your account
-            </h1>
-            <p className="text-sm text-neutral-500 mb-6">
-              Already have an account?{' '}
-              <Link to="/signin" className="text-brand-primary font-medium hover:underline">
-                Sign in
-              </Link>
-            </p>
+        <div className="flex-1 flex flex-col justify-center max-w-sm w-full mx-auto">
+          {/* Heading */}
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Sign up</h1>
+          <p className="text-sm text-neutral-500 mb-6">
+            Let's get started with your 14 days free trial
+          </p>
 
-            {/* Google Sign Up */}
-            <button
-              type="button"
-              onClick={handleGoogleAuth}
-              disabled={googlePending || isPending}
-              className="w-full flex items-center justify-center gap-3 border border-neutral-200 bg-white hover:bg-neutral-50
-                text-sm font-medium text-neutral-700 py-2.5 rounded-lg transition-colors
-                disabled:opacity-50 disabled:cursor-not-allowed mb-4"
-            >
-              <GoogleIcon />
-              Continue with Google
-            </button>
+          {/* Google button */}
+          <button
+            type="button"
+            onClick={handleGoogleAuth}
+            disabled={googlePending || isPending}
+            className="w-full flex items-center justify-center gap-3 bg-neutral-100 hover:bg-neutral-200
+              text-sm font-medium text-neutral-700 py-2.5 rounded-lg transition-colors
+              disabled:opacity-50 disabled:cursor-not-allowed mb-5"
+          >
+            <GoogleIcon />
+            Sign up with Google
+          </button>
 
-            {/* Divider */}
-            <div className="relative flex items-center mb-4">
-              <div className="flex-1 border-t border-neutral-200" />
-              <span className="mx-3 text-xs text-neutral-400">or continue with email</span>
-              <div className="flex-1 border-t border-neutral-200" />
-            </div>
+          {/* Divider */}
+          <div className="relative flex items-center mb-5">
+            <div className="flex-1 border-t border-neutral-200" />
+            <span className="mx-3 text-xs text-neutral-400">or</span>
+            <div className="flex-1 border-t border-neutral-200" />
+          </div>
 
-            {/* Form */}
-            <form onSubmit={onSubmit} noValidate className="space-y-4">
-              {/* Full Name */}
+          {/* Form */}
+          <form onSubmit={onSubmit} noValidate className="space-y-4">
+            {/* First name + Last name */}
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Full name
+                <label
+                  htmlFor="firstName"
+                  className="block text-sm font-medium text-neutral-700 mb-1"
+                >
+                  First name
                 </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
-                    <User size={15} />
-                  </span>
-                  <input
-                    id="fullName"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="Jane Smith"
-                    {...register('fullName')}
-                    className="w-full border border-neutral-200 rounded-lg pl-9 pr-3 py-2.5 text-sm text-neutral-900
-                      placeholder:text-neutral-400 focus:outline-none focus:ring-2
-                      focus:ring-brand-primary focus:border-transparent transition"
-                  />
-                </div>
-                {errors.fullName && (
-                  <ErrorMessage message={errors.fullName.message!} />
+                <input
+                  id="firstName"
+                  type="text"
+                  autoComplete="given-name"
+                  placeholder="Shariff"
+                  {...register('firstName')}
+                  className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
+                    placeholder:text-neutral-400 focus:outline-none focus:ring-2
+                    focus:ring-brand-primary focus:border-transparent transition"
+                />
+                {errors.firstName && (
+                  <ErrorMessage message={errors.firstName.message!} />
                 )}
               </div>
-
-              {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Email address
+                <label
+                  htmlFor="lastName"
+                  className="block text-sm font-medium text-neutral-700 mb-1"
+                >
+                  Last name
                 </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
-                    <Mail size={15} />
-                  </span>
-                  <input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    {...register('email')}
-                    className="w-full border border-neutral-200 rounded-lg pl-9 pr-3 py-2.5 text-sm text-neutral-900
-                      placeholder:text-neutral-400 focus:outline-none focus:ring-2
-                      focus:ring-brand-primary focus:border-transparent transition"
-                  />
-                </div>
+                <input
+                  id="lastName"
+                  type="text"
+                  autoComplete="family-name"
+                  placeholder="Saim"
+                  {...register('lastName')}
+                  className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
+                    placeholder:text-neutral-400 focus:outline-none focus:ring-2
+                    focus:ring-brand-primary focus:border-transparent transition"
+                />
+                {errors.lastName && (
+                  <ErrorMessage message={errors.lastName.message!} />
+                )}
+              </div>
+            </div>
+
+            {/* Email + Confirm email */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-neutral-700 mb-1"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="name@email.com"
+                  {...register('email')}
+                  className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
+                    placeholder:text-neutral-400 focus:outline-none focus:ring-2
+                    focus:ring-brand-primary focus:border-transparent transition"
+                />
                 {errors.email && (
                   <ErrorMessage message={errors.email.message!} />
                 )}
               </div>
-
-              {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1">
+                <label
+                  htmlFor="confirmEmail"
+                  className="block text-sm font-medium text-neutral-700 mb-1"
+                >
+                  Confirm email
+                </label>
+                <input
+                  id="confirmEmail"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="name@email.com"
+                  {...register('confirmEmail')}
+                  className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
+                    placeholder:text-neutral-400 focus:outline-none focus:ring-2
+                    focus:ring-brand-primary focus:border-transparent transition"
+                />
+                {errors.confirmEmail && (
+                  <ErrorMessage message={errors.confirmEmail.message!} />
+                )}
+              </div>
+            </div>
+
+            {/* Password + Confirm password */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-neutral-700 mb-1"
+                >
                   Password
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
-                    <Lock size={15} />
-                  </span>
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
-                    placeholder="Min. 8 characters"
+                    placeholder="Password"
                     {...register('password')}
-                    className="w-full border border-neutral-200 rounded-lg pl-9 pr-10 py-2.5 text-sm text-neutral-900
+                    className="w-full border border-neutral-200 rounded-lg px-3 pr-9 py-2.5 text-sm text-neutral-900
                       placeholder:text-neutral-400 focus:outline-none focus:ring-2
                       focus:ring-brand-primary focus:border-transparent transition"
                   />
@@ -239,57 +301,104 @@ export default function SignUpPage() {
                   <ErrorMessage message={errors.password.message!} />
                 )}
               </div>
-
-              {/* Submit */}
-              <button
-                type="submit"
-                disabled={isPending || googlePending}
-                className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm
-                  py-2.5 rounded-lg transition-colors
-                  disabled:bg-brand-primaryLight disabled:text-brand-primary disabled:cursor-not-allowed
-                  flex items-center justify-center gap-2 mt-2"
-              >
-                {isPending ? (
-                  <>
-                    <span
-                      className="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"
-                      aria-hidden="true"
-                    />
-                    Creating account…
-                  </>
-                ) : (
-                  'Create Account'
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-neutral-700 mb-1"
+                >
+                  Confirm password
+                </label>
+                <div className="relative">
+                  <input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    placeholder="Password"
+                    {...register('confirmPassword')}
+                    className="w-full border border-neutral-200 rounded-lg px-3 pr-9 py-2.5 text-sm text-neutral-900
+                      placeholder:text-neutral-400 focus:outline-none focus:ring-2
+                      focus:ring-brand-primary focus:border-transparent transition"
+                  />
+                  <button
+                    type="button"
+                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <ErrorMessage message={errors.confirmPassword.message!} />
                 )}
-              </button>
+              </div>
+            </div>
 
-              {/* Auth error */}
-              {combinedError && (
-                <ErrorMessage message={combinedError} />
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={isPending || googlePending}
+              className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm
+                py-2.5 rounded-lg transition-colors mt-1
+                disabled:bg-brand-primaryLight disabled:text-brand-primary disabled:cursor-not-allowed
+                flex items-center justify-center gap-2"
+            >
+              {isPending ? (
+                <>
+                  <span
+                    className="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"
+                    aria-hidden="true"
+                  />
+                  Creating account…
+                </>
+              ) : (
+                'Sign up'
               )}
-            </form>
-          </>
-        )}
+            </button>
+
+            {/* Auth error */}
+            {combinedError && <ErrorMessage message={combinedError} />}
+
+            {/* Verification banner */}
+            {emailSent && <VerificationBanner email={submittedEmail} />}
+          </form>
+
+          {/* Already a member */}
+          <p className="text-sm text-neutral-500 mt-5">
+            Already a member?{' '}
+            <Link to="/signin" className="text-brand-primary font-semibold hover:underline">
+              Log in now
+            </Link>
+          </p>
+
+          {/* Terms */}
+          <p className="text-xs text-neutral-400 mt-4 leading-relaxed">
+            By continuing, you agree to our{' '}
+            <a href="/terms" className="underline hover:text-neutral-600 transition-colors">
+              Terms of Service
+            </a>{' '}
+            and{' '}
+            <a href="/privacy" className="underline hover:text-neutral-600 transition-colors">
+              Privacy Policy
+            </a>
+          </p>
+        </div>
+
+        {/* Footer */}
+        <p className="text-xs text-neutral-400 mt-8 text-center">© 2026 MATIEO</p>
       </div>
 
-      {/* ── Right: Benefits panel ── */}
-      <div className="hidden md:flex flex-1 bg-neutral-50 flex-col justify-center px-16">
-        <div className="max-w-sm">
-          <h2 className="text-xl font-semibold text-brand-secondary mb-8">
-            Everything you need, in one place
+      {/* ── Right: Product panel ── */}
+      <div className="hidden md:flex flex-1 bg-neutral-50 flex-col justify-center px-14 py-16">
+        <div className="max-w-md">
+          <h2 className="text-3xl font-bold text-neutral-800 leading-snug mb-3">
+            A Modern Way to Remember
           </h2>
-          <ul className="space-y-8">
-            {BENEFITS.map(({ icon: Icon, heading, description }) => (
-              <li key={heading} className="flex gap-4">
-                <div className="w-10 h-10 rounded-lg bg-brand-primaryLight flex items-center justify-center flex-shrink-0">
-                  <Icon size={18} className="text-brand-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-brand-secondary mb-1">{heading}</p>
-                  <p className="text-sm text-neutral-500 leading-relaxed">{description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <p className="text-sm text-neutral-500 leading-relaxed mb-12">
+            Create and share digital obituaries and memorials with dignity,
+            simplicity, and care.
+          </p>
+          <AppMockup />
         </div>
       </div>
     </main>
