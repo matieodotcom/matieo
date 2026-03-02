@@ -9,6 +9,7 @@
 - [§Architecture](#architecture) — system diagram + structure
 - [§DB](#db) — compact schema + relationships
 - [§Design](#design) — tokens, patterns, Radix decision logic, component log
+- [§Responsive](#responsive) — breakpoints, padding, grid, typography, mobile nav patterns
 - [§ML](#ml) — ML service architecture + feature roadmap
 - [§Environments](#environments) — env vars, Supabase, Cloudinary, Render, Hostinger setup
 - [§Pages](#pages) — per-page build specs
@@ -354,6 +355,8 @@ Top-level site nav?           → NavigationMenu
 If unsure → `query-docs("radix-ui [name]")` via Context7 MCP.
 If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 
+> Responsive patterns → §Responsive below
+
 ### Radix component log
 > Add a row every time a new primitive is used in MATIEO for the first time. Never delete rows.
 
@@ -367,6 +370,81 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | Tooltip.tsx | Tooltip | `@radix-ui/react-tooltip` | — |
 | Avatar.tsx | Avatar | `@radix-ui/react-avatar` | Navbar (user avatar) |
 | Popover.tsx | Popover | `@radix-ui/react-popover` | — |
+
+---
+
+## §Responsive
+
+### Breakpoints (Tailwind defaults)
+
+| Prefix | Min-width | Target device |
+|--------|-----------|---------------|
+| _(none)_ | 0 | Mobile (320px+) |
+| `sm:` | 640px | Large mobile / small tablet |
+| `md:` | 768px | Tablet portrait |
+| `lg:` | 1024px | Tablet landscape / small desktop |
+| `xl:` | 1280px | Desktop |
+
+### Mandatory padding — all pages & sections
+```tsx
+// Outer section container
+"max-w-6xl mx-auto px-4 md:px-8"
+
+// Auth full-width panels
+"px-6 sm:px-10 md:px-16"   // split-panel form side (Sign In, Sign Up)
+"px-4 sm:px-8"             // centered card pages (Forgot/Reset Password)
+```
+
+### Typography scaling — section headings
+```tsx
+// Large heading (h1 hero / h2 section)
+"text-3xl sm:text-4xl lg:text-5xl"  // hero
+"text-2xl sm:text-3xl lg:text-4xl"  // section h2
+
+// Body / description — no scaling needed (text-lg reads fine at all widths)
+```
+
+### Grid patterns by column count
+```tsx
+// 2-column form grids (names, emails, passwords)
+"grid grid-cols-1 sm:grid-cols-2 gap-3"
+
+// 3-column feature/testimonial grids
+"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+
+// 3-column how-it-works / tutorial
+"grid grid-cols-1 md:grid-cols-3 gap-8"
+
+// 4-column stat cards
+"grid grid-cols-2 lg:grid-cols-4 gap-6"
+```
+
+### Horizontal button/action rows
+```tsx
+// Button group that should stack on mobile
+"flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4"
+
+// Inline trust signals / badges that wrap
+"flex flex-wrap items-center justify-center gap-4 md:gap-8"
+```
+
+### Mobile nav pattern (Navbar)
+- Hamburger `<button>` visible only at `< md` (`md:hidden`)
+- Desktop `<nav>` links hidden at `< md` (`hidden md:flex`)
+- Mobile panel: `id="mobile-nav"`, conditionally rendered, `md:hidden`
+- Clicking a link in mobile panel sets `isMenuOpen(false)` to auto-close
+- Hamburger `aria-label` toggles: "Open menu" / "Close menu"
+- `aria-expanded` reflects open state for screen readers
+
+### Checklist for every new page
+```
+[ ] All section containers: px-4 md:px-8
+[ ] All h2 section headings: text-2xl sm:text-3xl lg:text-4xl
+[ ] All multi-column grids: responsive breakpoints (see patterns above)
+[ ] All horizontal button rows: flex-col sm:flex-row on mobile
+[ ] No fixed widths (w-56, w-[340px]) without mobile override (w-full sm:w-56)
+[ ] Footer still stacks correctly (test with new page content below it)
+```
 
 ---
 

@@ -32,11 +32,11 @@ const SOCIAL_LINKS = [
 export function Footer() {
   return (
     <footer className="bg-brand-secondary">
-      <div className="max-w-[1200px] mx-auto px-8 pt-16 pb-8">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-12 md:pt-16 pb-8">
         {/* Top — brand + link columns */}
-        <div className="flex gap-16 pb-12 border-b border-white/10">
+        <div className="flex flex-col md:flex-row gap-10 md:gap-16 pb-12 border-b border-white/10">
           {/* Brand column */}
-          <div className="w-[340px] flex-shrink-0">
+          <div className="w-full md:w-[280px] md:flex-shrink-0">
             <Link to="/" className="flex items-center gap-2 mb-5">
               <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
                 <span className="text-white text-xs font-bold">M</span>
@@ -63,7 +63,7 @@ export function Footer() {
           </div>
 
           {/* Link columns */}
-          <div className="flex-1 grid grid-cols-3 gap-8">
+          <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-8">
             {(Object.entries(FOOTER_LINKS) as [string, readonly { label: string; to: string }[]][]).map(
               ([column, links]) => (
                 <div key={column}>
@@ -87,9 +87,9 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between pt-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between pt-8">
           <p className="text-sm text-[#99A1AF]">© 2026 MATIEO. All rights reserved.</p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap gap-4 md:gap-6">
             {(['Privacy Policy', 'Terms of Service', 'Cookie Policy'] as const).map((label) => (
               <Link key={label} to="#" className="text-sm text-[#99A1AF] hover:text-white transition-colors">
                 {label}

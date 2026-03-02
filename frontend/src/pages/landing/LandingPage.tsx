@@ -145,7 +145,7 @@ function HeroSection() {
         className="absolute bottom-0 left-0 w-64 h-64 bg-blue-100/80 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4 pointer-events-none"
       />
 
-      <div className="relative max-w-6xl mx-auto px-8 py-20 flex items-center gap-16 w-full">
+      <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20 flex flex-col lg:flex-row items-center gap-8 lg:gap-16 w-full">
         {/* Left column */}
         <div className="flex-1 min-w-0">
           {/* Badge */}
@@ -160,7 +160,7 @@ function HeroSection() {
           </div>
 
           {/* Heading */}
-          <h1 className="text-5xl font-normal leading-tight text-brand-primary mb-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal leading-tight text-brand-primary mb-6">
             Honoring Lives,
             <br />
             Preserving
@@ -176,7 +176,7 @@ function HeroSection() {
           </p>
 
           {/* CTAs */}
-          <div className="flex items-center gap-4 mb-10">
+          <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-8 md:mb-10">
             <Link
               to="/signup"
               className="inline-flex items-center gap-2 bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm px-7 py-3.5 rounded-lg transition-colors"
@@ -193,7 +193,7 @@ function HeroSection() {
           </div>
 
           {/* Social proof stats */}
-          <div className="flex items-center gap-6" aria-label="Platform stats">
+          <div className="flex items-center gap-4 md:gap-6" aria-label="Platform stats">
             <div>
               <p className="text-xl font-semibold text-brand-secondary">24/7</p>
               <p className="text-sm text-neutral-500">Support</p>
@@ -293,10 +293,10 @@ function HeroSection() {
 function FeaturesSection() {
   return (
     <section id="features" className="py-24 bg-white">
-      <div className="max-w-6xl mx-auto px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-normal text-neutral-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-4">
             Everything You Need in One Platform
           </h2>
           <p className="text-lg text-slate-500 max-w-xl mx-auto leading-relaxed">
@@ -306,7 +306,7 @@ function FeaturesSection() {
         </div>
 
         {/* 3×2 grid */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {FEATURES.map(({ Icon, title, description }) => (
             <div key={title} className="border border-neutral-200 rounded-xl p-6">
               <div className="w-14 h-14 border border-neutral-200 rounded-xl flex items-center justify-center mb-5">
@@ -325,23 +325,23 @@ function FeaturesSection() {
 function HowItWorksSection() {
   return (
     <section className="py-24 bg-blue-50">
-      <div className="max-w-6xl mx-auto px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-normal text-neutral-900 mb-4">How It Works</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-4">How It Works</h2>
           <p className="text-lg text-slate-500">
             Watch our step-by-step video guides to learn how to use MATIEO's powerful features.
           </p>
         </div>
 
         {/* 3 tutorial cards */}
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {HOW_IT_WORKS.map(({ title, description, bgClass }) => (
             <div key={title}>
               {/* Circular thumbnail */}
               <div className="flex justify-center mb-6">
                 <div
-                  className={`relative w-64 h-64 rounded-full ${bgClass} flex items-center justify-center overflow-hidden`}
+                  className={`relative w-44 h-44 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full ${bgClass} flex items-center justify-center overflow-hidden`}
                 >
                   <button
                     type="button"
@@ -365,10 +365,10 @@ function HowItWorksSection() {
 function StatsSection() {
   return (
     <section className="py-24 bg-white">
-      <div className="max-w-6xl mx-auto px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-normal text-neutral-900 mb-4">Trusted by Thousands</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-4">Trusted by Thousands</h2>
           <p className="text-lg text-slate-500 max-w-lg mx-auto leading-relaxed">
             Our platform serves families, researchers, and organizations with reliable data and
             compassionate services.
@@ -376,10 +376,10 @@ function StatsSection() {
         </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {STATS.map(({ value, label, description }) => (
             <div key={label} className="border border-neutral-200 rounded-xl p-6 text-center">
-              <p className="text-4xl font-normal text-brand-primary mb-2">{value}</p>
+              <p className="text-3xl md:text-4xl font-normal text-brand-primary mb-2">{value}</p>
               <p className="text-sm font-medium text-neutral-900 mb-1">{label}</p>
               <p className="text-xs text-slate-400">{description}</p>
             </div>
@@ -393,17 +393,17 @@ function StatsSection() {
 function TestimonialsSection() {
   return (
     <section className="py-24 bg-blue-50">
-      <div className="max-w-6xl mx-auto px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-normal text-neutral-900 mb-3">What Our Users Say</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-3">What Our Users Say</h2>
           <p className="text-lg text-slate-500">
             Join thousands of satisfied families, researchers, and organizations who trust MATIEO.
           </p>
         </div>
 
         {/* 3×2 testimonial grid */}
-        <div className="grid grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {TESTIMONIALS.map(({ quote, name, role, initials }) => (
             <article key={name} className="bg-white rounded-xl border border-neutral-200 p-6">
               {/* 5 stars */}
@@ -456,15 +456,15 @@ function CTASection() {
         className="absolute right-1/4 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-[#8EC5FF]/20 pointer-events-none"
       />
 
-      <div className="relative max-w-6xl mx-auto px-8 text-center">
-        <h2 className="text-4xl font-normal text-white mb-5">Get Started Today</h2>
+      <div className="relative max-w-6xl mx-auto px-4 md:px-8 text-center">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white mb-5">Get Started Today</h2>
         <p className="text-lg text-blue-100 max-w-xl mx-auto mb-10 leading-relaxed">
           Create meaningful Obituaries, build lasting Digital Memorials, Funeral Services &amp;
           connect with loved ones, and explore powerful Insights—all in one platform.
         </p>
 
         {/* CTA buttons */}
-        <div className="flex items-center justify-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-8">
           <Link
             to="/signup"
             className="inline-flex items-center gap-2 bg-white hover:bg-blue-50 text-brand-primary font-medium px-7 py-4 rounded-lg transition-colors"
@@ -481,7 +481,7 @@ function CTASection() {
         </div>
 
         {/* Trust signals */}
-        <div className="flex items-center justify-center gap-8 text-sm text-blue-100">
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm text-blue-100">
           {(['No hidden fees', 'Cancel anytime', 'Get support'] as const).map((label) => (
             <div key={label} className="flex items-center gap-2">
               <Check size={16} className="text-emerald-400 flex-shrink-0" aria-hidden="true" />
@@ -504,9 +504,9 @@ function WaitlistSection() {
 
   return (
     <section className="py-24 bg-blue-50">
-      <div className="max-w-6xl mx-auto px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
         <div className="max-w-[672px]">
-          <h2 className="text-4xl font-normal text-neutral-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-4">
             Not Ready To Sign Up Yet?
           </h2>
           <p className="text-lg text-slate-500 mb-8 leading-relaxed">
@@ -524,7 +524,7 @@ function WaitlistSection() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex items-center gap-3">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <div>
                 <label htmlFor="waitlist-name" className="sr-only">
                   Your name
@@ -534,7 +534,7 @@ function WaitlistSection() {
                   type="text"
                   placeholder="Enter your name"
                   required
-                  className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-56"
+                  className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-full sm:w-56"
                 />
               </div>
               <div>
@@ -546,12 +546,12 @@ function WaitlistSection() {
                   type="email"
                   placeholder="Enter your email"
                   required
-                  className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-56"
+                  className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-full sm:w-56"
                 />
               </div>
               <button
                 type="submit"
-                className="h-[50px] bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm px-7 rounded-lg transition-colors flex-shrink-0"
+                className="h-[50px] bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm px-7 rounded-lg transition-colors sm:flex-shrink-0"
               >
                 Follow Us
               </button>

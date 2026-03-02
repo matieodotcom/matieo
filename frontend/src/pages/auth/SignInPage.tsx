@@ -116,7 +116,7 @@ export default function SignInPage() {
   return (
     <main className="min-h-screen flex">
       {/* ── Left: Form panel ── */}
-      <div className="w-full md:w-[45%] flex flex-col px-10 md:px-16 py-10 bg-white">
+      <div className="w-full md:w-[45%] flex flex-col px-6 sm:px-10 md:px-16 py-10 bg-white">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 mb-10 self-start">
           <LogoMark />
@@ -276,7 +276,7 @@ export default function SignInPage() {
       </div>
 
       {/* ── Right: Product panel ── */}
-      <div className="hidden md:flex flex-1 bg-neutral-50 flex-col justify-center px-14 py-16">
+      <div className="hidden md:flex flex-1 bg-neutral-50 flex-col justify-center px-8 md:px-14 py-16">
         <div className="max-w-md">
           <h2 className="text-3xl font-bold text-neutral-800 leading-snug mb-3">
             A Modern Way to Remember

@@ -56,6 +56,41 @@ describe('Navbar — signed out', () => {
   })
 })
 
+describe('Navbar — hamburger menu', () => {
+  beforeEach(() => {
+    useAuthStore.setState({ user: null, session: null, isLoading: false })
+    vi.clearAllMocks()
+  })
+
+  it('renders hamburger button with aria-label "Open menu"', () => {
+    renderNavbar()
+    expect(screen.getByRole('button', { name: 'Open menu' })).toBeInTheDocument()
+  })
+
+  it('clicking hamburger opens mobile nav with all nav links', async () => {
+    renderNavbar()
+    await userEvent.click(screen.getByRole('button', { name: 'Open menu' }))
+
+    const mobileNav = document.getElementById('mobile-nav')
+    expect(mobileNav).toBeInTheDocument()
+    expect(mobileNav).toHaveTextContent('Memorials')
+    expect(mobileNav).toHaveTextContent('Obituary')
+    expect(mobileNav).toHaveTextContent('Insights')
+    expect(mobileNav).toHaveTextContent('Features')
+    expect(mobileNav).toHaveTextContent('Pricing')
+    expect(mobileNav).toHaveTextContent('About')
+  })
+
+  it('clicking hamburger again closes mobile nav', async () => {
+    renderNavbar()
+    await userEvent.click(screen.getByRole('button', { name: 'Open menu' }))
+    expect(document.getElementById('mobile-nav')).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Close menu' }))
+    expect(document.getElementById('mobile-nav')).not.toBeInTheDocument()
+  })
+})
+
 describe('Navbar — signed in', () => {
   const mockUser = {
     id: 'test-user-id',

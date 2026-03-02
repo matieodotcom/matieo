@@ -140,7 +140,7 @@ export default function SignUpPage() {
   return (
     <main className="min-h-screen flex">
       {/* ── Left: Form panel ── */}
-      <div className="w-full md:w-[45%] flex flex-col px-10 md:px-16 py-10 bg-white">
+      <div className="w-full md:w-[45%] flex flex-col px-6 sm:px-10 md:px-16 py-10 bg-white">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 mb-10 self-start">
           <LogoMark />
@@ -177,7 +177,7 @@ export default function SignUpPage() {
           {/* Form */}
           <form onSubmit={onSubmit} noValidate className="space-y-4">
             {/* First name + Last name */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label
                   htmlFor="firstName"
@@ -223,7 +223,7 @@ export default function SignUpPage() {
             </div>
 
             {/* Email + Confirm email */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label
                   htmlFor="email"
@@ -269,7 +269,7 @@ export default function SignUpPage() {
             </div>
 
             {/* Password + Confirm password */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label
                   htmlFor="password"

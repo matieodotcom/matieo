@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { UserAvatar } from '@/components/ui/Avatar'
@@ -75,36 +77,73 @@ function AuthActions() {
 }
 
 export function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-neutral-100">
-      <div className="max-w-6xl mx-auto px-8 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-          <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
-            <span className="text-white text-xs font-bold tracking-tight">M</span>
+    <div className="sticky top-0 z-50 bg-white">
+      <header className="border-b border-neutral-100">
+        <div className="max-w-6xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
+              <span className="text-white text-xs font-bold tracking-tight">M</span>
+            </div>
+            <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
+          </Link>
+
+          {/* Nav links — desktop */}
+          <nav aria-label="Main navigation">
+            <ul className="hidden md:flex items-center gap-8 list-none">
+              {NAV_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    to={link.to}
+                    className="text-sm text-stone-600 hover:text-brand-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Right side: hamburger (mobile) + auth */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-nav"
+              onClick={() => setIsMenuOpen((v) => !v)}
+              className="md:hidden text-neutral-600 hover:text-brand-primary p-1 transition-colors"
+            >
+              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+            <AuthActions />
           </div>
-          <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
-        </Link>
+        </div>
+      </header>
 
-        {/* Nav links */}
-        <nav aria-label="Main navigation">
-          <ul className="hidden md:flex items-center gap-8 list-none">
-            {NAV_LINKS.map((link) => (
-              <li key={link.label}>
-                <Link
-                  to={link.to}
-                  className="text-sm text-stone-600 hover:text-brand-primary transition-colors"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Auth actions */}
-        <AuthActions />
-      </div>
-    </header>
+      {/* Mobile nav panel */}
+      {isMenuOpen && (
+        <div id="mobile-nav" className="md:hidden border-b border-neutral-100 bg-white">
+          <nav aria-label="Mobile navigation">
+            <ul className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1 list-none">
+              {NAV_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    to={link.to}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block py-2 text-sm text-stone-600 hover:text-brand-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      )}
+    </div>
   )
 }

@@ -30,7 +30,7 @@ export default function ResetPasswordPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-white">
-      <div className="w-full max-w-sm mx-auto px-8 py-10 flex flex-col items-center gap-6">
+      <div className="w-full max-w-sm mx-auto px-4 sm:px-8 py-10 flex flex-col items-center gap-6">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <LogoMark />
