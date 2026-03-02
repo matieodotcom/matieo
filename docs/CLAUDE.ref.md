@@ -406,12 +406,21 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | | Local | Dev (hosted) | Prod (hosted) |
 |--|-------|-------------|---------------|
 | **Frontend** | localhost:5173 | dev.matieo.com (Hostinger) | matieo.com (Hostinger) |
-| **Node API** | localhost:3001 | matieo-api-dev.onrender.com | matieo-api.onrender.com |
-| **ML Service** | localhost:8000 | matieo-ml-dev.onrender.com | matieo-ml.onrender.com |
+| **Node API** | localhost:3001 | matieo-api-dev.onrender.com | — (not yet) |
+| **ML Service** | localhost:8000 | matieo-ml-dev.onrender.com | — (not yet) |
 | **Supabase** | — | matieo-dev project | matieo-prod project |
 | **Cloudinary** | — | matieo/dev/ prefix | matieo/prod/ prefix |
 | **Git branch** | feature/* | dev | main |
 | **Auto-deploy** | — | push to dev | push to main |
+
+**Active Render services (free tier):**
+- `matieo-api-dev` → dev Node API, branch: dev, auto-deploys on push to dev
+- `matieo-ml-dev` → dev ML service, branch: dev, auto-deploys on push to dev
+- Render auto-wires internal URL between the two services
+
+**Commented out in render.yaml (uncomment when going to prod):**
+- `matieo-api` → prod Node API, switch to free → starter when real users hit cold starts
+- `matieo-ml` → prod ML service, requires starter plan + persistent disk
 
 ---
 
@@ -450,18 +459,25 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 
 ---
 
-### 3. Render setup — 4 services via Blueprint
+### 3. Render setup — 2 services via Blueprint (free tier)
 
-All 4 services are defined in `render.yaml`. Currently on **free tier**.
+Defined in `render.yaml`. Currently 2 active services on free tier.
+
+**Active services:**
+
+| Service | Branch | URL |
+|---------|--------|-----|
+| `matieo-api` | main | matieo-api.onrender.com |
+| `matieo-api-dev` | dev | matieo-api-dev.onrender.com |
+
+**ML services** are commented out in `render.yaml` — uncomment and upgrade to `plan: starter` when ML features are ready to build.
 
 **Free tier limitations:**
 - Services spin down after 15 min of inactivity — ~30-60s cold start on next request
-- No persistent disk — ML models stored in memory only (fine until ML features are built)
-- 750 free hours/month shared across all services
+- 750 free hours/month shared across both services
+- No persistent disk (fine until ML features are built)
 
-**When to upgrade:** Switch `plan: free` → `plan: starter` in `render.yaml` when:
-- Cold starts are affecting real users (upgrade API services first)
-- ML models need to persist between deploys (upgrade ML services + add disk back)
+**When to upgrade:** Change `plan: free` → `plan: starter` in `render.yaml` for `matieo-api` when real users are hitting cold starts. Keep `matieo-api-dev` on free forever.
 
 **One-time setup:**
 1. Render dashboard → **New → Blueprint** → connect GitHub repo
