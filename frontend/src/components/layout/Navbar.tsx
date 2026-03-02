@@ -83,13 +83,25 @@ export function Navbar() {
     <div className="sticky top-0 z-50 bg-white">
       <header className="border-b border-neutral-100">
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
-              <span className="text-white text-xs font-bold tracking-tight">M</span>
-            </div>
-            <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
-          </Link>
+          {/* Left side: hamburger (mobile only) + logo */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-nav"
+              onClick={() => setIsMenuOpen((v) => !v)}
+              className="md:hidden text-neutral-600 hover:text-brand-primary p-1 transition-colors"
+            >
+              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
+                <span className="text-white text-xs font-bold tracking-tight">M</span>
+              </div>
+              <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
+            </Link>
+          </div>
 
           {/* Nav links — desktop */}
           <nav aria-label="Main navigation">
@@ -107,20 +119,8 @@ export function Navbar() {
             </ul>
           </nav>
 
-          {/* Right side: hamburger (mobile) + auth */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-nav"
-              onClick={() => setIsMenuOpen((v) => !v)}
-              className="md:hidden text-neutral-600 hover:text-brand-primary p-1 transition-colors"
-            >
-              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-            <AuthActions />
-          </div>
+          {/* Right side: auth actions */}
+          <AuthActions />
         </div>
       </header>
 
