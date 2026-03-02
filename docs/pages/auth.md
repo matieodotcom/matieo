@@ -1,4 +1,4 @@
-## Status: ✅ Complete (Sign Up, Sign In) | ⬜ Not started (Forgot Password)
+## Status: ✅ Complete (Sign Up, Sign In, Forgot Password)
 
 # Auth Pages Spec
 
@@ -7,7 +7,7 @@
 |------|-------|--------|
 | Sign Up | `/signup` | ✅ Complete |
 | Sign In | `/signin` | ✅ Complete |
-| Forgot Password | `/forgot-password` | ⬜ Not started |
+| Forgot Password | `/forgot-password` | ✅ Complete |
 
 ---
 
@@ -109,5 +109,42 @@ Split panel — no Navbar or Footer.
 ### Tests
 File: `src/__tests__/pages/signin.test.tsx` — **16 tests passing**
 
-## Forgot Password (`/forgot-password`)
-> ⬜ Not yet built. Centered card, full-page white, logo top-center.
+## Forgot Password (`/forgot-password`) — ✅ Complete
+
+### Layout
+Centered card — full-page white, no split panel.
+`min-h-screen flex items-center justify-center bg-white`
+Inner card: `w-full max-w-sm mx-auto px-8 py-10 flex flex-col items-center gap-6`
+
+### Screen 1 (emailSent === false)
+1. Logo (concentric-circle mark + MATIEO in brand blue) → links to `/`
+2. `<h1>` "Forgot Password?"
+3. Subtitle "No worries, we'll send you reset instructions."
+4. React Hook Form with Zod:
+   - Email Address (`id="email"`, Mail icon left)
+5. Submit: "Reset Password" (primary button, full-width)
+6. `<ErrorMessage>` for auth errors inline (no toast)
+7. "← Back to Sign in" link → `/signin`
+8. "© 2026 MATIEO" footer
+
+### Screen 2 (emailSent === true)
+1. Logo
+2. Green check icon: `w-16 h-16 rounded-full bg-green-100` + `CircleCheck` (size 32, `text-green-500`)
+3. `<h1>` "Check your email"
+4. "We sent a password reset link to" + `{submittedEmail}`
+5. "Open email" primary button → `window.open('mailto:')`
+6. "Didn't receive the email? Click to resend" → calls `resend()`
+7. "← Back to Sign in" link → `/signin`
+8. "© 2026 MATIEO" footer
+
+### Hook: `useForgotPassword`
+- Zod schema: `email (valid)`
+- Calls `supabase.auth.resetPasswordForEmail(email, { redirectTo: origin + '/forgot-password' })`
+- Success → `emailSent = true`, `submittedEmail` stored (no toast — Screen 2 is the confirmation)
+- Error → `error` state → `<ErrorMessage>` inline (no toast)
+- `resend()` → calls `submitReset(submittedEmail)` directly (bypasses form validation)
+- Returns: `{ form, onSubmit, isPending, error, emailSent, submittedEmail, resend }`
+
+### Tests
+File: `src/__tests__/pages/forgot-password.test.tsx` — **14 tests passing**
+File: `src/__tests__/hooks/use-auth.test.ts` — **4 new tests** (useForgotPassword describe block)

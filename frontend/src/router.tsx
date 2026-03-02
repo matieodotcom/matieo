@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import LandingPage from '@/pages/landing/LandingPage'
 import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
+import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/forgot-password',
-    element: <Placeholder name="Forgot Password" />,
+    element: <ForgotPasswordPage />,
   },
 
   // Public memorial

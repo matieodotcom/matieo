@@ -328,6 +328,96 @@ describe('useGoogleAuth', () => {
   })
 })
 
+describe('useForgotPassword', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('success → emailSent=true, no toast called', async () => {
+    vi.mocked(supabase.auth.resetPasswordForEmail).mockResolvedValueOnce({
+      data: {},
+      error: null,
+    } as never)
+
+    const { useForgotPassword } = await getModule()
+    const { result } = renderHook(() => useForgotPassword())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.emailSent).toBe(true)
+    })
+    expect(result.current.submittedEmail).toBe('jane@example.com')
+    expect(toast.success).not.toHaveBeenCalled()
+  })
+
+  it('auth error → sets error state', async () => {
+    vi.mocked(supabase.auth.resetPasswordForEmail).mockResolvedValueOnce({
+      data: {},
+      error: { message: 'Email not found' } as never,
+    })
+
+    const { useForgotPassword } = await getModule()
+    const { result } = renderHook(() => useForgotPassword())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.error).toBe('Email not found')
+    })
+    expect(result.current.emailSent).toBe(false)
+  })
+
+  it('invalid email (Zod) → no supabase call', async () => {
+    const { useForgotPassword } = await getModule()
+    const { result } = renderHook(() => useForgotPassword())
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.resetPasswordForEmail).not.toHaveBeenCalled()
+  })
+
+  it('resend — calling resend() calls resetPasswordForEmail again', async () => {
+    vi.mocked(supabase.auth.resetPasswordForEmail).mockResolvedValue({
+      data: {},
+      error: null,
+    } as never)
+
+    const { useForgotPassword } = await getModule()
+    const { result } = renderHook(() => useForgotPassword())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.emailSent).toBe(true)
+    })
+
+    await act(async () => {
+      await result.current.resend()
+    })
+
+    expect(supabase.auth.resetPasswordForEmail).toHaveBeenCalledTimes(2)
+  })
+})
+
 describe('useSignOut', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never })

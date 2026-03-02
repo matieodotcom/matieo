@@ -179,6 +179,50 @@ export function useGoogleAuth() {
   return { handleGoogleAuth, isPending, error }
 }
 
+// ── useForgotPassword ─────────────────────────────────────────────────────────
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email('Enter a valid email address'),
+})
+
+type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
+
+export function useForgotPassword() {
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [emailSent, setEmailSent] = useState(false)
+  const [submittedEmail, setSubmittedEmail] = useState('')
+
+  const form = useForm<ForgotPasswordFormValues>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: { email: '' },
+  })
+
+  const submitReset = async (email: string) => {
+    setIsPending(true)
+    setError(null)
+
+    const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/forgot-password',
+    })
+
+    setIsPending(false)
+
+    if (authError) {
+      setError(authError.message)
+      return
+    }
+
+    setSubmittedEmail(email)
+    setEmailSent(true)
+  }
+
+  const onSubmit = form.handleSubmit((values) => submitReset(values.email))
+  const resend = () => submitReset(submittedEmail)
+
+  return { form, onSubmit, isPending, error, emailSent, submittedEmail, resend }
+}
+
 // ── useSignOut ────────────────────────────────────────────────────────────────
 
 export function useSignOut() {

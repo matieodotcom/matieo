@@ -571,7 +571,7 @@ CLOUDINARY_API_SECRET
 | Landing | `/` | ✅ Complete | docs/pages/landing.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
-| Forgot Password | `/forgot-password` | ⬜ Not started | docs/pages/auth.md |
+| Forgot Password | `/forgot-password` | ✅ Complete | docs/pages/auth.md |
 | Analytics Dashboard | `/app/analytics` | ⬜ Not started | docs/pages/analytics.md |
 | View Memorials | `/app/memorials` | ⬜ Not started | docs/pages/view-memorials.md |
 | Create Memorial | `/app/memorials/create` | ⬜ Not started | docs/pages/create-memorial.md |
