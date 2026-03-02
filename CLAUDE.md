@@ -47,8 +47,9 @@ Every task is incomplete until affected files are updated.
 [ ] Component added?         → ref.md §Radix log updated
 [ ] Architecture decision?   → docs/decisions.md entry added
 [ ] Bug/limitation found?    → docs/known-issues.md entry added
-[ ] Feature built?           → tests written
+[ ] Feature built?           → tests written and passing
 [ ] Anything changed?        → relevant .env.example + ref.md updated
+[ ] All of the above done?   → commit + push to dev (automatic, no prompting)
 ```
 
 ---
@@ -176,10 +177,62 @@ Scope = affected module: `auth`, `memorial`, `insights`, `ml`, `backend`, `db`, 
 [ ] A11y       → semantic HTML, labels, alt text, aria where needed
 [ ] Cloudinary → verify preset, wire upload
 [ ] Route      → router.tsx entry
-[ ] Tests      → hook + page + route
+[ ] Tests      → hook + page + route — must pass before commit
 [ ] E2E        → if critical flow
 [ ] Page doc   → docs/pages/{name}.md
 [ ] Self-check → full maintenance checklist above
+[ ] Commit     → git add . → commit → push origin dev (automatic)
+```
+
+---
+
+## GIT WORKFLOW — AUTOMATIC, NO PROMPTING NEEDED
+
+Claude handles all git operations automatically at the end of every task.
+
+```
+NEVER commit to main — dev branch only
+NEVER ask the user whether to commit — always commit when task is complete
+NEVER leave uncommitted work at the end of a session
+```
+
+**Every task follows this exact flow:**
+```
+1. Check current branch → if not dev, switch to dev
+2. Build the feature
+3. Run tests → must pass before committing
+4. git add .
+5. git commit -m "type(scope): description" (follow commit format below)
+6. git push origin dev
+7. Confirm push succeeded in response to user
+```
+
+**Commit message format:**
+```
+feat(scope):     new page or feature
+fix(scope):      bug fix
+test(scope):     tests only
+db(scope):       schema or migration change
+chore(scope):    config, deps, tooling
+refactor(scope): no behaviour change
+docs:            documentation only
+```
+
+**Scope = affected area:** `landing`, `auth`, `memorial`, `insights`, `backend`, `ml`, `db`, `e2e`, `ci`
+
+**Example commit messages:**
+```
+feat(auth): add Sign In, Sign Up, Forgot Password pages — 47 tests passing
+feat(memorial): add Create Memorial page with photo upload — 38 tests passing
+db(memorials): add slug index and cause_of_death column
+fix(auth): handle expired token redirect to /signin
+```
+
+**After every commit Claude must confirm:**
+```
+✅ Committed to dev: "feat(landing): ..."
+✅ Pushed to origin/dev
+🚀 Auto-deploy to dev.matieo.com triggered
 ```
 
 ---

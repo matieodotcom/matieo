@@ -543,7 +543,7 @@ CLOUDINARY_API_SECRET
 
 | Page | Route | Status | Spec file |
 |------|-------|--------|-----------|
-| Landing | `/` | ⬜ Not started | docs/pages/landing.md |
+| Landing | `/` | ✅ Complete | docs/pages/landing.md |
 | Sign In | `/signin` | ⬜ Not started | docs/pages/auth.md |
 | Sign Up | `/signup` | ⬜ Not started | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ⬜ Not started | docs/pages/auth.md |
