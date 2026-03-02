@@ -203,7 +203,7 @@ export function useForgotPassword() {
     setError(null)
 
     const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/forgot-password',
+      redirectTo: window.location.origin + '/reset-password',
     })
 
     setIsPending(false)
@@ -221,6 +221,52 @@ export function useForgotPassword() {
   const resend = () => submitReset(submittedEmail)
 
   return { form, onSubmit, isPending, error, emailSent, submittedEmail, resend }
+}
+
+// ── useResetPassword ──────────────────────────────────────────────────────────
+
+const resetPasswordSchema = z
+  .object({
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string(),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+
+type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>
+
+export function useResetPassword() {
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  const form = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { password: '', confirmPassword: '' },
+  })
+
+  const onSubmit = form.handleSubmit(async (values) => {
+    setIsPending(true)
+    setError(null)
+
+    const { error: authError } = await supabase.auth.updateUser({
+      password: values.password,
+    })
+
+    setIsPending(false)
+
+    if (authError) {
+      setError(authError.message)
+      return
+    }
+
+    toast.success('Password updated successfully')
+    navigate('/signin')
+  })
+
+  return { form, onSubmit, isPending, error }
 }
 
 // ── useSignOut ────────────────────────────────────────────────────────────────

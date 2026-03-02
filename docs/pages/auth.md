@@ -1,4 +1,4 @@
-## Status: ✅ Complete (Sign Up, Sign In, Forgot Password)
+## Status: ✅ Complete (Sign Up, Sign In, Forgot Password, Reset Password)
 
 # Auth Pages Spec
 
@@ -8,6 +8,7 @@
 | Sign Up | `/signup` | ✅ Complete |
 | Sign In | `/signin` | ✅ Complete |
 | Forgot Password | `/forgot-password` | ✅ Complete |
+| Reset Password | `/reset-password` | ✅ Complete |
 
 ---
 
@@ -145,6 +146,47 @@ Inner card: `w-full max-w-sm mx-auto px-8 py-10 flex flex-col items-center gap-6
 - `resend()` → calls `submitReset(submittedEmail)` directly (bypasses form validation)
 - Returns: `{ form, onSubmit, isPending, error, emailSent, submittedEmail, resend }`
 
+### Hook: `useForgotPassword` — note on redirectTo
+`resetPasswordForEmail` `redirectTo` → `origin + '/reset-password'` (fixed, was `/forgot-password`)
+
 ### Tests
 File: `src/__tests__/pages/forgot-password.test.tsx` — **14 tests passing**
 File: `src/__tests__/hooks/use-auth.test.ts` — **4 new tests** (useForgotPassword describe block)
+
+---
+
+## Reset Password (`/reset-password`) — ✅ Complete
+
+### Layout
+Centered card — full-page white, no split panel (same pattern as ForgotPasswordPage).
+`min-h-screen flex items-center justify-center bg-white`
+Inner card: `w-full max-w-sm mx-auto px-8 py-10 flex flex-col items-center gap-6`
+
+### Content
+1. Logo (concentric-circle mark + MATIEO in brand blue) → links to `/`
+2. `<h1>` "Set New Password"
+3. Subtitle "Choose a strong password for your account."
+4. React Hook Form with Zod:
+   - New Password (`id="password"`, Lock icon left + Eye/EyeOff toggle right)
+   - Confirm Password (`id="confirmPassword"`, Lock icon left + Eye/EyeOff toggle right)
+5. Submit: "Update Password" (primary button, full-width, loading spinner)
+6. `<ErrorMessage>` for auth errors inline (no toast)
+7. "← Back to Sign in" link → `/signin`
+8. "© 2026 MATIEO" footer
+
+### Hook: `useResetPassword`
+- Zod schema: `password (min 8)`, `confirmPassword (must match password)`
+- Calls `supabase.auth.updateUser({ password })`
+- Success → `toast.success('Password updated successfully')` + `navigate('/signin')`
+- Error → `error` state → `<ErrorMessage>` below submit (no toast)
+- Returns: `{ form, onSubmit, isPending, error }`
+
+### Supabase flow
+Email reset link → browser → `redirectTo#access_token=...&type=recovery`
+→ Supabase JS processes hash, fires `onAuthStateChange(PASSWORD_RECOVERY, session)`
+→ `useAuthListener` sets session → `ResetPasswordPage` shows form
+→ `updateUser({ password })` → success → `/signin`
+
+### Tests
+File: `src/__tests__/pages/reset-password.test.tsx` — **15 tests passing**
+File: `src/__tests__/hooks/use-auth.test.ts` — **4 new tests** (useResetPassword describe block)

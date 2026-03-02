@@ -418,6 +418,89 @@ describe('useForgotPassword', () => {
   })
 })
 
+describe('useResetPassword', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('success → toast.success called and navigate invoked', async () => {
+    vi.mocked(supabase.auth.updateUser).mockResolvedValueOnce({
+      data: { user: {} as never },
+      error: null,
+    } as never)
+
+    const { useResetPassword } = await getModule()
+    const { result } = renderHook(() => useResetPassword())
+
+    act(() => {
+      result.current.form.setValue('password', 'newpassword1')
+      result.current.form.setValue('confirmPassword', 'newpassword1')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(toast.success).toHaveBeenCalledWith('Password updated successfully')
+    })
+  })
+
+  it('auth error → error state set, no toast', async () => {
+    vi.mocked(supabase.auth.updateUser).mockResolvedValueOnce({
+      data: { user: null },
+      error: { message: 'Auth session missing' } as never,
+    } as never)
+
+    const { useResetPassword } = await getModule()
+    const { result } = renderHook(() => useResetPassword())
+
+    act(() => {
+      result.current.form.setValue('password', 'newpassword1')
+      result.current.form.setValue('confirmPassword', 'newpassword1')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.error).toBe('Auth session missing')
+    })
+    expect(toast.success).not.toHaveBeenCalled()
+  })
+
+  it('Zod fail (short password) → no updateUser call', async () => {
+    const { useResetPassword } = await getModule()
+    const { result } = renderHook(() => useResetPassword())
+
+    act(() => {
+      result.current.form.setValue('password', 'short')
+      result.current.form.setValue('confirmPassword', 'short')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.updateUser).not.toHaveBeenCalled()
+  })
+
+  it('Zod fail (passwords mismatch) → no updateUser call', async () => {
+    const { useResetPassword } = await getModule()
+    const { result } = renderHook(() => useResetPassword())
+
+    act(() => {
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'different456')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.updateUser).not.toHaveBeenCalled()
+  })
+})
+
 describe('useSignOut', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: { id: 'u1' } as never, session: {} as never })
