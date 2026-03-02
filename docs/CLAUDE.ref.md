@@ -452,7 +452,16 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 
 ### 3. Render setup — 4 services via Blueprint
 
-All 4 services are defined in `render.yaml`. Render provisions everything automatically.
+All 4 services are defined in `render.yaml`. Currently on **free tier**.
+
+**Free tier limitations:**
+- Services spin down after 15 min of inactivity — ~30-60s cold start on next request
+- No persistent disk — ML models stored in memory only (fine until ML features are built)
+- 750 free hours/month shared across all services
+
+**When to upgrade:** Switch `plan: free` → `plan: starter` in `render.yaml` when:
+- Cold starts are affecting real users (upgrade API services first)
+- ML models need to persist between deploys (upgrade ML services + add disk back)
 
 **One-time setup:**
 1. Render dashboard → **New → Blueprint** → connect GitHub repo
@@ -543,7 +552,7 @@ CLOUDINARY_API_SECRET
 
 | Page | Route | Status | Spec file |
 |------|-------|--------|-----------|
-| Landing | `/` | ✅ Complete | docs/pages/landing.md |
+| Landing | `/` | ⬜ Not started | docs/pages/landing.md |
 | Sign In | `/signin` | ⬜ Not started | docs/pages/auth.md |
 | Sign Up | `/signup` | ⬜ Not started | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ⬜ Not started | docs/pages/auth.md |
