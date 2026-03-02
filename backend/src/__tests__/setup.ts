@@ -19,9 +19,7 @@ jest.mock('@/lib/cloudinary', () => ({
 }))
 
 jest.mock('@/lib/mlClient', () => ({
-  getMortalityPrediction: jest.fn().mockResolvedValue(null),
-  analyzeMemorialBiography: jest.fn().mockResolvedValue({
-    themes: [], sentiment: 'unknown', sentiment_score: 0, key_phrases: [], suggested_tags: [],
-  }),
-  isMLServiceHealthy: jest.fn().mockResolvedValue(false),
+  getMortalityPrediction: jest.fn(),
+  analyzeMemorialBiography: jest.fn(),
+  isMLServiceHealthy: jest.fn(),
 }))

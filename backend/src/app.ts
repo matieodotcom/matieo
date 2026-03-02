@@ -5,10 +5,11 @@
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
+import rateLimit from 'express-rate-limit'
 import healthRouter from './routes/health.routes'
-// import memorialsRouter from './routes/memorials.routes'
-// import insightsRouter from './routes/insights.routes'
-// import cloudinaryRouter from './routes/cloudinary.routes'
+import memorialsRouter from './routes/memorials.routes'
+import cloudinaryRouter from './routes/cloudinary.routes'
+import { errorHandler } from './middleware/error.middleware'
 
 const app = express()
 
@@ -20,10 +21,20 @@ app.use(cors({
 }))
 app.use(express.json({ limit: '10mb' }))
 
+// ── Rate limiting ────────────────────────────────────────────────────────────
+app.use(rateLimit({
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 900_000),
+  max: Number(process.env.RATE_LIMIT_MAX_REQUESTS ?? 100),
+  standardHeaders: true,
+  legacyHeaders: false,
+}))
+
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use(healthRouter)
-// app.use('/api/memorials', memorialsRouter)
-// app.use('/api/insights', insightsRouter)
-// app.use('/api/cloudinary', cloudinaryRouter)
+app.use('/api/memorials', memorialsRouter)
+app.use('/api/cloudinary', cloudinaryRouter)
+
+// ── Error handler (must be last) ─────────────────────────────────────────────
+app.use(errorHandler)
 
 export default app

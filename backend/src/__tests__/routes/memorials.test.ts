@@ -1,0 +1,150 @@
+import request from 'supertest'
+import app from '@/app'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { mockMemorial } from '@/__tests__/utils'
+
+const mockGetUser = supabaseAdmin.auth.getUser as jest.Mock
+const mockFrom = supabaseAdmin.from as jest.Mock
+
+const VALID_USER = { id: 'test-user-id', email: 'test@matieo.com', user_metadata: { role: 'user' } }
+
+function mockAuth() {
+  mockGetUser.mockResolvedValueOnce({ data: { user: VALID_USER }, error: null })
+}
+
+describe('GET /api/memorials', () => {
+  it('returns list of memorials for authenticated user', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      order: jest.fn().mockResolvedValueOnce({ data: [mockMemorial()], error: null }),
+    })
+
+    const res = await request(app)
+      .get('/api/memorials')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data[0].full_name).toBe('John Doe')
+  })
+
+  it('returns 401 without auth', async () => {
+    const res = await request(app).get('/api/memorials')
+    expect(res.status).toBe(401)
+  })
+})
+
+describe('POST /api/memorials', () => {
+  it('creates a memorial and returns 201', async () => {
+    mockAuth()
+    // slug uniqueness check
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: null, error: null }),
+    })
+    // insert
+    mockFrom.mockReturnValueOnce({
+      insert: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      single: jest.fn().mockResolvedValueOnce({ data: mockMemorial(), error: null }),
+    })
+
+    const res = await request(app)
+      .post('/api/memorials')
+      .set('Authorization', 'Bearer valid-token')
+      .send({ full_name: 'John Doe', date_of_death: '2024-01-10' })
+
+    expect(res.status).toBe(201)
+    expect(res.body.data.full_name).toBe('John Doe')
+  })
+
+  it('returns 400 when full_name is missing', async () => {
+    mockAuth()
+    const res = await request(app)
+      .post('/api/memorials')
+      .set('Authorization', 'Bearer valid-token')
+      .send({})
+    expect(res.status).toBe(400)
+    expect(res.body.error).toMatch(/full_name/)
+  })
+})
+
+describe('GET /api/memorials/:id', () => {
+  it('returns 404 when memorial not found', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: null, error: null }),
+    })
+
+    const res = await request(app)
+      .get('/api/memorials/nonexistent-id')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(404)
+  })
+
+  it('returns memorial when found', async () => {
+    mockAuth()
+    const memorial = mockMemorial()
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: memorial, error: null }),
+    })
+
+    const res = await request(app)
+      .get(`/api/memorials/${memorial.id}`)
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.id).toBe(memorial.id)
+  })
+})
+
+describe('POST /api/memorials/:id/publish', () => {
+  it('publishes a memorial', async () => {
+    mockAuth()
+    const published = mockMemorial({ status: 'published' })
+    mockFrom.mockReturnValueOnce({
+      update: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: published, error: null }),
+    })
+
+    const res = await request(app)
+      .post(`/api/memorials/${published.id}/publish`)
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.status).toBe('published')
+  })
+})
+
+describe('DELETE /api/memorials/:id', () => {
+  it('soft deletes a memorial', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      update: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: { id: 'memorial-id-123' }, error: null }),
+    })
+
+    const res = await request(app)
+      .delete('/api/memorials/memorial-id-123')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.id).toBe('memorial-id-123')
+  })
+})
