@@ -361,11 +361,11 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 |------------|-----------|---------|--------------|
 | Dialog.tsx | Dialog | `@radix-ui/react-dialog` | — |
 | Select.tsx | Select | `@radix-ui/react-select` | — |
-| DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | — |
+| DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | Navbar (user menu) |
 | Switch.tsx | Switch | `@radix-ui/react-switch` | — |
 | Tabs.tsx | Tabs | `@radix-ui/react-tabs` | — |
 | Tooltip.tsx | Tooltip | `@radix-ui/react-tooltip` | — |
-| Avatar.tsx | Avatar | `@radix-ui/react-avatar` | — |
+| Avatar.tsx | Avatar | `@radix-ui/react-avatar` | Navbar (user avatar) |
 | Popover.tsx | Popover | `@radix-ui/react-popover` | — |
 
 ---
@@ -568,9 +568,9 @@ CLOUDINARY_API_SECRET
 
 | Page | Route | Status | Spec file |
 |------|-------|--------|-----------|
-| Landing | `/` | ⬜ Not started | docs/pages/landing.md |
+| Landing | `/` | ✅ Complete | docs/pages/landing.md |
 | Sign In | `/signin` | ⬜ Not started | docs/pages/auth.md |
-| Sign Up | `/signup` | ⬜ Not started | docs/pages/auth.md |
+| Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ⬜ Not started | docs/pages/auth.md |
 | Analytics Dashboard | `/app/analytics` | ⬜ Not started | docs/pages/analytics.md |
 | View Memorials | `/app/memorials` | ⬜ Not started | docs/pages/view-memorials.md |

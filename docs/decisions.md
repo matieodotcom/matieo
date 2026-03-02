@@ -64,4 +64,11 @@
 
 ---
 
+## 2026-03-02 — useAuthListener pattern (singleton auth initializer in App.tsx)
+
+**Decision:** Auth state initialization lives in a dedicated `AuthInitializer` component rendered once inside `QueryClientProvider` in `App.tsx`, not inside the router or any page.
+**Why:** `onAuthStateChange` must subscribe exactly once for the lifetime of the app. Putting it in a page or hook that renders multiple times risks duplicate subscriptions. A null-returning component at the `App` level guarantees a single subscription regardless of routing.
+**Alternatives considered:** Initializing in `router.tsx` loader — requires React Router v6.4+ data router and adds complexity. Putting it in `authStore` — stores should not have side effects (Zustand convention).
+**Consequences:** `useAuthListener` must only be called from `AuthInitializer`. All other components read auth state via `useAuthStore` selectors. The `isLoading: true` default in `authStore` ensures UI waits for session before rendering auth-dependent content.
+
 <!-- New entries added below by Claude as decisions are made during development -->

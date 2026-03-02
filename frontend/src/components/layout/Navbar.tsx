@@ -1,4 +1,14 @@
 import { Link } from 'react-router-dom'
+import { useAuthStore } from '@/store/authStore'
+import { useSignOut } from '@/hooks/use-auth'
+import { UserAvatar } from '@/components/ui/Avatar'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/DropdownMenu'
 
 const NAV_LINKS = [
   { label: 'Memorials', to: '/app/memorials' },
@@ -8,6 +18,61 @@ const NAV_LINKS = [
   { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
 ] as const
+
+function AuthActions() {
+  const user = useAuthStore((s) => s.user)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  const { signOut } = useSignOut()
+
+  if (isLoading) return <div className="w-24" />
+
+  if (user) {
+    const displayName = user.user_metadata?.full_name ?? user.email ?? ''
+    const avatarUrl = (user.user_metadata?.avatar_url as string | undefined) ?? null
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            aria-label="User menu"
+            className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+          >
+            <UserAvatar src={avatarUrl} name={displayName} size="md" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem asChild>
+            <Link to="/app/settings">Profile</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/settings">Settings</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onSelect={signOut}>
+            Sign Out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+  }
+
+  return (
+    <div className="flex items-center gap-4">
+      <Link
+        to="/signin"
+        className="text-sm text-stone-600 font-medium hover:text-brand-primary transition-colors"
+      >
+        Sign in
+      </Link>
+      <Link
+        to="/signup"
+        className="bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
+      >
+        Sign up
+      </Link>
+    </div>
+  )
+}
 
 export function Navbar() {
   return (
@@ -38,20 +103,7 @@ export function Navbar() {
         </nav>
 
         {/* Auth actions */}
-        <div className="flex items-center gap-4">
-          <Link
-            to="/signin"
-            className="text-sm text-stone-600 font-medium hover:text-brand-primary transition-colors"
-          >
-            Sign in
-          </Link>
-          <Link
-            to="/signup"
-            className="bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
-          >
-            Sign up
-          </Link>
-        </div>
+        <AuthActions />
       </div>
     </header>
   )
