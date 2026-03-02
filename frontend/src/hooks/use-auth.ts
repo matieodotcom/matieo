@@ -143,7 +143,7 @@ export function useSignIn() {
       return
     }
 
-    navigate('/app')
+    navigate('/')
   }
 
   return {
