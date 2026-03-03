@@ -30,3 +30,6 @@ Thumbs.db
 .env.mcp
 claude_desktop_config.json
 .mcp.json.local
+
+#design files
+design/
