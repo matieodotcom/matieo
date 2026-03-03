@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom'
-import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase, Menu } from 'lucide-react'
+import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase, Menu, Moon, Sun } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
+import { useThemeStore } from '@/store/themeStore'
 import { UserAvatar } from '@/components/ui/Avatar'
 import {
   DropdownMenu,
@@ -24,10 +25,12 @@ export function DashboardLayout() {
   const user = useAuthStore((s) => s.user)
   const isLoading = useAuthStore((s) => s.isLoading)
   const { signOut } = useSignOut()
+  const isDark = useThemeStore((s) => s.isDark)
+  const toggle = useThemeStore((s) => s.toggle)
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-neutral-50">
+      <div className="flex min-h-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950">
         <div className="h-8 w-8 animate-pulse rounded-full bg-brand-primaryLight" />
       </div>
     )
@@ -41,22 +44,22 @@ export function DashboardLayout() {
   const avatarUrl = (user.user_metadata?.avatar_url as string | undefined) ?? null
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-50">
+    <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
       {/* Top Navbar */}
-      <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-neutral-100 flex-shrink-0">
+      <header className="h-16 flex items-center justify-between px-6 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800 flex-shrink-0">
         {/* Left: toggle + home */}
         <div className="flex items-center gap-4">
           <button
             aria-label="Toggle navigation"
             aria-expanded={isOpen}
             onClick={() => setIsOpen((v) => !v)}
-            className="text-neutral-600 hover:text-brand-primary p-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary p-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
           >
             <Menu size={20} />
           </button>
           <Link
             to="/"
-            className="flex items-center gap-1.5 text-sm text-neutral-600 hover:text-brand-primary transition-colors"
+            className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
           >
             <ArrowLeft size={15} />
             Home
@@ -68,7 +71,7 @@ export function DashboardLayout() {
           <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
             <span className="text-white text-xs font-bold tracking-tight">M</span>
           </div>
-          <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
+          <span className="text-brand-secondary dark:text-white font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 
         {/* Right: user avatar dropdown */}
@@ -76,7 +79,7 @@ export function DashboardLayout() {
           <DropdownMenuTrigger asChild>
             <button
               aria-label="User menu"
-              className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
             >
               <UserAvatar src={avatarUrl} name={displayName} size="md" />
             </button>
@@ -96,10 +99,10 @@ export function DashboardLayout() {
 
       {/* Body: push sidebar + main */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar — collapses to icon-only strip, never fully hidden */}
+        {/* Sidebar */}
         <aside
           className={[
-            'flex-shrink-0 bg-white border-r border-neutral-100 overflow-hidden',
+            'flex-shrink-0 bg-white dark:bg-neutral-900 border-r border-neutral-100 dark:border-neutral-800 overflow-hidden',
             'transition-[width] duration-300 ease-in-out',
             isOpen ? 'w-64' : 'w-16',
           ].join(' ')}
@@ -108,13 +111,14 @@ export function DashboardLayout() {
             {/* Section label — fade out when collapsed */}
             <p
               className={[
-                'px-6 pb-3 text-[11px] font-semibold text-neutral-400 uppercase tracking-widest whitespace-nowrap',
+                'px-6 pb-3 text-[11px] font-semibold text-neutral-400 dark:text-neutral-600 uppercase tracking-widest whitespace-nowrap',
                 'transition-opacity duration-200',
                 isOpen ? 'opacity-100' : 'opacity-0',
               ].join(' ')}
             >
               Navigate
             </p>
+
             <nav aria-label="Dashboard navigation" className="flex-1 px-2">
               <ul className="flex flex-col gap-0.5 list-none">
                 {SIDEBAR_LINKS.map(({ label, to, icon: Icon }) => (
@@ -126,8 +130,8 @@ export function DashboardLayout() {
                         [
                           'flex items-center py-3 text-sm transition-colors rounded-xl overflow-hidden',
                           isActive
-                            ? 'bg-brand-primaryLight text-brand-primary font-semibold'
-                            : 'text-neutral-600 font-medium hover:bg-neutral-50 hover:text-neutral-900',
+                            ? 'bg-brand-primaryLight dark:bg-brand-primary/20 text-brand-primary font-semibold'
+                            : 'text-neutral-600 dark:text-neutral-400 font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100',
                         ].join(' ')
                       }
                     >
@@ -147,10 +151,34 @@ export function DashboardLayout() {
                 ))}
               </ul>
             </nav>
+
+            {/* Dark mode toggle — bottom of sidebar */}
+            <div className="px-2 pt-2 mt-auto">
+              <div className="mx-1 mb-2 h-px bg-neutral-100 dark:bg-neutral-800" />
+              <button
+                onClick={toggle}
+                title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                className="flex items-center py-3 w-full text-sm transition-colors rounded-xl overflow-hidden text-neutral-600 dark:text-neutral-400 font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100"
+              >
+                <span className="w-12 flex-shrink-0 flex items-center justify-center">
+                  {isDark
+                    ? <Sun size={18} aria-hidden="true" />
+                    : <Moon size={18} aria-hidden="true" />}
+                </span>
+                <span
+                  className={[
+                    'whitespace-nowrap pr-4 transition-opacity duration-200',
+                    isOpen ? 'opacity-100' : 'opacity-0',
+                  ].join(' ')}
+                >
+                  {isDark ? 'Light mode' : 'Dark mode'}
+                </span>
+              </button>
+            </div>
           </div>
         </aside>
 
-        {/* Main — flex-1 fills remaining space as sidebar opens/closes */}
+        {/* Main */}
         <main className="flex-1 overflow-y-auto p-8">
           <Outlet />
         </main>

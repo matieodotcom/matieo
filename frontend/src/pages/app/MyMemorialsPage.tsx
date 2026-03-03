@@ -11,12 +11,12 @@ const LIMIT = 12
 
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-xl border border-neutral-100 animate-pulse overflow-hidden">
-      <div className="h-52 bg-neutral-100" />
+    <div className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 animate-pulse overflow-hidden">
+      <div className="h-52 bg-neutral-100 dark:bg-neutral-700" />
       <div className="p-4 space-y-2">
-        <div className="h-4 bg-neutral-100 rounded w-3/4" />
-        <div className="h-3 bg-neutral-100 rounded w-1/2" />
-        <div className="h-3 bg-neutral-100 rounded w-2/5" />
+        <div className="h-4 bg-neutral-100 dark:bg-neutral-700 rounded w-3/4" />
+        <div className="h-3 bg-neutral-100 dark:bg-neutral-700 rounded w-1/2" />
+        <div className="h-3 bg-neutral-100 dark:bg-neutral-700 rounded w-2/5" />
       </div>
     </div>
   )
@@ -37,7 +37,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
       <button
         onClick={() => onPage(page - 1)}
         disabled={page <= 1}
-        className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
         ← Prev
       </button>
@@ -49,7 +49,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
           className={`w-9 h-9 text-sm rounded-lg border transition-colors ${
             n === page
               ? 'bg-brand-primary border-brand-primary text-white font-medium'
-              : 'border-neutral-200 text-neutral-600 hover:bg-neutral-50'
+              : 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800'
           }`}
         >
           {n}
@@ -58,7 +58,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
       <button
         onClick={() => onPage(page + 1)}
         disabled={page >= totalPages}
-        className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
         Next →
       </button>
@@ -119,8 +119,8 @@ export default function MyMemorialsPage() {
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900">My Memorials</h1>
-          <p className="text-sm text-neutral-500 mt-1">
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">My Memorials</h1>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
             Manage and view all memorials you have created
           </p>
         </div>
@@ -139,7 +139,7 @@ export default function MyMemorialsPage() {
                 placeholder="Search..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="pl-9 pr-4 py-2 text-sm border border-neutral-200 rounded-lg w-52 bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                className="pl-9 pr-4 py-2 text-sm border border-neutral-200 dark:border-neutral-700 rounded-lg w-52 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                 aria-label="Search memorials"
               />
             </div>
@@ -170,16 +170,16 @@ export default function MyMemorialsPage() {
       {/* Empty state */}
       {!isPending && !error && memorials.length === 0 && (
         <div className="text-center py-20">
-          <Heart size={48} className="mx-auto text-neutral-200 mb-4" />
+          <Heart size={48} className="mx-auto text-neutral-200 dark:text-neutral-700 mb-4" />
           {q ? (
             <>
-              <p className="text-neutral-500 font-medium">No memorials match "{q}"</p>
-              <p className="text-sm text-neutral-400 mt-1">Try a different search term.</p>
+              <p className="text-neutral-500 dark:text-neutral-400 font-medium">No memorials match "{q}"</p>
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">Try a different search term.</p>
             </>
           ) : (
             <>
-              <p className="text-neutral-500 font-medium">You haven't created any memorials yet</p>
-              <p className="text-sm text-neutral-400 mt-1">
+              <p className="text-neutral-500 dark:text-neutral-400 font-medium">You haven't created any memorials yet</p>
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">
                 Create your first memorial to honour a loved one.
               </p>
               <button

@@ -37,8 +37,8 @@ export default function DashboardPage() {
   return (
     <div>
       <div>
-        <h1 className="text-2xl font-bold text-neutral-900">Welcome back, {firstName}!</h1>
-        <p className="text-sm text-neutral-500 mt-1">Here's what's happening.</p>
+        <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">Welcome back, {firstName}!</h1>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Here's what's happening.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
@@ -46,12 +46,12 @@ export default function DashboardPage() {
           <Link
             key={label}
             to={to}
-            className="bg-white rounded-xl border border-neutral-100 p-6 hover:shadow-sm transition-shadow flex flex-col gap-3"
+            className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 p-6 hover:shadow-sm transition-shadow flex flex-col gap-3"
           >
             <Icon size={24} className="text-brand-primary" aria-hidden="true" />
             <div>
-              <p className="font-semibold text-neutral-900">{label}</p>
-              <p className="text-sm text-neutral-500">{description}</p>
+              <p className="font-semibold text-neutral-900 dark:text-neutral-100">{label}</p>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">{description}</p>
             </div>
           </Link>
         ))}

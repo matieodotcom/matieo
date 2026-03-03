@@ -34,7 +34,7 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
   const href = `/memorial/${slug ?? memorial.id}`
 
   return (
-    <article className="bg-white rounded-xl border border-neutral-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+    <article className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <Link to={href} tabIndex={-1} aria-hidden>
         {cover_url ? (
           <img
@@ -43,8 +43,8 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
             className="w-full h-52 object-cover object-top"
           />
         ) : (
-          <div className="w-full h-52 bg-neutral-100 flex items-center justify-center">
-            <span className="text-3xl font-bold text-neutral-300">{getInitials(full_name)}</span>
+          <div className="w-full h-52 bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center">
+            <span className="text-3xl font-bold text-neutral-300 dark:text-neutral-500">{getInitials(full_name)}</span>
           </div>
         )}
       </Link>
@@ -53,15 +53,15 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
         <div className="flex items-start justify-between gap-2 mb-2">
           <Link
             to={href}
-            className="font-semibold text-neutral-900 hover:text-brand-primary transition-colors leading-snug"
+            className="font-semibold text-neutral-900 dark:text-neutral-100 hover:text-brand-primary transition-colors leading-snug"
           >
             {full_name}
           </Link>
           <span
             className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${
               status === 'published'
-                ? 'bg-green-50 text-green-700'
-                : 'bg-amber-50 text-amber-700'
+                ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
             }`}
           >
             {status === 'published' ? 'Published' : 'Draft'}
@@ -69,14 +69,14 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
         </div>
 
         {dateRange && (
-          <div className="flex items-center gap-1.5 text-sm text-neutral-500 mb-1">
+          <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 mb-1">
             <Calendar size={13} className="shrink-0" />
             <span>{dateRange}</span>
           </div>
         )}
 
         {location && (
-          <div className="flex items-center gap-1.5 text-sm text-neutral-500 mb-3">
+          <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 mb-3">
             <MapPin size={13} className="shrink-0" />
             <span>{location}</span>
           </div>

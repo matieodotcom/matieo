@@ -39,6 +39,21 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => vi.fn(), useParams: () => ({}) }
 })
 
+// matchMedia mock (not provided by jsdom)
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+})
+
 // Suppress noise
 global.console.error = vi.fn()
 global.console.warn = vi.fn()

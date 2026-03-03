@@ -62,7 +62,7 @@ function AuthActions() {
     <div className="flex items-center gap-4">
       <Link
         to="/signin"
-        className="text-sm text-stone-600 font-medium hover:text-brand-primary transition-colors"
+        className="text-sm text-stone-600 dark:text-neutral-400 font-medium hover:text-brand-primary transition-colors"
       >
         Sign in
       </Link>
@@ -84,8 +84,8 @@ export function Navbar() {
   const visibleLinks = user ? [DASHBOARD_LINK, ...NAV_LINKS] : [...NAV_LINKS]
 
   return (
-    <div className="sticky top-0 z-50 bg-white">
-      <header className="border-b border-neutral-100">
+    <div className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
+      <header className="border-b border-neutral-100 dark:border-neutral-800">
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
           {/* Left side: hamburger (mobile only) + logo */}
           <div className="flex items-center gap-3">
@@ -95,7 +95,7 @@ export function Navbar() {
               aria-expanded={isMenuOpen}
               aria-controls="mobile-nav"
               onClick={() => setIsMenuOpen((v) => !v)}
-              className="md:hidden text-neutral-600 hover:text-brand-primary p-1 transition-colors"
+              className="md:hidden text-neutral-600 dark:text-neutral-400 hover:text-brand-primary p-1 transition-colors"
             >
               {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -103,7 +103,7 @@ export function Navbar() {
               <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
                 <span className="text-white text-xs font-bold tracking-tight">M</span>
               </div>
-              <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
+              <span className="text-brand-secondary dark:text-white font-bold text-lg tracking-tight">MATIEO</span>
             </Link>
           </div>
 
@@ -119,7 +119,7 @@ export function Navbar() {
                       `text-sm transition-colors ${
                         isActive
                           ? 'text-brand-primary font-medium'
-                          : 'text-stone-600 hover:text-brand-primary'
+                          : 'text-stone-600 dark:text-neutral-400 hover:text-brand-primary'
                       }`
                     }
                   >
@@ -137,7 +137,7 @@ export function Navbar() {
 
       {/* Mobile nav panel */}
       {isMenuOpen && (
-        <div id="mobile-nav" className="md:hidden border-b border-neutral-100 bg-white">
+        <div id="mobile-nav" className="md:hidden border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900">
           <nav aria-label="Mobile navigation">
             <ul className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1 list-none">
               {visibleLinks.map((link) => (
@@ -150,7 +150,7 @@ export function Navbar() {
                       `block py-2 text-sm transition-colors ${
                         isActive
                           ? 'text-brand-primary font-medium'
-                          : 'text-stone-600 hover:text-brand-primary'
+                          : 'text-stone-600 dark:text-neutral-400 hover:text-brand-primary'
                       }`
                     }
                   >
