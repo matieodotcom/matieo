@@ -2,6 +2,9 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import LandingPage from '@/pages/landing/LandingPage'
 import FeaturesPage from '@/pages/features/FeaturesPage'
 import AboutPage from '@/pages/about/AboutPage'
+import InsightsPage from '@/pages/public/InsightsPage'
+import ObituaryPage from '@/pages/public/ObituaryPage'
+import PricingPage from '@/pages/public/PricingPage'
 import TermsPage from '@/pages/legal/TermsPage'
 import PrivacyPage from '@/pages/legal/PrivacyPage'
 import ViewMemorialsPage from '@/pages/app/ViewMemorialsPage'
@@ -63,10 +66,18 @@ const router = createBrowserRouter([
     element: <AboutPage />,
   },
 
-  // Public Insights (mortality data / analytics — separate from dashboard)
+  // Public Insights, Obituary, Pricing
   {
     path: '/insights',
-    element: <Placeholder name="Insights" />,
+    element: <InsightsPage />,
+  },
+  {
+    path: '/obituary',
+    element: <ObituaryPage />,
+  },
+  {
+    path: '/pricing',
+    element: <PricingPage />,
   },
 
   // Legal
