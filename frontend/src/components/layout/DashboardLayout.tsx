@@ -13,10 +13,10 @@ import {
 } from '@/components/ui/DropdownMenu'
 
 const SIDEBAR_LINKS = [
-  { label: 'Insights',  to: '/app/dashboard/insights',  icon: BarChart2  },
-  { label: 'Memorials', to: '/app/dashboard/memorials', icon: Heart      },
-  { label: 'Obituary',  to: '/app/dashboard/obituary',  icon: ScrollText },
-  { label: 'Services',  to: '/app/dashboard/services',  icon: Briefcase  },
+  { label: 'Insights',  to: '/dashboard/insights',  icon: BarChart2  },
+  { label: 'Memorials', to: '/dashboard/memorials', icon: Heart      },
+  { label: 'Obituary',  to: '/dashboard/obituary',  icon: ScrollText },
+  { label: 'Services',  to: '/dashboard/services',  icon: Briefcase  },
 ] as const
 
 export function DashboardLayout() {
@@ -64,7 +64,7 @@ export function DashboardLayout() {
         </div>
 
         {/* Centre: MATIEO logo */}
-        <Link to="/app/dashboard" className="flex items-center gap-2">
+        <Link to="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
             <span className="text-white text-xs font-bold tracking-tight">M</span>
           </div>
@@ -83,10 +83,10 @@ export function DashboardLayout() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem asChild>
-              <Link to="/app/settings">Profile</Link>
+              <Link to="/settings">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/app/settings">Settings</Link>
+              <Link to="/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>

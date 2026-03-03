@@ -153,7 +153,7 @@ export default function ViewMemorialsPage() {
 
             {/* Create — visible to all; opens sign-in modal if not authenticated */}
             <button
-              onClick={() => user ? navigate('/app/memorials/create') : setSignInOpen(true)}
+              onClick={() => user ? navigate('/memorials/create') : setSignInOpen(true)}
               className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
             >
               <Plus size={15} />
@@ -192,7 +192,7 @@ export default function ViewMemorialsPage() {
                   Create your first memorial to get started.
                 </p>
                 <button
-                  onClick={() => user ? navigate('/app/memorials/create') : setSignInOpen(true)}
+                  onClick={() => user ? navigate('/memorials/create') : setSignInOpen(true)}
                   className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
                 >
                   <Plus size={15} />
@@ -224,7 +224,7 @@ export default function ViewMemorialsPage() {
         onOpenChange={setSignInOpen}
         onSuccess={() => {
           setSignInOpen(false)
-          navigate('/app/memorials/create')
+          navigate('/memorials/create')
         }}
       />
     </div>

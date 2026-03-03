@@ -12,7 +12,7 @@ const mockUser = {
   user_metadata: { full_name: 'Jane Smith', avatar_url: null },
 } as unknown as User
 
-function renderLayout(initialRoute = '/app/dashboard') {
+function renderLayout(initialRoute = '/dashboard') {
   return renderWithProviders(<DashboardLayout />, { initialRoute })
 }
 
@@ -66,28 +66,28 @@ describe('DashboardLayout — authenticated', () => {
     expect(screen.getByText('Services')).toBeInTheDocument()
   })
 
-  it('Insights link points to /app/dashboard/insights', () => {
+  it('Insights link points to /dashboard/insights', () => {
     renderLayout()
     expect(screen.getByRole('link', { name: /insights/i }))
-      .toHaveAttribute('href', '/app/dashboard/insights')
+      .toHaveAttribute('href', '/dashboard/insights')
   })
 
-  it('Memorials link points to /app/dashboard/memorials', () => {
+  it('Memorials link points to /dashboard/memorials', () => {
     renderLayout()
     expect(screen.getByRole('link', { name: /memorials/i }))
-      .toHaveAttribute('href', '/app/dashboard/memorials')
+      .toHaveAttribute('href', '/dashboard/memorials')
   })
 
-  it('Obituary link points to /app/dashboard/obituary', () => {
+  it('Obituary link points to /dashboard/obituary', () => {
     renderLayout()
     expect(screen.getByRole('link', { name: /obituary/i }))
-      .toHaveAttribute('href', '/app/dashboard/obituary')
+      .toHaveAttribute('href', '/dashboard/obituary')
   })
 
-  it('Services link points to /app/dashboard/services', () => {
+  it('Services link points to /dashboard/services', () => {
     renderLayout()
     expect(screen.getByRole('link', { name: /services/i }))
-      .toHaveAttribute('href', '/app/dashboard/services')
+      .toHaveAttribute('href', '/dashboard/services')
   })
 })
 

@@ -47,7 +47,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
     isPending: googlePending,
     error: googleError,
   } = useGoogleAuth({
-    redirectTo: window.location.origin + '/app/memorials/create',
+    redirectTo: window.location.origin + '/memorials/create',
   })
 
   const {

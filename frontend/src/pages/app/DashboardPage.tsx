@@ -7,7 +7,7 @@ const QUICK_ACTIONS = [
     label: 'Create Memorial',
     description: 'Honour a loved one',
     icon: Plus,
-    to: '/app/memorials/create',
+    to: '/memorials/create',
   },
   {
     label: 'Browse Memorials',
@@ -19,13 +19,13 @@ const QUICK_ACTIONS = [
     label: 'Insights',
     description: 'Mortality analytics',
     icon: BarChart2,
-    to: '/app/dashboard/insights',
+    to: '/dashboard/insights',
   },
   {
     label: 'Services',
     description: 'Funeral & support services',
     icon: Briefcase,
-    to: '/app/dashboard/services',
+    to: '/dashboard/services',
   },
 ] as const
 

@@ -82,13 +82,9 @@ const router = createBrowserRouter([
     element: <Placeholder name="Public Memorial" />,
   },
 
-  // App (authenticated)
+  // Authenticated
   {
-    path: '/app',
-    element: <Navigate to="/app/dashboard" replace />,
-  },
-  {
-    path: '/app/dashboard',
+    path: '/dashboard',
     element: <DashboardLayout />,
     children: [
       { index: true,          element: <DashboardPage /> },
@@ -99,15 +95,15 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/app/memorials/create',
+    path: '/memorials/create',
     element: <Placeholder name="Create Memorial" />,
   },
   {
-    path: '/app/memorials/:id/edit',
+    path: '/memorials/:id/edit',
     element: <Placeholder name="Edit Memorial" />,
   },
   {
-    path: '/app/settings',
+    path: '/settings',
     element: <Placeholder name="Settings" />,
   },
 

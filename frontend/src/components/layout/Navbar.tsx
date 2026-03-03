@@ -15,13 +15,13 @@ import {
 const NAV_LINKS = [
   { label: 'Memorials', to: '/memorials' },
   { label: 'Obituary', to: '/obituary' },
-  { label: 'Insights', to: '/app/analytics' },
+  { label: 'Insights', to: '/dashboard/insights' },
   { label: 'Features', to: '/features' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
 ] as const
 
-const DASHBOARD_LINK = { label: 'Dashboard', to: '/app/dashboard' } as const
+const DASHBOARD_LINK = { label: 'Dashboard', to: '/dashboard' } as const
 
 function AuthActions() {
   const user = useAuthStore((s) => s.user)
@@ -46,10 +46,10 @@ function AuthActions() {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem asChild>
-            <Link to="/app/settings">Profile</Link>
+            <Link to="/settings">Profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/app/settings">Settings</Link>
+            <Link to="/settings">Settings</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>

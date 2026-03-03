@@ -111,7 +111,7 @@ describe('Navbar — signed in', () => {
   it('shows Dashboard link in nav list (left of Memorials)', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/app/dashboard')
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/dashboard')
   })
 
   it('renders avatar button instead of Sign in/Sign up links', () => {
