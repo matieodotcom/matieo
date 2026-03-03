@@ -22,6 +22,12 @@ const FOOTER_LINKS = {
   ],
 } as const
 
+const LEGAL_LINKS = [
+  { label: 'Privacy Policy', to: '#' },
+  { label: 'Terms of Service', to: '/terms' },
+  { label: 'Cookie Policy', to: '#' },
+] as const
+
 const SOCIAL_LINKS = [
   { Icon: Facebook, href: '#', label: 'Facebook' },
   { Icon: Twitter, href: '#', label: 'Twitter' },
@@ -90,8 +96,8 @@ export function Footer() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between pt-8">
           <p className="text-sm text-[#99A1AF]">© 2026 MATIEO. All rights reserved.</p>
           <div className="flex flex-wrap gap-4 md:gap-6">
-            {(['Privacy Policy', 'Terms of Service', 'Cookie Policy'] as const).map((label) => (
-              <Link key={label} to="#" className="text-sm text-[#99A1AF] hover:text-white transition-colors">
+            {LEGAL_LINKS.map(({ label, to }) => (
+              <Link key={label} to={to} className="text-sm text-[#99A1AF] hover:text-white transition-colors">
                 {label}
               </Link>
             ))}
