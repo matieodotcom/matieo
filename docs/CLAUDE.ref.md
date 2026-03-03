@@ -662,7 +662,7 @@ CLOUDINARY_API_SECRET
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ✅ Complete | docs/pages/auth.md |
 | Reset Password | `/reset-password` | ✅ Complete | docs/pages/auth.md |
-| Analytics Dashboard | `/app/analytics` | ⬜ Not started | docs/pages/analytics.md |
+| Dashboard | `/app/dashboard` | ✅ Complete | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Create Memorial | `/app/memorials/create` | ⬜ Not started | docs/pages/create-memorial.md |
 | Edit Memorial | `/app/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |

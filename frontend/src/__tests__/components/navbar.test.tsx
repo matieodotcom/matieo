@@ -141,4 +141,26 @@ describe('Navbar — signed in', () => {
     expect(screen.queryByRole('button', { name: /user menu/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /sign in/i })).not.toBeInTheDocument()
   })
+
+  it('shows "Dashboard" link when user is authenticated', () => {
+    renderNavbar()
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
+  })
+
+  it('"Dashboard" link points to /app/dashboard', () => {
+    renderNavbar()
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/app/dashboard')
+  })
+})
+
+describe('Navbar — Dashboard link visibility', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('does not show "Dashboard" link when user is not authenticated', () => {
+    useAuthStore.setState({ user: null, session: null, isLoading: false })
+    renderNavbar()
+    expect(screen.queryByRole('link', { name: 'Dashboard' })).not.toBeInTheDocument()
+  })
 })

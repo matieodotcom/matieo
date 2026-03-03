@@ -9,6 +9,8 @@ import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/auth/ResetPasswordPage'
+import { DashboardLayout } from '@/components/layout/DashboardLayout'
+import DashboardPage from '@/pages/app/DashboardPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -83,11 +85,18 @@ const router = createBrowserRouter([
   // App (authenticated)
   {
     path: '/app',
-    element: <Navigate to="/app/analytics" replace />,
+    element: <Navigate to="/app/dashboard" replace />,
   },
   {
-    path: '/app/analytics',
-    element: <Placeholder name="Analytics Dashboard" />,
+    path: '/app/dashboard',
+    element: <DashboardLayout />,
+    children: [
+      { index: true,          element: <DashboardPage /> },
+      { path: 'insights',     element: <Placeholder name="Insights" /> },
+      { path: 'memorials',    element: <Placeholder name="My Memorials" /> },
+      { path: 'obituary',     element: <Placeholder name="Obituary" /> },
+      { path: 'services',     element: <Placeholder name="Services" /> },
+    ],
   },
   {
     path: '/app/memorials/create',

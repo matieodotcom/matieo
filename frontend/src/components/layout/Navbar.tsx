@@ -33,28 +33,36 @@ function AuthActions() {
     const avatarUrl = (user.user_metadata?.avatar_url as string | undefined) ?? null
 
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            aria-label="User menu"
-            className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
-          >
-            <UserAvatar src={avatarUrl} name={displayName} size="md" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem asChild>
-            <Link to="/app/settings">Profile</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/app/settings">Settings</Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={signOut}>
-            Sign Out
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex items-center gap-4">
+        <Link
+          to="/app/dashboard"
+          className="text-sm font-medium text-stone-600 hover:text-brand-primary transition-colors"
+        >
+          Dashboard
+        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              aria-label="User menu"
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+            >
+              <UserAvatar src={avatarUrl} name={displayName} size="md" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem asChild>
+              <Link to="/app/settings">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/app/settings">Settings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={signOut}>
+              Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     )
   }
 
@@ -78,6 +86,7 @@ function AuthActions() {
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const user = useAuthStore((s) => s.user)
 
   return (
     <div className="sticky top-0 z-50 bg-white">
@@ -129,6 +138,17 @@ export function Navbar() {
         <div id="mobile-nav" className="md:hidden border-b border-neutral-100 bg-white">
           <nav aria-label="Mobile navigation">
             <ul className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1 list-none">
+              {user && (
+                <li>
+                  <Link
+                    to="/app/dashboard"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block py-2 text-sm font-medium text-stone-600 hover:text-brand-primary transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              )}
               {NAV_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link
