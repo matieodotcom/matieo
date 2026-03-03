@@ -12,7 +12,6 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
   toggle: () => {
     const next = !get().isDark
     try { localStorage.setItem('theme', next ? 'dark' : 'light') } catch {}
-    document.documentElement.classList.toggle('dark', next)
     set({ isDark: next })
   },
 
@@ -26,7 +25,6 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
         isDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
       }
     } catch {}
-    document.documentElement.classList.toggle('dark', isDark)
     set({ isDark })
   },
 }))

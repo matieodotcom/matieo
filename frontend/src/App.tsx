@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import { queryClient } from '@/lib/queryClient'
@@ -12,8 +12,12 @@ function AuthInitializer() {
 }
 
 function ThemeInitializer() {
+  const isDark = useThemeStore((s) => s.isDark)
   const init = useThemeStore((s) => s.init)
   useEffect(() => { init() }, [init])
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark)
+  }, [isDark])
   return null
 }
 

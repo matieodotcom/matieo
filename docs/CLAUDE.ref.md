@@ -95,6 +95,7 @@ export function ErrorMessage({ message }: { message: string }) {
 - `lib/apiClient.ts` — `apiFetch<T>(path, init?)` — authenticated fetch to Node API; reads Supabase JWT, attaches Bearer token, handles 401 redirect. **Use for ALL frontend→Node API calls. Never inline fetch with Bearer token.**
 - `lib/toast.ts` — Sonner wrapper (success/error/info)
 - `lib/queryClient.ts` — TanStack QueryClient singleton
+- `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK. Test: Jest + Supertest. Host: Render.
 
@@ -133,13 +134,14 @@ matieo/
 │   ├── router.tsx         ← All routes
 │   ├── lib/               ← supabase.ts, api.ts, cloudinary.ts, queryClient.ts
 │   ├── store/authStore.ts
+│   ├── store/themeStore.ts
 │   ├── hooks/             ← All data logic (useAuth, useMemorials, useInsights, useProfile)
-│   ├── components/ui/     ← Radix-based design system components
-│   ├── components/layout/ ← Navbar, Sidebar, AppLayout, TopBar, Footer
-│   ├── components/memorial/
-│   ├── components/insights/
-│   ├── components/shared/ ← PrivateRoute, ErrorBoundary, Skeletons
-│   └── pages/             ← landing/, auth/, app/, settings/
+│   ├── components/ui/     ← Avatar, Dialog, DropdownMenu, Sheet (Radix-based)
+│   ├── components/layout/ ← Navbar.tsx, Footer.tsx, DashboardLayout.tsx
+│   ├── components/auth/   ← SignInModal.tsx
+│   ├── components/memorial/ ← MemorialCard.tsx
+│   ├── components/shared/ ← ErrorMessage.tsx
+│   └── pages/             ← landing/, auth/, app/, public/, legal/, features/, about/
 ├── backend/src/
 │   ├── lib/supabaseAdmin.ts
 │   ├── lib/mlClient.ts
@@ -278,8 +280,30 @@ brand: {
 ```
 
 ### Layout contexts
-- **Public** (Landing, Auth): no sidebar, full-width
-- **App** (Dashboard, Memorials): fixed sidebar `w-64` + TopBar + `bg-neutral-50` main
+- **Public** (Landing, Auth, `/memorials`): `<Navbar>` + content + `<Footer>`. No sidebar.
+- **App** (all `/dashboard/*` routes): `DashboardLayout` — collapsible push sidebar + top navbar.
+
+### DashboardLayout structure
+```
+┌─────────────────────────────────────────────┐
+│  Top Navbar  h-16  bg-white  border-b        │  ← hamburger | ← Home | MATIEO logo | avatar
+├──────────┬──────────────────────────────────┤
+│ Sidebar  │                                   │
+│ w-16/64  │   <Outlet />                      │
+│ border-r │   p-8, overflow-y-auto            │
+│  ──────  │                                   │
+│ Insights │                                   │
+│Memorials │                                   │
+│ Obituary │                                   │
+│ Services │                                   │
+│ ──────── │                                   │
+│ 🌙 Dark  │                                   │
+└──────────┴──────────────────────────────────┘
+```
+- Sidebar width: `w-16` (collapsed, icons only) ↔ `w-64` (open, icons + labels). Toggled by hamburger in top navbar. Transition: `transition-[width] duration-300`.
+- Icons: always visible, centered in fixed `w-12` span. Labels: `opacity-0`/`opacity-100` transition (no clipping).
+- Dark mode toggle: bottom of sidebar. Moon icon → enables dark, Sun → disables. Uses `useThemeStore`.
+- Auth guard: `if (!user) return <Navigate to="/signin" replace />` at top of component.
 
 ### Auth page layouts
 - Sign In: left 45% white (form) / right 55% `bg-neutral-50` (product preview)
@@ -377,6 +401,22 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | Tooltip.tsx | Tooltip | `@radix-ui/react-tooltip` | — |
 | Avatar.tsx | Avatar | `@radix-ui/react-avatar` | Navbar (user avatar) |
 | Popover.tsx | Popover | `@radix-ui/react-popover` | — |
+
+### Dark mode patterns
+- Toggle: `darkMode: 'class'` in `tailwind.config.ts`. Class `dark` on `<html>` element.
+- All components with dark variants prefix bg/text/border with `dark:`.
+- Standard dark surface tokens:
+  ```
+  Page bg:       bg-neutral-50   dark:bg-neutral-950
+  Card/panel bg: bg-white        dark:bg-neutral-900
+  Border:        border-neutral-100  dark:border-neutral-800
+  Body text:     text-neutral-900    dark:text-neutral-100
+  Muted text:    text-neutral-500    dark:text-neutral-400
+  Very muted:    text-neutral-400    dark:text-neutral-600
+  Icon muted:    text-neutral-300    dark:text-neutral-700
+  Hover bg:      hover:bg-neutral-50 dark:hover:bg-neutral-800
+  ```
+- Never write `dark:` variants without the corresponding light variant on the same element.
 
 ---
 
@@ -658,16 +698,23 @@ CLOUDINARY_API_SECRET
 | About | `/about` | ✅ Complete | docs/pages/about.md |
 | Terms of Service | `/terms` | ✅ Complete | docs/pages/terms.md |
 | Privacy Policy | `/privacy` | ✅ Complete | docs/pages/privacy.md |
+| Insights (public) | `/insights` | ✅ Complete | docs/pages/insights-public.md |
+| Obituary (public) | `/obituary` | ✅ Complete | docs/pages/obituary-public.md |
+| Pricing (public) | `/pricing` | ✅ Complete | docs/pages/pricing.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ✅ Complete | docs/pages/auth.md |
 | Reset Password | `/reset-password` | ✅ Complete | docs/pages/auth.md |
-| Dashboard | `/app/dashboard` | ✅ Complete | docs/pages/dashboard.md |
+| Dashboard Home | `/dashboard` | ✅ Complete | docs/pages/dashboard.md |
+| Dashboard Insights | `/dashboard/insights` | ⬜ Placeholder | docs/pages/dashboard.md |
+| My Memorials | `/dashboard/memorials` | ✅ Complete | docs/pages/my-memorials.md |
+| Create Memorial | `/dashboard/memorials/create` | ⬜ Placeholder | docs/pages/create-memorial.md |
+| Dashboard Obituary | `/dashboard/obituary` | ⬜ Placeholder | docs/pages/dashboard.md |
+| Dashboard Services | `/dashboard/services` | ⬜ Placeholder | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
-| Create Memorial | `/app/memorials/create` | ⬜ Not started | docs/pages/create-memorial.md |
-| Edit Memorial | `/app/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
+| Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
 | Public Memorial | `/memorial/:slug` | ⬜ Not started | docs/pages/public-memorial.md |
-| Settings | `/app/settings` | ⬜ Not started | docs/pages/settings.md |
+| Settings | `/settings` | ⬜ Not started | docs/pages/settings.md |
 
 **Status key:** ⬜ Not started · 🔄 In progress · ✅ Complete
 
@@ -734,3 +781,42 @@ Types shared between backend and frontend:
 Accepts a full `MemorialRow`. Import from `@/components/memorial/MemorialCard`.
 Reuse on any page that lists memorials (dashboard, public gallery, search results).
 Shows: cover photo/initials placeholder, name, date range, location (if set), status badge, "View Memorial →" link.
+
+### Auth-gated CTA pattern
+Used on any page where an action requires authentication (e.g., "Create Memorial" on landing page, `/memorials` public page).
+```tsx
+// In page component:
+const user = useAuthStore((s) => s.user)
+const navigate = useNavigate()
+const [signInOpen, setSignInOpen] = useState(false)
+
+const handleAuthAction = () => {
+  if (user) {
+    navigate('/dashboard/memorials/create')
+  } else {
+    setSignInOpen(true)
+  }
+}
+
+// In JSX:
+<button onClick={handleAuthAction}>Create Memorial</button>
+<SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
+```
+`SignInModal` lives in `components/auth/SignInModal.tsx`. Import from `@/components/auth/SignInModal`.
+
+### Conditional list controls pattern
+On list pages, hide the search input and create button when the list is empty AND no search is active. Show them only when data exists or a search is in progress.
+```ts
+const showControls = total > 0 || !!q
+```
+Where `total` is the count from the API and `q` is the current search query from URL params. Prevents confusing empty search UI on a truly empty list.
+
+### DashboardLayout auth guard
+`DashboardLayout` handles its own auth check — do not wrap dashboard routes in a separate `PrivateRoute` component. Pattern:
+```tsx
+if (isLoading) return <LoadingSpinner />
+if (!user) return <Navigate to="/signin" replace />
+```
+
+### SignInModal usage
+`<SignInModal open={boolean} onClose={() => void}>` — Radix Dialog wrapping the sign-in form. Closes on successful sign-in (auth state listener triggers re-render). Used wherever an unauthenticated user triggers an auth-required action.
