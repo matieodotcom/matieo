@@ -1,25 +1,11 @@
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import { Navbar } from '@/components/layout/Navbar'
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-white font-sans">
-      {/* Top bar */}
-      <header className="flex items-center justify-between px-6 md:px-12 h-16 border-b border-neutral-100">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-brand-primary flex items-center justify-center">
-            <span className="text-white font-bold text-sm">M</span>
-          </div>
-          <span className="font-bold text-brand-primary text-lg tracking-wide">MATIEO</span>
-        </Link>
-        <Link
-          to="/signup"
-          className="flex items-center gap-1 text-sm text-neutral-500 hover:text-brand-primary transition-colors"
-        >
-          <ChevronLeft size={16} />
-          Back to Sign Up
-        </Link>
-      </header>
+      <Navbar />
 
       {/* Main content */}
       <main className="max-w-3xl mx-auto px-6 md:px-8 py-12">
