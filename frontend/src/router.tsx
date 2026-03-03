@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import LandingPage from '@/pages/landing/LandingPage'
 import FeaturesPage from '@/pages/features/FeaturesPage'
+import AboutPage from '@/pages/about/AboutPage'
 import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
@@ -48,6 +49,12 @@ const router = createBrowserRouter([
   {
     path: '/features',
     element: <FeaturesPage />,
+  },
+
+  // About
+  {
+    path: '/about',
+    element: <AboutPage />,
   },
 
   // Public memorial
