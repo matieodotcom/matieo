@@ -6,16 +6,15 @@ interface ThemeStore {
   init: () => void
 }
 
-export const useThemeStore = create<ThemeStore>((set) => ({
+export const useThemeStore = create<ThemeStore>((set, get) => ({
   isDark: false,
 
-  toggle: () =>
-    set((s) => {
-      const next = !s.isDark
-      try { localStorage.setItem('theme', next ? 'dark' : 'light') } catch {}
-      document.documentElement.classList.toggle('dark', next)
-      return { isDark: next }
-    }),
+  toggle: () => {
+    const next = !get().isDark
+    try { localStorage.setItem('theme', next ? 'dark' : 'light') } catch {}
+    document.documentElement.classList.toggle('dark', next)
+    set({ isDark: next })
+  },
 
   init: () => {
     let isDark = false
