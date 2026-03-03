@@ -45,4 +45,4 @@ jobs:
           protocol: ftps
           port: 21
           local-dir: frontend/dist/
-          server-dir: dev/
+          server-dir: public_html/dev/
