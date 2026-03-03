@@ -1,11 +1,12 @@
 -- =============================================================
 -- MATIEO — Full Schema Snapshot
 -- Keep this file in sync with supabase/migrations/
--- Last updated: 2026-01-01 (initial schema)
+-- Last updated: 2026-03-03 (add location to memorials)
 -- =============================================================
 
 -- Migrations applied:
 -- [x] 20260101_initial_schema.sql
+-- [x] 20260303_add_location_to_memorials.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.

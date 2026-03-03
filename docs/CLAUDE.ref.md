@@ -90,6 +90,12 @@ export function ErrorMessage({ message }: { message: string }) {
 
 **Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React. Test: Vitest + RTL.
 
+**Frontend key lib files:**
+- `lib/supabase.ts` — Supabase singleton client (anon key, frontend only)
+- `lib/apiClient.ts` — `apiFetch<T>(path, init?)` — authenticated fetch to Node API; reads Supabase JWT, attaches Bearer token, handles 401 redirect. **Use for ALL frontend→Node API calls. Never inline fetch with Bearer token.**
+- `lib/toast.ts` — Sonner wrapper (success/error/info)
+- `lib/queryClient.ts` — TanStack QueryClient singleton
+
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK. Test: Jest + Supertest. Host: Render.
 
 **ML Service (Python):** Python 3.11, FastAPI, scikit-learn, pandas, numpy, spaCy / HuggingFace. Test: pytest. Host: Render (separate service).
@@ -185,13 +191,14 @@ memorials
   id(uuid,pk), created_by(uuid,fk→auth.users),
   full_name(text,req), age_at_death(int), date_of_birth(date), date_of_death(date),
   gender(male|female|non-binary|prefer_not_to_say), race_ethnicity(text),
-  cover_cloudinary_public_id(text), cover_url(text),
+  location(text), cover_cloudinary_public_id(text), cover_url(text),
   cause_of_death(text), biography(text), tribute_message(text),
   slug(text,unique), full_memorial_url(text),
   status(draft|published,default:draft), deleted_at(ts,soft-delete),
   created_at(ts), updated_at(ts,trigger)
   RLS: public→published only; owner→all
   IDX: created_by, slug, status
+  Migration: 20260303_add_location_to_memorials.sql
 
 funeral_details
   id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),
@@ -656,7 +663,7 @@ CLOUDINARY_API_SECRET
 | Forgot Password | `/forgot-password` | ✅ Complete | docs/pages/auth.md |
 | Reset Password | `/reset-password` | ✅ Complete | docs/pages/auth.md |
 | Analytics Dashboard | `/app/analytics` | ⬜ Not started | docs/pages/analytics.md |
-| View Memorials | `/app/memorials` | ⬜ Not started | docs/pages/view-memorials.md |
+| View Memorials | `/app/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Create Memorial | `/app/memorials/create` | ⬜ Not started | docs/pages/create-memorial.md |
 | Edit Memorial | `/app/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
 | Public Memorial | `/memorial/:slug` | ⬜ Not started | docs/pages/public-memorial.md |
@@ -665,3 +672,56 @@ CLOUDINARY_API_SECRET
 **Status key:** ⬜ Not started · 🔄 In progress · ✅ Complete
 
 > When a page is complete, update status here and add `## Status: ✅ Complete` + `> Do not load spec unless editing this page.` to its spec file.
+
+---
+
+## §Patterns
+
+### Authenticated API calls (frontend → Node backend)
+Use `apiFetch<T>` from `@/lib/apiClient`. Never inline `fetch()` with a Bearer token.
+```ts
+import { apiFetch } from '@/lib/apiClient'
+const data = await apiFetch<MyResponseType>('/api/some-endpoint')
+```
+Mock in tests: `vi.mock('@/lib/apiClient', () => ({ apiFetch: vi.fn() }))`
+
+### Search + pagination URL state
+Standard pattern for any list page with search:
+- Controlled input → local `searchInput` state
+- `useEffect` + 300ms `setTimeout` debounce → writes `?q=` to URL (resets `?page=`)
+- `useSearchParams()` as the source of truth for `q` and `page`
+- Hook receives `{ q, page }` derived from URL params
+- `queryKey: ['entity', { q, page }]` — TanStack Query caches per combination
+- `placeholderData: (prev) => prev` — keeps previous page visible while next page loads
+
+### Server-side list endpoint pattern
+```ts
+// Controller: accept ?q=&page=&limit=
+const { q = '', page = '1', limit = '12' } = req.query
+const pageNum = Math.max(1, parseInt(page))
+const limitNum = Math.min(50, parseInt(limit))
+const offset = (pageNum - 1) * limitNum
+
+let query = supabaseAdmin.from('table')
+  .select('*', { count: 'exact' })
+  .eq('owner_col', req.user.id)
+  .is('deleted_at', null)
+  .order('created_at', { ascending: false })
+  .range(offset, offset + limitNum - 1)
+
+if (q.trim()) query = query.ilike('search_col', `%${q.trim()}%`)
+
+const { data, error, count } = await query
+res.json({ data, total: count ?? 0, page: pageNum, limit: limitNum, error: null })
+```
+
+### Frontend type mirroring
+Types shared between backend and frontend:
+- Backend source of truth: `backend/src/types/{domain}.types.ts`
+- Frontend mirror: `frontend/src/types/{domain}.ts`
+- No runtime coupling — manually kept in sync when backend types change.
+
+### MemorialCard component
+Accepts a full `MemorialRow`. Import from `@/components/memorial/MemorialCard`.
+Reuse on any page that lists memorials (dashboard, public gallery, search results).
+Shows: cover photo/initials placeholder, name, date range, location (if set), status badge, "View Memorial →" link.

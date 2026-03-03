@@ -15,6 +15,7 @@ export function mockMemorial(overrides = {}) {
     race_ethnicity: 'Caucasian',
     status: 'draft',
     slug: 'john-doe-2024',
+    location: null,
     cover_url: null,
     biography: null,
     tribute_message: null,

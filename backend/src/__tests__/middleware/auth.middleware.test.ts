@@ -40,7 +40,8 @@ describe('requireAuth middleware', () => {
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       is: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValueOnce({ data: [], error: null }),
+      order: jest.fn().mockReturnThis(),
+      range: jest.fn().mockResolvedValueOnce({ data: [], error: null, count: 0 }),
     })
 
     const res = await request(app)

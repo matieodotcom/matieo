@@ -17,7 +17,7 @@ function makeTestQueryClient() {
   })
 }
 
-function AllProviders({ children, initialRoute = '/' }: { children: React.ReactNode; initialRoute?: string }) {
+export function AllProviders({ children, initialRoute = '/' }: { children: React.ReactNode; initialRoute?: string }) {
   const queryClient = makeTestQueryClient()
   return (
     <MemoryRouter initialEntries={[initialRoute]}>
@@ -60,6 +60,7 @@ export function mockMemorial(overrides = {}) {
     race_ethnicity: 'Caucasian',
     status: 'draft',
     slug: 'john-doe-2024',
+    location: null,
     cover_url: null,
     biography: null,
     tribute_message: null,

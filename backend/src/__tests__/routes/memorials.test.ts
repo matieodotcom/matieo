@@ -19,7 +19,8 @@ describe('GET /api/memorials', () => {
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       is: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValueOnce({ data: [mockMemorial()], error: null }),
+      order: jest.fn().mockReturnThis(),
+      range: jest.fn().mockResolvedValueOnce({ data: [mockMemorial()], error: null, count: 1 }),
     })
 
     const res = await request(app)
@@ -33,6 +34,66 @@ describe('GET /api/memorials', () => {
   it('returns 401 without auth', async () => {
     const res = await request(app).get('/api/memorials')
     expect(res.status).toBe(401)
+  })
+
+  it('returns total, page, and limit in response', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      range: jest.fn().mockResolvedValueOnce({ data: [mockMemorial()], error: null, count: 5 }),
+    })
+
+    const res = await request(app)
+      .get('/api/memorials')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.total).toBe(5)
+    expect(res.body.page).toBe(1)
+    expect(res.body.limit).toBe(12)
+  })
+
+  it('filters by search query using ilike on full_name', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      range: jest.fn().mockReturnThis(),
+      ilike: jest.fn().mockResolvedValueOnce({ data: [mockMemorial()], error: null, count: 1 }),
+    })
+
+    const res = await request(app)
+      .get('/api/memorials?q=john')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data).toHaveLength(1)
+  })
+
+  it('returns correct slice for page 2', async () => {
+    mockAuth()
+    const m1 = mockMemorial({ id: 'id-1', full_name: 'Memorial Two' })
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      range: jest.fn().mockResolvedValueOnce({ data: [m1], error: null, count: 3 }),
+    })
+
+    const res = await request(app)
+      .get('/api/memorials?page=2&limit=2')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.page).toBe(2)
+    expect(res.body.limit).toBe(2)
+    expect(res.body.total).toBe(3)
   })
 })
 

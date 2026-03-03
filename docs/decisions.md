@@ -71,4 +71,22 @@
 **Alternatives considered:** Initializing in `router.tsx` loader — requires React Router v6.4+ data router and adds complexity. Putting it in `authStore` — stores should not have side effects (Zustand convention).
 **Consequences:** `useAuthListener` must only be called from `AuthInitializer`. All other components read auth state via `useAuthStore` selectors. The `isLoading: true` default in `authStore` ensures UI waits for session before rendering auth-dependent content.
 
+## 2026-03-03 — Server-side search + pagination for memorials list
+
+**Decision:** Search and pagination on `GET /api/memorials` are handled server-side using Supabase `ilike` + `.range()`, returning `{ data, total, page, limit }`.
+**Why:** Client-side filtering would require fetching all rows upfront, exposing the full dataset to the browser and not scaling as the memorial count grows. Server-side keeps payloads small and search fast regardless of table size.
+**Alternatives considered:** Client-side filter on a full fetch — rejected (scale + exposure). Full-text search with `to_tsvector` — considered but overkill for a simple name search; `ilike` is sufficient and requires no extra DB config.
+**Consequences:** All future list endpoints that need search should follow this pattern: accept `?q=&page=&limit=` query params, use `ilike` for text search, use `.range()` + `count: 'exact'` for pagination, return `total`/`page`/`limit` in response alongside `data`.
+
+---
+
+## 2026-03-03 — `apiClient.ts` as the standard frontend→backend bridge
+
+**Decision:** All frontend calls to the Node API go through `lib/apiClient.ts` (`apiFetch<T>`), never via raw `fetch()` with inline Bearer tokens.
+**Why:** The helper centralises JWT retrieval (from Supabase session), Authorization header attachment, 401 handling (sign out + redirect to /signin), and error normalisation. Without it, each call site would duplicate this logic and risk inconsistency.
+**Alternatives considered:** Axios interceptors — heavier dependency. Supabase client directly (bypassing Node API) — breaks the BE requirement and bypasses backend business logic.
+**Consequences:** Any new authenticated API call in the frontend must import `apiFetch` from `@/lib/apiClient`. Never call `fetch()` directly with a Bearer token. The helper must be mocked in all frontend tests that call the backend.
+
+---
+
 <!-- New entries added below by Claude as decisions are made during development -->

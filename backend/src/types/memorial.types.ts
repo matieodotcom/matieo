@@ -11,6 +11,7 @@ export interface MemorialRow {
   date_of_death: string | null
   gender: 'male' | 'female' | 'non-binary' | 'prefer_not_to_say' | null
   race_ethnicity: string | null
+  location: string | null
   cover_cloudinary_public_id: string | null
   cover_url: string | null
   cause_of_death: string | null
@@ -33,6 +34,7 @@ export interface CreateMemorialPayload {
   date_of_death?: string
   gender?: 'male' | 'female' | 'non-binary' | 'prefer_not_to_say'
   race_ethnicity?: string
+  location?: string
   cause_of_death?: string
   biography?: string
   tribute_message?: string
@@ -47,6 +49,7 @@ export interface UpdateMemorialPayload {
   date_of_death?: string
   gender?: 'male' | 'female' | 'non-binary' | 'prefer_not_to_say'
   race_ethnicity?: string
+  location?: string
   cause_of_death?: string
   biography?: string
   tribute_message?: string

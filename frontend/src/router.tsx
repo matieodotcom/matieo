@@ -4,6 +4,7 @@ import FeaturesPage from '@/pages/features/FeaturesPage'
 import AboutPage from '@/pages/about/AboutPage'
 import TermsPage from '@/pages/legal/TermsPage'
 import PrivacyPage from '@/pages/legal/PrivacyPage'
+import ViewMemorialsPage from '@/pages/app/ViewMemorialsPage'
 import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
@@ -86,7 +87,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/app/memorials',
-    element: <Placeholder name="View Memorials" />,
+    element: <ViewMemorialsPage />,
   },
   {
     path: '/app/memorials/create',
