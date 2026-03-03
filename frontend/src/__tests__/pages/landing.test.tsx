@@ -16,11 +16,11 @@ describe('LandingPage', () => {
       )
     })
 
-    it('renders Create Memorial CTA links', () => {
+    it('renders Create Memorial CTA buttons', () => {
       renderWithProviders(<LandingPage />)
       // Appears in both hero and CTA section
-      const links = screen.getAllByRole('link', { name: /Create Memorial/i })
-      expect(links.length).toBeGreaterThan(0)
+      const buttons = screen.getAllByRole('button', { name: /Create Memorial/i })
+      expect(buttons.length).toBeGreaterThan(0)
     })
 
     it('renders Create Obituary CTA links', () => {

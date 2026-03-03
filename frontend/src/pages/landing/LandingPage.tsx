@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   FileText,
   Heart,
@@ -15,6 +15,8 @@ import {
 } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { SignInModal } from '@/components/auth/SignInModal'
+import { useAuthStore } from '@/store/authStore'
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -132,7 +134,7 @@ const TESTIMONIALS = [
 
 // ── Sections ─────────────────────────────────────────────────────────────────
 
-function HeroSection() {
+function HeroSection({ onCreateMemorial }: { onCreateMemorial: () => void }) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-blue-50 to-brand-primaryLight/40 min-h-[680px] flex items-center">
       {/* Decorative blobs */}
@@ -177,13 +179,13 @@ function HeroSection() {
 
           {/* CTAs */}
           <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-8 md:mb-10">
-            <Link
-              to="/signup"
+            <button
+              onClick={onCreateMemorial}
               className="inline-flex items-center gap-2 bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm px-7 py-3.5 rounded-lg transition-colors"
             >
               Create Memorial
               <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            </button>
             <Link
               to="/signup"
               className="inline-flex items-center gap-2 border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 font-medium text-sm px-7 py-3.5 rounded-lg transition-colors"
@@ -443,7 +445,7 @@ function TestimonialsSection() {
   )
 }
 
-function CTASection() {
+function CTASection({ onCreateMemorial }: { onCreateMemorial: () => void }) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-r from-brand-secondary to-brand-primary py-24">
       {/* Decorative circles matching Figma */}
@@ -472,12 +474,12 @@ function CTASection() {
             Create Obituary
             <ArrowRight size={16} aria-hidden="true" />
           </Link>
-          <Link
-            to="/signup"
+          <button
+            onClick={onCreateMemorial}
             className="inline-flex items-center gap-2 border border-white/40 hover:border-white text-white font-medium px-7 py-4 rounded-lg transition-colors"
           >
             Create Memorial
-          </Link>
+          </button>
         </div>
 
         {/* Trust signals */}
@@ -566,19 +568,36 @@ function WaitlistSection() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
+  const user = useAuthStore((s) => s.user)
+  const navigate = useNavigate()
+  const [signInOpen, setSignInOpen] = useState(false)
+
+  function handleCreateMemorial() {
+    if (user) {
+      navigate('/dashboard/memorials/create')
+    } else {
+      setSignInOpen(true)
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
-        <HeroSection />
+        <HeroSection onCreateMemorial={handleCreateMemorial} />
         <FeaturesSection />
         <HowItWorksSection />
         <StatsSection />
         <TestimonialsSection />
-        <CTASection />
+        <CTASection onCreateMemorial={handleCreateMemorial} />
         <WaitlistSection />
       </main>
       <Footer />
+      <SignInModal
+        open={signInOpen}
+        onOpenChange={setSignInOpen}
+        onSuccess={() => navigate('/dashboard/memorials/create')}
+      />
     </div>
   )
 }
