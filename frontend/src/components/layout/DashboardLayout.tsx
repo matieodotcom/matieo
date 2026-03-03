@@ -96,37 +96,52 @@ export function DashboardLayout() {
 
       {/* Body: push sidebar + main */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Collapsible sidebar — width transitions so main collapses alongside it */}
+        {/* Sidebar — collapses to icon-only strip, never fully hidden */}
         <aside
           className={[
             'flex-shrink-0 bg-white border-r border-neutral-100 overflow-hidden',
             'transition-[width] duration-300 ease-in-out',
-            isOpen ? 'w-64' : 'w-0',
+            isOpen ? 'w-64' : 'w-16',
           ].join(' ')}
         >
-          {/* Inner div always holds the full w-64 so content doesn't compress */}
-          <div className="w-64 h-full flex flex-col py-4">
-            <p className="px-6 pb-3 text-[11px] font-semibold text-neutral-400 uppercase tracking-widest">
+          <div className="w-full h-full flex flex-col py-4">
+            {/* Section label — fade out when collapsed */}
+            <p
+              className={[
+                'px-6 pb-3 text-[11px] font-semibold text-neutral-400 uppercase tracking-widest whitespace-nowrap',
+                'transition-opacity duration-200',
+                isOpen ? 'opacity-100' : 'opacity-0',
+              ].join(' ')}
+            >
               Navigate
             </p>
-            <nav aria-label="Dashboard navigation" className="flex-1 px-3">
+            <nav aria-label="Dashboard navigation" className="flex-1 px-2">
               <ul className="flex flex-col gap-0.5 list-none">
                 {SIDEBAR_LINKS.map(({ label, to, icon: Icon }) => (
                   <li key={label}>
                     <NavLink
                       to={to}
-                      onClick={() => setIsOpen(false)}
+                      title={label}
                       className={({ isActive }) =>
                         [
-                          'flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors',
+                          'flex items-center py-3 text-sm transition-colors rounded-xl overflow-hidden',
                           isActive
                             ? 'bg-brand-primaryLight text-brand-primary font-semibold'
                             : 'text-neutral-600 font-medium hover:bg-neutral-50 hover:text-neutral-900',
                         ].join(' ')
                       }
                     >
-                      <Icon size={18} aria-hidden="true" />
-                      {label}
+                      <span className="w-12 flex-shrink-0 flex items-center justify-center">
+                        <Icon size={18} aria-hidden="true" />
+                      </span>
+                      <span
+                        className={[
+                          'whitespace-nowrap pr-4 transition-opacity duration-200',
+                          isOpen ? 'opacity-100' : 'opacity-0',
+                        ].join(' ')}
+                      >
+                        {label}
+                      </span>
                     </NavLink>
                   </li>
                 ))}
