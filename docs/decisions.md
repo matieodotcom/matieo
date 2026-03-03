@@ -89,4 +89,11 @@
 
 ---
 
+## 2026-03-03 — Memorials list is public; route is `/memorials` not `/app/memorials`
+
+**Decision:** The memorials listing page at `/memorials` is publicly accessible (no login required). The backend `GET /api/memorials` calls `listPublished()` which returns only `status = 'published'` memorials. The "Create Memorial" button is conditionally rendered only for authenticated users.
+**Why:** Memorial pages are about honoring and sharing loved ones — they should be discoverable by anyone without forcing an account wall. A logged-in user who wants to create a memorial can still do so via the visible Create button.
+**Alternatives considered:** Keeping the auth gate and redirecting to sign-in — rejected because it prevents public browsing and sharing. Showing all memorials (including drafts) publicly — rejected for privacy; only published memorials are shown.
+**Consequences:** `GET /api/memorials` no longer requires a Bearer token. The authenticated `list()` controller (returns own memorials) is still present for future use in a dashboard view. Any future list endpoint that should be public should follow the `listPublished()` pattern: filter by `status = 'published'`, no `created_by` filter, no `requireAuth` on the route.
+
 <!-- New entries added below by Claude as decisions are made during development -->

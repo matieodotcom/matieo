@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useSearchParams, Navigate } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Search, Plus, Heart } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -73,7 +73,6 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
 
 export default function ViewMemorialsPage() {
   const user = useAuthStore((s) => s.user)
-  const isLoading = useAuthStore((s) => s.isLoading)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchInput, setSearchInput] = useState(searchParams.get('q') ?? '')
@@ -117,11 +116,6 @@ export default function ViewMemorialsPage() {
   const total = data?.total ?? 0
   const totalPages = Math.ceil(total / LIMIT)
 
-  // Auth guard — wait for auth to resolve before redirecting
-  if (!isLoading && !user) {
-    return <Navigate to="/signin" replace />
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50 font-sans">
       <Navbar />
@@ -154,14 +148,16 @@ export default function ViewMemorialsPage() {
               />
             </div>
 
-            {/* Create */}
-            <Link
-              to="/app/memorials/create"
-              className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-            >
-              <Plus size={15} />
-              Create Memorial
-            </Link>
+            {/* Create — only shown to authenticated users */}
+            {user && (
+              <Link
+                to="/app/memorials/create"
+                className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+              >
+                <Plus size={15} />
+                Create Memorial
+              </Link>
+            )}
           </div>
         </div>
 
@@ -194,13 +190,15 @@ export default function ViewMemorialsPage() {
                 <p className="text-sm text-neutral-400 mt-1">
                   Create your first memorial to get started.
                 </p>
-                <Link
-                  to="/app/memorials/create"
-                  className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
-                >
-                  <Plus size={15} />
-                  Create Memorial
-                </Link>
+                {user && (
+                  <Link
+                    to="/app/memorials/create"
+                    className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
+                  >
+                    <Plus size={15} />
+                    Create Memorial
+                  </Link>
+                )}
               </>
             )}
           </div>

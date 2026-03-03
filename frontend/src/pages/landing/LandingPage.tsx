@@ -219,7 +219,7 @@ function HeroSection() {
                   <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
                 </div>
                 <div className="flex-1 bg-white rounded text-xs text-neutral-400 px-3 py-1 mx-2 border border-neutral-200">
-                  matieo.com/app/memorials
+                  matieo.com/memorials
                 </div>
               </div>
 

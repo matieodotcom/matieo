@@ -48,11 +48,18 @@ describe('ViewMemorialsPage', () => {
     expect(screen.getByRole('searchbox', { name: /search memorials/i })).toBeInTheDocument()
   })
 
-  it('renders "Create Memorial" link pointing to /app/memorials/create', async () => {
+  it('renders "Create Memorial" link pointing to /app/memorials/create when authenticated', async () => {
     const Page = await getPage()
     render(<Page />)
     const links = screen.getAllByRole('link', { name: /create memorial/i })
     expect(links[0]).toHaveAttribute('href', '/app/memorials/create')
+  })
+
+  it('hides "Create Memorial" button when user is not authenticated', async () => {
+    useAuthStore.setState({ user: null, session: null, isLoading: false })
+    const Page = await getPage()
+    render(<Page />)
+    expect(screen.queryByRole('link', { name: /create memorial/i })).not.toBeInTheDocument()
   })
 
   it('renders memorial cards when data is loaded', async () => {
@@ -103,7 +110,7 @@ describe('ViewMemorialsPage', () => {
     } as ReturnType<typeof useMemorials>)
 
     const Page = await getPage()
-    render(<Page />, { initialRoute: '/app/memorials?q=xyz' })
+    render(<Page />, { initialRoute: '/memorials?q=xyz' })
     expect(screen.getByText(/no memorials match/i)).toBeInTheDocument()
   })
 
@@ -145,11 +152,10 @@ describe('ViewMemorialsPage', () => {
     expect(input).toHaveValue('Ahmad')
   })
 
-  it('redirects to /signin when user is not authenticated', async () => {
+  it('renders page for unauthenticated visitors without redirecting', async () => {
     useAuthStore.setState({ user: null, session: null, isLoading: false })
     const Page = await getPage()
     render(<Page />)
-    // Navigate component renders nothing in MemoryRouter — no heading shown
-    expect(screen.queryByRole('heading', { name: 'Memorials' })).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'Memorials' })).toBeInTheDocument()
   })
 })

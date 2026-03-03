@@ -5,12 +5,14 @@ import * as memorials from '@/controllers/memorials.controller'
 
 const router = Router()
 
-router.use(requireAuth as unknown as RequestHandler)
-router.get('/', memorials.list as unknown as RequestHandler)
-router.post('/', memorials.create as unknown as RequestHandler)
-router.get('/:id', memorials.getById as unknown as RequestHandler)
-router.patch('/:id', memorials.update as unknown as RequestHandler)
-router.delete('/:id', memorials.softDelete as unknown as RequestHandler)
-router.post('/:id/publish', memorials.publish as unknown as RequestHandler)
+// Public — anyone can browse published memorials
+router.get('/', memorials.listPublished as unknown as RequestHandler)
+
+// Authenticated — requires valid Bearer token
+router.post('/', requireAuth as unknown as RequestHandler, memorials.create as unknown as RequestHandler)
+router.get('/:id', requireAuth as unknown as RequestHandler, memorials.getById as unknown as RequestHandler)
+router.patch('/:id', requireAuth as unknown as RequestHandler, memorials.update as unknown as RequestHandler)
+router.delete('/:id', requireAuth as unknown as RequestHandler, memorials.softDelete as unknown as RequestHandler)
+router.post('/:id/publish', requireAuth as unknown as RequestHandler, memorials.publish as unknown as RequestHandler)
 
 export default router

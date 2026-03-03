@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/DropdownMenu'
 
 const NAV_LINKS = [
-  { label: 'Memorials', to: '/app/memorials' },
+  { label: 'Memorials', to: '/memorials' },
   { label: 'Obituary', to: '/obituary' },
   { label: 'Insights', to: '/app/analytics' },
   { label: 'Features', to: '/features' },

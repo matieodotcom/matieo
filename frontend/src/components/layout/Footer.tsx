@@ -3,7 +3,7 @@ import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
 
 const FOOTER_LINKS = {
   Product: [
-    { label: 'Memorials', to: '/app/memorials' },
+    { label: 'Memorials', to: '/memorials' },
     { label: 'Obituary', to: '/obituary' },
     { label: 'Insights', to: '/app/analytics' },
     { label: 'Pricing', to: '/pricing' },

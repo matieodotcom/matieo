@@ -1,4 +1,4 @@
-import type { Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import type {
   AuthenticatedRequest,
@@ -34,6 +34,38 @@ async function uniqueSlug(base: string): Promise<string> {
 }
 
 // ── Controllers ───────────────────────────────────────────────────────────────
+
+export async function listPublished(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { q = '', page = '1', limit = '12' } = req.query as Record<string, string>
+    const pageNum = Math.max(1, parseInt(page))
+    const limitNum = Math.min(50, Math.max(1, parseInt(limit)))
+    const offset = (pageNum - 1) * limitNum
+
+    let query = supabaseAdmin
+      .from('memorials')
+      .select('*', { count: 'exact' })
+      .eq('status', 'published')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limitNum - 1)
+
+    if (q.trim()) {
+      query = query.ilike('full_name', `%${q.trim()}%`)
+    }
+
+    const { data, error, count } = await query
+    if (error) throw error
+
+    res.json({ data, total: count ?? 0, page: pageNum, limit: limitNum, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
 
 export async function list(
   req: AuthenticatedRequest,

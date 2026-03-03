@@ -70,7 +70,11 @@ const router = createBrowserRouter([
     element: <PrivacyPage />,
   },
 
-  // Public memorial
+  // Public memorial browsing + individual pages
+  {
+    path: '/memorials',
+    element: <ViewMemorialsPage />,
+  },
   {
     path: '/memorial/:slug',
     element: <Placeholder name="Public Memorial" />,
@@ -84,10 +88,6 @@ const router = createBrowserRouter([
   {
     path: '/app/analytics',
     element: <Placeholder name="Analytics Dashboard" />,
-  },
-  {
-    path: '/app/memorials',
-    element: <ViewMemorialsPage />,
   },
   {
     path: '/app/memorials/create',

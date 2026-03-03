@@ -663,7 +663,7 @@ CLOUDINARY_API_SECRET
 | Forgot Password | `/forgot-password` | ✅ Complete | docs/pages/auth.md |
 | Reset Password | `/reset-password` | ✅ Complete | docs/pages/auth.md |
 | Analytics Dashboard | `/app/analytics` | ⬜ Not started | docs/pages/analytics.md |
-| View Memorials | `/app/memorials` | ✅ Complete | docs/pages/view-memorials.md |
+| View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Create Memorial | `/app/memorials/create` | ⬜ Not started | docs/pages/create-memorial.md |
 | Edit Memorial | `/app/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
 | Public Memorial | `/memorial/:slug` | ⬜ Not started | docs/pages/public-memorial.md |
@@ -702,9 +702,18 @@ const pageNum = Math.max(1, parseInt(page))
 const limitNum = Math.min(50, parseInt(limit))
 const offset = (pageNum - 1) * limitNum
 
+// Authenticated list (own resources):
 let query = supabaseAdmin.from('table')
   .select('*', { count: 'exact' })
-  .eq('owner_col', req.user.id)
+  .eq('created_by', req.user.id)   // ← only user's own rows
+  .is('deleted_at', null)
+  .order('created_at', { ascending: false })
+  .range(offset, offset + limitNum - 1)
+
+// Public list (published resources only — no auth):
+let query = supabaseAdmin.from('table')
+  .select('*', { count: 'exact' })
+  .eq('status', 'published')       // ← only published rows
   .is('deleted_at', null)
   .order('created_at', { ascending: false })
   .range(offset, offset + limitNum - 1)
