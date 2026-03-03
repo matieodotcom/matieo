@@ -43,4 +43,4 @@ jobs:
           username: ${{ secrets.HOSTINGER_FTP_USER_PROD }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD_PROD }}
           local-dir: frontend/dist/
-          server-dir: /public_html/       # Adjust to your Hostinger prod root
+          server-dir: /       # Adjust to your Hostinger prod root
