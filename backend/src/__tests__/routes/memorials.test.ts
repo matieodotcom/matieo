@@ -92,6 +92,59 @@ describe('GET /api/memorials', () => {
   })
 })
 
+describe('GET /api/memorials/mine', () => {
+  it('returns 401 without auth token', async () => {
+    const res = await request(app).get('/api/memorials/mine')
+    expect(res.status).toBe(401)
+  })
+
+  it('returns only the authenticated user\'s memorials', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      range: jest.fn().mockResolvedValueOnce({
+        data: [mockMemorial({ status: 'draft' }), mockMemorial({ id: 'id-2', status: 'published' })],
+        error: null,
+        count: 2,
+      }),
+    })
+
+    const res = await request(app)
+      .get('/api/memorials/mine')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data).toHaveLength(2)
+    expect(res.body.total).toBe(2)
+  })
+
+  it('supports search query param', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      range: jest.fn().mockReturnThis(),
+      ilike: jest.fn().mockResolvedValueOnce({
+        data: [mockMemorial()],
+        error: null,
+        count: 1,
+      }),
+    })
+
+    const res = await request(app)
+      .get('/api/memorials/mine?q=john')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data).toHaveLength(1)
+  })
+})
+
 describe('POST /api/memorials', () => {
   it('creates a memorial and returns 201', async () => {
     mockAuth()

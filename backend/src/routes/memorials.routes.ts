@@ -10,6 +10,8 @@ router.get('/', memorials.listPublished as unknown as RequestHandler)
 
 // Authenticated — requires valid Bearer token
 router.post('/', requireAuth as unknown as RequestHandler, memorials.create as unknown as RequestHandler)
+// /mine must come before /:id so Express doesn't treat "mine" as an id
+router.get('/mine', requireAuth as unknown as RequestHandler, memorials.list as unknown as RequestHandler)
 router.get('/:id', requireAuth as unknown as RequestHandler, memorials.getById as unknown as RequestHandler)
 router.patch('/:id', requireAuth as unknown as RequestHandler, memorials.update as unknown as RequestHandler)
 router.delete('/:id', requireAuth as unknown as RequestHandler, memorials.softDelete as unknown as RequestHandler)
