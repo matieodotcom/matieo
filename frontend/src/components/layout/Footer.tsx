@@ -5,7 +5,7 @@ const FOOTER_LINKS = {
   Product: [
     { label: 'Memorials', to: '/memorials' },
     { label: 'Obituary', to: '/obituary' },
-    { label: 'Insights', to: '/dashboard/insights' },
+    { label: 'Insights', to: '/insights' },
     { label: 'Pricing', to: '/pricing' },
   ],
   Company: [

@@ -15,7 +15,7 @@ import {
 const NAV_LINKS = [
   { label: 'Memorials', to: '/memorials' },
   { label: 'Obituary', to: '/obituary' },
-  { label: 'Insights', to: '/dashboard/insights' },
+  { label: 'Insights', to: '/insights' },
   { label: 'Features', to: '/features' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },

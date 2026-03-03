@@ -63,6 +63,12 @@ const router = createBrowserRouter([
     element: <AboutPage />,
   },
 
+  // Public Insights (mortality data / analytics — separate from dashboard)
+  {
+    path: '/insights',
+    element: <Placeholder name="Insights" />,
+  },
+
   // Legal
   {
     path: '/terms',
