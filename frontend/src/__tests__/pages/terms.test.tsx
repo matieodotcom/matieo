@@ -56,12 +56,6 @@ describe('TermsPage', () => {
     expect(screen.getByText(/legal@matieo\.com/i)).toBeInTheDocument()
   })
 
-  it('renders "Back to Sign Up" link pointing to /signup', () => {
-    const links = screen.getAllByRole('link', { name: /back to sign up/i })
-    expect(links.length).toBeGreaterThan(0)
-    links.forEach((link) => expect(link).toHaveAttribute('href', '/signup'))
-  })
-
   it('renders "View Privacy Policy" link pointing to /privacy', () => {
     const link = screen.getByRole('link', { name: /view privacy policy/i })
     expect(link).toHaveAttribute('href', '/privacy')

@@ -3,6 +3,7 @@ import LandingPage from '@/pages/landing/LandingPage'
 import FeaturesPage from '@/pages/features/FeaturesPage'
 import AboutPage from '@/pages/about/AboutPage'
 import TermsPage from '@/pages/legal/TermsPage'
+import PrivacyPage from '@/pages/legal/PrivacyPage'
 import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: '/terms',
     element: <TermsPage />,
+  },
+  {
+    path: '/privacy',
+    element: <PrivacyPage />,
   },
 
   // Public memorial

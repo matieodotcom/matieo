@@ -169,19 +169,13 @@ export default function TermsPage() {
         </section>
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between mt-16 pt-8 border-t border-neutral-100">
+        <div className="mt-16 pt-8 border-t border-neutral-100">
           <Link
             to="/privacy"
             className="flex items-center gap-1 text-sm text-brand-primary hover:underline"
           >
             View Privacy Policy
             <ArrowRight size={14} />
-          </Link>
-          <Link
-            to="/signup"
-            className="text-sm text-neutral-500 hover:text-brand-primary transition-colors"
-          >
-            Back to Sign Up
           </Link>
         </div>
       </main>

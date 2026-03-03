@@ -23,7 +23,7 @@ const FOOTER_LINKS = {
 } as const
 
 const LEGAL_LINKS = [
-  { label: 'Privacy Policy', to: '#' },
+  { label: 'Privacy Policy', to: '/privacy' },
   { label: 'Terms of Service', to: '/terms' },
   { label: 'Cookie Policy', to: '#' },
 ] as const

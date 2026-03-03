@@ -650,6 +650,7 @@ CLOUDINARY_API_SECRET
 | Features | `/features` | ✅ Complete | docs/pages/features.md |
 | About | `/about` | ✅ Complete | docs/pages/about.md |
 | Terms of Service | `/terms` | ✅ Complete | docs/pages/terms.md |
+| Privacy Policy | `/privacy` | ✅ Complete | docs/pages/privacy.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
 | Forgot Password | `/forgot-password` | ✅ Complete | docs/pages/auth.md |
