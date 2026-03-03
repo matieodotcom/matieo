@@ -5,6 +5,7 @@ on:
     branches: [dev]
     paths:
       - 'frontend/**'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
