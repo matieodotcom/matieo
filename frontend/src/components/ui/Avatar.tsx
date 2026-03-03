@@ -24,7 +24,7 @@ interface UserAvatarProps {
 export function UserAvatar({ src, name, size = 'md' }: UserAvatarProps) {
   return (
     <RadixAvatar.Root
-      className={`${sizeClasses[size]} rounded-full inline-flex items-center justify-center overflow-hidden select-none`}
+      className={`${sizeClasses[size]} rounded-full flex items-center justify-center overflow-hidden select-none`}
     >
       <RadixAvatar.Image
         src={src ?? undefined}
