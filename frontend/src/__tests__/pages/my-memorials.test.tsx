@@ -88,12 +88,16 @@ describe('MyMemorialsPage', () => {
 
   it('renders search input', async () => {
     await renderPage()
-    expect(screen.getByRole('searchbox', { name: /search memorials/i })).toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.getByRole('searchbox', { name: /search memorials/i })).toBeInTheDocument(),
+    )
   })
 
   it('renders "Create Memorial" button', async () => {
     await renderPage()
-    expect(screen.getByRole('button', { name: /create memorial/i })).toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /create memorial/i })).toBeInTheDocument(),
+    )
   })
 
   it('renders memorial cards when data is loaded', async () => {
@@ -148,7 +152,9 @@ describe('MyMemorialsPage', () => {
 
   it('updates search input text', async () => {
     await renderPage()
-    const input = screen.getByRole('searchbox', { name: /search memorials/i })
+    const input = await waitFor(() =>
+      screen.getByRole('searchbox', { name: /search memorials/i }),
+    )
     await userEvent.type(input, 'john')
     expect(input).toHaveValue('john')
   })

@@ -118,6 +118,7 @@ export default function ViewMemorialsPage() {
   const memorials = data?.data ?? []
   const total = data?.total ?? 0
   const totalPages = Math.ceil(total / LIMIT)
+  const showControls = total > 0 || !!q
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50 font-sans">
@@ -133,33 +134,35 @@ export default function ViewMemorialsPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Search */}
-            <div className="relative">
-              <Search
-                size={15}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none"
-              />
-              <input
-                id="memorial-search"
-                type="search"
-                placeholder="Search..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="pl-9 pr-4 py-2 text-sm border border-neutral-200 rounded-lg w-52 bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-                aria-label="Search memorials"
-              />
-            </div>
+          {showControls && (
+            <div className="flex items-center gap-3">
+              {/* Search */}
+              <div className="relative">
+                <Search
+                  size={15}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none"
+                />
+                <input
+                  id="memorial-search"
+                  type="search"
+                  placeholder="Search..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="pl-9 pr-4 py-2 text-sm border border-neutral-200 rounded-lg w-52 bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                  aria-label="Search memorials"
+                />
+              </div>
 
-            {/* Create — visible to all; opens sign-in modal if not authenticated */}
-            <button
-              onClick={() => user ? navigate('/memorials/create') : setSignInOpen(true)}
-              className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-            >
-              <Plus size={15} />
-              Create Memorial
-            </button>
-          </div>
+              {/* Create — visible to all; opens sign-in modal if not authenticated */}
+              <button
+                onClick={() => user ? navigate('/dashboard/memorials/create') : setSignInOpen(true)}
+                className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+              >
+                <Plus size={15} />
+                Create Memorial
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Error */}
@@ -192,7 +195,7 @@ export default function ViewMemorialsPage() {
                   Create your first memorial to get started.
                 </p>
                 <button
-                  onClick={() => user ? navigate('/memorials/create') : setSignInOpen(true)}
+                  onClick={() => user ? navigate('/dashboard/memorials/create') : setSignInOpen(true)}
                   className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
                 >
                   <Plus size={15} />
@@ -224,7 +227,7 @@ export default function ViewMemorialsPage() {
         onOpenChange={setSignInOpen}
         onSuccess={() => {
           setSignInOpen(false)
-          navigate('/memorials/create')
+          navigate('/dashboard/memorials/create')
         }}
       />
     </div>
