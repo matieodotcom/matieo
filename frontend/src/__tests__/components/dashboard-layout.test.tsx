@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/__tests__/utils'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { useAuthStore } from '@/store/authStore'
@@ -21,12 +22,30 @@ describe('DashboardLayout — authenticated', () => {
     vi.clearAllMocks()
   })
 
-  it('renders all sidebar labels', () => {
+  it('renders "Toggle navigation" button', () => {
     renderLayout()
-    expect(screen.getByText('Insights')).toBeInTheDocument()
-    expect(screen.getByText('Memorials')).toBeInTheDocument()
-    expect(screen.getByText('Obituary')).toBeInTheDocument()
-    expect(screen.getByText('Services')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Toggle navigation' })).toBeInTheDocument()
+  })
+
+  it('toggle button starts collapsed (aria-expanded false)', () => {
+    renderLayout()
+    expect(screen.getByRole('button', { name: 'Toggle navigation' }))
+      .toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('clicking toggle sets aria-expanded to true', async () => {
+    renderLayout()
+    await userEvent.click(screen.getByRole('button', { name: 'Toggle navigation' }))
+    expect(screen.getByRole('button', { name: 'Toggle navigation' }))
+      .toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('clicking toggle again collapses sidebar (aria-expanded false)', async () => {
+    renderLayout()
+    const btn = screen.getByRole('button', { name: 'Toggle navigation' })
+    await userEvent.click(btn)
+    await userEvent.click(btn)
+    expect(btn).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('renders Home back link', () => {
@@ -39,28 +58,36 @@ describe('DashboardLayout — authenticated', () => {
     expect(screen.getByRole('button', { name: /user menu/i })).toBeInTheDocument()
   })
 
-  it('Insights sidebar link points to /app/dashboard/insights', () => {
+  it('renders all nav labels in the sidebar', () => {
     renderLayout()
-    const link = screen.getByRole('link', { name: /insights/i })
-    expect(link).toHaveAttribute('href', '/app/dashboard/insights')
+    expect(screen.getByText('Insights')).toBeInTheDocument()
+    expect(screen.getByText('Memorials')).toBeInTheDocument()
+    expect(screen.getByText('Obituary')).toBeInTheDocument()
+    expect(screen.getByText('Services')).toBeInTheDocument()
   })
 
-  it('Memorials sidebar link points to /app/dashboard/memorials', () => {
+  it('Insights link points to /app/dashboard/insights', () => {
     renderLayout()
-    const link = screen.getByRole('link', { name: /memorials/i })
-    expect(link).toHaveAttribute('href', '/app/dashboard/memorials')
+    expect(screen.getByRole('link', { name: /insights/i }))
+      .toHaveAttribute('href', '/app/dashboard/insights')
   })
 
-  it('Obituary sidebar link points to /app/dashboard/obituary', () => {
+  it('Memorials link points to /app/dashboard/memorials', () => {
     renderLayout()
-    const link = screen.getByRole('link', { name: /obituary/i })
-    expect(link).toHaveAttribute('href', '/app/dashboard/obituary')
+    expect(screen.getByRole('link', { name: /memorials/i }))
+      .toHaveAttribute('href', '/app/dashboard/memorials')
   })
 
-  it('Services sidebar link points to /app/dashboard/services', () => {
+  it('Obituary link points to /app/dashboard/obituary', () => {
     renderLayout()
-    const link = screen.getByRole('link', { name: /services/i })
-    expect(link).toHaveAttribute('href', '/app/dashboard/services')
+    expect(screen.getByRole('link', { name: /obituary/i }))
+      .toHaveAttribute('href', '/app/dashboard/obituary')
+  })
+
+  it('Services link points to /app/dashboard/services', () => {
+    renderLayout()
+    expect(screen.getByRole('link', { name: /services/i }))
+      .toHaveAttribute('href', '/app/dashboard/services')
   })
 })
 
@@ -72,7 +99,6 @@ describe('DashboardLayout — unauthenticated', () => {
 
   it('redirects to /signin when not authenticated', () => {
     renderLayout()
-    // After redirect the sidebar content should not be visible
-    expect(screen.queryByRole('navigation', { name: /dashboard navigation/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Toggle navigation' })).not.toBeInTheDocument()
   })
 })

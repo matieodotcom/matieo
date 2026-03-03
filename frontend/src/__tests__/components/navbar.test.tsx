@@ -32,6 +32,11 @@ describe('Navbar — signed out', () => {
     expect(screen.getByText('About')).toBeInTheDocument()
   })
 
+  it('does not show Dashboard link when signed out', () => {
+    renderNavbar()
+    expect(screen.queryByRole('link', { name: 'Dashboard' })).not.toBeInTheDocument()
+  })
+
   it('renders Sign in and Sign up links', () => {
     renderNavbar()
     expect(screen.getByText('Sign in')).toBeInTheDocument()
@@ -103,6 +108,12 @@ describe('Navbar — signed in', () => {
     vi.clearAllMocks()
   })
 
+  it('shows Dashboard link in nav list (left of Memorials)', () => {
+    renderNavbar()
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/app/dashboard')
+  })
+
   it('renders avatar button instead of Sign in/Sign up links', () => {
     renderNavbar()
     expect(screen.getByRole('button', { name: /user menu/i })).toBeInTheDocument()
@@ -142,25 +153,11 @@ describe('Navbar — signed in', () => {
     expect(screen.queryByRole('link', { name: /sign in/i })).not.toBeInTheDocument()
   })
 
-  it('shows "Dashboard" link when user is authenticated', () => {
+  it('Dashboard link appears in mobile nav when signed in', async () => {
     renderNavbar()
-    expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
-  })
+    await userEvent.click(screen.getByRole('button', { name: 'Open menu' }))
 
-  it('"Dashboard" link points to /app/dashboard', () => {
-    renderNavbar()
-    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/app/dashboard')
-  })
-})
-
-describe('Navbar — Dashboard link visibility', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('does not show "Dashboard" link when user is not authenticated', () => {
-    useAuthStore.setState({ user: null, session: null, isLoading: false })
-    renderNavbar()
-    expect(screen.queryByRole('link', { name: 'Dashboard' })).not.toBeInTheDocument()
+    const mobileNav = document.getElementById('mobile-nav')
+    expect(mobileNav).toHaveTextContent('Dashboard')
   })
 })

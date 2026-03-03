@@ -21,6 +21,8 @@ const NAV_LINKS = [
   { label: 'About', to: '/about' },
 ] as const
 
+const DASHBOARD_LINK = { label: 'Dashboard', to: '/app/dashboard' } as const
+
 function AuthActions() {
   const user = useAuthStore((s) => s.user)
   const isLoading = useAuthStore((s) => s.isLoading)
@@ -33,36 +35,26 @@ function AuthActions() {
     const avatarUrl = (user.user_metadata?.avatar_url as string | undefined) ?? null
 
     return (
-      <div className="flex items-center gap-4">
-        <Link
-          to="/app/dashboard"
-          className="text-sm font-medium text-stone-600 hover:text-brand-primary transition-colors"
-        >
-          Dashboard
-        </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              aria-label="User menu"
-              className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
-            >
-              <UserAvatar src={avatarUrl} name={displayName} size="md" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem asChild>
-              <Link to="/app/settings">Profile</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/app/settings">Settings</Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={signOut}>
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            aria-label="User menu"
+            className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+          >
+            <UserAvatar src={avatarUrl} name={displayName} size="md" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem asChild>
+            <Link to="/app/settings">Profile</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/settings">Settings</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     )
   }
 
@@ -87,6 +79,9 @@ function AuthActions() {
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
+
+  // Prepend Dashboard link for signed-in users
+  const visibleLinks = user ? [DASHBOARD_LINK, ...NAV_LINKS] : [...NAV_LINKS]
 
   return (
     <div className="sticky top-0 z-50 bg-white">
@@ -115,7 +110,7 @@ export function Navbar() {
           {/* Nav links — desktop */}
           <nav aria-label="Main navigation">
             <ul className="hidden md:flex items-center gap-8 list-none">
-              {NAV_LINKS.map((link) => (
+              {visibleLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.to}
@@ -138,18 +133,7 @@ export function Navbar() {
         <div id="mobile-nav" className="md:hidden border-b border-neutral-100 bg-white">
           <nav aria-label="Mobile navigation">
             <ul className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1 list-none">
-              {user && (
-                <li>
-                  <Link
-                    to="/app/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block py-2 text-sm font-medium text-stone-600 hover:text-brand-primary transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-              )}
-              {NAV_LINKS.map((link) => (
+              {visibleLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.to}

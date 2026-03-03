@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom'
-import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase } from 'lucide-react'
+import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase, Menu } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { UserAvatar } from '@/components/ui/Avatar'
@@ -19,6 +20,7 @@ const SIDEBAR_LINKS = [
 ] as const
 
 export function DashboardLayout() {
+  const [isOpen, setIsOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
   const isLoading = useAuthStore((s) => s.isLoading)
   const { signOut } = useSignOut()
@@ -42,14 +44,24 @@ export function DashboardLayout() {
     <div className="min-h-screen flex flex-col bg-neutral-50">
       {/* Top Navbar */}
       <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-neutral-100 flex-shrink-0">
-        {/* Left: Home back link */}
-        <Link
-          to="/"
-          className="flex items-center gap-1.5 text-sm text-neutral-600 hover:text-brand-primary transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Home
-        </Link>
+        {/* Left: toggle + home */}
+        <div className="flex items-center gap-4">
+          <button
+            aria-label="Toggle navigation"
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen((v) => !v)}
+            className="text-neutral-600 hover:text-brand-primary p-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          >
+            <Menu size={20} />
+          </button>
+          <Link
+            to="/"
+            className="flex items-center gap-1.5 text-sm text-neutral-600 hover:text-brand-primary transition-colors"
+          >
+            <ArrowLeft size={15} />
+            Home
+          </Link>
+        </div>
 
         {/* Centre: MATIEO logo */}
         <Link to="/app/dashboard" className="flex items-center gap-2">
@@ -59,7 +71,7 @@ export function DashboardLayout() {
           <span className="text-brand-secondary font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 
-        {/* Right: User avatar dropdown */}
+        {/* Right: user avatar dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -77,42 +89,53 @@ export function DashboardLayout() {
               <Link to="/app/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={signOut}>
-              Sign Out
-            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
 
-      {/* Body: sidebar + main */}
+      {/* Body: push sidebar + main */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-64 h-full bg-white border-r border-neutral-100 pt-6 flex flex-col flex-shrink-0">
-          <nav aria-label="Dashboard navigation">
-            <ul className="flex flex-col gap-1 list-none px-0">
-              {SIDEBAR_LINKS.map(({ label, to, icon: Icon }) => (
-                <li key={label}>
-                  <NavLink
-                    to={to}
-                    className={({ isActive }) =>
-                      [
-                        'flex items-center gap-3 px-4 py-2.5 mx-3 rounded-lg text-sm transition-colors',
-                        isActive
-                          ? 'bg-brand-primaryLight text-brand-primary font-medium'
-                          : 'text-neutral-600 hover:bg-neutral-50',
-                      ].join(' ')
-                    }
-                  >
-                    <Icon size={16} aria-hidden="true" />
-                    {label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
+        {/* Collapsible sidebar — width transitions so main collapses alongside it */}
+        <aside
+          className={[
+            'flex-shrink-0 bg-white border-r border-neutral-100 overflow-hidden',
+            'transition-[width] duration-300 ease-in-out',
+            isOpen ? 'w-64' : 'w-0',
+          ].join(' ')}
+        >
+          {/* Inner div always holds the full w-64 so content doesn't compress */}
+          <div className="w-64 h-full flex flex-col py-4">
+            <p className="px-6 pb-3 text-[11px] font-semibold text-neutral-400 uppercase tracking-widest">
+              Navigate
+            </p>
+            <nav aria-label="Dashboard navigation" className="flex-1 px-3">
+              <ul className="flex flex-col gap-0.5 list-none">
+                {SIDEBAR_LINKS.map(({ label, to, icon: Icon }) => (
+                  <li key={label}>
+                    <NavLink
+                      to={to}
+                      onClick={() => setIsOpen(false)}
+                      className={({ isActive }) =>
+                        [
+                          'flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors',
+                          isActive
+                            ? 'bg-brand-primaryLight text-brand-primary font-semibold'
+                            : 'text-neutral-600 font-medium hover:bg-neutral-50 hover:text-neutral-900',
+                        ].join(' ')
+                      }
+                    >
+                      <Icon size={18} aria-hidden="true" />
+                      {label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         </aside>
 
-        {/* Main content */}
+        {/* Main — flex-1 fills remaining space as sidebar opens/closes */}
         <main className="flex-1 overflow-y-auto p-8">
           <Outlet />
         </main>
