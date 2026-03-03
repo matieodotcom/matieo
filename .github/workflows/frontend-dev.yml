@@ -42,5 +42,7 @@ jobs:
           server: ${{ secrets.HOSTINGER_FTP_HOST }}
           username: ${{ secrets.HOSTINGER_FTP_USER_DEV }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD_DEV }}
+          protocol: ftps
+          port: 21
           local-dir: frontend/dist/
           server-dir: public_html/dev/   # Adjust to your Hostinger dev path
