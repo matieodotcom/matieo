@@ -117,7 +117,7 @@ export function useSignUp() {
 
 // ── useSignIn ─────────────────────────────────────────────────────────────────
 
-export function useSignIn() {
+export function useSignIn(options?: { onSuccess?: () => void }) {
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
@@ -143,7 +143,7 @@ export function useSignIn() {
       return
     }
 
-    navigate('/')
+    options?.onSuccess ? options.onSuccess() : navigate('/')
   }
 
   return {
@@ -156,7 +156,7 @@ export function useSignIn() {
 
 // ── useGoogleAuth ─────────────────────────────────────────────────────────────
 
-export function useGoogleAuth() {
+export function useGoogleAuth(options?: { redirectTo?: string }) {
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -166,7 +166,7 @@ export function useGoogleAuth() {
 
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/' },
+      options: { redirectTo: options?.redirectTo ?? window.location.origin + '/' },
     })
 
     if (authError) {

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { Search, Plus, Heart } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { MemorialCard } from '@/components/memorial/MemorialCard'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
+import { SignInModal } from '@/components/auth/SignInModal'
 import { useMemorials } from '@/hooks/use-memorials'
 import { useAuthStore } from '@/store/authStore'
 
@@ -73,6 +74,8 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
 
 export default function ViewMemorialsPage() {
   const user = useAuthStore((s) => s.user)
+  const navigate = useNavigate()
+  const [signInOpen, setSignInOpen] = useState(false)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchInput, setSearchInput] = useState(searchParams.get('q') ?? '')
@@ -148,16 +151,14 @@ export default function ViewMemorialsPage() {
               />
             </div>
 
-            {/* Create — only shown to authenticated users */}
-            {user && (
-              <Link
-                to="/app/memorials/create"
-                className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
-              >
-                <Plus size={15} />
-                Create Memorial
-              </Link>
-            )}
+            {/* Create — visible to all; opens sign-in modal if not authenticated */}
+            <button
+              onClick={() => user ? navigate('/app/memorials/create') : setSignInOpen(true)}
+              className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+            >
+              <Plus size={15} />
+              Create Memorial
+            </button>
           </div>
         </div>
 
@@ -190,15 +191,13 @@ export default function ViewMemorialsPage() {
                 <p className="text-sm text-neutral-400 mt-1">
                   Create your first memorial to get started.
                 </p>
-                {user && (
-                  <Link
-                    to="/app/memorials/create"
-                    className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
-                  >
-                    <Plus size={15} />
-                    Create Memorial
-                  </Link>
-                )}
+                <button
+                  onClick={() => user ? navigate('/app/memorials/create') : setSignInOpen(true)}
+                  className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
+                >
+                  <Plus size={15} />
+                  Create Memorial
+                </button>
               </>
             )}
           </div>
@@ -219,6 +218,15 @@ export default function ViewMemorialsPage() {
       </main>
 
       <Footer />
+
+      <SignInModal
+        open={signInOpen}
+        onOpenChange={setSignInOpen}
+        onSuccess={() => {
+          setSignInOpen(false)
+          navigate('/app/memorials/create')
+        }}
+      />
     </div>
   )
 }

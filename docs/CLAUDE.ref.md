@@ -369,7 +369,7 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 
 | `ui/` file | Primitive | Package | First used in |
 |------------|-----------|---------|--------------|
-| Dialog.tsx | Dialog | `@radix-ui/react-dialog` | — |
+| Dialog.tsx | Dialog | `@radix-ui/react-dialog` | SignInModal (Create Memorial flow) |
 | Select.tsx | Select | `@radix-ui/react-select` | — |
 | DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | Navbar (user menu) |
 | Switch.tsx | Switch | `@radix-ui/react-switch` | — |

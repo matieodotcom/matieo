@@ -7,6 +7,11 @@ vi.mock('@/hooks/use-memorials', () => ({
   useMemorials: vi.fn(),
 }))
 
+vi.mock('@/components/auth/SignInModal', () => ({
+  SignInModal: ({ open }: { open: boolean }) =>
+    open ? <div data-testid="sign-in-modal" /> : null,
+}))
+
 async function getPage() {
   const { default: ViewMemorialsPage } = await import('@/pages/app/ViewMemorialsPage')
   return ViewMemorialsPage
@@ -48,18 +53,25 @@ describe('ViewMemorialsPage', () => {
     expect(screen.getByRole('searchbox', { name: /search memorials/i })).toBeInTheDocument()
   })
 
-  it('renders "Create Memorial" link pointing to /app/memorials/create when authenticated', async () => {
+  it('shows "Create Memorial" button when authenticated', async () => {
     const Page = await getPage()
     render(<Page />)
-    const links = screen.getAllByRole('link', { name: /create memorial/i })
-    expect(links[0]).toHaveAttribute('href', '/app/memorials/create')
+    expect(screen.getByRole('button', { name: /create memorial/i })).toBeInTheDocument()
   })
 
-  it('hides "Create Memorial" button when user is not authenticated', async () => {
+  it('shows "Create Memorial" button when not authenticated', async () => {
     useAuthStore.setState({ user: null, session: null, isLoading: false })
     const Page = await getPage()
     render(<Page />)
-    expect(screen.queryByRole('link', { name: /create memorial/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /create memorial/i })).toBeInTheDocument()
+  })
+
+  it('opens sign-in modal when Create Memorial clicked while not authenticated', async () => {
+    useAuthStore.setState({ user: null, session: null, isLoading: false })
+    const Page = await getPage()
+    render(<Page />)
+    fireEvent.click(screen.getByRole('button', { name: /create memorial/i }))
+    expect(screen.getByTestId('sign-in-modal')).toBeInTheDocument()
   })
 
   it('renders memorial cards when data is loaded', async () => {
