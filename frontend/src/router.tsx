@@ -94,11 +94,12 @@ const router = createBrowserRouter([
     path: '/dashboard',
     element: <DashboardLayout />,
     children: [
-      { index: true,          element: <DashboardPage /> },
-      { path: 'insights',     element: <Placeholder name="Insights" /> },
-      { path: 'memorials',    element: <MyMemorialsPage /> },
-      { path: 'obituary',     element: <Placeholder name="Obituary" /> },
-      { path: 'services',     element: <Placeholder name="Services" /> },
+      { index: true,                element: <DashboardPage /> },
+      { path: 'insights',           element: <Placeholder name="Insights" /> },
+      { path: 'memorials',          element: <MyMemorialsPage /> },
+      { path: 'memorials/create',   element: <Placeholder name="Create Memorial" /> },
+      { path: 'obituary',           element: <Placeholder name="Obituary" /> },
+      { path: 'services',           element: <Placeholder name="Services" /> },
     ],
   },
   {

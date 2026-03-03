@@ -7,7 +7,7 @@ const QUICK_ACTIONS = [
     label: 'Create Memorial',
     description: 'Honour a loved one',
     icon: Plus,
-    to: '/memorials/create',
+    to: '/dashboard/memorials/create',
   },
   {
     label: 'Browse Memorials',

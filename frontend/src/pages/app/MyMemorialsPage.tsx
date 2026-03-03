@@ -143,7 +143,7 @@ export default function MyMemorialsPage() {
           </div>
 
           <button
-            onClick={() => navigate('/memorials/create')}
+            onClick={() => navigate('/dashboard/memorials/create')}
             className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
           >
             <Plus size={15} />
@@ -180,7 +180,7 @@ export default function MyMemorialsPage() {
                 Create your first memorial to honour a loved one.
               </p>
               <button
-                onClick={() => navigate('/memorials/create')}
+                onClick={() => navigate('/dashboard/memorials/create')}
                 className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
               >
                 <Plus size={15} />
