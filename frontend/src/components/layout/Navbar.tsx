@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
@@ -112,12 +112,19 @@ export function Navbar() {
             <ul className="hidden md:flex items-center gap-8 list-none">
               {visibleLinks.map((link) => (
                 <li key={link.label}>
-                  <Link
+                  <NavLink
                     to={link.to}
-                    className="text-sm text-stone-600 hover:text-brand-primary transition-colors"
+                    end
+                    className={({ isActive }) =>
+                      `text-sm transition-colors ${
+                        isActive
+                          ? 'text-brand-primary font-medium'
+                          : 'text-stone-600 hover:text-brand-primary'
+                      }`
+                    }
                   >
                     {link.label}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -135,13 +142,20 @@ export function Navbar() {
             <ul className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1 list-none">
               {visibleLinks.map((link) => (
                 <li key={link.label}>
-                  <Link
+                  <NavLink
                     to={link.to}
+                    end
                     onClick={() => setIsMenuOpen(false)}
-                    className="block py-2 text-sm text-stone-600 hover:text-brand-primary transition-colors"
+                    className={({ isActive }) =>
+                      `block py-2 text-sm transition-colors ${
+                        isActive
+                          ? 'text-brand-primary font-medium'
+                          : 'text-stone-600 hover:text-brand-primary'
+                      }`
+                    }
                   >
                     {link.label}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
