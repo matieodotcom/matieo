@@ -156,7 +156,7 @@ describe('SignUpPage', () => {
 
   it('shows verification banner after successful submit', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
-      data: { user: null, session: null },
+      data: { user: { identities: [{ id: '1' }] }, session: null },
       error: null,
     } as never)
 
@@ -172,7 +172,7 @@ describe('SignUpPage', () => {
 
   it('calls toast.success after successful submit', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
-      data: { user: null, session: null },
+      data: { user: { identities: [{ id: '1' }] }, session: null },
       error: null,
     } as never)
 

@@ -101,7 +101,7 @@ describe('useSignUp', () => {
 
   it('sets emailSent=true and calls toast on success', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
-      data: { user: null, session: null },
+      data: { user: { identities: [{ id: '1' }] }, session: null },
       error: null,
     } as never)
 
@@ -158,6 +158,37 @@ describe('useSignUp', () => {
     expect(result.current.emailSent).toBe(false)
   })
 
+  it('sets error when email is already registered (empty identities)', async () => {
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
+      data: { user: { identities: [] }, session: null },
+      error: null,
+    } as never)
+
+    const { useSignUp } = await getModule()
+    const { result } = renderHook(() => useSignUp())
+
+    act(() => {
+      result.current.form.setValue('firstName', 'Jane')
+      result.current.form.setValue('lastName', 'Smith')
+      result.current.form.setValue('email', 'existing@example.com')
+      result.current.form.setValue('confirmEmail', 'existing@example.com')
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.error).toBe(
+        'An account with this email already exists. Please sign in instead.'
+      )
+    })
+    expect(result.current.emailSent).toBe(false)
+    expect(toast.success).not.toHaveBeenCalled()
+  })
+
   it('does not call supabase.auth.signUp when Zod validation fails', async () => {
     const { useSignUp } = await getModule()
     const { result } = renderHook(() => useSignUp())
@@ -171,7 +202,7 @@ describe('useSignUp', () => {
 
   it('passes full_name as firstName + lastName to supabase', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
-      data: { user: null, session: null },
+      data: { user: { identities: [{ id: '1' }] }, session: null },
       error: null,
     } as never)
 

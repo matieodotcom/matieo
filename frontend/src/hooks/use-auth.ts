@@ -85,7 +85,7 @@ export function useSignUp() {
     setIsPending(true)
     setError(null)
 
-    const { error: authError } = await supabase.auth.signUp({
+    const { data, error: authError } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       options: {
@@ -98,6 +98,12 @@ export function useSignUp() {
 
     if (authError) {
       setError(authError.message)
+      return
+    }
+
+    // Supabase returns user with empty identities when email is already registered
+    if (!data.user || data.user.identities?.length === 0) {
+      setError('An account with this email already exists. Please sign in instead.')
       return
     }
 
