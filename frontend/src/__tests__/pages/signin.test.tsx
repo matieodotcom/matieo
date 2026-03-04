@@ -123,4 +123,66 @@ describe('SignInPage', () => {
     renderWithProviders(<SignInPage />)
     expect(screen.getByText(/a modern way to remember/i)).toBeInTheDocument()
   })
+
+  it('shows unconfirmed banner (not generic error) when Supabase returns "Email not confirmed"', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+
+    renderWithProviders(<SignInPage />)
+    await userEvent.type(screen.getByLabelText('Email Address'), 'jane@example.com')
+    await userEvent.type(screen.getByLabelText('Password'), 'password123')
+    await userEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument()
+      expect(screen.getByText(/email not verified/i)).toBeInTheDocument()
+    })
+    expect(screen.queryByText('Email not confirmed')).not.toBeInTheDocument()
+  })
+
+  it('resend button visible inside banner and clickable', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+    vi.mocked(supabase.auth.resend).mockResolvedValueOnce({ data: {}, error: null } as never)
+
+    renderWithProviders(<SignInPage />)
+    await userEvent.type(screen.getByLabelText('Email Address'), 'jane@example.com')
+    await userEvent.type(screen.getByLabelText('Password'), 'password123')
+    await userEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /resend verification email/i })).toBeInTheDocument()
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: /resend verification email/i }))
+
+    expect(supabase.auth.resend).toHaveBeenCalledOnce()
+  })
+
+  it('resend button shows "Resend in Ns" text after first resend (cooldown active)', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+    vi.mocked(supabase.auth.resend).mockResolvedValueOnce({ data: {}, error: null } as never)
+
+    renderWithProviders(<SignInPage />)
+    await userEvent.type(screen.getByLabelText('Email Address'), 'jane@example.com')
+    await userEvent.type(screen.getByLabelText('Password'), 'password123')
+    await userEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /resend verification email/i })).toBeInTheDocument()
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: /resend verification email/i }))
+
+    await waitFor(() => {
+      expect(screen.getByText(/resend in \d+s/i)).toBeInTheDocument()
+    })
+  })
 })

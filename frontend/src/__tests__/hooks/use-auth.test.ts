@@ -299,6 +299,157 @@ describe('useSignIn', () => {
     const { result } = renderHook(() => useSignIn())
     expect(result.current.isPending).toBe(false)
   })
+
+  it('sets isEmailUnconfirmed=true and no generic error when "Email not confirmed"', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.isEmailUnconfirmed).toBe(true)
+    })
+    expect(result.current.error).toBeNull()
+  })
+
+  it('resendVerification calls supabase.auth.resend with signup type and email', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+    vi.mocked(supabase.auth.resend).mockResolvedValueOnce({ data: {}, error: null } as never)
+
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => expect(result.current.isEmailUnconfirmed).toBe(true))
+
+    await act(async () => {
+      await result.current.resendVerification()
+    })
+
+    expect(supabase.auth.resend).toHaveBeenCalledWith({
+      type: 'signup',
+      email: 'jane@example.com',
+    })
+  })
+
+  it('resendVerification starts cooldown on success (resendCooldown > 0)', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+    vi.mocked(supabase.auth.resend).mockResolvedValueOnce({ data: {}, error: null } as never)
+
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => expect(result.current.isEmailUnconfirmed).toBe(true))
+
+    await act(async () => {
+      await result.current.resendVerification()
+    })
+
+    expect(result.current.resendCooldown).toBeGreaterThan(0)
+  })
+
+  it('resendVerification is a no-op when cooldown > 0', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+    vi.mocked(supabase.auth.resend).mockResolvedValue({ data: {}, error: null } as never)
+
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => expect(result.current.isEmailUnconfirmed).toBe(true))
+
+    // First resend — starts cooldown
+    await act(async () => {
+      await result.current.resendVerification()
+    })
+
+    // Second call — should be no-op because cooldown > 0
+    await act(async () => {
+      await result.current.resendVerification()
+    })
+
+    expect(supabase.auth.resend).toHaveBeenCalledTimes(1)
+  })
+
+  it('resendVerification sets error on resend failure', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: null, session: null },
+      error: { message: 'Email not confirmed' } as never,
+    })
+    vi.mocked(supabase.auth.resend).mockResolvedValueOnce({
+      data: {},
+      error: { message: 'Rate limit exceeded' } as never,
+    } as never)
+
+    const { useSignIn } = await getModule()
+    const { result } = renderHook(() => useSignIn())
+
+    act(() => {
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => expect(result.current.isEmailUnconfirmed).toBe(true))
+
+    await act(async () => {
+      await result.current.resendVerification()
+    })
+
+    await waitFor(() => {
+      expect(result.current.error).toBe('Rate limit exceeded')
+    })
+    expect(result.current.resendCooldown).toBe(0)
+  })
 })
 
 describe('useGoogleAuth', () => {

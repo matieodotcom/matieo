@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -126,6 +126,10 @@ export function useSignUp() {
 export function useSignIn(options?: { onSuccess?: () => void }) {
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isEmailUnconfirmed, setIsEmailUnconfirmed] = useState(false)
+  const [isResending, setIsResending] = useState(false)
+  const [resendCooldown, setResendCooldown] = useState(0)
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const navigate = useNavigate()
 
   const form = useForm<SignInFormValues>({
@@ -133,9 +137,43 @@ export function useSignIn(options?: { onSuccess?: () => void }) {
     defaultValues: { email: '', password: '' },
   })
 
+  useEffect(() => {
+    return () => {
+      if (cooldownRef.current) clearInterval(cooldownRef.current)
+    }
+  }, [])
+
+  const startCooldown = (seconds = 60) => {
+    setResendCooldown(seconds)
+    cooldownRef.current = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(cooldownRef.current!)
+          return 0
+        }
+        return s - 1
+      })
+    }, 1000)
+  }
+
+  const resendVerification = async () => {
+    if (resendCooldown > 0 || isResending) return
+    setIsResending(true)
+    const email = form.getValues('email')
+    const { error: resendError } = await supabase.auth.resend({ type: 'signup', email })
+    setIsResending(false)
+    if (resendError) {
+      setError(resendError.message)
+      return
+    }
+    startCooldown()
+    toast.success('Verification email resent')
+  }
+
   const onSubmit = async (values: SignInFormValues) => {
     setIsPending(true)
     setError(null)
+    setIsEmailUnconfirmed(false)
 
     const { error: authError } = await supabase.auth.signInWithPassword({
       email: values.email,
@@ -145,6 +183,10 @@ export function useSignIn(options?: { onSuccess?: () => void }) {
     setIsPending(false)
 
     if (authError) {
+      if (authError.message === 'Email not confirmed') {
+        setIsEmailUnconfirmed(true)
+        return
+      }
       setError(authError.message)
       return
     }
@@ -157,6 +199,10 @@ export function useSignIn(options?: { onSuccess?: () => void }) {
     onSubmit: form.handleSubmit(onSubmit),
     isPending,
     error,
+    isEmailUnconfirmed,
+    resendVerification,
+    isResending,
+    resendCooldown,
   }
 }
 

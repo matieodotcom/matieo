@@ -1,8 +1,45 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, MailWarning } from 'lucide-react'
 import { useSignIn, useGoogleAuth } from '@/hooks/use-auth'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
+
+// ── UnconfirmedEmailBanner ────────────────────────────────────────────────────
+
+function UnconfirmedEmailBanner({
+  onResend,
+  isResending,
+  cooldown,
+}: {
+  onResend: () => void
+  isResending: boolean
+  cooldown: number
+}) {
+  return (
+    <div role="alert" className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+      <MailWarning size={18} className="text-amber-500 mt-0.5 flex-shrink-0" />
+      <div className="flex-1">
+        <p className="text-sm font-semibold text-amber-800">Email not verified</p>
+        <p className="text-xs text-amber-700 mt-0.5">
+          Please verify your email before signing in.
+        </p>
+        <button
+          type="button"
+          onClick={onResend}
+          disabled={cooldown > 0 || isResending}
+          className="mt-2 text-xs font-medium text-amber-800 underline
+            disabled:no-underline disabled:text-amber-400 disabled:cursor-not-allowed"
+        >
+          {isResending
+            ? 'Sending…'
+            : cooldown > 0
+            ? `Resend in ${cooldown}s`
+            : 'Resend verification email'}
+        </button>
+      </div>
+    </div>
+  )
+}
 
 // ── Logo mark (concentric circles) ───────────────────────────────────────────
 
@@ -103,7 +140,16 @@ function AppMockup() {
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false)
 
-  const { form, onSubmit, isPending, error } = useSignIn()
+  const {
+    form,
+    onSubmit,
+    isPending,
+    error,
+    isEmailUnconfirmed,
+    resendVerification,
+    isResending,
+    resendCooldown,
+  } = useSignIn()
   const { handleGoogleAuth, isPending: googlePending, error: googleError } = useGoogleAuth()
 
   const {
@@ -224,8 +270,16 @@ export default function SignInPage() {
               )}
             </button>
 
-            {/* Auth error */}
-            {combinedError && <ErrorMessage message={combinedError} />}
+            {/* Auth error / unconfirmed email */}
+            {isEmailUnconfirmed ? (
+              <UnconfirmedEmailBanner
+                onResend={resendVerification}
+                isResending={isResending}
+                cooldown={resendCooldown}
+              />
+            ) : (
+              combinedError && <ErrorMessage message={combinedError} />
+            )}
 
             {/* Login with Google */}
             <button
