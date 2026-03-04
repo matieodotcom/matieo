@@ -100,9 +100,7 @@ export function Navbar() {
               {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
             <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
-                <span className="text-white text-xs font-bold tracking-tight">M</span>
-              </div>
+              <img src="/logo.png" alt="" className="w-8 h-8" aria-hidden="true" />
               <span className="text-brand-secondary dark:text-white font-bold text-lg tracking-tight">MATIEO</span>
             </Link>
           </div>

@@ -41,18 +41,6 @@ function UnconfirmedEmailBanner({
   )
 }
 
-// ── Logo mark (concentric circles) ───────────────────────────────────────────
-
-function LogoMark() {
-  return (
-    <div className="w-9 h-9 rounded-full bg-brand-secondary flex items-center justify-center flex-shrink-0">
-      <div className="w-[22px] h-[22px] rounded-full border-[2.5px] border-white/40 flex items-center justify-center">
-        <div className="w-[9px] h-[9px] rounded-full bg-white" />
-      </div>
-    </div>
-  )
-}
-
 // ── Google G icon ─────────────────────────────────────────────────────────────
 
 function GoogleIcon() {
@@ -165,7 +153,7 @@ export default function SignInPage() {
       <div className="w-full md:w-[45%] flex flex-col px-6 sm:px-10 md:px-16 py-10 bg-white">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 mb-10 self-start">
-          <LogoMark />
+          <img src="/logo.png" alt="" className="w-9 h-9" aria-hidden="true" />
           <span className="text-brand-primary font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 

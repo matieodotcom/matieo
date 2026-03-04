@@ -68,9 +68,7 @@ export function DashboardLayout() {
 
         {/* Centre: MATIEO logo */}
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
-            <span className="text-white text-xs font-bold tracking-tight">M</span>
-          </div>
+          <img src="/logo.png" alt="" className="w-8 h-8" aria-hidden="true" />
           <span className="text-brand-secondary dark:text-white font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 

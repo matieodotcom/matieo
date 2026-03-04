@@ -44,9 +44,7 @@ export function Footer() {
           {/* Brand column */}
           <div className="w-full md:w-[280px] md:flex-shrink-0">
             <Link to="/" className="flex items-center gap-2 mb-5">
-              <div className="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center">
-                <span className="text-white text-xs font-bold">M</span>
-              </div>
+              <img src="/logo.png" alt="" className="w-8 h-8" aria-hidden="true" />
               <span className="text-white font-bold text-lg tracking-tight">MATIEO</span>
             </Link>
             <p className="text-sm text-[#99A1AF] leading-relaxed mb-6 max-w-[300px]">

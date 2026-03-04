@@ -4,18 +4,6 @@ import { Lock, Eye, EyeOff, ChevronLeft } from 'lucide-react'
 import { useResetPassword } from '@/hooks/use-auth'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
-// ── Logo mark (concentric circles) ───────────────────────────────────────────
-
-function LogoMark() {
-  return (
-    <div className="w-9 h-9 rounded-full bg-brand-secondary flex items-center justify-center flex-shrink-0">
-      <div className="w-[22px] h-[22px] rounded-full border-[2.5px] border-white/40 flex items-center justify-center">
-        <div className="w-[9px] h-[9px] rounded-full bg-white" />
-      </div>
-    </div>
-  )
-}
-
 // ── ResetPasswordPage ─────────────────────────────────────────────────────────
 
 export default function ResetPasswordPage() {
@@ -33,7 +21,7 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm mx-auto px-4 sm:px-8 py-10 flex flex-col items-center gap-6">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <LogoMark />
+          <img src="/logo.png" alt="" className="w-9 h-9" aria-hidden="true" />
           <span className="text-brand-primary font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 
