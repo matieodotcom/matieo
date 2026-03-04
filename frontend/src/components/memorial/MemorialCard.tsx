@@ -31,7 +31,10 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
     .map((d) => formatDate(d!))
     .join(' · ')
 
-  const href = `/memorial/${slug ?? memorial.id}`
+  const href =
+    status === 'draft'
+      ? `/dashboard/memorials/${memorial.id}/edit`
+      : `/memorial/${slug ?? memorial.id}`
 
   return (
     <article className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
@@ -86,7 +89,7 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
           to={href}
           className="inline-flex items-center gap-1 text-sm text-brand-primary font-medium hover:underline mt-1"
         >
-          View Memorial →
+          {status === 'draft' ? 'Continue Editing →' : 'View Memorial →'}
         </Link>
       </div>
     </article>

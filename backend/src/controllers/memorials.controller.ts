@@ -4,6 +4,7 @@ import type {
   AuthenticatedRequest,
   CreateMemorialPayload,
   UpdateMemorialPayload,
+  PhotoPayload,
 } from '@/types/memorial.types'
 
 // ── Slug generation ───────────────────────────────────────────────────────────
@@ -105,18 +106,34 @@ export async function create(
   next: NextFunction,
 ): Promise<void> {
   try {
-    const payload = req.body as CreateMemorialPayload
+    const { custom_slug, photos, ...payload } = req.body as CreateMemorialPayload
 
     if (!payload.full_name?.trim()) {
       res.status(400).json({ data: null, error: 'full_name is required' })
       return
     }
 
-    const year = payload.date_of_death
-      ? new Date(payload.date_of_death).getFullYear()
-      : undefined
-    const baseSlug = generateSlug(payload.full_name, year)
-    const slug = await uniqueSlug(baseSlug)
+    let slug: string
+    if (custom_slug?.trim()) {
+      // Validate uniqueness of custom slug
+      const { data: existing } = await supabaseAdmin
+        .from('memorials')
+        .select('id')
+        .eq('slug', custom_slug.trim())
+        .maybeSingle()
+      if (existing) {
+        res.status(422).json({ data: null, error: 'This web address is already taken' })
+        return
+      }
+      slug = custom_slug.trim()
+    } else {
+      const year = payload.date_of_death
+        ? new Date(payload.date_of_death).getFullYear()
+        : undefined
+      const baseSlug = generateSlug(payload.full_name, year)
+      slug = await uniqueSlug(baseSlug)
+    }
+
     const fullMemorialUrl = `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}/memorial/${slug}`
 
     const { data, error } = await supabaseAdmin
@@ -131,10 +148,27 @@ export async function create(
       .single()
 
     if (error) throw error
+
+    // Insert gallery photos if provided
+    if (photos && photos.length > 0) {
+      await insertPhotos(data.id, photos)
+    }
+
     res.status(201).json({ data, error: null })
   } catch (err) {
     next(err)
   }
+}
+
+async function insertPhotos(memorialId: string, photos: PhotoPayload[]): Promise<void> {
+  const rows = photos.map((p, i) => ({
+    memorial_id: memorialId,
+    cloudinary_public_id: p.cloudinary_public_id,
+    cloudinary_url: p.cloudinary_url,
+    caption: p.caption ?? null,
+    sort_order: p.sort_order ?? i,
+  }))
+  await supabaseAdmin.from('memorial_photos').insert(rows)
 }
 
 export async function getById(
@@ -147,7 +181,7 @@ export async function getById(
 
     const { data, error } = await supabaseAdmin
       .from('memorials')
-      .select('*')
+      .select('*, memorial_photos(*)')
       .eq('id', id)
       .eq('created_by', req.user.id)
       .is('deleted_at', null)
@@ -172,7 +206,8 @@ export async function update(
 ): Promise<void> {
   try {
     const { id } = req.params
-    const payload = req.body as UpdateMemorialPayload
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { photos, custom_slug, ...payload } = req.body as UpdateMemorialPayload & { custom_slug?: string }
 
     const { data, error } = await supabaseAdmin
       .from('memorials')
@@ -187,6 +222,14 @@ export async function update(
     if (!data) {
       res.status(404).json({ data: null, error: 'Memorial not found' })
       return
+    }
+
+    // Replace gallery photos if provided
+    if (photos !== undefined) {
+      await supabaseAdmin.from('memorial_photos').delete().eq('memorial_id', id)
+      if (photos.length > 0) {
+        await insertPhotos(id, photos)
+      }
     }
 
     res.json({ data, error: null })

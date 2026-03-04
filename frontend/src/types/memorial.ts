@@ -1,5 +1,15 @@
 // Mirrors backend/src/types/memorial.types.ts — keep in sync when backend types change.
 
+export interface MemorialPhoto {
+  id: string
+  memorial_id: string
+  cloudinary_public_id: string
+  cloudinary_url: string
+  caption: string | null
+  sort_order: number
+  created_at: string
+}
+
 export interface MemorialRow {
   id: string
   created_by: string
@@ -12,6 +22,12 @@ export interface MemorialRow {
   location: string | null
   cover_cloudinary_public_id: string | null
   cover_url: string | null
+  profile_cloudinary_public_id: string | null
+  profile_url: string | null
+  country: string | null
+  state: string | null
+  creator_relationship: string | null
+  quote: string | null
   cause_of_death: string | null
   biography: string | null
   tribute_message: string | null
@@ -21,6 +37,7 @@ export interface MemorialRow {
   deleted_at: string | null
   created_at: string
   updated_at: string
+  memorial_photos?: MemorialPhoto[]
 }
 
 export interface MemorialsResponse {

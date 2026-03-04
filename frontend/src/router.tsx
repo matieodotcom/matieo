@@ -15,6 +15,7 @@ import ResetPasswordPage from '@/pages/auth/ResetPasswordPage'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import DashboardPage from '@/pages/app/DashboardPage'
 import MyMemorialsPage from '@/pages/app/MyMemorialsPage'
+import CreateMemorialPage from '@/pages/app/CreateMemorialPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -108,7 +109,8 @@ const router = createBrowserRouter([
       { index: true,                element: <DashboardPage /> },
       { path: 'insights',           element: <Placeholder name="Insights" /> },
       { path: 'memorials',          element: <MyMemorialsPage /> },
-      { path: 'memorials/create',   element: <Placeholder name="Create Memorial" /> },
+      { path: 'memorials/create',        element: <CreateMemorialPage /> },
+      { path: 'memorials/:id/edit',      element: <CreateMemorialPage /> },
       { path: 'obituary',           element: <Placeholder name="Obituary" /> },
       { path: 'services',           element: <Placeholder name="Services" /> },
     ],

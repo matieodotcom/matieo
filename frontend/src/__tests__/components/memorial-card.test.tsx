@@ -50,9 +50,15 @@ describe('MemorialCard', () => {
     expect(screen.getByText('Published')).toBeInTheDocument()
   })
 
-  it('renders "View Memorial" link with correct href', () => {
-    render(<MemorialCard memorial={mockMemorial({ slug: 'john-doe-2024' })} />)
+  it('renders "View Memorial" link with correct href for published memorial', () => {
+    render(<MemorialCard memorial={mockMemorial({ slug: 'john-doe-2024', status: 'published' })} />)
     const link = screen.getByRole('link', { name: /view memorial/i })
     expect(link).toHaveAttribute('href', '/memorial/john-doe-2024')
+  })
+
+  it('renders "Continue Editing" link pointing to edit page for draft memorial', () => {
+    render(<MemorialCard memorial={mockMemorial({ status: 'draft' })} />)
+    const link = screen.getByRole('link', { name: /continue editing/i })
+    expect(link).toHaveAttribute('href', '/dashboard/memorials/memorial-id-123/edit')
   })
 })

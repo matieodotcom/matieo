@@ -196,13 +196,15 @@ memorials
   full_name(text,req), age_at_death(int), date_of_birth(date), date_of_death(date),
   gender(male|female|non-binary|prefer_not_to_say), race_ethnicity(text),
   location(text), cover_cloudinary_public_id(text), cover_url(text),
+  profile_cloudinary_public_id(text), profile_url(text),
+  country(text), state(text), creator_relationship(text), quote(text),
   cause_of_death(text), biography(text), tribute_message(text),
   slug(text,unique), full_memorial_url(text),
   status(draft|published,default:draft), deleted_at(ts,soft-delete),
   created_at(ts), updated_at(ts,trigger)
   RLS: public→published only; owner→all
   IDX: created_by, slug, status
-  Migration: 20260303_add_location_to_memorials.sql
+  Migrations: 20260303_add_location_to_memorials.sql, 20260304_create_memorial_additions.sql
 
 funeral_details
   id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),
@@ -257,6 +259,7 @@ waitlist_subscribers
 - `20260101_initial_schema.sql` — all tables above
 - `20260303_add_location_to_memorials.sql` — location column on memorials
 - `20260304_waitlist_subscribers.sql` — waitlist_subscribers table
+- `20260304_create_memorial_additions.sql` — profile_cloudinary_public_id, profile_url, country, state, creator_relationship, quote on memorials
 
 ---
 
@@ -403,7 +406,7 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | `ui/` file | Primitive | Package | First used in |
 |------------|-----------|---------|--------------|
 | Dialog.tsx | Dialog | `@radix-ui/react-dialog` | SignInModal (Create Memorial flow) |
-| Select.tsx | Select | `@radix-ui/react-select` | — |
+| Select.tsx | Select | `@radix-ui/react-select` | Create Memorial (personal info + gallery dropdowns) |
 | DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | Navbar (user menu) |
 | Switch.tsx | Switch | `@radix-ui/react-switch` | — |
 | Tabs.tsx | Tabs | `@radix-ui/react-tabs` | — |
@@ -717,7 +720,7 @@ CLOUDINARY_API_SECRET
 | Dashboard Home | `/dashboard` | ✅ Complete | docs/pages/dashboard.md |
 | Dashboard Insights | `/dashboard/insights` | ⬜ Placeholder | docs/pages/dashboard.md |
 | My Memorials | `/dashboard/memorials` | ✅ Complete | docs/pages/my-memorials.md |
-| Create Memorial | `/dashboard/memorials/create` | ⬜ Placeholder | docs/pages/create-memorial.md |
+| Create Memorial | `/dashboard/memorials/create` | ✅ Complete | docs/pages/create-memorial.md |
 | Dashboard Obituary | `/dashboard/obituary` | ⬜ Placeholder | docs/pages/dashboard.md |
 | Dashboard Services | `/dashboard/services` | ⬜ Placeholder | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |

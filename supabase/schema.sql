@@ -8,6 +8,7 @@
 -- [x] 20260101_initial_schema.sql
 -- [x] 20260303_add_location_to_memorials.sql
 -- [x] 20260304_waitlist_subscribers.sql
+-- [x] 20260304_create_memorial_additions.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.
