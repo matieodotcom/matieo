@@ -72,7 +72,12 @@ File: `j6RIhPAVnr7HK8TTujCGX4` | Node: `718:3076` (matieo.proto.com, pre-login)
 - Bg: `bg-blue-50`
 - H2: "Not Ready To Sign Up Yet?"
 - Form: name input + email input + "Follow Us" button
-- Client-side only — shows success message on submit (no backend)
+- **Auth-aware:** hidden when `user !== null` or while `isLoading` (avoids flash)
+- **Wired to backend:** POST `/api/waitlist` via `useWaitlist` hook (TanStack mutation)
+- Success: replaced by confirmation message (isSuccess state)
+- Error: inline `<ErrorMessage>` below form (409 "Already subscribed" shown inline)
+- Spinner/disabled state while isPending
+- Confirmation email sent via Resend on successful subscription
 
 ### 9. Footer
 - Bg: `bg-brand-secondary` (#1A1A2E)
@@ -85,10 +90,9 @@ File: `j6RIhPAVnr7HK8TTujCGX4` | Node: `718:3076` (matieo.proto.com, pre-login)
 ## Tests
 - `src/__tests__/components/navbar.test.tsx` — 6 tests
 - `src/__tests__/components/footer.test.tsx` — 5 tests
-- `src/__tests__/pages/landing.test.tsx` — 19 tests
+- `src/__tests__/pages/landing.test.tsx` — 24 tests
 
 ## Known limitations
 - Play buttons in "How It Works" are UI-only (no video modal yet)
-- Waitlist form submits client-side only (no backend/email integration yet)
 - Product mockup in hero is a CSS approximation (no actual screenshot)
 - No mobile/responsive breakpoints — desktop-first (1920px design)

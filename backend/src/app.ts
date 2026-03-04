@@ -9,6 +9,7 @@ import rateLimit from 'express-rate-limit'
 import healthRouter from './routes/health.routes'
 import memorialsRouter from './routes/memorials.routes'
 import cloudinaryRouter from './routes/cloudinary.routes'
+import waitlistRouter from './routes/waitlist.routes'
 import { errorHandler } from './middleware/error.middleware'
 
 const app = express()
@@ -33,6 +34,7 @@ app.use(rateLimit({
 app.use(healthRouter)
 app.use('/api/memorials', memorialsRouter)
 app.use('/api/cloudinary', cloudinaryRouter)
+app.use('/api/waitlist', waitlistRouter)
 
 // ── Error handler (must be last) ─────────────────────────────────────────────
 app.use(errorHandler)

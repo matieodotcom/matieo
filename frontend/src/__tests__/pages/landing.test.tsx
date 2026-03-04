@@ -1,7 +1,43 @@
-import { describe, it, expect } from 'vitest'
-import { screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '@/__tests__/utils'
 import LandingPage from '@/pages/landing/LandingPage'
+import { useAuthStore } from '@/store/authStore'
+
+// ── Mock useWaitlist so we control mutation state in tests ────────────────────
+
+const mockSubmit = vi.fn()
+const mockWaitlistState = {
+  submit: mockSubmit,
+  isPending: false,
+  isSuccess: false,
+  isError: false,
+  errorMessage: null as string | null,
+}
+
+vi.mock('@/hooks/use-waitlist', () => ({
+  useWaitlist: () => mockWaitlistState,
+}))
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function setAuthState(user: object | null, isLoading = false) {
+  useAuthStore.setState({ user: user as never, isLoading })
+}
+
+beforeEach(() => {
+  // Default: logged-out, auth resolved
+  setAuthState(null, false)
+  // Reset mutation state
+  mockWaitlistState.submit = mockSubmit
+  mockWaitlistState.isPending = false
+  mockWaitlistState.isSuccess = false
+  mockWaitlistState.isError = false
+  mockWaitlistState.errorMessage = null
+  mockSubmit.mockReset()
+})
+
+// ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe('LandingPage', () => {
   it('renders without crashing', () => {
@@ -18,7 +54,6 @@ describe('LandingPage', () => {
 
     it('renders Create Memorial CTA buttons', () => {
       renderWithProviders(<LandingPage />)
-      // Appears in both hero and CTA section
       const buttons = screen.getAllByRole('button', { name: /Create Memorial/i })
       expect(buttons.length).toBeGreaterThan(0)
     })
@@ -45,7 +80,6 @@ describe('LandingPage', () => {
 
     it('renders all 6 feature card headings', () => {
       renderWithProviders(<LandingPage />)
-      // Use heading role to avoid matching nav links or footer links with same text
       const headings = screen.getAllByRole('heading').map((h) => h.textContent)
       expect(headings).toContain('Obituary')
       expect(headings).toContain('Digital Memorials')
@@ -116,12 +150,29 @@ describe('LandingPage', () => {
     })
   })
 
-  describe('Waitlist section', () => {
-    it('renders the section heading', () => {
+  describe('Waitlist section — auth-aware visibility', () => {
+    it('renders when user is null and auth is resolved', () => {
+      setAuthState(null, false)
       renderWithProviders(<LandingPage />)
       expect(
         screen.getByRole('heading', { name: /Not Ready To Sign Up Yet\?/i }),
       ).toBeInTheDocument()
+    })
+
+    it('does not render when a user is signed in', () => {
+      setAuthState({ id: 'user-1', email: 'user@matieo.com' }, false)
+      renderWithProviders(<LandingPage />)
+      expect(
+        screen.queryByRole('heading', { name: /Not Ready To Sign Up Yet\?/i }),
+      ).not.toBeInTheDocument()
+    })
+
+    it('does not render while auth is still loading', () => {
+      setAuthState(null, true)
+      renderWithProviders(<LandingPage />)
+      expect(
+        screen.queryByRole('heading', { name: /Not Ready To Sign Up Yet\?/i }),
+      ).not.toBeInTheDocument()
     })
 
     it('renders name and email inputs with proper labels', () => {
@@ -130,18 +181,40 @@ describe('LandingPage', () => {
       expect(screen.getByLabelText('Your email')).toBeInTheDocument()
     })
 
-    it('shows success message after form submission', () => {
+    it('calls submit with name and email on form submit', async () => {
       renderWithProviders(<LandingPage />)
-      const nameInput = screen.getByLabelText('Your name')
-      const emailInput = screen.getByLabelText('Your email')
-      const submitBtn = screen.getByRole('button', { name: /Follow Us/i })
 
-      fireEvent.change(nameInput, { target: { value: 'Jane Doe' } })
-      fireEvent.change(emailInput, { target: { value: 'jane@example.com' } })
-      fireEvent.click(submitBtn)
+      fireEvent.change(screen.getByLabelText('Your name'), { target: { value: 'Jane Doe' } })
+      fireEvent.change(screen.getByLabelText('Your email'), { target: { value: 'jane@example.com' } })
+      fireEvent.click(screen.getByRole('button', { name: /Follow Us/i }))
 
+      await waitFor(() => {
+        expect(mockSubmit).toHaveBeenCalledWith(
+          { name: 'Jane Doe', email: 'jane@example.com' },
+        )
+      })
+    })
+
+    it('shows success state when isSuccess is true', () => {
+      mockWaitlistState.isSuccess = true
+      renderWithProviders(<LandingPage />)
       expect(screen.getByText(/You're in!/i)).toBeInTheDocument()
       expect(screen.queryByRole('button', { name: /Follow Us/i })).not.toBeInTheDocument()
+    })
+
+    it('shows error message when isError is true', () => {
+      mockWaitlistState.isError = true
+      mockWaitlistState.errorMessage = 'Already subscribed'
+      renderWithProviders(<LandingPage />)
+      expect(screen.getByText('Already subscribed')).toBeInTheDocument()
+    })
+
+    it('disables inputs and button while isPending', () => {
+      mockWaitlistState.isPending = true
+      renderWithProviders(<LandingPage />)
+      expect(screen.getByLabelText('Your name')).toBeDisabled()
+      expect(screen.getByLabelText('Your email')).toBeDisabled()
+      expect(screen.getByRole('button', { name: /Sending/i })).toBeDisabled()
     })
   })
 })

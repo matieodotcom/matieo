@@ -23,3 +23,8 @@ jest.mock('@/lib/mlClient', () => ({
   analyzeMemorialBiography: jest.fn(),
   isMLServiceHealthy: jest.fn(),
 }))
+
+jest.mock('@/lib/emailClient', () => ({
+  resend: {},
+  sendWaitlistConfirmation: jest.fn().mockImplementation(() => Promise.resolve()),
+}))

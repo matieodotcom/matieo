@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
+import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   FileText,
@@ -16,7 +15,9 @@ import {
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { SignInModal } from '@/components/auth/SignInModal'
+import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useAuthStore } from '@/store/authStore'
+import { useWaitlist } from '@/hooks/use-waitlist'
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -497,11 +498,17 @@ function CTASection({ onCreateMemorial }: { onCreateMemorial: () => void }) {
 }
 
 function WaitlistSection() {
-  const [submitted, setSubmitted] = useState(false)
+  const nameRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
+  const { submit, isPending, isSuccess, isError, errorMessage } = useWaitlist()
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setSubmitted(true)
+    const name = nameRef.current?.value.trim() ?? ''
+    const email = emailRef.current?.value.trim() ?? ''
+    if (name && email) {
+      submit({ name, email })
+    }
   }
 
   return (
@@ -516,7 +523,7 @@ function WaitlistSection() {
             and insights delivered to your email.
           </p>
 
-          {submitted ? (
+          {isSuccess ? (
             <div className="flex items-center gap-3 py-4">
               <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
                 <Check size={18} className="text-emerald-600" />
@@ -526,38 +533,50 @@ function WaitlistSection() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <div>
-                <label htmlFor="waitlist-name" className="sr-only">
-                  Your name
-                </label>
-                <input
-                  id="waitlist-name"
-                  type="text"
-                  placeholder="Enter your name"
-                  required
-                  className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-full sm:w-56"
-                />
-              </div>
-              <div>
-                <label htmlFor="waitlist-email" className="sr-only">
-                  Your email
-                </label>
-                <input
-                  id="waitlist-email"
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-full sm:w-56"
-                />
-              </div>
-              <button
-                type="submit"
-                className="h-[50px] bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm px-7 rounded-lg transition-colors sm:flex-shrink-0"
-              >
-                Follow Us
-              </button>
-            </form>
+            <>
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div>
+                  <label htmlFor="waitlist-name" className="sr-only">
+                    Your name
+                  </label>
+                  <input
+                    ref={nameRef}
+                    id="waitlist-name"
+                    type="text"
+                    placeholder="Enter your name"
+                    required
+                    disabled={isPending}
+                    className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-full sm:w-56 disabled:opacity-60"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="waitlist-email" className="sr-only">
+                    Your email
+                  </label>
+                  <input
+                    ref={emailRef}
+                    id="waitlist-email"
+                    type="email"
+                    placeholder="Enter your email"
+                    required
+                    disabled={isPending}
+                    className="h-[50px] border border-neutral-300 rounded-lg px-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent bg-white w-full sm:w-56 disabled:opacity-60"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="h-[50px] bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm px-7 rounded-lg transition-colors sm:flex-shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {isPending ? 'Sending…' : 'Follow Us'}
+                </button>
+              </form>
+              {isError && errorMessage && (
+                <div className="mt-3">
+                  <ErrorMessage message={errorMessage} />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -569,6 +588,7 @@ function WaitlistSection() {
 
 export default function LandingPage() {
   const user = useAuthStore((s) => s.user)
+  const isLoading = useAuthStore((s) => s.isLoading)
   const navigate = useNavigate()
   const [signInOpen, setSignInOpen] = useState(false)
 
@@ -590,7 +610,7 @@ export default function LandingPage() {
         <StatsSection />
         <TestimonialsSection />
         <CTASection onCreateMemorial={handleCreateMemorial} />
-        <WaitlistSection />
+        {!isLoading && user === null && <WaitlistSection />}
       </main>
       <Footer />
       <SignInModal

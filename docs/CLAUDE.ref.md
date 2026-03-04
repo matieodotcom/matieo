@@ -97,7 +97,8 @@ export function ErrorMessage({ message }: { message: string }) {
 - `lib/queryClient.ts` — TanStack QueryClient singleton
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
 
-**Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK. Test: Jest + Supertest. Host: Render.
+**Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
+- `lib/emailClient.ts` — Resend singleton + `sendWaitlistConfirmation(name, email)` helper
 
 **ML Service (Python):** Python 3.11, FastAPI, scikit-learn, pandas, numpy, spaCy / HuggingFace. Test: pytest. Host: Render (separate service).
 
@@ -244,10 +245,17 @@ mortality_data
   created_at(ts)
   RLS: authenticated read-only; write via service role only
   IDX: country, year, cause_of_death
+
+waitlist_subscribers
+  id(uuid,pk), name(text,req), email(text,req,unique), subscribed_at(ts)
+  RLS: anyone can INSERT; no public SELECT (service role only)
+  Migration: 20260304_waitlist_subscribers.sql
 ```
 
 **Migrations applied:**
 - `20260101_initial_schema.sql` — all tables above
+- `20260303_add_location_to_memorials.sql` — location column on memorials
+- `20260304_waitlist_subscribers.sql` — waitlist_subscribers table
 
 ---
 
