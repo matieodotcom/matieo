@@ -187,7 +187,8 @@ export function useMemorialForm(memorialId?: string) {
 
   const createMutation = useCreateMemorial()
   const updateMutation = useUpdateMemorial()
-  const { data: existingMemorial, isPending: isLoading } = useGetMemorial(memorialId)
+  const { data: existingMemorial, isPending: isFetching } = useGetMemorial(memorialId)
+  const isLoading = isEdit && isFetching
 
   const isPending = createMutation.isPending || updateMutation.isPending
   const error = createMutation.error ?? updateMutation.error
