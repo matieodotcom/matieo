@@ -39,6 +39,15 @@
         "CLOUDINARY_API_SECRET": "${CLOUDINARY_API_SECRET}"
       },
       "description": "Cloudinary — verify presets, manage media assets"
+    },
+
+    "resend": {
+      "command": "npx",
+      "args": ["-y", "resend-mcp"],
+      "env": {
+        "RESEND_API_KEY": "${RESEND_API_KEY}"
+      },
+      "description": "Resend — send transactional emails, manage contacts, domains, broadcasts"
     }
   }
 }

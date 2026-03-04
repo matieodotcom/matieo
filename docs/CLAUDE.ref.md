@@ -99,6 +99,7 @@ export function ErrorMessage({ message }: { message: string }) {
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
 - `lib/emailClient.ts` — Resend singleton + `sendWaitlistConfirmation(name, email)` helper
+- **Resend MCP** configured in `.mcp.json` — use for testing/sending emails, domain verification, contact management. Requires `RESEND_API_KEY` in `.env.mcp`.
 
 **ML Service (Python):** Python 3.11, FastAPI, scikit-learn, pandas, numpy, spaCy / HuggingFace. Test: pytest. Host: Render (separate service).
 

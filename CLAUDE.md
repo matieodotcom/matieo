@@ -19,6 +19,7 @@ Brand: Blue `#3B5BFF`. Two user modes: memorial creation (families) + mortality 
 | Figma | Before any UI work | `get_design_context(url)` + `get_variable_defs(url)` |
 | Cloudinary | Before any upload UI | Verify preset exists |
 | Context7 | Before any library API | `query-docs("lib-name")` |
+| Resend | Before any email work | Use MCP to send/test emails, manage domains/contacts |
 
 ---
 
