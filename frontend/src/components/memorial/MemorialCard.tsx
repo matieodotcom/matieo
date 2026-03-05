@@ -24,7 +24,7 @@ function getInitials(name: string): string {
 }
 
 export function MemorialCard({ memorial }: MemorialCardProps) {
-  const { full_name, date_of_birth, date_of_death, location, cover_url, status, slug } = memorial
+  const { full_name, date_of_birth, date_of_death, location, profile_url, status, slug } = memorial
 
   const dateRange = [date_of_birth, date_of_death]
     .filter(Boolean)
@@ -39,9 +39,9 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
   return (
     <article className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <Link to={href} tabIndex={-1} aria-hidden>
-        {cover_url ? (
+        {profile_url ? (
           <img
-            src={cover_url}
+            src={profile_url}
             alt={full_name}
             className="w-full h-52 object-cover object-top"
           />

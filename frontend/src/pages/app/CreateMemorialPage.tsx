@@ -205,6 +205,7 @@ export default function CreateMemorialPage() {
 
   const firstName = watch('firstName')
   const lastName = watch('lastName')
+  const dateOfBirth = watch('dateOfBirth')
   const dateOfDeath = watch('dateOfDeath')
   const country = watch('country')
   const stateOptions = useMemo(() => buildStateOptions(country ?? ''), [country])
@@ -220,6 +221,17 @@ export default function CreateMemorialPage() {
     // Only auto-update if slug matches previous auto value or is empty
     setValue('slug', derived, { shouldValidate: false })
   }, [firstName, lastName, dateOfDeath, setValue])
+
+  // Auto-calculate age when both dates are present
+  useEffect(() => {
+    if (!dateOfBirth || !dateOfDeath) return
+    const dob = new Date(dateOfBirth)
+    const dod = new Date(dateOfDeath)
+    let age = dod.getFullYear() - dob.getFullYear()
+    const monthDiff = dod.getMonth() - dob.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && dod.getDate() < dob.getDate())) age -= 1
+    if (age >= 1 && age <= 120) setValue('ageAtDeath', String(age))
+  }, [dateOfBirth, dateOfDeath, setValue])
 
   const domain = getDomain()
   const displaySlug = slug || '…'
@@ -319,6 +331,30 @@ export default function CreateMemorialPage() {
               {errors.lastName && <ErrorMessage message={errors.lastName.message!} />}
             </div>
 
+            {/* Date of Birth */}
+            <div>
+              <FieldLabel htmlFor="dateOfBirth">Date of Birth</FieldLabel>
+              <input
+                id="dateOfBirth"
+                type="date"
+                className={inputClass}
+                {...register('dateOfBirth')}
+              />
+              {errors.dateOfBirth && <ErrorMessage message={errors.dateOfBirth.message!} />}
+            </div>
+
+            {/* Date of Death */}
+            <div>
+              <FieldLabel htmlFor="dateOfDeath">Date of Death</FieldLabel>
+              <input
+                id="dateOfDeath"
+                type="date"
+                className={inputClass}
+                {...register('dateOfDeath')}
+              />
+              {errors.dateOfDeath && <ErrorMessage message={errors.dateOfDeath.message!} />}
+            </div>
+
             {/* Age at Death */}
             <div>
               <FieldLabel htmlFor="ageAtDeath">Age at Death</FieldLabel>
@@ -334,28 +370,6 @@ export default function CreateMemorialPage() {
                     options={AGE_OPTIONS}
                   />
                 )}
-              />
-            </div>
-
-            {/* Date of Birth */}
-            <div>
-              <FieldLabel htmlFor="dateOfBirth">Date of Birth</FieldLabel>
-              <input
-                id="dateOfBirth"
-                type="date"
-                className={inputClass}
-                {...register('dateOfBirth')}
-              />
-            </div>
-
-            {/* Date of Death */}
-            <div>
-              <FieldLabel htmlFor="dateOfDeath">Date of Death</FieldLabel>
-              <input
-                id="dateOfDeath"
-                type="date"
-                className={inputClass}
-                {...register('dateOfDeath')}
               />
             </div>
 

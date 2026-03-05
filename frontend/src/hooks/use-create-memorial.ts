@@ -97,12 +97,41 @@ const slugSchema = z
   .optional()
   .or(z.literal(''))
 
-const draftSchema = z.object({
+const today = () => new Date().toISOString().split('T')[0]
+
+const dateOfBirthField = z
+  .string()
+  .optional()
+  .default('')
+  .refine((s) => !s || !isNaN(new Date(s).getTime()), { message: 'Invalid date' })
+  .refine((s) => !s || s < today(), { message: 'Date of birth must be in the past' })
+
+const dateOfDeathField = z
+  .string()
+  .optional()
+  .default('')
+  .refine((s) => !s || !isNaN(new Date(s).getTime()), { message: 'Invalid date' })
+  .refine((s) => !s || s <= today(), { message: 'Date of death cannot be in the future' })
+
+function dateCrossValidation(
+  data: { dateOfBirth?: string; dateOfDeath?: string },
+  ctx: z.RefinementCtx,
+) {
+  if (data.dateOfBirth && data.dateOfDeath && data.dateOfDeath < data.dateOfBirth) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Date of death must be after date of birth',
+      path: ['dateOfDeath'],
+    })
+  }
+}
+
+const draftBase = z.object({
   firstName: z.string().optional().default(''),
   lastName: z.string().optional().default(''),
   ageAtDeath: z.string().optional().default(''),
-  dateOfBirth: z.string().optional().default(''),
-  dateOfDeath: z.string().optional().default(''),
+  dateOfBirth: dateOfBirthField,
+  dateOfDeath: dateOfDeathField,
   gender: z.string().optional().default(''),
   raceEthnicity: z.string().optional().default(''),
   country: z.string().optional().default(''),
@@ -118,7 +147,7 @@ const draftSchema = z.object({
   galleryPhotos: z.custom<PhotoValue[]>().optional(),
 })
 
-const publishSchema = draftSchema.extend({
+const publishBase = draftBase.extend({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   gender: z.string().min(1, 'Gender is required'),
@@ -128,6 +157,9 @@ const publishSchema = draftSchema.extend({
     .custom<PhotoValue | null>()
     .refine((v) => v !== null && v !== undefined, { message: 'Memorial photo is required' }),
 })
+
+const draftSchema = draftBase.superRefine(dateCrossValidation)
+const publishSchema = publishBase.superRefine(dateCrossValidation)
 
 export type MemorialFormValues = z.infer<typeof draftSchema>
 
