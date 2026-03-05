@@ -106,10 +106,25 @@ describe('DashboardLayout — preview route', () => {
     expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
   })
 
-  it('shows Home link on non-preview routes', () => {
+  it('shows Home link on non-preview, non-create/edit routes', () => {
     renderLayout('/dashboard/memorials')
     expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /back to editing/i })).not.toBeInTheDocument()
+  })
+
+  it('shows "My Memorials" back link on create route', () => {
+    renderLayout('/dashboard/memorials/create')
+    const link = screen.getByRole('link', { name: /my memorials/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/dashboard/memorials')
+    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+  })
+
+  it('shows "My Memorials" back link on edit route', () => {
+    renderLayout('/dashboard/memorials/abc-123/edit')
+    const link = screen.getByRole('link', { name: /my memorials/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/dashboard/memorials')
   })
 })
 

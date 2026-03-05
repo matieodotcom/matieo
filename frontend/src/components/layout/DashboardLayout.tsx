@@ -30,6 +30,9 @@ export function DashboardLayout() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const isPreview = pathname === '/dashboard/memorials/preview'
+  const isCreateOrEdit =
+    pathname === '/dashboard/memorials/create' ||
+    /^\/dashboard\/memorials\/[^/]+\/edit$/.test(pathname)
   const mainRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -81,6 +84,14 @@ export function DashboardLayout() {
               <ArrowLeft size={15} />
               Back to editing
             </button>
+          ) : isCreateOrEdit ? (
+            <Link
+              to="/dashboard/memorials"
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+            >
+              <ArrowLeft size={15} />
+              My Memorials
+            </Link>
           ) : (
             <Link
               to="/"

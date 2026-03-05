@@ -50,7 +50,7 @@ export function MemorialCard({ memorial, onDelete }: MemorialCardProps) {
           <img
             src={profile_url}
             alt={full_name}
-            className="w-full h-52 object-cover object-top"
+            className="w-full h-52 object-cover object-center"
           />
         ) : (
           <div className="w-full h-52 bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center">
