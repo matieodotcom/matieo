@@ -114,22 +114,8 @@ export default function MemorialPreviewPage() {
           </div>
         )}
 
-        {/* Biography + Photo Gallery */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Biography */}
-          <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
-            <h2 className="mb-4 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-              Biography
-            </h2>
-            {v.biography ? (
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
-                {v.biography}
-              </p>
-            ) : (
-              <p className="text-sm text-neutral-400 italic">No biography added yet.</p>
-            )}
-          </div>
-
+        {/* Photo Gallery + Biography */}
+        <div className="flex flex-col gap-6">
           {/* Photo Gallery */}
           <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
             <h2 className="mb-4 text-base font-semibold text-neutral-900 dark:text-neutral-100">
@@ -155,6 +141,20 @@ export default function MemorialPreviewPage() {
                 <Images className="h-8 w-8 text-neutral-300 dark:text-neutral-600 mb-2" aria-hidden="true" />
                 <p className="text-sm text-neutral-400">No photos added yet.</p>
               </div>
+            )}
+          </div>
+
+          {/* Biography */}
+          <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
+            <h2 className="mb-4 text-base font-semibold text-neutral-900 dark:text-neutral-100">
+              Biography
+            </h2>
+            {v.biography ? (
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
+                {v.biography}
+              </p>
+            ) : (
+              <p className="text-sm text-neutral-400 italic">No biography added yet.</p>
             )}
           </div>
         </div>
