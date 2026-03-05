@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Controller } from 'react-hook-form'
 import { ArrowRight } from 'lucide-react'
@@ -6,6 +6,7 @@ import { PhotoUpload, GalleryUpload } from '@/components/ui/PhotoUpload'
 import { Select } from '@/components/ui/Select'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useMemorialForm, sanitiseSlug, deriveSlug } from '@/hooks/use-create-memorial'
+import { buildCountryOptions, buildStateOptions, detectUserCountryCode } from '@/lib/geo'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -30,43 +31,6 @@ const RACE_OPTIONS = [
   { value: 'Hispanic', label: 'Hispanic' },
   { value: 'Arab', label: 'Arab' },
   { value: 'Other', label: 'Other' },
-]
-
-const COUNTRY_OPTIONS = [
-  { value: 'Malaysia', label: 'Malaysia' },
-  { value: 'Singapore', label: 'Singapore' },
-  { value: 'Indonesia', label: 'Indonesia' },
-  { value: 'United States', label: 'United States' },
-  { value: 'United Kingdom', label: 'United Kingdom' },
-  { value: 'Australia', label: 'Australia' },
-  { value: 'Canada', label: 'Canada' },
-  { value: 'New Zealand', label: 'New Zealand' },
-  { value: 'India', label: 'India' },
-  { value: 'China', label: 'China' },
-  { value: 'Japan', label: 'Japan' },
-  { value: 'South Korea', label: 'South Korea' },
-  { value: 'Germany', label: 'Germany' },
-  { value: 'France', label: 'France' },
-  { value: 'Other', label: 'Other' },
-]
-
-const MALAYSIA_STATE_OPTIONS = [
-  { value: 'Johor', label: 'Johor' },
-  { value: 'Kedah', label: 'Kedah' },
-  { value: 'Kelantan', label: 'Kelantan' },
-  { value: 'Melaka', label: 'Melaka' },
-  { value: 'Negeri Sembilan', label: 'Negeri Sembilan' },
-  { value: 'Pahang', label: 'Pahang' },
-  { value: 'Perak', label: 'Perak' },
-  { value: 'Perlis', label: 'Perlis' },
-  { value: 'Pulau Pinang', label: 'Pulau Pinang' },
-  { value: 'Sabah', label: 'Sabah' },
-  { value: 'Sarawak', label: 'Sarawak' },
-  { value: 'Selangor', label: 'Selangor' },
-  { value: 'Terengganu', label: 'Terengganu' },
-  { value: 'Kuala Lumpur', label: 'Kuala Lumpur (Federal Territory)' },
-  { value: 'Labuan', label: 'Labuan (Federal Territory)' },
-  { value: 'Putrajaya', label: 'Putrajaya (Federal Territory)' },
 ]
 
 const RELATIONSHIP_OPTIONS = [
@@ -128,10 +92,18 @@ export default function CreateMemorialPage() {
     formState: { errors },
   } = form
 
+  const [countryOptions, setCountryOptions] = useState(() => buildCountryOptions(null))
+  useEffect(() => {
+    detectUserCountryCode().then(code => {
+      if (code) setCountryOptions(buildCountryOptions(code))
+    })
+  }, [])
+
   const firstName = watch('firstName')
   const lastName = watch('lastName')
   const dateOfDeath = watch('dateOfDeath')
   const country = watch('country')
+  const stateOptions = useMemo(() => buildStateOptions(country ?? ''), [country])
   const slug = watch('slug')
   const biography = watch('biography') ?? ''
   const tributeMessage = watch('tributeMessage') ?? ''
@@ -330,7 +302,7 @@ export default function CreateMemorialPage() {
                       setValue('state', '')
                     }}
                     placeholder="Select country"
-                    options={COUNTRY_OPTIONS}
+                    options={countryOptions}
                   />
                 )}
               />
@@ -348,16 +320,16 @@ export default function CreateMemorialPage() {
                     id="state"
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
-                    placeholder={country === 'Malaysia' ? 'Select state' : 'Select country first'}
-                    options={country === 'Malaysia' ? MALAYSIA_STATE_OPTIONS : []}
-                    disabled={country !== 'Malaysia'}
+                    placeholder={stateOptions.length > 0 ? 'Select state / province' : 'No states for this country'}
+                    options={stateOptions}
+                    disabled={stateOptions.length === 0}
                   />
                 )}
               />
             </div>
 
             {/* Creator Relationship */}
-            <div className="sm:col-span-2">
+            <div>
               <FieldLabel htmlFor="creatorRelationship">Your Relationship to the Deceased</FieldLabel>
               <Controller
                 name="creatorRelationship"
