@@ -406,13 +406,13 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | `ui/` file | Primitive | Package | First used in |
 |------------|-----------|---------|--------------|
 | Dialog.tsx | Dialog | `@radix-ui/react-dialog` | SignInModal (Create Memorial flow) |
-| Select.tsx | Select | `@radix-ui/react-select` | Create Memorial (personal info + gallery dropdowns) |
+| Select.tsx | Select (combobox) | `@radix-ui/react-popover` | Create Memorial (personal info + gallery dropdowns) — inline-searchable; typing filters options in real time |
 | DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | Navbar (user menu) |
 | Switch.tsx | Switch | `@radix-ui/react-switch` | — |
 | Tabs.tsx | Tabs | `@radix-ui/react-tabs` | — |
 | Tooltip.tsx | Tooltip | `@radix-ui/react-tooltip` | — |
 | Avatar.tsx | Avatar | `@radix-ui/react-avatar` | Navbar (user avatar) |
-| Popover.tsx | Popover | `@radix-ui/react-popover` | — |
+| Popover.tsx | Popover | `@radix-ui/react-popover` | Select.tsx (inline, not a standalone wrapper) |
 
 ### Dark mode patterns
 - Toggle: `darkMode: 'class'` in `tailwind.config.ts`. Class `dark` on `<html>` element.
