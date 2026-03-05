@@ -44,7 +44,7 @@ export function Select({
 
       <RadixSelect.Portal>
         <RadixSelect.Content
-          className="z-50 max-h-60 overflow-y-auto rounded-xl border border-neutral-100
+          className="z-50 min-w-[var(--radix-select-trigger-width)] max-h-60 overflow-y-auto rounded-xl border border-neutral-100
             dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-xl py-1
             data-[state=open]:animate-in data-[state=closed]:animate-out
             data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0
@@ -57,7 +57,7 @@ export function Select({
               <RadixSelect.Item
                 key={opt.value}
                 value={opt.value}
-                className="relative flex cursor-pointer select-none items-center px-3 py-2 text-sm
+                className="relative flex cursor-pointer select-none items-center pl-3 pr-8 py-2 text-sm
                   text-neutral-700 dark:text-neutral-300 focus:bg-neutral-50 dark:focus:bg-neutral-700
                   focus:outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50
                   data-[highlighted]:bg-brand-primaryLight dark:data-[highlighted]:bg-neutral-700"
