@@ -28,7 +28,7 @@ export default function MemorialPreviewPage() {
   }
 
   const v = state.values
-  const fullName = [v.firstName, v.lastName].filter(Boolean).join(' ') || 'Untitled Memorial'
+  const fullName = [v.firstName, v.lastName].filter(Boolean).join(' ')
   const locationText = [v.state, v.country].filter(Boolean).join(', ')
   const dateRange = [
     v.dateOfBirth ? formatDate(v.dateOfBirth) : '',

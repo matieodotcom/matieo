@@ -150,10 +150,10 @@ describe('MemorialPreviewPage', () => {
     expect(screen.getByText(/Tributes \(0\)/)).toBeInTheDocument()
   })
 
-  it('shows "Untitled Memorial" when no name is provided', () => {
+  it('shows empty heading when no name is provided', () => {
     mockLocationState = { values: { ...baseValues, firstName: '', lastName: '' } }
     renderPage()
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Untitled Memorial')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('')
   })
 
   it('renders custom hex colour as cover background', () => {
