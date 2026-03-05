@@ -33,6 +33,7 @@ export interface MemorialRow {
   tribute_message: string | null
   slug: string | null
   full_memorial_url: string | null
+  cover_gradient: string | null
   status: 'draft' | 'published'
   deleted_at: string | null
   created_at: string

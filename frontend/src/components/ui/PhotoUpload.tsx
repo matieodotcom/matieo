@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Upload, X } from 'lucide-react'
 import { uploadToCloudinary } from '@/lib/cloudinary'
+import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
 export interface PhotoValue {
   public_id: string
@@ -14,6 +15,7 @@ interface PhotoUploadProps {
   onChange: (value: PhotoValue | null) => void
   accept?: string
   maxSizeMb?: number
+  error?: string
 }
 
 export function PhotoUpload({
@@ -23,6 +25,7 @@ export function PhotoUpload({
   onChange,
   accept = 'image/*',
   maxSizeMb = 10,
+  error: externalError,
 }: PhotoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -129,6 +132,7 @@ export function PhotoUpload({
           {error}
         </p>
       )}
+      {externalError && <ErrorMessage message={externalError} />}
     </div>
   )
 }

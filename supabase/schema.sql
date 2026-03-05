@@ -1,7 +1,7 @@
 -- =============================================================
 -- MATIEO — Full Schema Snapshot
 -- Keep this file in sync with supabase/migrations/
--- Last updated: 2026-03-04 (add waitlist_subscribers)
+-- Last updated: 2026-03-05 (add cover_gradient to memorials)
 -- =============================================================
 
 -- Migrations applied:
@@ -9,6 +9,7 @@
 -- [x] 20260303_add_location_to_memorials.sql
 -- [x] 20260304_waitlist_subscribers.sql
 -- [x] 20260304_create_memorial_additions.sql
+-- [x] 20260305_add_cover_gradient.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.

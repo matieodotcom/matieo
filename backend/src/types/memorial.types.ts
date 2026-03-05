@@ -25,6 +25,7 @@ export interface MemorialRow {
   tribute_message: string | null
   slug: string | null
   full_memorial_url: string | null
+  cover_gradient: string | null
   status: 'draft' | 'published'
   deleted_at: string | null
   created_at: string
@@ -57,6 +58,7 @@ export interface CreateMemorialPayload {
   tribute_message?: string
   cover_cloudinary_public_id?: string
   cover_url?: string
+  cover_gradient?: string | null
   profile_cloudinary_public_id?: string
   profile_url?: string
   custom_slug?: string
@@ -81,6 +83,7 @@ export interface UpdateMemorialPayload {
   tribute_message?: string
   cover_cloudinary_public_id?: string
   cover_url?: string
+  cover_gradient?: string | null
   profile_cloudinary_public_id?: string
   profile_url?: string
   status?: 'draft' | 'published'

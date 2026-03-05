@@ -26,6 +26,7 @@ interface MemorialApiPayload {
   tribute_message?: string
   cover_cloudinary_public_id?: string
   cover_url?: string
+  cover_gradient?: string | null
   profile_cloudinary_public_id?: string
   profile_url?: string
   custom_slug?: string
@@ -112,6 +113,7 @@ const draftSchema = z.object({
   slug: slugSchema,
   profilePhoto: z.custom<PhotoValue | null>().optional(),
   coverPhoto: z.custom<PhotoValue | null>().optional(),
+  coverGradient: z.string().optional(),
   galleryPhotos: z.custom<PhotoValue[]>().optional(),
 })
 
@@ -121,6 +123,9 @@ const publishSchema = draftSchema.extend({
   gender: z.string().min(1, 'Gender is required'),
   raceEthnicity: z.string().min(1, 'Race/ethnicity is required'),
   country: z.string().min(1, 'Country is required'),
+  profilePhoto: z
+    .custom<PhotoValue | null>()
+    .refine((v) => v !== null && v !== undefined, { message: 'Memorial photo is required' }),
 })
 
 export type MemorialFormValues = z.infer<typeof draftSchema>
@@ -173,6 +178,7 @@ function rowToFormValues(row: MemorialRow): Partial<MemorialFormValues> {
       row.cover_url && row.cover_cloudinary_public_id
         ? { public_id: row.cover_cloudinary_public_id, url: row.cover_url }
         : null,
+    coverGradient: row.cover_gradient ?? 'blue',
     galleryPhotos: (row.memorial_photos ?? [])
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((p) => ({ public_id: p.cloudinary_public_id, url: p.cloudinary_url })),
@@ -212,6 +218,7 @@ export function useMemorialForm(memorialId?: string) {
       slug: '',
       profilePhoto: null,
       coverPhoto: null,
+      coverGradient: 'blue',
       galleryPhotos: [],
     },
   })
@@ -243,6 +250,7 @@ export function useMemorialForm(memorialId?: string) {
       tribute_message: values.tributeMessage || undefined,
       cover_cloudinary_public_id: values.coverPhoto?.public_id,
       cover_url: values.coverPhoto?.url,
+      cover_gradient: values.coverPhoto ? null : (values.coverGradient ?? 'blue'),
       profile_cloudinary_public_id: values.profilePhoto?.public_id,
       profile_url: values.profilePhoto?.url,
       custom_slug: values.slug || autoSlug || undefined,

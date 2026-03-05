@@ -197,7 +197,7 @@ memorials
   full_name(text,req), age_at_death(int), date_of_birth(date), date_of_death(date),
   gender(male|female|non-binary|prefer_not_to_say), race_ethnicity(text),
   location(text), cover_cloudinary_public_id(text), cover_url(text),
-  profile_cloudinary_public_id(text), profile_url(text),
+  cover_gradient(text), profile_cloudinary_public_id(text), profile_url(text),
   country(text), state(text), creator_relationship(text), quote(text),
   cause_of_death(text), biography(text), tribute_message(text),
   slug(text,unique), full_memorial_url(text),
@@ -205,7 +205,7 @@ memorials
   created_at(ts), updated_at(ts,trigger)
   RLS: public→published only; owner→all
   IDX: created_by, slug, status
-  Migrations: 20260303_add_location_to_memorials.sql, 20260304_create_memorial_additions.sql
+  Migrations: 20260303_add_location_to_memorials.sql, 20260304_create_memorial_additions.sql, 20260305_add_cover_gradient.sql
 
 funeral_details
   id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),
@@ -261,6 +261,7 @@ waitlist_subscribers
 - `20260303_add_location_to_memorials.sql` — location column on memorials
 - `20260304_waitlist_subscribers.sql` — waitlist_subscribers table
 - `20260304_create_memorial_additions.sql` — profile_cloudinary_public_id, profile_url, country, state, creator_relationship, quote on memorials
+- `20260305_add_cover_gradient.sql` — cover_gradient column on memorials
 
 ---
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Controller } from 'react-hook-form'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Check } from 'lucide-react'
 import { PhotoUpload, GalleryUpload } from '@/components/ui/PhotoUpload'
 import { Select } from '@/components/ui/Select'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
@@ -44,6 +44,19 @@ const RELATIONSHIP_OPTIONS = [
   { value: 'Other', label: 'Other' },
 ]
 
+// ── Gradient options ──────────────────────────────────────────────────────────
+
+export const COVER_GRADIENTS = [
+  { key: 'blue',     label: 'Ocean Blue',   tw: 'from-blue-500 to-brand-primary' },
+  { key: 'sunset',   label: 'Sunset',       tw: 'from-orange-400 to-rose-500' },
+  { key: 'forest',   label: 'Forest',       tw: 'from-green-500 to-teal-400' },
+  { key: 'purple',   label: 'Twilight',     tw: 'from-purple-500 to-pink-400' },
+  { key: 'ocean',    label: 'Deep Ocean',   tw: 'from-cyan-500 to-blue-700' },
+  { key: 'charcoal', label: 'Charcoal',     tw: 'from-neutral-700 to-neutral-900' },
+  { key: 'gold',     label: 'Golden Hour',  tw: 'from-amber-400 to-orange-500' },
+  { key: 'rose',     label: 'Rose',         tw: 'from-rose-400 to-pink-600' },
+]
+
 // ── Domain helper ─────────────────────────────────────────────────────────────
 
 function getDomain(): string {
@@ -76,6 +89,55 @@ const inputClass =
   'w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary transition-colors'
 
 const textareaClass = `${inputClass} resize-none`
+
+// ── Cover photo + gradient picker ────────────────────────────────────────────
+
+interface CoverPhotoFieldProps {
+  coverPhoto: import('@/components/ui/PhotoUpload').PhotoValue | null
+  onCoverPhotoChange: (v: import('@/components/ui/PhotoUpload').PhotoValue | null) => void
+  coverGradient: string
+  onGradientChange: (key: string) => void
+}
+
+function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGradientChange }: CoverPhotoFieldProps) {
+  return (
+    <div className="space-y-4">
+      <PhotoUpload
+        label="Cover Photo"
+        hint="Recommended 1216×282px, up to 10MB"
+        value={coverPhoto}
+        onChange={onCoverPhotoChange}
+      />
+      {!coverPhoto && (
+        <div>
+          <p className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            Or choose a cover background
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {COVER_GRADIENTS.map((g) => (
+              <button
+                key={g.key}
+                type="button"
+                aria-label={g.label}
+                aria-pressed={coverGradient === g.key}
+                onClick={() => onGradientChange(g.key)}
+                className={`relative h-10 w-16 rounded-lg bg-gradient-to-r ${g.tw} ring-offset-2 transition-all
+                  ${coverGradient === g.key
+                    ? 'ring-2 ring-brand-primary'
+                    : 'hover:ring-2 hover:ring-neutral-300 dark:hover:ring-neutral-600'
+                  }`}
+              >
+                {coverGradient === g.key && (
+                  <Check className="absolute inset-0 m-auto h-4 w-4 text-white drop-shadow" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -161,18 +223,25 @@ export default function CreateMemorialPage() {
                   hint="Recommended 360×360px, up to 10MB"
                   value={field.value ?? null}
                   onChange={field.onChange}
+                  error={errors.profilePhoto?.message as string | undefined}
                 />
               )}
             />
             <Controller
               name="coverPhoto"
               control={control}
-              render={({ field }) => (
-                <PhotoUpload
-                  label="Cover Photo"
-                  hint="Recommended 1216×282px, up to 10MB"
-                  value={field.value ?? null}
-                  onChange={field.onChange}
+              render={({ field: coverField }) => (
+                <Controller
+                  name="coverGradient"
+                  control={control}
+                  render={({ field: gradField }) => (
+                    <CoverPhotoField
+                      coverPhoto={coverField.value ?? null}
+                      onCoverPhotoChange={coverField.onChange}
+                      coverGradient={gradField.value ?? 'blue'}
+                      onGradientChange={gradField.onChange}
+                    />
+                  )}
                 />
               )}
             />
