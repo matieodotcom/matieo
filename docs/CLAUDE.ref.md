@@ -834,5 +834,48 @@ if (isLoading) return <LoadingSpinner />
 if (!user) return <Navigate to="/signin" replace />
 ```
 
+---
+
+## §Accessibility
+
+```
+1. Semantic HTML — use <button>, <nav>, <main>, <section>, <label> correctly
+2. Every input → explicit id + htmlFor on its label (no aria-label shortcuts for forms)
+3. Every icon-only button → aria-label describing the action
+4. Every image → meaningful alt text (or alt="" if decorative)
+5. Radix primitives handle focus trapping and ARIA roles automatically — don't override
+6. Tab order must follow visual order — avoid tabIndex > 0
+7. Colour contrast — brand.primary #3B5BFF on white passes WCAG AA (verified)
+8. Mobile touch targets — minimum 44×44px (h-11 w-11) for all interactive elements
+```
+
+---
+
+## §PageBuildOrder
+
+When building a new page, follow this sequence:
+
+```
+[ ] Figma MCP  → design context + variables + screenshot
+[ ] Context7   → docs for each lib being used
+[ ] ref.md     → check §Pages status, §DB schema
+[ ] Decisions  → check docs/decisions.md for relevant past decisions
+[ ] Supabase   → list_tables(), plan schema changes
+[ ] Migration  → write + execute DEV → PROD
+[ ] Ref update → schema.sql + CLAUDE.ref.md §DB
+[ ] Backend    → route + controller if needed
+[ ] Hook       → all data fetching/mutation
+[ ] UI         → pixel-accurate, Tailwind + Radix + Montserrat, mobile-first
+[ ] Wire       → hook → UI, all 3 states + error handling pattern
+[ ] A11y       → semantic HTML, labels, alt text, aria (see §Accessibility)
+[ ] Cloudinary → verify preset, wire upload
+[ ] Route      → router.tsx entry
+[ ] Tests      → hook + page + route — must pass before commit
+[ ] E2E        → if critical flow
+[ ] Page doc   → docs/pages/{name}.md
+[ ] Self-check → full maintenance checklist in CLAUDE.md
+[ ] Commit     → git add . → commit → push origin dev (automatic)
+```
+
 ### SignInModal usage
 `<SignInModal open={boolean} onClose={() => void}>` — Radix Dialog wrapping the sign-in form. Closes on successful sign-in (auth state listener triggers re-render). Used wherever an unauthenticated user triggers an auth-required action.

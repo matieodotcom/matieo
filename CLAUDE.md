@@ -140,65 +140,7 @@ Constants     → SCREAMING_SNAKE: MAX_PHOTO_COUNT, SLUG_MAX_LENGTH
 
 ---
 
-## COMMIT FORMAT
-
-```
-feat(scope):  new feature          → feat(memorial): add photo gallery upload
-fix(scope):   bug fix              → fix(auth): handle expired token redirect
-db(scope):    schema change        → db(memorials): add slug uniqueness index
-test(scope):  tests only           → test(useMemorials): add error state coverage
-chore(scope): config/deps/tooling  → chore(deps): upgrade tanstack-query to v5.1
-refactor:     no behaviour change  → refactor(memorial-form): extract family member hook
-docs:         documentation only   → docs(decisions): add Cloudinary over Supabase rationale
-```
-
-Scope = affected module: `auth`, `memorial`, `insights`, `ml`, `backend`, `db`, `e2e`, `ci`
-
----
-
-## ACCESSIBILITY
-
-```
-1. Semantic HTML — use <button>, <nav>, <main>, <section>, <label> correctly
-2. Every input → explicit id + htmlFor on its label (no aria-label shortcuts for forms)
-3. Every icon-only button → aria-label describing the action
-4. Every image → meaningful alt text (or alt="" if decorative)
-5. Radix primitives handle focus trapping and ARIA roles automatically — don't override
-6. Tab order must follow visual order — avoid tabIndex > 0
-7. Colour contrast — brand.primary #3B5BFF on white passes WCAG AA (verified)
-```
-
----
-
-## PAGE BUILD ORDER
-
-```
-[ ] Figma MCP  → design context + variables + screenshot
-[ ] Context7   → docs for each lib being used
-[ ] ref.md     → check §Pages status, §DB schema
-[ ] Decisions  → check docs/decisions.md for relevant past decisions
-[ ] Supabase   → list_tables(), plan schema changes
-[ ] Migration  → write + execute DEV → PROD
-[ ] Ref update → schema.sql + CLAUDE.ref.md §DB
-[ ] Backend    → route + controller if needed
-[ ] Hook       → all data fetching/mutation
-[ ] UI         → pixel-accurate, Tailwind + Radix + Montserrat
-[ ] Wire       → hook → UI, all 3 states + error handling pattern
-[ ] A11y       → semantic HTML, labels, alt text, aria where needed
-[ ] Cloudinary → verify preset, wire upload
-[ ] Route      → router.tsx entry
-[ ] Tests      → hook + page + route — must pass before commit
-[ ] E2E        → if critical flow
-[ ] Page doc   → docs/pages/{name}.md
-[ ] Self-check → full maintenance checklist above
-[ ] Commit     → git add . → commit → push origin dev (automatic)
-```
-
----
-
 ## GIT WORKFLOW — AUTOMATIC, NO PROMPTING NEEDED
-
-Claude handles all git operations automatically at the end of every task.
 
 ```
 NEVER commit to main — dev branch only
@@ -206,58 +148,16 @@ NEVER ask the user whether to commit — always commit when task is complete
 NEVER leave uncommitted work at the end of a session
 ```
 
-**Every task follows this exact flow:**
-```
-1. Check current branch → if not dev, switch to dev
-2. Build the feature
-3. Run tests → must pass before committing
-4. git add .
-5. git commit -m "type(scope): description" (follow commit format below)
-6. git push origin dev
-7. Confirm push succeeded in response to user
-```
+Flow: check branch → build → tests pass → `git add .` → commit → `git push origin dev` → confirm.
 
-**Commit message format:**
+Commit format: `feat(scope): description — N tests passing`
+Scopes: `auth`, `memorial`, `insights`, `ml`, `backend`, `db`, `e2e`, `ci`
+Types: `feat` `fix` `db` `test` `chore` `refactor` `docs`
+
+After every push confirm:
 ```
-feat(scope):     new page or feature
-fix(scope):      bug fix
-test(scope):     tests only
-db(scope):       schema or migration change
-chore(scope):    config, deps, tooling
-refactor(scope): no behaviour change
-docs:            documentation only
+✅ Committed to dev: "..."   ✅ Pushed to origin/dev   🚀 Auto-deploy triggered
 ```
-
-**Scope = affected area:** `landing`, `auth`, `memorial`, `insights`, `backend`, `ml`, `db`, `e2e`, `ci`
-
-**Example commit messages:**
-```
-feat(auth): add Sign In, Sign Up, Forgot Password pages — 47 tests passing
-feat(memorial): add Create Memorial page with photo upload — 38 tests passing
-db(memorials): add slug index and cause_of_death column
-fix(auth): handle expired token redirect to /signin
-```
-
-**After every commit Claude must confirm:**
-```
-✅ Committed to dev: "feat(landing): ..."
-✅ Pushed to origin/dev
-🚀 Auto-deploy to dev.matieo.com triggered
-```
-
----
-
-## FILE LIFECYCLE — NO MANUAL CLEANUP NEEDED
-
-Claude manages file lifecycle automatically:
-- **Completed pages** → Claude adds `## Status: ✅ Complete` + load guard to page spec. File stays, never auto-loaded.
-- **Renamed pages** → Claude renames the spec file + updates `§Pages` table in ref.md.
-- **Deleted features** → Claude removes the spec file + cleans router.tsx + updates ref.md.
-- **Migrations** → Never deleted. Permanent historical record.
-- **`__tests__/utils.ts` factories** → Updated in-place when models change.
-- **Orphaned docs** → Self-check catches them every task close.
-
-You should never need to manually delete any project file.
 
 ---
 
@@ -282,5 +182,7 @@ NEVER  leave orphaned docs behind          → rename/delete with the feature
 ---
 
 > **Stack, design tokens, schema, Radix logic, ML architecture, env setup, error patterns → `docs/CLAUDE.ref.md`**
+> **Accessibility rules → `docs/CLAUDE.ref.md §Accessibility`**
+> **Page build checklist → `docs/CLAUDE.ref.md §PageBuildOrder`**
 > **Past architecture decisions → `docs/decisions.md`**
 > **Known bugs and limitations → `docs/known-issues.md`**
