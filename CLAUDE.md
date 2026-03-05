@@ -37,6 +37,7 @@ Every task is incomplete until affected files are updated.
 | ML feature | `docs/CLAUDE.ref.md §ML roadmap` |
 | Env var | `.env.*.example` |
 | Stack/deps | `docs/CLAUDE.ref.md §Stack` + `package.json` / `requirements.txt` |
+| New `lib/` file | `docs/CLAUDE.ref.md §Stack` — add entry under "Frontend key lib files" |
 | Architecture decision made | `docs/decisions.md` |
 | Bug or limitation found | `docs/known-issues.md` |
 
@@ -46,6 +47,8 @@ Every task is incomplete until affected files are updated.
 [ ] Page added/renamed?      → router.tsx + page doc + ref.md §Pages updated
 [ ] Page doc orphaned?       → deleted or renamed to match
 [ ] Component added?         → ref.md §Radix log updated
+[ ] lib/ file added?         → ref.md §Stack "Frontend key lib files" entry added
+[ ] Package installed?       → ref.md §Stack deps line updated
 [ ] Architecture decision?   → docs/decisions.md entry added
 [ ] Bug/limitation found?    → docs/known-issues.md entry added
 [ ] Feature built?           → tests written and passing
