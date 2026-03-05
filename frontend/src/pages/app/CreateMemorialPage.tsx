@@ -597,7 +597,7 @@ export default function CreateMemorialPage() {
                 text-brand-primary hover:bg-brand-primaryLight/40 dark:hover:bg-brand-primary/10
                 disabled:opacity-50 transition-colors"
             >
-              View Draft
+              Preview
             </button>
           </div>
 
