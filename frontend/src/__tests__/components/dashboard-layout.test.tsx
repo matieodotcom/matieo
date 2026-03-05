@@ -113,6 +113,33 @@ describe('DashboardLayout — preview route', () => {
   })
 })
 
+describe('DashboardLayout — mobile drawer', () => {
+  beforeEach(() => {
+    useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
+    vi.clearAllMocks()
+  })
+
+  it('backdrop is not rendered when sidebar is closed', () => {
+    renderLayout()
+    expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
+  })
+
+  it('backdrop renders when sidebar is open', async () => {
+    renderLayout()
+    await userEvent.click(screen.getByRole('button', { name: 'Toggle navigation' }))
+    expect(screen.getByTestId('sidebar-backdrop')).toBeInTheDocument()
+  })
+
+  it('clicking backdrop closes the sidebar', async () => {
+    renderLayout()
+    await userEvent.click(screen.getByRole('button', { name: 'Toggle navigation' }))
+    await userEvent.click(screen.getByTestId('sidebar-backdrop'))
+    expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Toggle navigation' }))
+      .toHaveAttribute('aria-expanded', 'false')
+  })
+})
+
 describe('DashboardLayout — unauthenticated', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: null, session: null, isLoading: false })

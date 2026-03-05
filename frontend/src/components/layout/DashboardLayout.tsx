@@ -36,6 +36,13 @@ export function DashboardLayout() {
     mainRef.current?.scrollTo({ top: 0, behavior: 'instant' })
   }, [pathname])
 
+  // Close drawer on mobile when navigating
+  useEffect(() => {
+    if (window.matchMedia('(max-width: 1023px)').matches) {
+      setIsOpen(false)
+    }
+  }, [pathname])
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-neutral-50 dark:bg-neutral-950">
@@ -54,7 +61,7 @@ export function DashboardLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
       {/* Top Navbar */}
-      <header className="h-16 flex items-center justify-between px-6 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800 flex-shrink-0">
+      <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800 flex-shrink-0 z-50 relative">
         {/* Left: toggle + home */}
         <div className="flex items-center gap-4">
           <button
@@ -114,14 +121,33 @@ export function DashboardLayout() {
         </DropdownMenu>
       </header>
 
-      {/* Body: push sidebar + main */}
+      {/* Mobile backdrop — closes drawer on outside tap */}
+      {isOpen && (
+        <div
+          data-testid="sidebar-backdrop"
+          className="fixed inset-0 z-30 bg-neutral-950/50 lg:hidden"
+          aria-hidden="true"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Body: sidebar + main */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
+        {/* Sidebar
+            Mobile/tablet : fixed overlay drawer (slides in from left, z-40)
+            Desktop (lg+) : inline push sidebar (width transition) */}
         <aside
           className={[
+            // Mobile: fixed overlay below the header
+            'fixed top-16 bottom-0 left-0 z-40 w-64',
+            // Desktop: back to normal inline flow
+            'lg:relative lg:inset-auto lg:z-auto',
             'flex-shrink-0 bg-white dark:bg-neutral-900 border-r border-neutral-100 dark:border-neutral-800 overflow-hidden',
-            'transition-[width] duration-300 ease-in-out',
-            isOpen ? 'w-64' : 'w-16',
+            // Mobile uses translate; desktop uses width
+            'transition-transform duration-300 ease-in-out lg:transition-[width]',
+            isOpen
+              ? 'translate-x-0 lg:w-64'
+              : '-translate-x-full lg:w-16 lg:translate-x-0',
           ].join(' ')}
         >
           <div className="w-full h-full flex flex-col py-4">
@@ -196,7 +222,7 @@ export function DashboardLayout() {
         </aside>
 
         {/* Main */}
-        <main ref={mainRef} className="flex-1 overflow-y-auto p-8">
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

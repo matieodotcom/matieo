@@ -96,6 +96,12 @@ Mocks in `__tests__/setup.ts`. Factories in `__tests__/utils.ts`. Coverage gates
 7. Supabase client only via lib/supabase.ts — never instantiate inline
 8. Every form field needs id + htmlFor pairing — no exceptions
 9. Semantic HTML always — div is last resort for interactive elements
+10. Mobile-first responsive design — EVERY page and component must work on mobile (≥ 320px), tablet (≥ 768px), and desktop (≥ 1024px)
+    - Use Tailwind responsive prefixes: base → sm:640 → md:768 → lg:1024 → xl:1280
+    - Padding/spacing: p-4 sm:p-6 lg:p-8 pattern — never hardcode desktop-only padding
+    - Overlays/drawers (sidebars, modals): fixed overlay on mobile, inline on desktop (lg:relative lg:inset-auto)
+    - Touch targets: minimum 44×44px (h-11 w-11) for all interactive elements on mobile
+    - Stacked layout on mobile, side-by-side on md/lg where appropriate
 ```
 
 ---
