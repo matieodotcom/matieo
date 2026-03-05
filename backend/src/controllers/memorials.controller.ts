@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { cloudinary } from '@/lib/cloudinary'
 import type {
   AuthenticatedRequest,
   CreateMemorialPayload,
@@ -262,6 +263,71 @@ export async function softDelete(
     }
 
     res.json({ data: { id: data.id }, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function permanentDelete(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+
+    // Fetch memorial — must belong to user and not be soft-deleted
+    const { data: memorial, error: fetchError } = await supabaseAdmin
+      .from('memorials')
+      .select('id, status, cover_cloudinary_public_id, profile_cloudinary_public_id')
+      .eq('id', id)
+      .eq('created_by', req.user.id)
+      .is('deleted_at', null)
+      .maybeSingle()
+
+    if (fetchError) throw fetchError
+    if (!memorial) {
+      res.status(404).json({ data: null, error: 'Memorial not found' })
+      return
+    }
+
+    if (memorial.status !== 'draft') {
+      res.status(403).json({ data: null, error: 'Only draft memorials can be permanently deleted' })
+      return
+    }
+
+    // Collect gallery photo public_ids
+    const { data: photos } = await supabaseAdmin
+      .from('memorial_photos')
+      .select('cloudinary_public_id')
+      .eq('memorial_id', id)
+
+    const publicIds: string[] = [
+      memorial.cover_cloudinary_public_id,
+      memorial.profile_cloudinary_public_id,
+      ...(photos ?? []).map((p: { cloudinary_public_id: string | null }) => p.cloudinary_public_id),
+    ].filter(Boolean) as string[]
+
+    // Best-effort Cloudinary cleanup — DB delete always proceeds
+    const results = await Promise.allSettled(
+      publicIds.map((pid) => cloudinary.uploader.destroy(pid)),
+    )
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.error(`Cloudinary destroy failed for ${publicIds[i]}:`, r.reason)
+      }
+    })
+
+    // Hard delete — cascade removes memorial_photos
+    const { error: deleteError } = await supabaseAdmin
+      .from('memorials')
+      .delete()
+      .eq('id', id)
+      .eq('created_by', req.user.id)
+
+    if (deleteError) throw deleteError
+
+    res.json({ data: { id }, error: null })
   } catch (err) {
     next(err)
   }

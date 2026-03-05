@@ -23,6 +23,13 @@ Authenticated user's list of memorials they have created. Supports search and pa
 
 Hook: `useMyMemorials({ q, page })` in `hooks/use-my-memorials.ts`.
 
+### Mutations
+| Endpoint | Method | Notes |
+|----------|--------|-------|
+| `DELETE /api/memorials/:id/permanent` | DELETE | Hard-delete draft + Cloudinary cleanup. Drafts only — returns 403 for published. |
+
+Hook: `useDeleteMemorial()` in `hooks/use-delete-memorial.ts`.
+
 ---
 
 ## Schema Changes Required

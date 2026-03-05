@@ -88,7 +88,7 @@ export function ErrorMessage({ message }: { message: string }) {
 
 ## §Stack
 
-**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city. Test: Vitest + RTL.
+**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`. Test: Vitest + RTL.
 
 **Frontend key lib files:**
 - `lib/supabase.ts` — Supabase singleton client (anon key, frontend only)
@@ -97,6 +97,7 @@ export function ErrorMessage({ message }: { message: string }) {
 - `lib/queryClient.ts` — TanStack QueryClient singleton
 - `lib/geo.ts` — `detectUserCountryCode()` (async, Cloudflare CDN trace, CORS-safe, falls back to `navigator.language` region), `buildCountryOptions(isoCode|null)` (full world list, detected country first), `buildStateOptions(countryName)` (dynamic states via `country-state-city`)
 - `components/layout/ScrollToTop.tsx` — pathless root route element; calls `window.scrollTo({ top: 0, behavior: 'instant' })` on every pathname change, renders `<Outlet />`
+- `hooks/use-delete-memorial.ts` — `useDeleteMemorial()` mutation: `DELETE /api/memorials/:id/permanent`, invalidates `['my-memorials']`, toasts on success
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
@@ -411,6 +412,7 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | Dialog.tsx | Dialog | `@radix-ui/react-dialog` | SignInModal (Create Memorial flow) |
 | Select.tsx | Select (combobox) | `@radix-ui/react-popover` | Create Memorial (personal info + gallery dropdowns) — inline-searchable; typing filters options in real time |
 | DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | Navbar (user menu) |
+| AlertDialog.tsx | AlertDialog | `@radix-ui/react-alert-dialog` | MyMemorialsPage (delete draft confirmation) |
 | Switch.tsx | Switch | `@radix-ui/react-switch` | — |
 | Tabs.tsx | Tabs | `@radix-ui/react-tabs` | — |
 | Tooltip.tsx | Tooltip | `@radix-ui/react-tooltip` | — |

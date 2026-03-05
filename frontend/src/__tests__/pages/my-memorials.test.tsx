@@ -4,9 +4,14 @@ import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/__tests__/utils'
 import { useAuthStore } from '@/store/authStore'
 import type { User } from '@supabase/supabase-js'
+import MyMemorialsPage from '@/pages/app/MyMemorialsPage'
 
 vi.mock('@/lib/apiClient', () => ({
   apiFetch: vi.fn(),
+}))
+
+vi.mock('@/lib/toast', () => ({
+  toast: { success: vi.fn(), error: vi.fn() },
 }))
 
 const mockUser = {
@@ -68,11 +73,10 @@ const mockMemorialData = {
   error: null,
 }
 
-async function renderPage() {
+async function renderPage(initialRoute = '/dashboard/memorials') {
   const { apiFetch } = await import('@/lib/apiClient')
   vi.mocked(apiFetch).mockResolvedValue(mockMemorialData)
-  const { default: MyMemorialsPage } = await import('@/pages/app/MyMemorialsPage')
-  return renderWithProviders(<MyMemorialsPage />, { initialRoute: '/dashboard/memorials' })
+  return renderWithProviders(<MyMemorialsPage />, { initialRoute })
 }
 
 describe('MyMemorialsPage', () => {
@@ -109,7 +113,6 @@ describe('MyMemorialsPage', () => {
   it('shows skeleton cards while loading', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
-    const { default: MyMemorialsPage } = await import('@/pages/app/MyMemorialsPage')
     renderWithProviders(<MyMemorialsPage />)
     expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0)
   })
@@ -117,7 +120,6 @@ describe('MyMemorialsPage', () => {
   it('shows empty state when no memorials exist', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockResolvedValueOnce({ ...mockMemorialData, data: [], total: 0 })
-    const { default: MyMemorialsPage } = await import('@/pages/app/MyMemorialsPage')
     renderWithProviders(<MyMemorialsPage />)
     await waitFor(() =>
       expect(screen.getByText(/haven't created any memorials/i)).toBeInTheDocument(),
@@ -127,7 +129,6 @@ describe('MyMemorialsPage', () => {
   it('shows search empty state when no results match query', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockResolvedValueOnce({ ...mockMemorialData, data: [], total: 0 })
-    const { default: MyMemorialsPage } = await import('@/pages/app/MyMemorialsPage')
     renderWithProviders(<MyMemorialsPage />, { initialRoute: '/dashboard/memorials?q=xyz' })
     await waitFor(() => expect(screen.getByText(/no memorials match/i)).toBeInTheDocument())
   })
@@ -135,7 +136,6 @@ describe('MyMemorialsPage', () => {
   it('shows error message when fetch fails', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockRejectedValueOnce(new Error('Network error'))
-    const { default: MyMemorialsPage } = await import('@/pages/app/MyMemorialsPage')
     renderWithProviders(<MyMemorialsPage />)
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument())
   })
@@ -143,7 +143,6 @@ describe('MyMemorialsPage', () => {
   it('renders pagination when total > limit', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockResolvedValueOnce({ ...mockMemorialData, total: 25 })
-    const { default: MyMemorialsPage } = await import('@/pages/app/MyMemorialsPage')
     renderWithProviders(<MyMemorialsPage />)
     await waitFor(() =>
       expect(screen.getByRole('navigation', { name: /pagination/i })).toBeInTheDocument(),
@@ -157,5 +156,73 @@ describe('MyMemorialsPage', () => {
     )
     await userEvent.type(input, 'john')
     expect(input).toHaveValue('john')
+  })
+
+  it('shows options button on draft cards', async () => {
+    await renderPage()
+    await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
+    expect(screen.getByRole('button', { name: /memorial options/i })).toBeInTheDocument()
+  })
+
+  it('opens confirmation dialog on delete click', async () => {
+    const user = userEvent.setup()
+    await renderPage()
+    await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
+
+    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(screen.getByText('Delete Draft'))
+
+    await waitFor(() =>
+      expect(screen.getByText(/delete this draft/i)).toBeInTheDocument(),
+    )
+  })
+
+  it('calls permanent delete API on confirm', async () => {
+    const user = userEvent.setup()
+    const { apiFetch } = await import('@/lib/apiClient')
+    // first call: list memorials; second: delete
+    vi.mocked(apiFetch)
+      .mockResolvedValueOnce(mockMemorialData)
+      .mockResolvedValueOnce({ data: { id: 'mem-2' }, error: null })
+      .mockResolvedValueOnce({ ...mockMemorialData, data: [mockMemorialData.data[0]], total: 1 })
+
+    renderWithProviders(<MyMemorialsPage />, { initialRoute: '/dashboard/memorials' })
+
+    await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
+
+    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(screen.getByText('Delete Draft'))
+    await waitFor(() => expect(screen.getByText(/delete this draft/i)).toBeInTheDocument())
+
+    await user.click(screen.getByRole('button', { name: /^delete$/i }))
+
+    await waitFor(() =>
+      expect(vi.mocked(apiFetch)).toHaveBeenCalledWith(
+        '/api/memorials/mem-2/permanent',
+        { method: 'DELETE' },
+      ),
+    )
+  })
+
+  it('shows error in dialog on delete failure', async () => {
+    const user = userEvent.setup()
+    const { apiFetch } = await import('@/lib/apiClient')
+    vi.mocked(apiFetch)
+      .mockResolvedValueOnce(mockMemorialData)
+      .mockRejectedValueOnce(new Error('Server error'))
+
+    renderWithProviders(<MyMemorialsPage />, { initialRoute: '/dashboard/memorials' })
+
+    await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
+
+    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(screen.getByText('Delete Draft'))
+    await waitFor(() => expect(screen.getByText(/delete this draft/i)).toBeInTheDocument())
+
+    await user.click(screen.getByRole('button', { name: /^delete$/i }))
+
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent('Server error'),
+    )
   })
 })

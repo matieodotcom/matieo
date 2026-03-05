@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom'
-import { Calendar, MapPin } from 'lucide-react'
+import { Calendar, MapPin, MoreVertical, Trash2 } from 'lucide-react'
 import type { MemorialRow } from '@/types/memorial'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/DropdownMenu'
 
 interface MemorialCardProps {
   memorial: MemorialRow
+  onDelete?: (id: string) => void
 }
 
 function formatDate(dateStr: string): string {
@@ -23,7 +30,7 @@ function getInitials(name: string): string {
     .toUpperCase()
 }
 
-export function MemorialCard({ memorial }: MemorialCardProps) {
+export function MemorialCard({ memorial, onDelete }: MemorialCardProps) {
   const { full_name, date_of_birth, date_of_death, location, profile_url, status, slug } = memorial
 
   const dateRange = [date_of_birth, date_of_death]
@@ -60,15 +67,38 @@ export function MemorialCard({ memorial }: MemorialCardProps) {
           >
             {full_name}
           </Link>
-          <span
-            className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${
-              status === 'published'
-                ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
-            }`}
-          >
-            {status === 'published' ? 'Published' : 'Draft'}
-          </span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span
+              className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                status === 'published'
+                  ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                  : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
+              }`}
+            >
+              {status === 'published' ? 'Published' : 'Draft'}
+            </span>
+            {status === 'draft' && onDelete && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    aria-label="Memorial options"
+                    className="flex items-center justify-center h-8 w-8 rounded-lg text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  >
+                    <MoreVertical size={15} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    className="text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
+                    onSelect={() => onDelete(memorial.id)}
+                  >
+                    <Trash2 size={14} className="mr-2 shrink-0" />
+                    Delete Draft
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
 
         {dateRange && (

@@ -15,6 +15,7 @@ router.get('/mine', requireAuth as unknown as RequestHandler, memorials.list as 
 router.get('/:id', requireAuth as unknown as RequestHandler, memorials.getById as unknown as RequestHandler)
 router.patch('/:id', requireAuth as unknown as RequestHandler, memorials.update as unknown as RequestHandler)
 router.delete('/:id', requireAuth as unknown as RequestHandler, memorials.softDelete as unknown as RequestHandler)
+router.delete('/:id/permanent', requireAuth as unknown as RequestHandler, memorials.permanentDelete as unknown as RequestHandler)
 router.post('/:id/publish', requireAuth as unknown as RequestHandler, memorials.publish as unknown as RequestHandler)
 
 export default router

@@ -4,6 +4,15 @@ import { Search, Plus, Heart } from 'lucide-react'
 import { MemorialCard } from '@/components/memorial/MemorialCard'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useMyMemorials } from '@/hooks/use-my-memorials'
+import { useDeleteMemorial } from '@/hooks/use-delete-memorial'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/ui/AlertDialog'
 
 const LIMIT = 12
 
@@ -73,6 +82,7 @@ export default function MyMemorialsPage() {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchInput, setSearchInput] = useState(searchParams.get('q') ?? '')
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   const q = searchParams.get('q') ?? ''
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1'))
@@ -109,10 +119,18 @@ export default function MyMemorialsPage() {
   }
 
   const { data, isPending, error } = useMyMemorials({ q, page, limit: LIMIT })
+  const { mutate: deleteDraft, isPending: isDeleting, error: deleteError } = useDeleteMemorial()
   const memorials = data?.data ?? []
   const total = data?.total ?? 0
   const totalPages = Math.ceil(total / LIMIT)
   const showControls = total > 0 || !!q
+
+  function handleConfirmDelete() {
+    if (!pendingDeleteId) return
+    deleteDraft(pendingDeleteId, {
+      onSuccess: () => setPendingDeleteId(null),
+    })
+  }
 
   return (
     <div>
@@ -199,13 +217,46 @@ export default function MyMemorialsPage() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {memorials.map((memorial) => (
-              <MemorialCard key={memorial.id} memorial={memorial} />
+              <MemorialCard key={memorial.id} memorial={memorial} onDelete={setPendingDeleteId} />
             ))}
           </div>
 
           <Pagination page={page} totalPages={totalPages} onPage={setPage} />
         </>
       )}
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog
+        open={!!pendingDeleteId}
+        onOpenChange={(open) => { if (!open) setPendingDeleteId(null) }}
+      >
+        <AlertDialogContent>
+          <AlertDialogTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+            Delete this draft?
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
+            This will permanently delete the draft and all its photos. This cannot be undone.
+          </AlertDialogDescription>
+          {deleteError && (
+            <p role="alert" className="text-sm text-red-600 dark:text-red-400 mb-4">
+              {deleteError.message}
+            </p>
+          )}
+          <div className="flex justify-end gap-3">
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <button
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+              className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium
+                bg-red-600 hover:bg-red-700 text-white transition-colors
+                focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+                disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isDeleting ? 'Deleting…' : 'Delete'}
+            </button>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

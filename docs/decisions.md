@@ -97,3 +97,10 @@
 **Consequences:** `GET /api/memorials` no longer requires a Bearer token. The authenticated `list()` controller (returns own memorials) is still present for future use in a dashboard view. Any future list endpoint that should be public should follow the `listPublished()` pattern: filter by `status = 'published'`, no `created_by` filter, no `requireAuth` on the route.
 
 <!-- New entries added below by Claude as decisions are made during development -->
+
+## 2026-03-05 — Backend owns Cloudinary cleanup on memorial hard-delete
+
+**Decision:** When a draft memorial is permanently deleted, the backend (`permanentDelete` controller) fetches all Cloudinary public_ids (cover, profile, gallery photos), calls `cloudinary.uploader.destroy()` in parallel with `Promise.allSettled`, then hard-deletes the DB row regardless of Cloudinary results.
+**Why:** Cloudinary cleanup is best-effort — a failed destroy would orphan a file but should never block the user from deleting their memorial. Centralizing cleanup in the backend prevents the frontend from needing Cloudinary credentials and ensures it happens even if called from non-browser clients. `Promise.allSettled` guarantees all destroys are attempted, and failures are logged server-side.
+**Alternatives considered:** Frontend calls Cloudinary destroy before calling the delete API — rejected because it exposes API credentials and creates race conditions. Queuing cleanup in a background job — overkill for current scale.
+**Consequences:** `DELETE /api/memorials/:id/permanent` is the only way to hard-delete a draft. Soft-delete (`DELETE /:id`) remains for other use cases. Only `status = 'draft'` memorials can be permanently deleted — published memorials return 403.

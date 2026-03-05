@@ -1,4 +1,6 @@
 import { render, screen } from '../utils'
+import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import { MemorialCard } from '@/components/memorial/MemorialCard'
 import { mockMemorial } from '../utils'
 
@@ -25,17 +27,17 @@ describe('MemorialCard', () => {
     expect(screen.queryByText(/Kuala Lumpur/)).not.toBeInTheDocument()
   })
 
-  it('renders cover image when cover_url is present', () => {
+  it('renders profile image when profile_url is present', () => {
     render(
-      <MemorialCard memorial={mockMemorial({ cover_url: 'https://example.com/photo.jpg' })} />,
+      <MemorialCard memorial={mockMemorial({ profile_url: 'https://example.com/photo.jpg' })} />,
     )
     // Image is inside an aria-hidden decorative link; use getByAltText
     const img = screen.getByAltText('John Doe')
     expect(img).toHaveAttribute('src', 'https://example.com/photo.jpg')
   })
 
-  it('renders initials placeholder when no cover_url', () => {
-    render(<MemorialCard memorial={mockMemorial({ cover_url: null })} />)
+  it('renders initials placeholder when no profile_url', () => {
+    render(<MemorialCard memorial={mockMemorial({ profile_url: null })} />)
     // "JD" initials for "John Doe"
     expect(screen.getByText('JD')).toBeInTheDocument()
   })
@@ -60,5 +62,31 @@ describe('MemorialCard', () => {
     render(<MemorialCard memorial={mockMemorial({ status: 'draft' })} />)
     const link = screen.getByRole('link', { name: /continue editing/i })
     expect(link).toHaveAttribute('href', '/dashboard/memorials/memorial-id-123/edit')
+  })
+
+  it('renders options menu button for draft memorial when onDelete provided', () => {
+    render(<MemorialCard memorial={mockMemorial({ status: 'draft' })} onDelete={vi.fn()} />)
+    expect(screen.getByRole('button', { name: /memorial options/i })).toBeInTheDocument()
+  })
+
+  it('does not render options menu for published memorial', () => {
+    render(<MemorialCard memorial={mockMemorial({ status: 'published' })} onDelete={vi.fn()} />)
+    expect(screen.queryByRole('button', { name: /memorial options/i })).not.toBeInTheDocument()
+  })
+
+  it('does not render options menu when onDelete is not provided', () => {
+    render(<MemorialCard memorial={mockMemorial({ status: 'draft' })} />)
+    expect(screen.queryByRole('button', { name: /memorial options/i })).not.toBeInTheDocument()
+  })
+
+  it('calls onDelete with correct id when "Delete Draft" clicked', async () => {
+    const user = userEvent.setup()
+    const onDelete = vi.fn()
+    render(<MemorialCard memorial={mockMemorial({ status: 'draft' })} onDelete={onDelete} />)
+
+    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(screen.getByText('Delete Draft'))
+
+    expect(onDelete).toHaveBeenCalledWith('memorial-id-123')
   })
 })
