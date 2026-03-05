@@ -278,7 +278,7 @@ export function useMemorialForm(memorialId?: string) {
   }, [existingMemorial, form])
 
   function buildPayload(values: MemorialFormValues, status: 'draft' | 'published'): MemorialApiPayload {
-    const fullName = `${values.firstName ?? ''} ${values.lastName ?? ''}`.trim() || 'Untitled'
+    const fullName = `${values.firstName ?? ''} ${values.lastName ?? ''}`.trim()
     const year = values.dateOfDeath ? new Date(values.dateOfDeath).getFullYear().toString() : undefined
     const autoSlug = deriveSlug(values.firstName ?? '', values.lastName ?? '', year)
 
