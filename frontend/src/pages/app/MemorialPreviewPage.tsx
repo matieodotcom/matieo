@@ -43,8 +43,8 @@ export default function MemorialPreviewPage() {
   const galleryPhotos = v.galleryPhotos ?? []
 
   return (
-    // -m-8 counteracts DashboardLayout main's p-8 so we own the full layout
-    <div className="-m-8 bg-neutral-50 dark:bg-neutral-950">
+    // Responsive negative margin counteracts DashboardLayout main's p-4 sm:p-6 lg:p-8
+    <div className="-m-4 sm:-m-6 lg:-m-8 bg-neutral-50 dark:bg-neutral-950">
 
       {/* ── Cover ── */}
       <div className="h-52 w-full overflow-hidden">
@@ -58,12 +58,12 @@ export default function MemorialPreviewPage() {
       </div>
 
       {/* ── Profile zone ── */}
-      <div className="mx-auto max-w-5xl px-6 md:px-10">
+      <div className="mx-auto max-w-3xl px-4">
 
         {/* Photo + identity */}
         <div className="flex items-start gap-6">
           {/* Photo: -mt-16 so it overlaps the cover by half its height */}
-          <div className="shrink-0 -mt-20 h-40 w-40 rounded-full border-4 border-neutral-50 dark:border-neutral-950 overflow-hidden shadow-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+          <div className="shrink-0 -mt-20 h-60 w-60 rounded-full border-4 border-neutral-50 dark:border-neutral-950 overflow-hidden shadow-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
             {v.profilePhoto ? (
               <img
                 src={v.profilePhoto.url}
@@ -103,7 +103,7 @@ export default function MemorialPreviewPage() {
       </div>
 
       {/* ── Page body ── */}
-      <div className="mx-auto max-w-5xl px-6 md:px-10 py-10 space-y-6">
+      <div className="mx-auto max-w-3xl px-4 py-10 space-y-6">
 
         {/* Quote */}
         {v.quote && (
