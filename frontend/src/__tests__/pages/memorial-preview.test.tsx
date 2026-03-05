@@ -155,4 +155,11 @@ describe('MemorialPreviewPage', () => {
     renderPage()
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Untitled Memorial')
   })
+
+  it('renders custom hex colour as cover background', () => {
+    mockLocationState = { values: { ...baseValues, coverPhoto: null, coverGradient: '#a34b2c' } }
+    const { container } = renderPage()
+    const cover = container.querySelector('[style*="background-color"]')
+    expect(cover).toBeInTheDocument()
+  })
 })

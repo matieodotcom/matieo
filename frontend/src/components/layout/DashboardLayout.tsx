@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase, Menu, Moon, Sun } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
@@ -30,6 +30,11 @@ export function DashboardLayout() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const isPreview = pathname === '/dashboard/memorials/preview'
+  const mainRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0, behavior: 'instant' })
+  }, [pathname])
 
   if (isLoading) {
     return (
@@ -191,7 +196,7 @@ export function DashboardLayout() {
         </aside>
 
         {/* Main */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-8">
           <Outlet />
         </main>
       </div>

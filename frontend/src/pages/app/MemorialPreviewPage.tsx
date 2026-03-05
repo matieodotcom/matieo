@@ -1,6 +1,6 @@
 import { useLocation, Navigate } from 'react-router-dom'
 import { Calendar, MapPin, User, Images } from 'lucide-react'
-import { COVER_GRADIENTS } from '@/pages/app/CreateMemorialPage'
+import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import type { MemorialFormValues } from '@/hooks/use-create-memorial'
 
 interface PreviewState {
@@ -36,8 +36,10 @@ export default function MemorialPreviewPage() {
   ]
     .filter(Boolean)
     .join(' · ')
-  const gradient =
-    COVER_GRADIENTS.find((g) => g.key === (v.coverGradient ?? 'blue')) ?? COVER_GRADIENTS[0]
+  const customColor = v.coverGradient && isCustomColor(v.coverGradient) ? v.coverGradient : null
+  const gradient = !customColor
+    ? (COVER_GRADIENTS.find((g) => g.key === (v.coverGradient ?? 'blue')) ?? COVER_GRADIENTS[0])
+    : null
   const galleryPhotos = v.galleryPhotos ?? []
 
   return (
@@ -48,8 +50,10 @@ export default function MemorialPreviewPage() {
       <div className="h-52 w-full overflow-hidden">
         {v.coverPhoto ? (
           <img src={v.coverPhoto.url} alt="Cover" className="h-full w-full object-cover" />
+        ) : customColor ? (
+          <div className="h-full w-full" style={{ backgroundColor: customColor }} />
         ) : (
-          <div className={`h-full w-full bg-gradient-to-r ${gradient.tw}`} />
+          <div className={`h-full w-full bg-gradient-to-r ${gradient!.tw}`} />
         )}
       </div>
 

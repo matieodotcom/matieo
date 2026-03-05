@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Controller } from 'react-hook-form'
 import { ArrowRight, Check } from 'lucide-react'
@@ -44,6 +44,12 @@ const RELATIONSHIP_OPTIONS = [
   { value: 'Friend', label: 'Friend' },
   { value: 'Other', label: 'Other' },
 ]
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+export function isCustomColor(value: string): boolean {
+  return value.startsWith('#')
+}
 
 // ── Gradient options ──────────────────────────────────────────────────────────
 
@@ -101,6 +107,9 @@ interface CoverPhotoFieldProps {
 }
 
 function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGradientChange }: CoverPhotoFieldProps) {
+  const colorInputRef = useRef<HTMLInputElement>(null)
+  const isCustom = !COVER_GRADIENTS.some((g) => g.key === coverGradient)
+
   return (
     <div className="space-y-4">
       <PhotoUpload
@@ -133,6 +142,37 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
                 )}
               </button>
             ))}
+            {/* Custom colour swatch */}
+            <div className="relative">
+              <button
+                type="button"
+                aria-label="Custom colour"
+                aria-pressed={isCustom}
+                onClick={() => colorInputRef.current?.click()}
+                className={`relative h-10 w-16 rounded-lg overflow-hidden ring-offset-2 transition-all
+                  ${isCustom
+                    ? 'ring-2 ring-brand-primary'
+                    : 'hover:ring-2 hover:ring-neutral-300 dark:hover:ring-neutral-600'
+                  }`}
+                style={isCustom ? { backgroundColor: coverGradient } : undefined}
+              >
+                {!isCustom && (
+                  <div className="h-full w-full bg-gradient-to-br from-rose-400 via-amber-300 to-blue-500" />
+                )}
+                {isCustom && (
+                  <Check className="absolute inset-0 m-auto h-4 w-4 text-white drop-shadow" />
+                )}
+              </button>
+              <input
+                ref={colorInputRef}
+                type="color"
+                defaultValue="#3B5BFF"
+                onChange={(e) => onGradientChange(e.target.value)}
+                className="sr-only"
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+            </div>
           </div>
         </div>
       )}

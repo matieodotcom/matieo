@@ -16,6 +16,9 @@ function renderLayout(initialRoute = '/dashboard') {
   return renderWithProviders(<DashboardLayout />, { initialRoute })
 }
 
+// jsdom does not implement HTMLElement.scrollTo
+HTMLElement.prototype.scrollTo = vi.fn()
+
 describe('DashboardLayout — authenticated', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })

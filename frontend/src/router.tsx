@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
+import { ScrollToTop } from '@/components/layout/ScrollToTop'
 import LandingPage from '@/pages/landing/LandingPage'
 import FeaturesPage from '@/pages/features/FeaturesPage'
 import AboutPage from '@/pages/about/AboutPage'
@@ -32,108 +33,113 @@ function Placeholder({ name }: { name: string }) {
 
 // ── Routes ───────────────────────────────────────────────────────────────────
 const router = createBrowserRouter([
-  // Public
   {
-    path: '/',
-    element: <LandingPage />,
-  },
-
-  // Auth
-  {
-    path: '/signin',
-    element: <SignInPage />,
-  },
-  {
-    path: '/signup',
-    element: <SignUpPage />,
-  },
-  {
-    path: '/forgot-password',
-    element: <ForgotPasswordPage />,
-  },
-  {
-    path: '/reset-password',
-    element: <ResetPasswordPage />,
-  },
-
-  // Features
-  {
-    path: '/features',
-    element: <FeaturesPage />,
-  },
-
-  // About
-  {
-    path: '/about',
-    element: <AboutPage />,
-  },
-
-  // Public Insights, Obituary, Pricing
-  {
-    path: '/insights',
-    element: <InsightsPage />,
-  },
-  {
-    path: '/obituary',
-    element: <ObituaryPage />,
-  },
-  {
-    path: '/pricing',
-    element: <PricingPage />,
-  },
-
-  // Legal
-  {
-    path: '/terms',
-    element: <TermsPage />,
-  },
-  {
-    path: '/privacy',
-    element: <PrivacyPage />,
-  },
-
-  // Public memorial browsing + individual pages
-  {
-    path: '/memorials',
-    element: <ViewMemorialsPage />,
-  },
-  {
-    path: '/memorial/:slug',
-    element: <Placeholder name="Public Memorial" />,
-  },
-
-  // Authenticated
-  {
-    path: '/dashboard',
-    element: <DashboardLayout />,
+    element: <ScrollToTop />,
     children: [
-      { index: true,                     element: <DashboardPage /> },
-      { path: 'insights',                element: <Placeholder name="Insights" /> },
-      { path: 'memorials',               element: <MyMemorialsPage /> },
-      { path: 'memorials/create',        element: <CreateMemorialPage /> },
-      { path: 'memorials/:id/edit',      element: <CreateMemorialPage /> },
-      { path: 'memorials/preview',       element: <MemorialPreviewPage /> },
-      { path: 'obituary',                element: <Placeholder name="Obituary" /> },
-      { path: 'services',                element: <Placeholder name="Services" /> },
-    ],
-  },
-  {
-    path: '/memorials/create',
-    element: <Placeholder name="Create Memorial" />,
-  },
-  {
-    path: '/memorials/:id/edit',
-    element: <Placeholder name="Edit Memorial" />,
-  },
-  {
-    path: '/settings',
-    element: <Placeholder name="Settings" />,
-  },
+      // Public
+      {
+        path: '/',
+        element: <LandingPage />,
+      },
 
-  // Fallback
-  {
-    path: '*',
-    element: <Navigate to="/" replace />,
+      // Auth
+      {
+        path: '/signin',
+        element: <SignInPage />,
+      },
+      {
+        path: '/signup',
+        element: <SignUpPage />,
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: '/reset-password',
+        element: <ResetPasswordPage />,
+      },
+
+      // Features
+      {
+        path: '/features',
+        element: <FeaturesPage />,
+      },
+
+      // About
+      {
+        path: '/about',
+        element: <AboutPage />,
+      },
+
+      // Public Insights, Obituary, Pricing
+      {
+        path: '/insights',
+        element: <InsightsPage />,
+      },
+      {
+        path: '/obituary',
+        element: <ObituaryPage />,
+      },
+      {
+        path: '/pricing',
+        element: <PricingPage />,
+      },
+
+      // Legal
+      {
+        path: '/terms',
+        element: <TermsPage />,
+      },
+      {
+        path: '/privacy',
+        element: <PrivacyPage />,
+      },
+
+      // Public memorial browsing + individual pages
+      {
+        path: '/memorials',
+        element: <ViewMemorialsPage />,
+      },
+      {
+        path: '/memorial/:slug',
+        element: <Placeholder name="Public Memorial" />,
+      },
+
+      // Authenticated
+      {
+        path: '/dashboard',
+        element: <DashboardLayout />,
+        children: [
+          { index: true,                     element: <DashboardPage /> },
+          { path: 'insights',                element: <Placeholder name="Insights" /> },
+          { path: 'memorials',               element: <MyMemorialsPage /> },
+          { path: 'memorials/create',        element: <CreateMemorialPage /> },
+          { path: 'memorials/:id/edit',      element: <CreateMemorialPage /> },
+          { path: 'memorials/preview',       element: <MemorialPreviewPage /> },
+          { path: 'obituary',                element: <Placeholder name="Obituary" /> },
+          { path: 'services',                element: <Placeholder name="Services" /> },
+        ],
+      },
+      {
+        path: '/memorials/create',
+        element: <Placeholder name="Create Memorial" />,
+      },
+      {
+        path: '/memorials/:id/edit',
+        element: <Placeholder name="Edit Memorial" />,
+      },
+      {
+        path: '/settings',
+        element: <Placeholder name="Settings" />,
+      },
+
+      // Fallback
+      {
+        path: '*',
+        element: <Navigate to="/" replace />,
+      },
+    ],
   },
 ])
 
