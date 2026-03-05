@@ -723,6 +723,7 @@ CLOUDINARY_API_SECRET
 | Dashboard Insights | `/dashboard/insights` | ⬜ Placeholder | docs/pages/dashboard.md |
 | My Memorials | `/dashboard/memorials` | ✅ Complete | docs/pages/my-memorials.md |
 | Create Memorial | `/dashboard/memorials/create` | ✅ Complete | docs/pages/create-memorial.md |
+| Memorial Preview | `/dashboard/memorials/preview` | ✅ Complete | docs/pages/create-memorial.md |
 | Dashboard Obituary | `/dashboard/obituary` | ⬜ Placeholder | docs/pages/dashboard.md |
 | Dashboard Services | `/dashboard/services` | ⬜ Placeholder | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |

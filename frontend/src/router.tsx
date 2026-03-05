@@ -16,6 +16,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import DashboardPage from '@/pages/app/DashboardPage'
 import MyMemorialsPage from '@/pages/app/MyMemorialsPage'
 import CreateMemorialPage from '@/pages/app/CreateMemorialPage'
+import MemorialPreviewPage from '@/pages/app/MemorialPreviewPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -99,6 +100,12 @@ const router = createBrowserRouter([
   {
     path: '/memorial/:slug',
     element: <Placeholder name="Public Memorial" />,
+  },
+
+  // Memorial preview (outside DashboardLayout — no sidebar)
+  {
+    path: '/dashboard/memorials/preview',
+    element: <MemorialPreviewPage />,
   },
 
   // Authenticated

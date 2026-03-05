@@ -518,16 +518,28 @@ export default function CreateMemorialPage() {
 
         {/* Bottom actions */}
         <div className="flex items-center justify-between gap-4 pb-6">
-          <button
-            type="button"
-            onClick={onSaveDraft}
-            disabled={isPending}
-            className="rounded-lg border border-neutral-200 dark:border-neutral-700 px-5 py-2.5 text-sm font-medium
-              text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800
-              disabled:opacity-50 transition-colors"
-          >
-            Save as Draft
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onSaveDraft}
+              disabled={isPending}
+              className="rounded-lg border border-neutral-200 dark:border-neutral-700 px-5 py-2.5 text-sm font-medium
+                text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800
+                disabled:opacity-50 transition-colors"
+            >
+              Save as Draft
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard/memorials/preview', { state: { values: form.getValues() } })}
+              disabled={isPending}
+              className="rounded-lg border border-brand-primary/30 px-5 py-2.5 text-sm font-medium
+                text-brand-primary hover:bg-brand-primaryLight/40 dark:hover:bg-brand-primary/10
+                disabled:opacity-50 transition-colors"
+            >
+              View Draft
+            </button>
+          </div>
 
           <div className="flex items-center gap-3">
             <button
