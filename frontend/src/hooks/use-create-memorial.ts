@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '@/lib/apiClient'
 import { toast } from '@/lib/toast'
+import { useMemorialDraftStore } from '@/store/memorialDraftStore'
 import type { PhotoValue } from '@/components/ui/PhotoUpload'
 import type { MemorialRow } from '@/types/memorial'
 
@@ -199,9 +200,16 @@ export function useMemorialForm(memorialId?: string) {
   const isPending = createMutation.isPending || updateMutation.isPending
   const error = createMutation.error ?? updateMutation.error
 
+  const draft = useMemorialDraftStore((s) => s.draft)
+  const clearDraft = useMemorialDraftStore((s) => s.clearDraft)
+
+  // Track whether a draft was present at mount time so we don't overwrite it
+  // with server data when in edit mode
+  const restoredFromDraft = useRef(!!draft)
+
   const form = useForm<MemorialFormValues>({
     resolver: zodResolver(draftSchema),
-    defaultValues: {
+    defaultValues: draft ?? {
       firstName: '',
       lastName: '',
       ageAtDeath: '',
@@ -223,9 +231,16 @@ export function useMemorialForm(memorialId?: string) {
     },
   })
 
-  // Pre-populate form when editing an existing memorial
+  // Clear the draft from the store once consumed (form has already picked it up via defaultValues)
   useEffect(() => {
-    if (existingMemorial) {
+    if (restoredFromDraft.current) {
+      clearDraft()
+    }
+  }, [clearDraft])
+
+  // Pre-populate form when editing an existing memorial — skip if draft was restored
+  useEffect(() => {
+    if (existingMemorial && !restoredFromDraft.current) {
       form.reset(rowToFormValues(existingMemorial))
     }
   }, [existingMemorial, form])

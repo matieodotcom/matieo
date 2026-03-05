@@ -102,24 +102,19 @@ const router = createBrowserRouter([
     element: <Placeholder name="Public Memorial" />,
   },
 
-  // Memorial preview (outside DashboardLayout — no sidebar)
-  {
-    path: '/dashboard/memorials/preview',
-    element: <MemorialPreviewPage />,
-  },
-
   // Authenticated
   {
     path: '/dashboard',
     element: <DashboardLayout />,
     children: [
-      { index: true,                element: <DashboardPage /> },
-      { path: 'insights',           element: <Placeholder name="Insights" /> },
-      { path: 'memorials',          element: <MyMemorialsPage /> },
+      { index: true,                     element: <DashboardPage /> },
+      { path: 'insights',                element: <Placeholder name="Insights" /> },
+      { path: 'memorials',               element: <MyMemorialsPage /> },
       { path: 'memorials/create',        element: <CreateMemorialPage /> },
       { path: 'memorials/:id/edit',      element: <CreateMemorialPage /> },
-      { path: 'obituary',           element: <Placeholder name="Obituary" /> },
-      { path: 'services',           element: <Placeholder name="Services" /> },
+      { path: 'memorials/preview',       element: <MemorialPreviewPage /> },
+      { path: 'obituary',                element: <Placeholder name="Obituary" /> },
+      { path: 'services',                element: <Placeholder name="Services" /> },
     ],
   },
   {

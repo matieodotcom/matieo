@@ -6,6 +6,7 @@ import { PhotoUpload, GalleryUpload } from '@/components/ui/PhotoUpload'
 import { Select } from '@/components/ui/Select'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useMemorialForm, sanitiseSlug, deriveSlug } from '@/hooks/use-create-memorial'
+import { useMemorialDraftStore } from '@/store/memorialDraftStore'
 import { buildCountryOptions, buildStateOptions, detectUserCountryCode } from '@/lib/geo'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -145,6 +146,7 @@ export default function CreateMemorialPage() {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { form, onSaveDraft, onPublish, isPending, isLoading, isEdit, error } = useMemorialForm(id)
+  const saveDraft = useMemorialDraftStore((s) => s.saveDraft)
   const {
     register,
     handleSubmit,
@@ -531,7 +533,11 @@ export default function CreateMemorialPage() {
             </button>
             <button
               type="button"
-              onClick={() => navigate('/dashboard/memorials/preview', { state: { values: form.getValues() } })}
+              onClick={() => {
+                const values = form.getValues()
+                saveDraft(values)
+                navigate('/dashboard/memorials/preview', { state: { values } })
+              }}
               disabled={isPending}
               className="rounded-lg border border-brand-primary/30 px-5 py-2.5 text-sm font-medium
                 text-brand-primary hover:bg-brand-primaryLight/40 dark:hover:bg-brand-primary/10

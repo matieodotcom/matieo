@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, NavLink, Navigate, Outlet } from 'react-router-dom'
+import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase, Menu, Moon, Sun } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
@@ -27,6 +27,9 @@ export function DashboardLayout() {
   const { signOut } = useSignOut()
   const isDark = useThemeStore((s) => s.isDark)
   const toggle = useThemeStore((s) => s.toggle)
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const isPreview = pathname === '/dashboard/memorials/preview'
 
   if (isLoading) {
     return (
@@ -57,13 +60,24 @@ export function DashboardLayout() {
           >
             <Menu size={20} />
           </button>
-          <Link
-            to="/"
-            className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
-          >
-            <ArrowLeft size={15} />
-            Home
-          </Link>
+          {isPreview ? (
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+            >
+              <ArrowLeft size={15} />
+              Back to editing
+            </button>
+          ) : (
+            <Link
+              to="/"
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+            >
+              <ArrowLeft size={15} />
+              Home
+            </Link>
+          )}
         </div>
 
         {/* Centre: MATIEO logo */}

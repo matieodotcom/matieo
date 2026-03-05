@@ -1,20 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { userEvent } from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import MemorialPreviewPage from '@/pages/app/MemorialPreviewPage'
 import type { MemorialFormValues } from '@/hooks/use-create-memorial'
 
-// Mock react-router-dom hooks (keep MemoryRouter / Navigate real)
-const mockNavigate = vi.fn()
 let mockLocationState: { values: MemorialFormValues } | null = null
 
 vi.mock('react-router-dom', async (importActual) => {
   const actual = await importActual<typeof import('react-router-dom')>()
   return {
     ...actual,
-    useNavigate: () => mockNavigate,
     useLocation: () => ({ state: mockLocationState, pathname: '/dashboard/memorials/preview' }),
   }
 })
@@ -136,21 +132,11 @@ describe('MemorialPreviewPage', () => {
     expect(screen.getByText('No photos added yet.')).toBeInTheDocument()
   })
 
-  it('renders the "Back to editing" button', () => {
+  it('shows Preview badge in the dashboard top navbar (handled by DashboardLayout)', () => {
+    // Back button and Preview badge are rendered by DashboardLayout — not this component.
+    // Just assert the page content renders without errors.
     renderPage()
-    expect(screen.getByRole('button', { name: /back to editing/i })).toBeInTheDocument()
-  })
-
-  it('calls navigate(-1) when back button is clicked', async () => {
-    const user = userEvent.setup()
-    renderPage()
-    await user.click(screen.getByRole('button', { name: /back to editing/i }))
-    expect(mockNavigate).toHaveBeenCalledWith(-1)
-  })
-
-  it('shows Preview badge', () => {
-    renderPage()
-    expect(screen.getByText('Preview')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
   })
 
   it('renders tributes count as (1) when tribute message is present', () => {

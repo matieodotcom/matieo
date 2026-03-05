@@ -91,6 +91,25 @@ describe('DashboardLayout — authenticated', () => {
   })
 })
 
+describe('DashboardLayout — preview route', () => {
+  beforeEach(() => {
+    useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
+    vi.clearAllMocks()
+  })
+
+  it('shows "Back to editing" button instead of Home link on preview route', () => {
+    renderLayout('/dashboard/memorials/preview')
+    expect(screen.getByRole('button', { name: /back to editing/i })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+  })
+
+  it('shows Home link on non-preview routes', () => {
+    renderLayout('/dashboard/memorials')
+    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /back to editing/i })).not.toBeInTheDocument()
+  })
+})
+
 describe('DashboardLayout — unauthenticated', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: null, session: null, isLoading: false })
