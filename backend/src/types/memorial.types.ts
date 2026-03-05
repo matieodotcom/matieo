@@ -81,11 +81,11 @@ export interface UpdateMemorialPayload {
   cause_of_death?: string
   biography?: string
   tribute_message?: string
-  cover_cloudinary_public_id?: string
-  cover_url?: string
+  cover_cloudinary_public_id?: string | null
+  cover_url?: string | null
   cover_gradient?: string | null
-  profile_cloudinary_public_id?: string
-  profile_url?: string
+  profile_cloudinary_public_id?: string | null
+  profile_url?: string | null
   status?: 'draft' | 'published'
   photos?: PhotoPayload[]
 }

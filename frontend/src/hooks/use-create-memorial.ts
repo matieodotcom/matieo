@@ -25,11 +25,11 @@ interface MemorialApiPayload {
   quote?: string
   biography?: string
   tribute_message?: string
-  cover_cloudinary_public_id?: string
-  cover_url?: string
+  cover_cloudinary_public_id?: string | null
+  cover_url?: string | null
   cover_gradient?: string | null
-  profile_cloudinary_public_id?: string
-  profile_url?: string
+  profile_cloudinary_public_id?: string | null
+  profile_url?: string | null
   custom_slug?: string
   status: 'draft' | 'published'
   photos?: { cloudinary_public_id: string; cloudinary_url: string; sort_order: number }[]
@@ -295,11 +295,11 @@ export function useMemorialForm(memorialId?: string) {
       quote: values.quote || undefined,
       biography: values.biography || undefined,
       tribute_message: values.tributeMessage || undefined,
-      cover_cloudinary_public_id: values.coverPhoto?.public_id,
-      cover_url: values.coverPhoto?.url,
+      cover_cloudinary_public_id: values.coverPhoto?.public_id ?? null,
+      cover_url: values.coverPhoto?.url ?? null,
       cover_gradient: values.coverPhoto ? null : (values.coverGradient ?? 'blue'),
-      profile_cloudinary_public_id: values.profilePhoto?.public_id,
-      profile_url: values.profilePhoto?.url,
+      profile_cloudinary_public_id: values.profilePhoto?.public_id ?? null,
+      profile_url: values.profilePhoto?.url ?? null,
       custom_slug: values.slug || autoSlug || undefined,
       status,
       photos: (values.galleryPhotos ?? []).map((p, i) => ({
