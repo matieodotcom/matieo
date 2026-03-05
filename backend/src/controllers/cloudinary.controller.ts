@@ -2,6 +2,24 @@ import type { Response, NextFunction } from 'express'
 import { cloudinary } from '@/lib/cloudinary'
 import type { AuthenticatedRequest } from '@/types/memorial.types'
 
+export async function deleteAsset(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { public_id } = req.body as { public_id?: string }
+    if (!public_id || typeof public_id !== 'string') {
+      res.status(400).json({ data: null, error: 'public_id is required' })
+      return
+    }
+    await cloudinary.uploader.destroy(public_id)
+    res.json({ data: { deleted: true }, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export async function signUpload(
   req: AuthenticatedRequest,
   res: Response,

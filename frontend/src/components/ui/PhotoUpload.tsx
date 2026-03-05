@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Upload, X } from 'lucide-react'
-import { uploadToCloudinary } from '@/lib/cloudinary'
+import { uploadToCloudinary, deleteFromCloudinary } from '@/lib/cloudinary'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
 export interface PhotoValue {
@@ -28,6 +28,7 @@ export function PhotoUpload({
   error: externalError,
 }: PhotoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const sessionUploads = useRef(new Set<string>())
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -42,6 +43,7 @@ export function PhotoUpload({
     setIsUploading(true)
     try {
       const result = await uploadToCloudinary(file)
+      sessionUploads.current.add(result.public_id)
       onChange({ public_id: result.public_id, url: result.secure_url })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed')
@@ -81,7 +83,13 @@ export function PhotoUpload({
           />
           <button
             type="button"
-            onClick={() => onChange(null)}
+            onClick={() => {
+              if (value?.public_id && sessionUploads.current.has(value.public_id)) {
+                deleteFromCloudinary(value.public_id).catch(() => {})
+                sessionUploads.current.delete(value.public_id)
+              }
+              onChange(null)
+            }}
             aria-label={`Remove ${label}`}
             className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full
               bg-neutral-900/70 text-white hover:bg-neutral-900 transition-colors"
@@ -147,6 +155,7 @@ interface GalleryUploadProps {
 
 export function GalleryUpload({ values, onChange, max = 5 }: GalleryUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const sessionUploads = useRef(new Set<string>())
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -163,6 +172,7 @@ export function GalleryUpload({ values, onChange, max = 5 }: GalleryUploadProps)
     setIsUploading(true)
     try {
       const result = await uploadToCloudinary(file)
+      sessionUploads.current.add(result.public_id)
       onChange([...values, { public_id: result.public_id, url: result.secure_url }])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed')
@@ -178,6 +188,11 @@ export function GalleryUpload({ values, onChange, max = 5 }: GalleryUploadProps)
   }
 
   function remove(index: number) {
+    const item = values[index]
+    if (item?.public_id && sessionUploads.current.has(item.public_id)) {
+      deleteFromCloudinary(item.public_id).catch(() => {})
+      sessionUploads.current.delete(item.public_id)
+    }
     onChange(values.filter((_, i) => i !== index))
   }
 

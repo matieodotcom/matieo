@@ -56,3 +56,10 @@ export async function uploadToCloudinary(file: File): Promise<CloudinaryUploadRe
   const data = (await res.json()) as { public_id: string; secure_url: string }
   return { public_id: data.public_id, secure_url: data.secure_url }
 }
+
+export async function deleteFromCloudinary(publicId: string): Promise<void> {
+  await apiFetch('/api/cloudinary/asset', {
+    method: 'DELETE',
+    body: JSON.stringify({ public_id: publicId }),
+  })
+}
