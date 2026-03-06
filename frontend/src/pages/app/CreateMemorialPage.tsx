@@ -239,7 +239,7 @@ export default function CreateMemorialPage() {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-8 space-y-6">
+      <div className="py-8 space-y-6">
         {[...Array(4)].map((_, i) => (
           <div key={i} className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 animate-pulse space-y-3">
             <div className="h-4 bg-neutral-100 dark:bg-neutral-700 rounded w-1/4" />
@@ -252,7 +252,7 @@ export default function CreateMemorialPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="py-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">

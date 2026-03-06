@@ -233,8 +233,10 @@ export function DashboardLayout() {
         </aside>
 
         {/* Main */}
-        <main ref={mainRef} className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <Outlet />
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-4 lg:p-6">
+          <div className="mx-auto max-w-5xl">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
