@@ -18,6 +18,7 @@ import DashboardPage from '@/pages/app/DashboardPage'
 import MyMemorialsPage from '@/pages/app/MyMemorialsPage'
 import CreateMemorialPage from '@/pages/app/CreateMemorialPage'
 import MemorialPreviewPage from '@/pages/app/MemorialPreviewPage'
+import PublicMemorialPage from '@/pages/public/PublicMemorialPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -103,7 +104,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/memorial/:slug',
-        element: <Placeholder name="Public Memorial" />,
+        element: <PublicMemorialPage />,
       },
 
       // Authenticated
@@ -120,14 +121,6 @@ const router = createBrowserRouter([
           { path: 'obituary',                element: <Placeholder name="Obituary" /> },
           { path: 'services',                element: <Placeholder name="Services" /> },
         ],
-      },
-      {
-        path: '/memorials/create',
-        element: <Placeholder name="Create Memorial" />,
-      },
-      {
-        path: '/memorials/:id/edit',
-        element: <Placeholder name="Edit Memorial" />,
       },
       {
         path: '/settings',

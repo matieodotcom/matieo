@@ -184,7 +184,7 @@ export function deriveSlug(firstName: string, lastName: string, year?: string): 
 // ── Row → form values ─────────────────────────────────────────────────────────
 
 function rowToFormValues(row: MemorialRow): Partial<MemorialFormValues> {
-  const nameParts = row.full_name.split(' ')
+  const nameParts = row.full_name?.split(' ') ?? []
   const firstName = nameParts[0] ?? ''
   const lastName = nameParts.slice(1).join(' ')
 
