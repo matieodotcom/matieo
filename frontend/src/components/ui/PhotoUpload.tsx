@@ -16,6 +16,7 @@ interface PhotoUploadProps {
   accept?: string
   maxSizeMb?: number
   error?: string
+  uploadAreaClassName?: string
 }
 
 export function PhotoUpload({
@@ -26,6 +27,7 @@ export function PhotoUpload({
   accept = 'image/*',
   maxSizeMb = 10,
   error: externalError,
+  uploadAreaClassName,
 }: PhotoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const sessionUploads = useRef(new Set<string>())
@@ -79,7 +81,7 @@ export function PhotoUpload({
           <img
             src={value.url}
             alt={label}
-            className="h-40 w-full object-cover"
+            className={`${uploadAreaClassName ?? 'h-40'} w-full object-cover`}
           />
           <button
             type="button"
@@ -106,7 +108,7 @@ export function PhotoUpload({
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           className={`flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed
-            transition-colors cursor-pointer h-40 w-full
+            transition-colors cursor-pointer ${uploadAreaClassName ?? 'h-40'} w-full
             ${isUploading
               ? 'border-brand-primary/40 bg-brand-primaryLight/30 dark:bg-brand-primary/10'
               : 'border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 hover:border-brand-primary/60 hover:bg-brand-primaryLight/20'

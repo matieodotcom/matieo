@@ -268,38 +268,43 @@ export default function CreateMemorialPage() {
       <form onSubmit={handleSubmit(onPublish)} noValidate className="space-y-6">
         {/* Photos */}
         <Section title="Photos">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Controller
-              name="profilePhoto"
-              control={control}
-              render={({ field }) => (
-                <PhotoUpload
-                  label="Memorial Photo"
-                  hint="Recommended 360×360px, up to 10MB"
-                  value={field.value ?? null}
-                  onChange={field.onChange}
-                  error={errors.profilePhoto?.message as string | undefined}
-                />
-              )}
-            />
-            <Controller
-              name="coverPhoto"
-              control={control}
-              render={({ field: coverField }) => (
-                <Controller
-                  name="coverGradient"
-                  control={control}
-                  render={({ field: gradField }) => (
-                    <CoverPhotoField
-                      coverPhoto={coverField.value ?? null}
-                      onCoverPhotoChange={coverField.onChange}
-                      coverGradient={gradField.value ?? 'blue'}
-                      onGradientChange={gradField.onChange}
-                    />
-                  )}
-                />
-              )}
-            />
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <div className="w-full sm:w-[360px] sm:shrink-0">
+              <Controller
+                name="profilePhoto"
+                control={control}
+                render={({ field }) => (
+                  <PhotoUpload
+                    label="Memorial Photo"
+                    hint="Recommended 360×360px, up to 10MB"
+                    value={field.value ?? null}
+                    onChange={field.onChange}
+                    uploadAreaClassName="h-48 sm:h-[360px]"
+                    error={errors.profilePhoto?.message as string | undefined}
+                  />
+                )}
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <Controller
+                name="coverPhoto"
+                control={control}
+                render={({ field: coverField }) => (
+                  <Controller
+                    name="coverGradient"
+                    control={control}
+                    render={({ field: gradField }) => (
+                      <CoverPhotoField
+                        coverPhoto={coverField.value ?? null}
+                        onCoverPhotoChange={coverField.onChange}
+                        coverGradient={gradField.value ?? 'blue'}
+                        onGradientChange={gradField.onChange}
+                      />
+                    )}
+                  />
+                )}
+              />
+            </div>
           </div>
         </Section>
 
