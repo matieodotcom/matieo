@@ -62,7 +62,7 @@ export function DashboardLayout() {
   const avatarUrl = (user.user_metadata?.avatar_url as string | undefined) ?? null
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
+    <div className="h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
       {/* Top Navbar */}
       <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800 flex-shrink-0 z-50 relative">
         {/* Left: toggle + home */}
@@ -173,7 +173,7 @@ export function DashboardLayout() {
               Navigate
             </p>
 
-            <nav aria-label="Dashboard navigation" className="flex-1 px-2">
+            <nav aria-label="Dashboard navigation" className="flex-1 px-2 overflow-y-auto">
               <ul className="flex flex-col gap-0.5 list-none">
                 {SIDEBAR_LINKS.map(({ label, to, icon: Icon }) => (
                   <li key={label}>
