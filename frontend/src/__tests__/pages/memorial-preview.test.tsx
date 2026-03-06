@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import MemorialPreviewPage from '@/pages/app/MemorialPreviewPage'
@@ -161,5 +162,107 @@ describe('MemorialPreviewPage', () => {
     const { container } = renderPage()
     const cover = container.querySelector('[style*="background-color"]')
     expect(cover).toBeInTheDocument()
+  })
+})
+
+describe('MemorialPreviewPage — lightbox', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockLocationState = { values: baseValues }
+  })
+
+  it('lightbox is not visible on initial render', () => {
+    renderPage()
+    expect(screen.queryByRole('dialog', { name: /photo viewer/i })).not.toBeInTheDocument()
+  })
+
+  it('clicking profile photo opens lightbox', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view profile photo/i }))
+    expect(screen.getByRole('dialog', { name: /photo viewer/i })).toBeInTheDocument()
+  })
+
+  it('lightbox shows profile photo src', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view profile photo/i }))
+    const dialog = screen.getByRole('dialog', { name: /photo viewer/i })
+    const img = dialog.querySelector('img')
+    expect(img).toHaveAttribute('src', 'https://cdn.test/profile.jpg')
+  })
+
+  it('profile photo lightbox has no prev/next arrows (single photo)', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view profile photo/i }))
+    expect(screen.queryByRole('button', { name: /previous photo/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /next photo/i })).not.toBeInTheDocument()
+  })
+
+  it('clicking gallery photo opens lightbox with correct image', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 2/i }))
+    const dialog = screen.getByRole('dialog', { name: /photo viewer/i })
+    const img = dialog.querySelector('img')
+    expect(img).toHaveAttribute('src', 'https://cdn.test/g2.jpg')
+  })
+
+  it('gallery lightbox shows prev and next buttons', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 1/i }))
+    expect(screen.getByRole('button', { name: /previous photo/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /next photo/i })).toBeInTheDocument()
+  })
+
+  it('next button advances to next gallery photo', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 1/i }))
+    await user.click(screen.getByRole('button', { name: /next photo/i }))
+    const dialog = screen.getByRole('dialog', { name: /photo viewer/i })
+    expect(dialog.querySelector('img')).toHaveAttribute('src', 'https://cdn.test/g2.jpg')
+  })
+
+  it('prev button wraps to last photo from first', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 1/i }))
+    await user.click(screen.getByRole('button', { name: /previous photo/i }))
+    const dialog = screen.getByRole('dialog', { name: /photo viewer/i })
+    expect(dialog.querySelector('img')).toHaveAttribute('src', 'https://cdn.test/g2.jpg')
+  })
+
+  it('close button closes the lightbox', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 1/i }))
+    await user.click(screen.getByRole('button', { name: /close photo viewer/i }))
+    expect(screen.queryByRole('dialog', { name: /photo viewer/i })).not.toBeInTheDocument()
+  })
+
+  it('clicking overlay backdrop closes the lightbox', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 1/i }))
+    fireEvent.click(screen.getByRole('dialog', { name: /photo viewer/i }))
+    expect(screen.queryByRole('dialog', { name: /photo viewer/i })).not.toBeInTheDocument()
+  })
+
+  it('Escape key closes the lightbox', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 1/i }))
+    await user.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog', { name: /photo viewer/i })).not.toBeInTheDocument()
+  })
+
+  it('shows photo counter for gallery lightbox', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    await user.click(screen.getByRole('button', { name: /view gallery photo 1/i }))
+    expect(screen.getByText('1 / 2')).toBeInTheDocument()
   })
 })

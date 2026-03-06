@@ -98,6 +98,7 @@ export function ErrorMessage({ message }: { message: string }) {
 - `lib/geo.ts` — `detectUserCountryCode()` (async, Cloudflare CDN trace, CORS-safe, falls back to `navigator.language` region), `buildCountryOptions(isoCode|null)` (full world list, detected country first), `buildStateOptions(countryName)` (dynamic states via `country-state-city`)
 - `components/layout/ScrollToTop.tsx` — pathless root route element; calls `window.scrollTo({ top: 0, behavior: 'instant' })` on every pathname change, renders `<Outlet />`
 - `hooks/use-delete-memorial.ts` — `useDeleteMemorial()` mutation: `DELETE /api/memorials/:id/permanent`, invalidates `['my-memorials']`, toasts on success
+- `hooks/use-public-memorial.ts` — `usePublicMemorial(slug)` query: `GET /api/memorials/by-slug/:slug`, public (no auth), returns `{ data: MemorialRow }`
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
@@ -731,7 +732,7 @@ CLOUDINARY_API_SECRET
 | Dashboard Services | `/dashboard/services` | ⬜ Placeholder | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
-| Public Memorial | `/memorial/:slug` | ⬜ Not started | docs/pages/public-memorial.md |
+| Public Memorial | `/memorial/:slug` | ✅ Complete | docs/pages/public-memorial.md |
 | Settings | `/settings` | ⬜ Not started | docs/pages/settings.md |
 
 **Status key:** ⬜ Not started · 🔄 In progress · ✅ Complete

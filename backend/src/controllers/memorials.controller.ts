@@ -69,6 +69,34 @@ export async function listPublished(
   }
 }
 
+export async function getBySlug(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { slug } = req.params
+
+    const { data, error } = await supabaseAdmin
+      .from('memorials')
+      .select('*, memorial_photos(*)')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .is('deleted_at', null)
+      .maybeSingle()
+
+    if (error) throw error
+    if (!data) {
+      res.status(404).json({ data: null, error: 'Memorial not found' })
+      return
+    }
+
+    res.json({ data, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export async function list(
   req: AuthenticatedRequest,
   res: Response,

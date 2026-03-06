@@ -7,6 +7,7 @@ const router = Router()
 
 // Public — anyone can browse published memorials
 router.get('/', memorials.listPublished as unknown as RequestHandler)
+router.get('/by-slug/:slug', memorials.getBySlug as unknown as RequestHandler)
 
 // Authenticated — requires valid Bearer token
 router.post('/', requireAuth as unknown as RequestHandler, memorials.create as unknown as RequestHandler)

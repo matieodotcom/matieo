@@ -240,6 +240,50 @@ describe('POST /api/memorials/:id/publish', () => {
   })
 })
 
+describe('GET /api/memorials/by-slug/:slug', () => {
+  it('returns memorial by slug without auth', async () => {
+    const memorial = mockMemorial({ status: 'published', slug: 'john-doe-2024' })
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: memorial, error: null }),
+    })
+
+    const res = await request(app).get('/api/memorials/by-slug/john-doe-2024')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.slug).toBe('john-doe-2024')
+  })
+
+  it('returns 404 when slug not found', async () => {
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: null, error: null }),
+    })
+
+    const res = await request(app).get('/api/memorials/by-slug/nonexistent')
+
+    expect(res.status).toBe(404)
+    expect(res.body.error).toMatch(/not found/i)
+  })
+
+  it('returns 404 for draft memorials (status filter applied server-side)', async () => {
+    mockFrom.mockReturnValueOnce({
+      select: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: null, error: null }),
+    })
+
+    const res = await request(app).get('/api/memorials/by-slug/draft-slug')
+
+    expect(res.status).toBe(404)
+  })
+})
+
 describe('DELETE /api/memorials/:id', () => {
   it('soft deletes a memorial', async () => {
     mockAuth()
