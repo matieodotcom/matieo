@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form'
 import { ArrowRight, Check } from 'lucide-react'
 import { PhotoUpload, GalleryUpload } from '@/components/ui/PhotoUpload'
 import { Select } from '@/components/ui/Select'
+import { DatePicker } from '@/components/ui/DatePicker'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useMemorialForm, sanitiseSlug, deriveSlug } from '@/hooks/use-create-memorial'
 import { useMemorialDraftStore } from '@/store/memorialDraftStore'
@@ -334,11 +335,18 @@ export default function CreateMemorialPage() {
             {/* Date of Birth */}
             <div>
               <FieldLabel htmlFor="dateOfBirth">Date of Birth</FieldLabel>
-              <input
-                id="dateOfBirth"
-                type="date"
-                className={inputClass}
-                {...register('dateOfBirth')}
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    id="dateOfBirth"
+                    value={field.value ?? undefined}
+                    onChange={field.onChange}
+                    placeholder="Pick date of birth"
+                    disableFuture
+                  />
+                )}
               />
               {errors.dateOfBirth && <ErrorMessage message={errors.dateOfBirth.message!} />}
             </div>
@@ -346,11 +354,18 @@ export default function CreateMemorialPage() {
             {/* Date of Death */}
             <div>
               <FieldLabel htmlFor="dateOfDeath">Date of Death</FieldLabel>
-              <input
-                id="dateOfDeath"
-                type="date"
-                className={inputClass}
-                {...register('dateOfDeath')}
+              <Controller
+                name="dateOfDeath"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    id="dateOfDeath"
+                    value={field.value ?? undefined}
+                    onChange={field.onChange}
+                    placeholder="Pick date of death"
+                    disableFuture
+                  />
+                )}
               />
               {errors.dateOfDeath && <ErrorMessage message={errors.dateOfDeath.message!} />}
             </div>

@@ -88,7 +88,7 @@ export function ErrorMessage({ message }: { message: string }) {
 
 ## §Stack
 
-**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`. Test: Vitest + RTL.
+**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`, `react-day-picker` v9, `date-fns` v4. Test: Vitest + RTL.
 
 **Frontend key lib files:**
 - `lib/supabase.ts` — Supabase singleton client (anon key, frontend only)
@@ -419,7 +419,8 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | Tabs.tsx | Tabs | `@radix-ui/react-tabs` | — |
 | Tooltip.tsx | Tooltip | `@radix-ui/react-tooltip` | — |
 | Avatar.tsx | Avatar | `@radix-ui/react-avatar` | Navbar (user avatar) |
-| Popover.tsx | Popover | `@radix-ui/react-popover` | Select.tsx (inline, not a standalone wrapper) |
+| Popover.tsx | Popover | `@radix-ui/react-popover` | DatePicker.tsx (standalone wrapper with Portal) |
+| DatePicker.tsx | DatePicker | `react-day-picker` v9 + `date-fns` v4 | CreateMemorialPage (dateOfBirth / dateOfDeath) — YYYY-MM-DD string; `disableFuture` prop disables future days; custom `CalendarSelect` for fully-themed month/year dropdowns |
 
 ### Dark mode patterns
 - Toggle: `darkMode: 'class'` in `tailwind.config.ts`. Class `dark` on `<html>` element.
