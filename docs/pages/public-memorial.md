@@ -32,6 +32,10 @@ Hook: `usePublicMemorial(slug)` in `hooks/use-public-memorial.ts`.
 - **Loaded** — full layout matching preview page
 
 ## Features
+- Auth-conditional header
+  - Logged out: full `<Navbar />` with all nav options
+  - Logged in: minimal header — Back button (navigate(-1) / fallback `/`) left, avatar → `/dashboard` right
+  - Auth loading: empty placeholder (no layout shift)
 - Cover photo or gradient
 - Profile photo with lightbox on click
 - Gallery photos with lightbox + prev/next arrows + counter

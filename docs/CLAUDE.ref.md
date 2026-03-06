@@ -732,7 +732,7 @@ CLOUDINARY_API_SECRET
 | Dashboard Services | `/dashboard/services` | ⬜ Placeholder | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
-| Public Memorial | `/memorial/:slug` | ✅ Complete | docs/pages/public-memorial.md |
+| Public Memorial | `/memorial/:slug` | ✅ Complete | docs/pages/public-memorial.md — auth-conditional header: Navbar when logged out, minimal back+avatar when logged in |
 | Settings | `/settings` | ⬜ Not started | docs/pages/settings.md |
 
 **Status key:** ⬜ Not started · 🔄 In progress · ✅ Complete

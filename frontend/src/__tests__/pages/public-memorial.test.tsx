@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { renderWithProviders } from '@/__tests__/utils'
+import { renderWithProviders, mockUser } from '@/__tests__/utils'
+import { useAuthStore } from '@/store/authStore'
+import type { User } from '@supabase/supabase-js'
 
 vi.mock('@/lib/apiClient', () => ({
   apiFetch: vi.fn(),
@@ -78,6 +80,7 @@ function renderPage() {
 describe('PublicMemorialPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    useAuthStore.setState({ user: null, session: null, isLoading: false })
   })
 
   it('shows loading skeleton while fetching', async () => {
@@ -187,5 +190,57 @@ describe('PublicMemorialPage', () => {
     renderPage()
     await waitFor(() => expect(vi.mocked(apiFetch)).toHaveBeenCalled())
     expect(vi.mocked(apiFetch).mock.calls[0][0]).toContain('/api/memorials/by-slug/john-doe-2024')
+  })
+
+  describe('MemorialHeader', () => {
+    describe('logged out', () => {
+      it('renders the full Navbar when not logged in', async () => {
+        const { apiFetch } = await import('@/lib/apiClient')
+        vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
+        renderPage()
+        // Navbar renders a <nav> element
+        expect(screen.getByRole('navigation')).toBeInTheDocument()
+      })
+
+      it('does not show back button when not logged in', async () => {
+        const { apiFetch } = await import('@/lib/apiClient')
+        vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
+        renderPage()
+        expect(screen.queryByRole('button', { name: /go back/i })).not.toBeInTheDocument()
+      })
+    })
+
+    describe('logged in', () => {
+      beforeEach(() => {
+        useAuthStore.setState({
+          user: mockUser() as unknown as User,
+          session: {} as never,
+          isLoading: false,
+        })
+      })
+
+      it('shows Back button when logged in', async () => {
+        const { apiFetch } = await import('@/lib/apiClient')
+        vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
+        renderPage()
+        expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
+      })
+
+      it('shows dashboard link wrapping avatar when logged in', async () => {
+        const { apiFetch } = await import('@/lib/apiClient')
+        vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
+        renderPage()
+        expect(screen.getByRole('link', { name: /go to dashboard/i })).toBeInTheDocument()
+      })
+
+      it('does not show logo or sign in when logged in', async () => {
+        const { apiFetch } = await import('@/lib/apiClient')
+        vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
+        renderPage()
+        const header = document.querySelector('header')!
+        expect(within(header).queryByText('MATIEO')).not.toBeInTheDocument()
+        expect(within(header).queryByRole('link', { name: /sign in/i })).not.toBeInTheDocument()
+      })
+    })
   })
 })

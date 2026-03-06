@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Calendar, MapPin, User, Images, X, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { UserAvatar } from '@/components/ui/Avatar'
 import { usePublicMemorial } from '@/hooks/use-public-memorial'
+import { useAuthStore } from '@/store/authStore'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import type { MemorialPhoto } from '@/types/memorial'
 
@@ -79,6 +81,63 @@ function NotFound() {
         Browse memorials
       </Link>
     </div>
+  )
+}
+
+// ── Memorial header ───────────────────────────────────────────────────────────
+
+function MemorialHeader() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const user = useAuthStore((s) => s.user)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  // 'default' key means direct access (new tab, typed URL, bookmark) — no history to go back to
+  const canGoBack = location.key !== 'default'
+
+  // Not logged in (or still loading) → full Navbar with all nav options
+  if (!user) {
+    return <Navbar />
+  }
+
+  // Auth resolving → minimal placeholder to avoid layout shift
+  if (isLoading) {
+    return (
+      <header className="sticky top-0 z-50 bg-white border-b border-neutral-200">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="w-16 h-4 bg-neutral-100 rounded" />
+          <div className="w-9 h-9 bg-neutral-100 rounded-full" />
+        </div>
+      </header>
+    )
+  }
+
+  // Logged in → minimal header: back button + avatar
+  return (
+    <header className="sticky top-0 z-50 bg-white border-b border-neutral-200">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <button
+          type="button"
+          aria-label="Go back"
+          onClick={() => (canGoBack ? navigate(-1) : navigate('/'))}
+          className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
+        >
+          <ArrowLeft size={18} />
+          Back
+        </button>
+
+        <Link
+          to="/dashboard"
+          aria-label="Go to dashboard"
+          className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+        >
+          <UserAvatar
+            src={(user.user_metadata?.avatar_url as string | undefined) ?? null}
+            name={user.user_metadata?.full_name ?? user.email ?? ''}
+            size="md"
+          />
+        </Link>
+      </div>
+    </header>
   )
 }
 
@@ -201,7 +260,7 @@ export default function PublicMemorialPage() {
       )}
 
       <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
-        <Navbar />
+        <MemorialHeader />
 
         <main className="flex-1">
           {isPending && <Skeleton />}
