@@ -240,6 +240,50 @@ describe('POST /api/memorials/:id/publish', () => {
   })
 })
 
+describe('POST /api/memorials/:id/unpublish', () => {
+  it('unpublishes a memorial and returns it as draft', async () => {
+    mockAuth()
+    const draft = mockMemorial({ status: 'draft' })
+    mockFrom.mockReturnValueOnce({
+      update: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: draft, error: null }),
+    })
+
+    const res = await request(app)
+      .post(`/api/memorials/${draft.id}/unpublish`)
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.status).toBe('draft')
+  })
+
+  it('returns 401 without auth token', async () => {
+    const res = await request(app).post('/api/memorials/some-id/unpublish')
+    expect(res.status).toBe(401)
+  })
+
+  it('returns 404 when memorial not found', async () => {
+    mockAuth()
+    mockFrom.mockReturnValueOnce({
+      update: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      is: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValueOnce({ data: null, error: null }),
+    })
+
+    const res = await request(app)
+      .post('/api/memorials/nonexistent/unpublish')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(404)
+    expect(res.body.error).toMatch(/not found/i)
+  })
+})
+
 describe('GET /api/memorials/by-slug/:slug', () => {
   it('returns memorial by slug without auth', async () => {
     const memorial = mockMemorial({ status: 'published', slug: 'john-doe-2024' })

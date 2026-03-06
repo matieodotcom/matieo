@@ -69,9 +69,25 @@ describe('MemorialCard', () => {
     expect(screen.getByRole('button', { name: /memorial options/i })).toBeInTheDocument()
   })
 
-  it('does not render options menu for published memorial', () => {
+  it('does not render options menu for published memorial when only onDelete is provided', () => {
     render(<MemorialCard memorial={mockMemorial({ status: 'published' })} onDelete={vi.fn()} />)
     expect(screen.queryByRole('button', { name: /memorial options/i })).not.toBeInTheDocument()
+  })
+
+  it('renders options menu for published memorial when onUnpublish is provided', () => {
+    render(<MemorialCard memorial={mockMemorial({ status: 'published' })} onUnpublish={vi.fn()} />)
+    expect(screen.getByRole('button', { name: /memorial options/i })).toBeInTheDocument()
+  })
+
+  it('calls onUnpublish with correct id when "Unpublish" clicked', async () => {
+    const user = userEvent.setup()
+    const onUnpublish = vi.fn()
+    render(<MemorialCard memorial={mockMemorial({ status: 'published' })} onUnpublish={onUnpublish} />)
+
+    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(screen.getByText('Unpublish'))
+
+    expect(onUnpublish).toHaveBeenCalledWith('memorial-id-123')
   })
 
   it('does not render options menu when onDelete is not provided', () => {

@@ -5,6 +5,7 @@ import { MemorialCard } from '@/components/memorial/MemorialCard'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useMyMemorials } from '@/hooks/use-my-memorials'
 import { useDeleteMemorial } from '@/hooks/use-delete-memorial'
+import { useUnpublishMemorial } from '@/hooks/use-unpublish-memorial'
 import {
   AlertDialog,
   AlertDialogContent,
@@ -83,6 +84,7 @@ export default function MyMemorialsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchInput, setSearchInput] = useState(searchParams.get('q') ?? '')
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+  const [pendingUnpublishId, setPendingUnpublishId] = useState<string | null>(null)
 
   const q = searchParams.get('q') ?? ''
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1'))
@@ -120,6 +122,7 @@ export default function MyMemorialsPage() {
 
   const { data, isPending, error } = useMyMemorials({ q, page, limit: LIMIT })
   const { mutate: deleteDraft, isPending: isDeleting, error: deleteError } = useDeleteMemorial()
+  const { mutate: unpublishMemorial, isPending: isUnpublishing, error: unpublishError } = useUnpublishMemorial()
   const memorials = data?.data ?? []
   const total = data?.total ?? 0
   const totalPages = Math.ceil(total / LIMIT)
@@ -129,6 +132,13 @@ export default function MyMemorialsPage() {
     if (!pendingDeleteId) return
     deleteDraft(pendingDeleteId, {
       onSuccess: () => setPendingDeleteId(null),
+    })
+  }
+
+  function handleConfirmUnpublish() {
+    if (!pendingUnpublishId) return
+    unpublishMemorial(pendingUnpublishId, {
+      onSuccess: () => setPendingUnpublishId(null),
     })
   }
 
@@ -217,7 +227,12 @@ export default function MyMemorialsPage() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {memorials.map((memorial) => (
-              <MemorialCard key={memorial.id} memorial={memorial} onDelete={setPendingDeleteId} />
+              <MemorialCard
+                key={memorial.id}
+                memorial={memorial}
+                onDelete={setPendingDeleteId}
+                onUnpublish={setPendingUnpublishId}
+              />
             ))}
           </div>
 
@@ -253,6 +268,39 @@ export default function MyMemorialsPage() {
                 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isDeleting ? 'Deleting…' : 'Delete'}
+            </button>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Unpublish confirmation dialog */}
+      <AlertDialog
+        open={!!pendingUnpublishId}
+        onOpenChange={(open) => { if (!open) setPendingUnpublishId(null) }}
+      >
+        <AlertDialogContent>
+          <AlertDialogTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+            Unpublish this memorial?
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
+            The memorial will no longer be publicly accessible. It will be saved as a draft and you can republish it at any time.
+          </AlertDialogDescription>
+          {unpublishError && (
+            <p role="alert" className="text-sm text-red-600 dark:text-red-400 mb-4">
+              {unpublishError.message}
+            </p>
+          )}
+          <div className="flex justify-end gap-3">
+            <AlertDialogCancel disabled={isUnpublishing}>Cancel</AlertDialogCancel>
+            <button
+              onClick={handleConfirmUnpublish}
+              disabled={isUnpublishing}
+              className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium
+                bg-brand-primary hover:bg-brand-primaryHover text-white transition-colors
+                focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2
+                disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isUnpublishing ? 'Unpublishing…' : 'Unpublish'}
             </button>
           </div>
         </AlertDialogContent>

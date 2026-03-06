@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/__tests__/utils'
 import { useAuthStore } from '@/store/authStore'
@@ -82,7 +82,7 @@ async function renderPage(initialRoute = '/dashboard/memorials') {
 describe('MyMemorialsPage', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
-    vi.clearAllMocks()
+    vi.resetAllMocks()
   })
 
   it('renders "My Memorials" heading', async () => {
@@ -161,15 +161,24 @@ describe('MyMemorialsPage', () => {
   it('shows options button on draft cards', async () => {
     await renderPage()
     await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
-    expect(screen.getByRole('button', { name: /memorial options/i })).toBeInTheDocument()
+    const janeCard = screen.getByText('Jane Smith').closest('article')!
+    expect(within(janeCard).getByRole('button', { name: /memorial options/i })).toBeInTheDocument()
+  })
+
+  it('shows options button on published cards', async () => {
+    await renderPage()
+    await waitFor(() => expect(screen.getByText('John Doe')).toBeInTheDocument())
+    const johnCard = screen.getByText('John Doe').closest('article')!
+    expect(within(johnCard).getByRole('button', { name: /memorial options/i })).toBeInTheDocument()
   })
 
   it('opens confirmation dialog on delete click', async () => {
     const user = userEvent.setup()
     await renderPage()
     await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
+    const janeCard = screen.getByText('Jane Smith').closest('article')!
 
-    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(within(janeCard).getByRole('button', { name: /memorial options/i }))
     await user.click(screen.getByText('Delete Draft'))
 
     await waitFor(() =>
@@ -180,7 +189,6 @@ describe('MyMemorialsPage', () => {
   it('calls permanent delete API on confirm', async () => {
     const user = userEvent.setup()
     const { apiFetch } = await import('@/lib/apiClient')
-    // first call: list memorials; second: delete
     vi.mocked(apiFetch)
       .mockResolvedValueOnce(mockMemorialData)
       .mockResolvedValueOnce({ data: { id: 'mem-2' }, error: null })
@@ -189,8 +197,9 @@ describe('MyMemorialsPage', () => {
     renderWithProviders(<MyMemorialsPage />, { initialRoute: '/dashboard/memorials' })
 
     await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
+    const janeCard = screen.getByText('Jane Smith').closest('article')!
 
-    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(within(janeCard).getByRole('button', { name: /memorial options/i }))
     await user.click(screen.getByText('Delete Draft'))
     await waitFor(() => expect(screen.getByText(/delete this draft/i)).toBeInTheDocument())
 
@@ -214,8 +223,9 @@ describe('MyMemorialsPage', () => {
     renderWithProviders(<MyMemorialsPage />, { initialRoute: '/dashboard/memorials' })
 
     await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument())
+    const janeCard = screen.getByText('Jane Smith').closest('article')!
 
-    await user.click(screen.getByRole('button', { name: /memorial options/i }))
+    await user.click(within(janeCard).getByRole('button', { name: /memorial options/i }))
     await user.click(screen.getByText('Delete Draft'))
     await waitFor(() => expect(screen.getByText(/delete this draft/i)).toBeInTheDocument())
 
@@ -223,6 +233,47 @@ describe('MyMemorialsPage', () => {
 
     await waitFor(() =>
       expect(screen.getByRole('alert')).toHaveTextContent('Server error'),
+    )
+  })
+
+  it('opens unpublish confirmation dialog on Unpublish click', async () => {
+    const user = userEvent.setup()
+    await renderPage()
+    await waitFor(() => expect(screen.getByText('John Doe')).toBeInTheDocument())
+    const johnCard = screen.getByText('John Doe').closest('article')!
+
+    await user.click(within(johnCard).getByRole('button', { name: /memorial options/i }))
+    await user.click(screen.getByText('Unpublish'))
+
+    await waitFor(() =>
+      expect(screen.getByText(/unpublish this memorial/i)).toBeInTheDocument(),
+    )
+  })
+
+  it('calls unpublish API on confirm', async () => {
+    const user = userEvent.setup()
+    const { apiFetch } = await import('@/lib/apiClient')
+    vi.mocked(apiFetch)
+      .mockResolvedValueOnce(mockMemorialData)
+      .mockResolvedValueOnce({ data: { ...mockMemorialData.data[0], status: 'draft' }, error: null })
+      .mockResolvedValueOnce(mockMemorialData)
+
+    renderWithProviders(<MyMemorialsPage />, { initialRoute: '/dashboard/memorials' })
+
+    await waitFor(() => expect(screen.getByText('John Doe')).toBeInTheDocument())
+    const johnCard = screen.getByText('John Doe').closest('article')!
+
+    await user.click(within(johnCard).getByRole('button', { name: /memorial options/i }))
+    await user.click(screen.getByText('Unpublish'))
+    await waitFor(() => expect(screen.getByText(/unpublish this memorial/i)).toBeInTheDocument())
+
+    await user.click(screen.getByRole('button', { name: /^unpublish$/i }))
+
+    await waitFor(() =>
+      expect(vi.mocked(apiFetch)).toHaveBeenCalledWith(
+        '/api/memorials/mem-1/unpublish',
+        { method: 'POST' },
+      ),
     )
   })
 })

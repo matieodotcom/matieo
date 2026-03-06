@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Calendar, MapPin, MoreVertical, Trash2 } from 'lucide-react'
+import { Calendar, MapPin, MoreVertical, Trash2, EyeOff } from 'lucide-react'
 import type { MemorialRow } from '@/types/memorial'
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
 interface MemorialCardProps {
   memorial: MemorialRow
   onDelete?: (id: string) => void
+  onUnpublish?: (id: string) => void
 }
 
 function formatDate(dateStr: string): string {
@@ -30,7 +31,7 @@ function getInitials(name: string): string {
     .toUpperCase()
 }
 
-export function MemorialCard({ memorial, onDelete }: MemorialCardProps) {
+export function MemorialCard({ memorial, onDelete, onUnpublish }: MemorialCardProps) {
   const { full_name, date_of_birth, date_of_death, location, profile_url, status, slug } = memorial
 
   const dateRange = [date_of_birth, date_of_death]
@@ -77,7 +78,7 @@ export function MemorialCard({ memorial, onDelete }: MemorialCardProps) {
             >
               {status === 'published' ? 'Published' : 'Draft'}
             </span>
-            {status === 'draft' && onDelete && (
+            {(status === 'draft' ? !!onDelete : !!onUnpublish) && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -88,13 +89,21 @@ export function MemorialCard({ memorial, onDelete }: MemorialCardProps) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem
-                    className="text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
-                    onSelect={() => onDelete(memorial.id)}
-                  >
-                    <Trash2 size={14} className="mr-2 shrink-0" />
-                    Delete Draft
-                  </DropdownMenuItem>
+                  {status === 'draft' && onDelete && (
+                    <DropdownMenuItem
+                      className="text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
+                      onSelect={() => onDelete(memorial.id)}
+                    >
+                      <Trash2 size={14} className="mr-2 shrink-0" />
+                      Delete Draft
+                    </DropdownMenuItem>
+                  )}
+                  {status === 'published' && onUnpublish && (
+                    <DropdownMenuItem onSelect={() => onUnpublish(memorial.id)}>
+                      <EyeOff size={14} className="mr-2 shrink-0" />
+                      Unpublish
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             )}

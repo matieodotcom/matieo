@@ -361,6 +361,35 @@ export async function permanentDelete(
   }
 }
 
+export async function unpublish(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+
+    const { data, error } = await supabaseAdmin
+      .from('memorials')
+      .update({ status: 'draft' })
+      .eq('id', id)
+      .eq('created_by', req.user.id)
+      .is('deleted_at', null)
+      .select()
+      .maybeSingle()
+
+    if (error) throw error
+    if (!data) {
+      res.status(404).json({ data: null, error: 'Memorial not found' })
+      return
+    }
+
+    res.json({ data, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export async function publish(
   req: AuthenticatedRequest,
   res: Response,
