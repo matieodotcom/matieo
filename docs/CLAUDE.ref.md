@@ -197,7 +197,7 @@ profiles
   RLS: owner read/update only
 
 memorials
-  id(uuid,pk), created_by(uuid,fk→auth.users),
+  id(uuid,pk), created_by(uuid,fk→auth.users), creator_name(text,denorm),
   full_name(text,req), age_at_death(int), date_of_birth(date), date_of_death(date),
   gender(male|female|non-binary|prefer_not_to_say), race_ethnicity(text),
   location(text), cover_cloudinary_public_id(text), cover_url(text),
@@ -209,7 +209,7 @@ memorials
   created_at(ts), updated_at(ts,trigger)
   RLS: public→published only; owner→all
   IDX: created_by, slug, status
-  Migrations: 20260303_add_location_to_memorials.sql, 20260304_create_memorial_additions.sql, 20260305_add_cover_gradient.sql
+  Migrations: 20260303_add_location_to_memorials.sql, 20260304_create_memorial_additions.sql, 20260305_add_cover_gradient.sql, 20260306_add_creator_name_to_memorials.sql
 
 funeral_details
   id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),

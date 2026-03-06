@@ -27,6 +27,7 @@ export async function requireAuth(
     id: data.user.id,
     email: data.user.email,
     role: (data.user.user_metadata?.role as string) ?? 'user',
+    full_name: data.user.user_metadata?.full_name as string | undefined,
   }
 
   next()

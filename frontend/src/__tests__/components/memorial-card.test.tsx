@@ -52,15 +52,20 @@ describe('MemorialCard', () => {
     expect(screen.getByText('Published')).toBeInTheDocument()
   })
 
-  it('renders "View Memorial" link with correct href for published memorial', () => {
+  it('hides status badge when showStatus is false', () => {
+    render(<MemorialCard memorial={mockMemorial({ status: 'published' })} showStatus={false} />)
+    expect(screen.queryByText('Published')).not.toBeInTheDocument()
+  })
+
+  it('whole card links to memorial page for published memorial', () => {
     render(<MemorialCard memorial={mockMemorial({ slug: 'john-doe-2024', status: 'published' })} />)
-    const link = screen.getByRole('link', { name: /view memorial/i })
+    const link = screen.getByRole('link', { name: 'John Doe' })
     expect(link).toHaveAttribute('href', '/memorial/john-doe-2024')
   })
 
-  it('renders "Continue Editing" link pointing to edit page for draft memorial', () => {
+  it('whole card links to edit page for draft memorial', () => {
     render(<MemorialCard memorial={mockMemorial({ status: 'draft' })} />)
-    const link = screen.getByRole('link', { name: /continue editing/i })
+    const link = screen.getByRole('link', { name: 'John Doe' })
     expect(link).toHaveAttribute('href', '/dashboard/memorials/memorial-id-123/edit')
   })
 
@@ -104,5 +109,20 @@ describe('MemorialCard', () => {
     await user.click(screen.getByText('Delete Draft'))
 
     expect(onDelete).toHaveBeenCalledWith('memorial-id-123')
+  })
+
+  it('renders "By <name>" when showPublisher is true and creator_name is set', () => {
+    render(<MemorialCard memorial={mockMemorial({ creator_name: 'Jane Smith' })} showPublisher />)
+    expect(screen.getByText('By Jane Smith')).toBeInTheDocument()
+  })
+
+  it('does not render publisher line when showPublisher is false', () => {
+    render(<MemorialCard memorial={mockMemorial({ creator_name: 'Jane Smith' })} />)
+    expect(screen.queryByText(/By Jane Smith/)).not.toBeInTheDocument()
+  })
+
+  it('does not render publisher line when creator_name is null even if showPublisher is true', () => {
+    render(<MemorialCard memorial={mockMemorial({ creator_name: null })} showPublisher />)
+    expect(screen.queryByText(/^By /)).not.toBeInTheDocument()
   })
 })

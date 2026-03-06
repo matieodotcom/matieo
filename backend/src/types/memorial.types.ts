@@ -5,6 +5,7 @@ import type { Request } from 'express'
 export interface MemorialRow {
   id: string
   created_by: string
+  creator_name: string | null
   full_name: string
   age_at_death: number | null
   date_of_birth: string | null
@@ -103,6 +104,7 @@ export interface AuthenticatedUser {
   id: string
   email: string | undefined
   role: string
+  full_name: string | undefined
 }
 
 export interface AuthenticatedRequest extends Request {

@@ -52,6 +52,7 @@ export function mockMemorial(overrides = {}) {
   return {
     id: 'memorial-id-123',
     created_by: 'test-user-id',
+    creator_name: 'Test User',
     full_name: 'John Doe',
     date_of_birth: '1945-03-15',
     date_of_death: '2024-01-10',

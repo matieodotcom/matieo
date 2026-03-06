@@ -12,6 +12,8 @@ interface MemorialCardProps {
   memorial: MemorialRow
   onDelete?: (id: string) => void
   onUnpublish?: (id: string) => void
+  showPublisher?: boolean
+  showStatus?: boolean
 }
 
 function formatDate(dateStr: string): string {
@@ -31,8 +33,8 @@ function getInitials(name: string): string {
     .toUpperCase()
 }
 
-export function MemorialCard({ memorial, onDelete, onUnpublish }: MemorialCardProps) {
-  const { full_name, date_of_birth, date_of_death, location, profile_url, status, slug } = memorial
+export function MemorialCard({ memorial, onDelete, onUnpublish, showPublisher, showStatus = true }: MemorialCardProps) {
+  const { full_name, date_of_birth, date_of_death, location, profile_url, status, slug, creator_name } = memorial
 
   const dateRange = [date_of_birth, date_of_death]
     .filter(Boolean)
@@ -45,39 +47,39 @@ export function MemorialCard({ memorial, onDelete, onUnpublish }: MemorialCardPr
       : `/memorial/${slug ?? memorial.id}`
 
   return (
-    <article className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-      <Link to={href} tabIndex={-1} aria-hidden>
-        {profile_url ? (
-          <img
-            src={profile_url}
-            alt={full_name}
-            className="w-full h-52 object-cover object-center"
-          />
-        ) : (
-          <div className="w-full h-52 bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center">
-            <span className="text-3xl font-bold text-neutral-300 dark:text-neutral-500">{getInitials(full_name)}</span>
-          </div>
-        )}
-      </Link>
+    <article className="relative bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      {profile_url ? (
+        <img
+          src={profile_url}
+          alt={full_name}
+          className="w-full h-52 object-cover object-center"
+        />
+      ) : (
+        <div className="w-full h-52 bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center">
+          <span className="text-3xl font-bold text-neutral-300 dark:text-neutral-500">{getInitials(full_name)}</span>
+        </div>
+      )}
 
       <div className="p-4">
         <div className="flex items-start justify-between gap-2 mb-2">
           <Link
             to={href}
-            className="font-semibold text-neutral-900 dark:text-neutral-100 hover:text-brand-primary transition-colors leading-snug"
+            className="font-semibold text-neutral-900 dark:text-neutral-100 leading-snug after:absolute after:inset-0 after:rounded-xl"
           >
             {full_name}
           </Link>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span
-              className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                status === 'published'
-                  ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                  : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
-              }`}
-            >
-              {status === 'published' ? 'Published' : 'Draft'}
-            </span>
+          <div className="relative z-10 flex items-center gap-1.5 shrink-0">
+            {showStatus && (
+              <span
+                className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                  status === 'published'
+                    ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                    : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
+                }`}
+              >
+                {status === 'published' ? 'Published' : 'Draft'}
+              </span>
+            )}
             {(status === 'draft' ? !!onDelete : !!onUnpublish) && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -118,18 +120,17 @@ export function MemorialCard({ memorial, onDelete, onUnpublish }: MemorialCardPr
         )}
 
         {location && (
-          <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 mb-3">
+          <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400">
             <MapPin size={13} className="shrink-0" />
             <span>{location}</span>
           </div>
         )}
 
-        <Link
-          to={href}
-          className="inline-flex items-center gap-1 text-sm text-brand-primary font-medium hover:underline mt-1"
-        >
-          {status === 'draft' ? 'Continue Editing →' : 'View Memorial →'}
-        </Link>
+        {showPublisher && creator_name && (
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
+            By {creator_name}
+          </p>
+        )}
       </div>
     </article>
   )

@@ -13,6 +13,7 @@ export interface MemorialPhoto {
 export interface MemorialRow {
   id: string
   created_by: string
+  creator_name: string | null
   full_name: string
   age_at_death: number | null
   date_of_birth: string | null

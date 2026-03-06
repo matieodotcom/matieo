@@ -165,11 +165,14 @@ export async function create(
 
     const fullMemorialUrl = `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}/memorial/${slug}`
 
+    const creatorName: string | null = req.user.full_name ?? req.user.email ?? null
+
     const { data, error } = await supabaseAdmin
       .from('memorials')
       .insert({
         ...payload,
         created_by: req.user.id,
+        creator_name: creatorName,
         slug,
         full_memorial_url: fullMemorialUrl,
       })
