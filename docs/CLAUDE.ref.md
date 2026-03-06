@@ -98,6 +98,7 @@ export function ErrorMessage({ message }: { message: string }) {
 - `lib/geo.ts` — `detectUserCountryCode()` (async, Cloudflare CDN trace, CORS-safe, falls back to `navigator.language` region), `buildCountryOptions(isoCode|null)` (full world list, detected country first), `buildStateOptions(countryName)` (dynamic states via `country-state-city`)
 - `components/layout/ScrollToTop.tsx` — pathless root route element; calls `window.scrollTo({ top: 0, behavior: 'instant' })` on every pathname change, renders `<Outlet />`
 - `hooks/use-delete-memorial.ts` — `useDeleteMemorial()` mutation: `DELETE /api/memorials/:id/permanent`, invalidates `['my-memorials']`, toasts on success
+- `hooks/use-unpublish-memorial.ts` — `useUnpublishMemorial()` mutation: `POST /api/memorials/:id/unpublish`, sets status→draft, invalidates `['my-memorials']`, toasts on success
 - `hooks/use-public-memorial.ts` — `usePublicMemorial(slug)` query: `GET /api/memorials/by-slug/:slug`, public (no auth), returns `{ data: MemorialRow }`
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
 

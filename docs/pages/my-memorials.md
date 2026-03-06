@@ -27,8 +27,10 @@ Hook: `useMyMemorials({ q, page })` in `hooks/use-my-memorials.ts`.
 | Endpoint | Method | Notes |
 |----------|--------|-------|
 | `DELETE /api/memorials/:id/permanent` | DELETE | Hard-delete draft + Cloudinary cleanup. Drafts only — returns 403 for published. |
+| `POST /api/memorials/:id/unpublish` | POST | Sets `status → draft`. Memorial disappears from public pages. Reversible via publish. |
 
 Hook: `useDeleteMemorial()` in `hooks/use-delete-memorial.ts`.
+Hook: `useUnpublishMemorial()` in `hooks/use-unpublish-memorial.ts`.
 
 ---
 
@@ -50,6 +52,8 @@ Hook: `useDeleteMemorial()` in `hooks/use-delete-memorial.ts`.
 | Hook | File | Purpose |
 |------|------|---------|
 | `useMyMemorials` | `hooks/use-my-memorials.ts` | Fetch user's memorials with search + pagination |
+| `useDeleteMemorial` | `hooks/use-delete-memorial.ts` | Permanently delete a draft memorial |
+| `useUnpublishMemorial` | `hooks/use-unpublish-memorial.ts` | Move a published memorial back to draft |
 
 ---
 
