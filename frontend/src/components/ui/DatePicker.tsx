@@ -37,7 +37,7 @@ const MONTH_NAMES = [
 ]
 
 const CURRENT_YEAR = new Date().getFullYear()
-const YEARS = Array.from({ length: CURRENT_YEAR - 1899 }, (_, i) => CURRENT_YEAR - i)
+const YEARS = Array.from({ length: CURRENT_YEAR - 1799 }, (_, i) => CURRENT_YEAR - i)
 
 // ── Minimal themed select dropdown ────────────────────────────────────────────
 
@@ -209,7 +209,7 @@ export function DatePicker({
         <DayPicker
           mode="single"
           hideNavigation
-          startMonth={new Date(1900, 0)}
+          startMonth={new Date(1800, 0)}
           endMonth={disableFuture ? today : undefined}
           selected={selected}
           defaultMonth={selected ?? new Date()}
