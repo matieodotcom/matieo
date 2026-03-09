@@ -158,7 +158,9 @@ export default function MemorialPreviewPage() {
           {v.coverPhoto ? (
             <img src={v.coverPhoto.url} alt="Cover" className="h-full w-full object-cover" />
           ) : customColor ? (
-            <div className="h-full w-full" style={{ backgroundColor: customColor }} />
+            customColor.startsWith('linear-gradient')
+              ? <div className="h-full w-full" style={{ backgroundImage: customColor }} />
+              : <div className="h-full w-full" style={{ backgroundColor: customColor }} />
           ) : (
             <div className={`h-full w-full bg-gradient-to-r ${gradient!.tw}`} />
           )}

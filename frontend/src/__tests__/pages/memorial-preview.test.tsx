@@ -163,6 +163,14 @@ describe('MemorialPreviewPage', () => {
     const cover = container.querySelector('[style*="background-color"]')
     expect(cover).toBeInTheDocument()
   })
+
+  it('renders custom linear-gradient as cover background-image', () => {
+    const gradient = 'linear-gradient(to right, #3B5BFF, #1A1A2E)'
+    mockLocationState = { values: { ...baseValues, coverPhoto: null, coverGradient: gradient } }
+    const { container } = renderPage()
+    const cover = container.querySelector('[style*="background-image"]')
+    expect(cover).toBeInTheDocument()
+  })
 })
 
 describe('MemorialPreviewPage — lightbox', () => {
