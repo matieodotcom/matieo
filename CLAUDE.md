@@ -23,6 +23,14 @@ Brand: Blue `#3B5BFF`. Two user modes: memorial creation (families) + mortality 
 
 ---
 
+## TODO LIST — MANDATORY FOR EVERY TASK
+
+At the start of every task, use `TaskCreate` to create a todo list breaking the work into steps.
+Update each task to `in_progress` when starting it, `completed` when done.
+Never begin implementation without a todo list in place first.
+
+---
+
 ## SELF-MAINTENANCE — NON-NEGOTIABLE
 
 Every task is incomplete until affected files are updated.
