@@ -34,4 +34,6 @@ claude_desktop_config.json
 #design files
 design/
 
-.claude
+.claude/
+!.claude/commands/
+!.claude/commands/**
