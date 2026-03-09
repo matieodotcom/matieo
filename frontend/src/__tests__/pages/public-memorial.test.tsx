@@ -226,19 +226,19 @@ describe('PublicMemorialPage', () => {
         expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
       })
 
-      it('shows dashboard link wrapping avatar when logged in', async () => {
+      it('shows user menu button (avatar dropdown) when logged in', async () => {
         const { apiFetch } = await import('@/lib/apiClient')
         vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
         renderPage()
-        expect(screen.getByRole('link', { name: /go to dashboard/i })).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /user menu/i })).toBeInTheDocument()
       })
 
-      it('does not show logo or sign in when logged in', async () => {
+      it('shows MATIEO logo and does not show sign in when logged in', async () => {
         const { apiFetch } = await import('@/lib/apiClient')
         vi.mocked(apiFetch).mockImplementation(() => new Promise(() => {}))
         renderPage()
         const header = document.querySelector('header')!
-        expect(within(header).queryByText('MATIEO')).not.toBeInTheDocument()
+        expect(within(header).getByText('MATIEO')).toBeInTheDocument()
         expect(within(header).queryByRole('link', { name: /sign in/i })).not.toBeInTheDocument()
       })
     })

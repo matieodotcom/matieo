@@ -4,8 +4,16 @@ import { Calendar, MapPin, User, Images, X, ChevronLeft, ChevronRight, ArrowLeft
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { UserAvatar } from '@/components/ui/Avatar'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/DropdownMenu'
 import { usePublicMemorial } from '@/hooks/use-public-memorial'
 import { useAuthStore } from '@/store/authStore'
+import { useSignOut } from '@/hooks/use-auth'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import type { MemorialPhoto } from '@/types/memorial'
 
@@ -91,6 +99,7 @@ function MemorialHeader() {
   const location = useLocation()
   const user = useAuthStore((s) => s.user)
   const isLoading = useAuthStore((s) => s.isLoading)
+  const { signOut } = useSignOut()
   // 'default' key means direct access (new tab, typed URL, bookmark) — no history to go back to
   const canGoBack = location.key !== 'default'
 
@@ -102,40 +111,57 @@ function MemorialHeader() {
   // Auth resolving → minimal placeholder to avoid layout shift
   if (isLoading) {
     return (
-      <header className="sticky top-0 z-50 bg-white border-b border-neutral-200">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="w-16 h-4 bg-neutral-100 rounded" />
-          <div className="w-9 h-9 bg-neutral-100 rounded-full" />
+      <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800">
+        <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+          <div className="w-16 h-4 bg-neutral-100 dark:bg-neutral-800 rounded" />
+          <div className="w-9 h-9 bg-neutral-100 dark:bg-neutral-800 rounded-full" />
         </div>
       </header>
     )
   }
 
-  // Logged in → minimal header: back button + avatar
+  // Logged in → minimal header: back · logo · avatar dropdown
+  const displayName = user.user_metadata?.full_name ?? user.email ?? ''
+  const avatarUrl = (user.user_metadata?.avatar_url as string | undefined) ?? null
+
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-neutral-200">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         <button
           type="button"
           aria-label="Go back"
           onClick={() => (canGoBack ? navigate(-1) : navigate('/'))}
-          className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
         >
-          <ArrowLeft size={18} />
-          Back
+          <ArrowLeft size={15} />
+          <span className="hidden sm:inline">Back</span>
         </button>
 
-        <Link
-          to="/dashboard"
-          aria-label="Go to dashboard"
-          className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
-        >
-          <UserAvatar
-            src={(user.user_metadata?.avatar_url as string | undefined) ?? null}
-            name={user.user_metadata?.full_name ?? user.email ?? ''}
-            size="md"
-          />
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/logo.png" alt="" className="w-8 h-8" aria-hidden="true" />
+          <span className="text-brand-secondary dark:text-white font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              aria-label="User menu"
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+            >
+              <UserAvatar src={avatarUrl} name={displayName} size="md" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem asChild>
+              <Link to="/settings">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/settings">Settings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )

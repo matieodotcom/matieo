@@ -65,8 +65,8 @@ export function DashboardLayout() {
     <div className="h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
       {/* Top Navbar */}
       <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-neutral-800 flex-shrink-0 z-50 relative">
-        {/* Left: toggle + home */}
-        <div className="flex items-center gap-4">
+        {/* Left: toggle + back link */}
+        <div className="flex items-center gap-3">
           <button
             aria-label="Toggle navigation"
             aria-expanded={isOpen}
@@ -82,7 +82,7 @@ export function DashboardLayout() {
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
-              Back to editing
+              <span className="hidden sm:inline">Back to editing</span>
             </button>
           ) : isCreateOrEdit ? (
             <Link
@@ -90,7 +90,7 @@ export function DashboardLayout() {
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
-              My Memorials
+              <span className="hidden sm:inline">My Memorials</span>
             </Link>
           ) : (
             <Link
@@ -98,7 +98,7 @@ export function DashboardLayout() {
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
-              Home
+              <span className="hidden sm:inline">Home</span>
             </Link>
           )}
         </div>

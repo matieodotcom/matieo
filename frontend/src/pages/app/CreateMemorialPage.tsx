@@ -1009,15 +1009,27 @@ export default function CreateMemorialPage() {
         )}
 
         {/* Bottom actions */}
-        <div className="flex items-center justify-between gap-4 pb-6">
+        <div className="flex flex-col gap-3 pb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          {/* Mobile: Publish first (primary CTA) */}
+          <button
+            type="submit"
+            disabled={isPending}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-primary px-5 py-3 text-sm font-medium
+              text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors sm:hidden"
+          >
+            {isPending ? 'Saving…' : 'Publish Memorial'}
+            {!isPending && <ArrowRight className="h-4 w-4" />}
+          </button>
+
+          {/* Secondary actions row */}
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={onSaveDraft}
               disabled={isPending}
-              className="rounded-lg border border-neutral-200 dark:border-neutral-700 px-5 py-2.5 text-sm font-medium
+              className="flex-1 rounded-lg border border-neutral-200 dark:border-neutral-700 px-5 py-2.5 text-sm font-medium
                 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800
-                disabled:opacity-50 transition-colors"
+                disabled:opacity-50 transition-colors sm:flex-none"
             >
               Save as Draft
             </button>
@@ -1029,15 +1041,16 @@ export default function CreateMemorialPage() {
                 navigate('/dashboard/memorials/preview', { state: { values } })
               }}
               disabled={isPending}
-              className="rounded-lg border border-brand-primary/30 px-5 py-2.5 text-sm font-medium
+              className="flex-1 rounded-lg border border-brand-primary/30 px-5 py-2.5 text-sm font-medium
                 text-brand-primary hover:bg-brand-primaryLight/40 dark:hover:bg-brand-primary/10
-                disabled:opacity-50 transition-colors"
+                disabled:opacity-50 transition-colors sm:flex-none"
             >
               Preview
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Desktop: Cancel + Publish / Mobile: Cancel only */}
+          <div className="flex items-center justify-center gap-3 sm:justify-start">
             <button
               type="button"
               onClick={() => navigate('/dashboard/memorials')}
@@ -1047,10 +1060,11 @@ export default function CreateMemorialPage() {
               Cancel
             </button>
 
+            {/* Desktop Publish (hidden on mobile — shown above instead) */}
             <button
               type="submit"
               disabled={isPending}
-              className="flex items-center gap-2 rounded-lg bg-brand-primary px-5 py-2.5 text-sm font-medium
+              className="hidden sm:flex items-center gap-2 rounded-lg bg-brand-primary px-5 py-2.5 text-sm font-medium
                 text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors"
             >
               {isPending ? 'Saving…' : 'Publish Memorial'}
