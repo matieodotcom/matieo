@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Controller } from 'react-hook-form'
-import { Plus, Trash2 } from 'lucide-react'
+import { ArrowRight, Plus, Trash2 } from 'lucide-react'
 import { PhotoUpload } from '@/components/ui/PhotoUpload'
 import { Select } from '@/components/ui/Select'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useObituaryForm } from '@/hooks/use-create-obituary'
 import { buildCountryOptions, buildStateOptions, detectUserCountryCode } from '@/lib/geo'
+import { CoverPhotoField } from '@/pages/app/CreateMemorialPage'
+import { useObituaryDraftStore } from '@/store/obituaryDraftStore'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -160,56 +162,66 @@ const RELATIONSHIP_OPTIONS = [
   { value: 'Other', label: 'Other' },
 ]
 
-// ── Section card wrapper ───────────────────────────────────────────────────────
+// ── Time options (every 30 min, 6 AM – 11:30 PM) ─────────────────────────────
 
-function SectionCard({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
-  return (
-    <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-100 dark:border-neutral-800 p-6">
-      <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 mb-1">{title}</h2>
-      {subtitle && (
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">{subtitle}</p>
-      )}
-      {!subtitle && <div className="mb-4" />}
-      {children}
-    </div>
-  )
-}
+const TIME_OPTIONS = Array.from({ length: 36 }, (_, i) => {
+  const totalMinutes = 360 + i * 30 // start at 06:00
+  const h24 = Math.floor(totalMinutes / 60)
+  const min = totalMinutes % 60
+  const h12 = h24 % 12 === 0 ? 12 : h24 % 12
+  const ampm = h24 < 12 ? 'AM' : 'PM'
+  const value = `${String(h24).padStart(2, '0')}:${String(min).padStart(2, '0')}`
+  const label = `${h12}:${String(min).padStart(2, '0')} ${ampm}`
+  return { value, label }
+})
 
-// ── Field wrapper ─────────────────────────────────────────────────────────────
+// ── Section wrapper ───────────────────────────────────────────────────────────
 
-function Field({
-  id,
-  label,
-  required,
-  error,
+function Section({
+  title,
+  subtitle,
   children,
 }: {
-  id: string
-  label: string
-  required?: boolean
-  error?: string
+  title: string
+  subtitle?: string
   children: React.ReactNode
 }) {
   return (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-        {label}
-        {required && <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>}
-      </label>
-      {children}
-      {error && (
-        <p role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
-          {error}
-        </p>
+    <section className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
+      <h2 className="mb-5 text-base font-semibold text-neutral-900 dark:text-neutral-100">{title}</h2>
+      {subtitle && (
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 -mt-3 mb-4">{subtitle}</p>
       )}
-    </div>
+      {children}
+    </section>
   )
 }
 
-// ── Text input ────────────────────────────────────────────────────────────────
+// ── Field label ───────────────────────────────────────────────────────────────
+
+function FieldLabel({
+  htmlFor,
+  children,
+  required,
+}: {
+  htmlFor: string
+  children: React.ReactNode
+  required?: boolean
+}) {
+  return (
+    <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+      {children}
+      {required && <span className="ml-0.5 text-red-500" aria-hidden="true">*</span>}
+    </label>
+  )
+}
+
+// ── Input class ───────────────────────────────────────────────────────────────
 
 const inputClass =
-  'w-full px-3 py-2.5 text-sm border border-neutral-200 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent'
+  'w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary transition-colors'
+
+const textareaClass = `${inputClass} resize-none`
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -240,6 +252,9 @@ export default function CreateObituaryPage() {
   const biographyValue = watch('biography') ?? ''
 
   const [countryOptions, setCountryOptions] = useState(() => buildCountryOptions(null))
+  const storedGradient = useObituaryDraftStore((s) => s.coverGradient)
+  const saveDraftStore = useObituaryDraftStore((s) => s.saveDraft)
+  const [coverGradient, setCoverGradient] = useState(storedGradient)
 
   useEffect(() => {
     detectUserCountryCode().then((code) => {
@@ -251,20 +266,29 @@ export default function CreateObituaryPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-24">
-        <div className="h-8 w-8 animate-pulse rounded-full bg-brand-primaryLight" />
+      <div className="py-8 space-y-6">
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={i}
+            className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 animate-pulse space-y-3"
+          >
+            <div className="h-4 bg-neutral-100 dark:bg-neutral-700 rounded w-1/4" />
+            <div className="h-10 bg-neutral-100 dark:bg-neutral-700 rounded" />
+            <div className="h-10 bg-neutral-100 dark:bg-neutral-700 rounded" />
+          </div>
+        ))}
       </div>
     )
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="mx-auto py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
           {isEdit ? 'Edit Obituary' : "Let's create an online obituary"}
         </h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           We are deeply sorry for your loss and are committed to helping you create a beautiful obituary.
         </p>
       </div>
@@ -274,60 +298,49 @@ export default function CreateObituaryPage() {
       <form onSubmit={handleSubmit(onPublish)} noValidate className="space-y-6">
 
         {/* ── Photos ── */}
-        <SectionCard title="Photos">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Section title="Photos">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
             {/* Obituary Photo */}
-            <div>
-              <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-                Obituary Photo
-                <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
-              </p>
-              <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-3">360×360px, PNG/JPG up to 10MB</p>
+            <div className="w-full sm:w-[360px] sm:shrink-0">
               <Controller
                 control={control}
                 name="profilePhoto"
                 render={({ field }) => (
                   <PhotoUpload
+                    label="Obituary Photo"
+                    hint="Recommended 360×360px, up to 10MB"
                     value={field.value ?? null}
                     onChange={field.onChange}
-                    aspect={1}
-                    uploadPreset="obituary_profile"
+                    uploadAreaClassName="h-48 sm:h-[360px]"
+                    error={errors.profilePhoto?.message as string | undefined}
                   />
                 )}
               />
-              {errors.profilePhoto && (
-                <p role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
-                  {errors.profilePhoto.message as string}
-                </p>
-              )}
             </div>
 
-            {/* Cover Photo */}
-            <div>
-              <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-                Upload Cover Photo
-              </p>
-              <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-3">1296×282px, PNG/JPG up to 10MB</p>
+            {/* Cover Photo + Gradient */}
+            <div className="min-w-0 flex-1">
               <Controller
                 control={control}
                 name="coverPhoto"
                 render={({ field }) => (
-                  <PhotoUpload
-                    value={field.value ?? null}
-                    onChange={field.onChange}
-                    aspect={1296 / 282}
-                    uploadPreset="obituary_cover"
+                  <CoverPhotoField
+                    coverPhoto={field.value ?? null}
+                    onCoverPhotoChange={field.onChange}
+                    coverGradient={coverGradient}
+                    onGradientChange={setCoverGradient}
                   />
                 )}
               />
             </div>
           </div>
-        </SectionCard>
+        </Section>
 
         {/* ── Personal Information ── */}
-        <SectionCard title="Personal Information">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field id="firstName" label="First Name" required error={errors.firstName?.message}>
+        <Section title="Personal Information">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <FieldLabel htmlFor="firstName" required>First Name</FieldLabel>
               <input
                 id="firstName"
                 type="text"
@@ -335,9 +348,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('firstName')}
               />
-            </Field>
+              {errors.firstName && <ErrorMessage message={errors.firstName.message!} />}
+            </div>
 
-            <Field id="lastName" label="Last Name" required error={errors.lastName?.message}>
+            <div>
+              <FieldLabel htmlFor="lastName" required>Last Name</FieldLabel>
               <input
                 id="lastName"
                 type="text"
@@ -345,9 +360,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('lastName')}
               />
-            </Field>
+              {errors.lastName && <ErrorMessage message={errors.lastName.message!} />}
+            </div>
 
-            <Field id="dateOfBirth" label="Date of Birth" error={errors.dateOfBirth?.message}>
+            <div>
+              <FieldLabel htmlFor="dateOfBirth">Date of Birth</FieldLabel>
               <Controller
                 control={control}
                 name="dateOfBirth"
@@ -359,9 +376,11 @@ export default function CreateObituaryPage() {
                   />
                 )}
               />
-            </Field>
+              {errors.dateOfBirth && <ErrorMessage message={errors.dateOfBirth.message!} />}
+            </div>
 
-            <Field id="ageAtDeath" label="Age of Death" required error={errors.ageAtDeath?.message}>
+            <div>
+              <FieldLabel htmlFor="ageAtDeath" required>Age at Death</FieldLabel>
               <Controller
                 control={control}
                 name="ageAtDeath"
@@ -371,13 +390,15 @@ export default function CreateObituaryPage() {
                     placeholder="Select age"
                     options={AGE_OPTIONS}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
                 )}
               />
-            </Field>
+              {errors.ageAtDeath && <ErrorMessage message={errors.ageAtDeath.message!} />}
+            </div>
 
-            <Field id="dateOfDeath" label="Date of Death" required error={errors.dateOfDeath?.message}>
+            <div>
+              <FieldLabel htmlFor="dateOfDeath" required>Date of Death</FieldLabel>
               <Controller
                 control={control}
                 name="dateOfDeath"
@@ -389,9 +410,11 @@ export default function CreateObituaryPage() {
                   />
                 )}
               />
-            </Field>
+              {errors.dateOfDeath && <ErrorMessage message={errors.dateOfDeath.message!} />}
+            </div>
 
-            <Field id="country" label="Country" required error={errors.country?.message}>
+            <div>
+              <FieldLabel htmlFor="country" required>Country</FieldLabel>
               <Controller
                 control={control}
                 name="country"
@@ -401,29 +424,34 @@ export default function CreateObituaryPage() {
                     placeholder="Select country"
                     options={countryOptions}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
                 )}
               />
-            </Field>
+              {errors.country && <ErrorMessage message={errors.country.message!} />}
+            </div>
 
-            <Field id="state" label="State" error={errors.state?.message}>
+            <div>
+              <FieldLabel htmlFor="state">State</FieldLabel>
               <Controller
                 control={control}
                 name="state"
                 render={({ field }) => (
                   <Select
                     id="state"
-                    placeholder="Select state"
+                    placeholder={stateOptions.length > 0 ? 'Select state / province' : 'No states for this country'}
                     options={stateOptions}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
+                    disabled={stateOptions.length === 0}
                   />
                 )}
               />
-            </Field>
+              {errors.state && <ErrorMessage message={errors.state.message!} />}
+            </div>
 
-            <Field id="placeOfDeath" label="Place of Death" required error={errors.placeOfDeath?.message}>
+            <div>
+              <FieldLabel htmlFor="placeOfDeath" required>Place of Death</FieldLabel>
               <Controller
                 control={control}
                 name="placeOfDeath"
@@ -433,13 +461,15 @@ export default function CreateObituaryPage() {
                     placeholder="Select place of death"
                     options={PLACE_OF_DEATH_OPTIONS}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
                 )}
               />
-            </Field>
+              {errors.placeOfDeath && <ErrorMessage message={errors.placeOfDeath.message!} />}
+            </div>
 
-            <Field id="gender" label="Gender" required error={errors.gender?.message}>
+            <div>
+              <FieldLabel htmlFor="gender" required>Gender</FieldLabel>
               <Controller
                 control={control}
                 name="gender"
@@ -449,13 +479,15 @@ export default function CreateObituaryPage() {
                     placeholder="Select gender"
                     options={GENDER_OPTIONS}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
                 )}
               />
-            </Field>
+              {errors.gender && <ErrorMessage message={errors.gender.message!} />}
+            </div>
 
-            <Field id="raceEthnicity" label="Race/Ethnicity" required error={errors.raceEthnicity?.message}>
+            <div>
+              <FieldLabel htmlFor="raceEthnicity" required>Race / Ethnicity</FieldLabel>
               <Controller
                 control={control}
                 name="raceEthnicity"
@@ -465,23 +497,25 @@ export default function CreateObituaryPage() {
                     placeholder="Select race/ethnicity"
                     options={RACE_OPTIONS}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
                 )}
               />
-            </Field>
+              {errors.raceEthnicity && <ErrorMessage message={errors.raceEthnicity.message!} />}
+            </div>
           </div>
-        </SectionCard>
+        </Section>
 
         {/* ── Cause of Passing (Private) ── */}
-        <SectionCard title="Cause of Passing (Optional)">
+        <Section title="Cause of Passing (Optional)">
           <div className="mb-4 p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-100 dark:border-neutral-700">
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
               This information will never appear on the public obituary. With consent, it may be used anonymously for insights.
             </p>
           </div>
           <div className="space-y-4">
-            <Field id="causeOfPassing" label="Cause of Passing" error={errors.causeOfPassing?.message}>
+            <div>
+              <FieldLabel htmlFor="causeOfPassing">Cause of Passing</FieldLabel>
               <Controller
                 control={control}
                 name="causeOfPassing"
@@ -491,11 +525,12 @@ export default function CreateObituaryPage() {
                     placeholder="Select cause of passing"
                     options={CAUSE_OF_PASSING_OPTIONS}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
                 )}
               />
-            </Field>
+              {errors.causeOfPassing && <ErrorMessage message={errors.causeOfPassing.message!} />}
+            </div>
 
             <div className="flex items-start gap-2">
               <input
@@ -512,15 +547,16 @@ export default function CreateObituaryPage() {
               </label>
             </div>
           </div>
-        </SectionCard>
+        </Section>
 
         {/* ── Funeral/Prayers Details ── */}
-        <SectionCard
+        <Section
           title="Funeral/Prayers Details (Optional)"
           subtitle="Resident, religious home, funeral center, etc."
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field id="funeralName" label="Name" error={errors.funeralName?.message}>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <FieldLabel htmlFor="funeralName">Name</FieldLabel>
               <input
                 id="funeralName"
                 type="text"
@@ -528,9 +564,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('funeralName')}
               />
-            </Field>
+              {errors.funeralName && <ErrorMessage message={errors.funeralName.message!} />}
+            </div>
 
-            <Field id="funeralLocation" label="Location" error={errors.funeralLocation?.message}>
+            <div>
+              <FieldLabel htmlFor="funeralLocation">Location</FieldLabel>
               <input
                 id="funeralLocation"
                 type="text"
@@ -538,9 +576,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('funeralLocation')}
               />
-            </Field>
+              {errors.funeralLocation && <ErrorMessage message={errors.funeralLocation.message!} />}
+            </div>
 
-            <Field id="funeralDate" label="Date" error={errors.funeralDate?.message}>
+            <div>
+              <FieldLabel htmlFor="funeralDate">Date</FieldLabel>
               <Controller
                 control={control}
                 name="funeralDate"
@@ -552,35 +592,46 @@ export default function CreateObituaryPage() {
                   />
                 )}
               />
-            </Field>
+              {errors.funeralDate && <ErrorMessage message={errors.funeralDate.message!} />}
+            </div>
 
-            <Field id="funeralTime" label="Time" error={errors.funeralTime?.message}>
-              <input
-                id="funeralTime"
-                type="time"
-                className={inputClass}
-                {...register('funeralTime')}
+            <div>
+              <FieldLabel htmlFor="funeralTime">Time</FieldLabel>
+              <Controller
+                control={control}
+                name="funeralTime"
+                render={({ field }) => (
+                  <Select
+                    id="funeralTime"
+                    placeholder="Select time"
+                    options={TIME_OPTIONS}
+                    value={field.value ?? ''}
+                    onValueChange={field.onChange}
+                  />
+                )}
               />
-            </Field>
+              {errors.funeralTime && <ErrorMessage message={errors.funeralTime.message!} />}
+            </div>
 
             <div className="sm:col-span-2">
-              <Field id="funeralNote" label="Note" error={errors.funeralNote?.message}>
-                <textarea
-                  id="funeralNote"
-                  rows={3}
-                  placeholder="Additional notes about the funeral service..."
-                  className={`${inputClass} resize-none`}
-                  {...register('funeralNote')}
-                />
-              </Field>
+              <FieldLabel htmlFor="funeralNote">Note</FieldLabel>
+              <textarea
+                id="funeralNote"
+                rows={3}
+                placeholder="Additional notes about the funeral service..."
+                className={textareaClass}
+                {...register('funeralNote')}
+              />
+              {errors.funeralNote && <ErrorMessage message={errors.funeralNote.message!} />}
             </div>
           </div>
-        </SectionCard>
+        </Section>
 
         {/* ── Burial Details ── */}
-        <SectionCard title="Burial Details (Optional)">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field id="burialCenterName" label="Burial Center Name" error={errors.burialCenterName?.message}>
+        <Section title="Burial Details (Optional)">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <FieldLabel htmlFor="burialCenterName">Burial Center Name</FieldLabel>
               <input
                 id="burialCenterName"
                 type="text"
@@ -588,9 +639,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('burialCenterName')}
               />
-            </Field>
+              {errors.burialCenterName && <ErrorMessage message={errors.burialCenterName.message!} />}
+            </div>
 
-            <Field id="burialLocation" label="Location" error={errors.burialLocation?.message}>
+            <div>
+              <FieldLabel htmlFor="burialLocation">Location</FieldLabel>
               <input
                 id="burialLocation"
                 type="text"
@@ -598,9 +651,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('burialLocation')}
               />
-            </Field>
+              {errors.burialLocation && <ErrorMessage message={errors.burialLocation.message!} />}
+            </div>
 
-            <Field id="burialDate" label="Burial Date" error={errors.burialDate?.message}>
+            <div>
+              <FieldLabel htmlFor="burialDate">Burial Date</FieldLabel>
               <Controller
                 control={control}
                 name="burialDate"
@@ -612,35 +667,46 @@ export default function CreateObituaryPage() {
                   />
                 )}
               />
-            </Field>
+              {errors.burialDate && <ErrorMessage message={errors.burialDate.message!} />}
+            </div>
 
-            <Field id="burialTime" label="Burial Time" error={errors.burialTime?.message}>
-              <input
-                id="burialTime"
-                type="time"
-                className={inputClass}
-                {...register('burialTime')}
+            <div>
+              <FieldLabel htmlFor="burialTime">Burial Time</FieldLabel>
+              <Controller
+                control={control}
+                name="burialTime"
+                render={({ field }) => (
+                  <Select
+                    id="burialTime"
+                    placeholder="Select time"
+                    options={TIME_OPTIONS}
+                    value={field.value ?? ''}
+                    onValueChange={field.onChange}
+                  />
+                )}
               />
-            </Field>
+              {errors.burialTime && <ErrorMessage message={errors.burialTime.message!} />}
+            </div>
 
             <div className="sm:col-span-2">
-              <Field id="burialNote" label="Note" error={errors.burialNote?.message}>
-                <textarea
-                  id="burialNote"
-                  rows={3}
-                  placeholder="Additional notes about the burial..."
-                  className={`${inputClass} resize-none`}
-                  {...register('burialNote')}
-                />
-              </Field>
+              <FieldLabel htmlFor="burialNote">Note</FieldLabel>
+              <textarea
+                id="burialNote"
+                rows={3}
+                placeholder="Additional notes about the burial..."
+                className={textareaClass}
+                {...register('burialNote')}
+              />
+              {errors.burialNote && <ErrorMessage message={errors.burialNote.message!} />}
             </div>
           </div>
-        </SectionCard>
+        </Section>
 
         {/* ── Contact Person ── */}
-        <SectionCard title="Contact Person">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field id="contactPersonName" label="Name" required error={errors.contactPersonName?.message}>
+        <Section title="Contact Person">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <FieldLabel htmlFor="contactPersonName" required>Name</FieldLabel>
               <input
                 id="contactPersonName"
                 type="text"
@@ -648,9 +714,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('contactPersonName')}
               />
-            </Field>
+              {errors.contactPersonName && <ErrorMessage message={errors.contactPersonName.message!} />}
+            </div>
 
-            <Field id="contactPersonRelationship" label="Relationship" required error={errors.contactPersonRelationship?.message}>
+            <div>
+              <FieldLabel htmlFor="contactPersonRelationship" required>Relationship</FieldLabel>
               <Controller
                 control={control}
                 name="contactPersonRelationship"
@@ -660,13 +728,15 @@ export default function CreateObituaryPage() {
                     placeholder="Select relationship"
                     options={RELATIONSHIP_OPTIONS}
                     value={field.value ?? ''}
-                    onChange={field.onChange}
+                    onValueChange={field.onChange}
                   />
                 )}
               />
-            </Field>
+              {errors.contactPersonRelationship && <ErrorMessage message={errors.contactPersonRelationship.message!} />}
+            </div>
 
-            <Field id="contactPersonPhone" label="Phone Number" required error={errors.contactPersonPhone?.message}>
+            <div>
+              <FieldLabel htmlFor="contactPersonPhone" required>Phone Number</FieldLabel>
               <input
                 id="contactPersonPhone"
                 type="tel"
@@ -674,9 +744,11 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('contactPersonPhone')}
               />
-            </Field>
+              {errors.contactPersonPhone && <ErrorMessage message={errors.contactPersonPhone.message!} />}
+            </div>
 
-            <Field id="contactPersonEmail" label="Email Address" error={errors.contactPersonEmail?.message}>
+            <div>
+              <FieldLabel htmlFor="contactPersonEmail">Email Address</FieldLabel>
               <input
                 id="contactPersonEmail"
                 type="email"
@@ -684,20 +756,21 @@ export default function CreateObituaryPage() {
                 className={inputClass}
                 {...register('contactPersonEmail')}
               />
-            </Field>
+              {errors.contactPersonEmail && <ErrorMessage message={errors.contactPersonEmail.message!} />}
+            </div>
           </div>
-        </SectionCard>
+        </Section>
 
         {/* ── Family Members ── */}
-        <SectionCard title="Family Members (Optional)">
+        <Section title="Family Members (Optional)">
           <div className="space-y-3">
             {familyMembersField.fields.map((field, index) => (
               <div key={field.id} className="flex items-start gap-2">
-                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label
                       htmlFor={`familyMembers.${index}.name`}
-                      className="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                      className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
                     >
                       Name
                     </label>
@@ -712,7 +785,7 @@ export default function CreateObituaryPage() {
                   <div>
                     <label
                       htmlFor={`familyMembers.${index}.relationship`}
-                      className="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                      className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
                     >
                       Relationship
                     </label>
@@ -725,7 +798,7 @@ export default function CreateObituaryPage() {
                           placeholder="Select relationship"
                           options={RELATIONSHIP_OPTIONS}
                           value={f.value ?? ''}
-                          onChange={f.onChange}
+                          onValueChange={f.onChange}
                         />
                       )}
                     />
@@ -735,7 +808,7 @@ export default function CreateObituaryPage() {
                   type="button"
                   onClick={() => familyMembersField.remove(index)}
                   aria-label="Remove family member"
-                  className="mt-6 flex items-center justify-center h-10 w-10 rounded-lg text-neutral-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="mt-6 flex h-10 w-10 items-center justify-center rounded-lg text-neutral-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 >
                   <Trash2 size={15} />
                 </button>
@@ -751,26 +824,27 @@ export default function CreateObituaryPage() {
               Add Family Member
             </button>
           </div>
-        </SectionCard>
+        </Section>
 
         {/* ── Memorial Message ── */}
-        <SectionCard title="Memorial Message (Optional)">
-          <Field id="biography" label="Biography" error={errors.biography?.message}>
+        <Section title="Memorial Message (Optional)">
+          <div>
+            <FieldLabel htmlFor="biography">Biography</FieldLabel>
             <textarea
               id="biography"
               rows={6}
+              maxLength={4000}
               placeholder="Share the life story, memories, and legacy of your loved one..."
-              className={`${inputClass} resize-none`}
+              className={textareaClass}
               {...register('biography')}
             />
-            <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500 text-right">
-              {biographyValue.length} / 4000
-            </p>
-          </Field>
-        </SectionCard>
+            <p className="mt-1 text-right text-xs text-neutral-400">{biographyValue.length} / 4000</p>
+            {errors.biography && <ErrorMessage message={errors.biography.message!} />}
+          </div>
+        </Section>
 
         {/* ── Death Certificate ── */}
-        <SectionCard title="Death Certificate (Optional)">
+        <Section title="Death Certificate (Optional)">
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
             Upload a copy of the death certificate for verification purposes
           </p>
@@ -792,34 +866,70 @@ export default function CreateObituaryPage() {
               />
             )}
           />
-        </SectionCard>
+        </Section>
 
         {/* ── Footer ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pb-8">
-          <button
-            type="button"
-            onClick={() => navigate('/dashboard/obituary')}
-            className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="button"
-            onClick={onSaveDraft}
-            disabled={isPending}
-            className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Save as Draft
-          </button>
-
+        <div className="flex flex-col gap-3 pb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          {/* Mobile: Publish first (primary CTA) */}
           <button
             type="submit"
             disabled={isPending}
-            className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-white bg-brand-primary hover:bg-brand-primaryHover rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-primary px-5 py-3 text-sm font-medium
+              text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors sm:hidden"
           >
-            {isPending ? 'Saving…' : isEdit ? 'Update Obituary' : 'Publish'}
+            {isPending ? 'Saving…' : isEdit ? 'Update Obituary' : 'Publish Obituary'}
+            {!isPending && <ArrowRight className="h-4 w-4" />}
           </button>
+
+          {/* Secondary actions */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onSaveDraft}
+              disabled={isPending}
+              className="flex-1 rounded-lg border border-neutral-200 dark:border-neutral-700 px-5 py-2.5 text-sm font-medium
+                text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800
+                disabled:opacity-50 transition-colors sm:flex-none"
+            >
+              Save as Draft
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const values = form.getValues()
+                saveDraftStore(values, coverGradient)
+                navigate('/dashboard/obituary/preview', { state: { values, coverGradient } })
+              }}
+              disabled={isPending}
+              className="flex-1 rounded-lg border border-brand-primary/30 px-5 py-2.5 text-sm font-medium
+                text-brand-primary hover:bg-brand-primaryLight/40 dark:hover:bg-brand-primary/10
+                disabled:opacity-50 transition-colors sm:flex-none"
+            >
+              Preview
+            </button>
+          </div>
+
+          {/* Cancel + Desktop Publish */}
+          <div className="flex items-center justify-center gap-3 sm:justify-start">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard/obituary')}
+              disabled={isPending}
+              className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors disabled:opacity-50"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={isPending}
+              className="hidden sm:flex items-center gap-2 rounded-lg bg-brand-primary px-5 py-2.5 text-sm font-medium
+                text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors"
+            >
+              {isPending ? 'Saving…' : isEdit ? 'Update Obituary' : 'Publish Obituary'}
+              {!isPending && <ArrowRight className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
       </form>
     </div>

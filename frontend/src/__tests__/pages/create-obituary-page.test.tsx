@@ -53,13 +53,13 @@ describe('CreateObituaryPage', () => {
   it('renders action buttons', () => {
     renderWithProviders(<CreateObituaryPage />)
     expect(screen.getByRole('button', { name: 'Save as Draft' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Publish' })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /Publish Obituary/i })[0]).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
   })
 
   it('shows validation errors for required fields on publish attempt', async () => {
     renderWithProviders(<CreateObituaryPage />)
-    await userEvent.click(screen.getByRole('button', { name: 'Publish' }))
+    await userEvent.click(screen.getAllByRole('button', { name: /Publish Obituary/i })[0])
     await waitFor(() => {
       expect(screen.getByText('First name is required')).toBeInTheDocument()
     })

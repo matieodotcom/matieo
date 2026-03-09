@@ -29,7 +29,9 @@ export function DashboardLayout() {
   const toggle = useThemeStore((s) => s.toggle)
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const isPreview = pathname === '/dashboard/memorials/preview'
+  const isPreview =
+    pathname === '/dashboard/memorials/preview' ||
+    pathname === '/dashboard/obituary/preview'
   const isCreateOrEdit =
     pathname === '/dashboard/memorials/create' ||
     /^\/dashboard\/memorials\/[^/]+\/edit$/.test(pathname)

@@ -100,11 +100,13 @@ export function ErrorMessage({ message }: { message: string }) {
 - `hooks/use-delete-memorial.ts` — `useDeleteMemorial()` mutation: `DELETE /api/memorials/:id/permanent`, invalidates `['my-memorials']`, toasts on success
 - `hooks/use-unpublish-memorial.ts` — `useUnpublishMemorial()` mutation: `POST /api/memorials/:id/unpublish`, sets status→draft, invalidates `['my-memorials']`, toasts on success
 - `hooks/use-public-memorial.ts` — `usePublicMemorial(slug)` query: `GET /api/memorials/by-slug/:slug`, public (no auth), returns `{ data: MemorialRow }`
-- `hooks/use-create-obituary.ts` — `useObituaryForm(id?)`, `useCreateObituary()`, `useUpdateObituary()`, `useGetObituary(id?)`, `sanitiseSlug`, `deriveSlug`; manages full obituary form state with draftSchema/publishSchema
+- `hooks/use-create-obituary.ts` — `useObituaryForm(id?)`, `useCreateObituary()`, `useUpdateObituary()`, `useGetObituary(id?)`, `sanitiseSlug`, `deriveSlug`; manages full obituary form state with draftSchema/publishSchema; integrates `useObituaryDraftStore` for draft persistence across preview navigation
 - `hooks/use-my-obituaries.ts` — `useMyObitaries({q,page,limit})` query: `GET /api/obituaries/mine`
 - `hooks/use-obituaries.ts` — `useObitaries({q,page,limit})` query: `GET /api/obituaries` (public)
 - `hooks/use-delete-obituary.ts` — `useDeleteObituary()` mutation: `DELETE /api/obituaries/:id/permanent`, invalidates `['my-obituaries']`
 - `hooks/use-unpublish-obituary.ts` — `useUnpublishObituary()` mutation: `POST /api/obituaries/:id/unpublish`, invalidates `['my-obituaries']`
+- `store/memorialDraftStore.ts` — Zustand store: `draft: MemorialFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists memorial form across preview navigation
+- `store/obituaryDraftStore.ts` — Zustand store: `draft: ObituaryFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists obituary form across preview navigation
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
@@ -147,6 +149,8 @@ matieo/
 │   ├── lib/               ← supabase.ts, api.ts, cloudinary.ts, queryClient.ts
 │   ├── store/authStore.ts
 │   ├── store/themeStore.ts
+│   ├── store/memorialDraftStore.ts
+│   ├── store/obituaryDraftStore.ts
 │   ├── hooks/             ← All data logic (useAuth, useMemorials, useInsights, useProfile)
 │   ├── components/ui/     ← Avatar, Dialog, DropdownMenu, Sheet (Radix-based)
 │   ├── components/layout/ ← Navbar.tsx, Footer.tsx, DashboardLayout.tsx
@@ -763,6 +767,7 @@ CLOUDINARY_API_SECRET
 | My Obituaries | `/dashboard/obituary` | ✅ Complete | docs/pages/my-obituaries.md |
 | Create Obituary | `/dashboard/obituary/create` | ✅ Complete | docs/pages/create-obituary.md |
 | Edit Obituary | `/dashboard/obituary/:id/edit` | ✅ Complete | docs/pages/create-obituary.md |
+| Obituary Preview | `/dashboard/obituary/preview` | ✅ Complete | docs/pages/create-obituary.md |
 | Dashboard Services | `/dashboard/services` | ⬜ Placeholder | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |

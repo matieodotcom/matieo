@@ -363,7 +363,7 @@ interface CoverPhotoFieldProps {
   onGradientChange: (key: string) => void
 }
 
-function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGradientChange }: CoverPhotoFieldProps) {
+export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGradientChange }: CoverPhotoFieldProps) {
   const parsedCustom = coverGradient.startsWith('linear-gradient')
     ? parseLinearGradient(coverGradient)
     : null

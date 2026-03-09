@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,6 +8,7 @@ import { apiFetch } from '@/lib/apiClient'
 import { toast } from '@/lib/toast'
 import type { PhotoValue } from '@/components/ui/PhotoUpload'
 import type { ObituaryRow } from '@/types/obituary'
+import { useObituaryDraftStore } from '@/store/obituaryDraftStore'
 
 // ── API types ─────────────────────────────────────────────────────────────────
 
@@ -359,9 +360,13 @@ export function useObituaryForm(obituaryId?: string) {
   const isPending = createMutation.isPending || updateMutation.isPending
   const error = createMutation.error ?? updateMutation.error
 
+  const draft = useObituaryDraftStore((s) => s.draft)
+  const clearDraft = useObituaryDraftStore((s) => s.clearDraft)
+  const restoredFromDraft = useRef(!!draft)
+
   const form = useForm<ObituaryFormValues>({
     resolver: zodResolver(draftSchema),
-    defaultValues: {
+    defaultValues: draft ?? {
       firstName: '',
       lastName: '',
       ageAtDeath: '',
@@ -401,9 +406,16 @@ export function useObituaryForm(obituaryId?: string) {
     name: 'familyMembers',
   })
 
-  // Pre-populate form when editing an existing obituary
+  // Clear draft from store once consumed by defaultValues
   useEffect(() => {
-    if (existingObituary) {
+    if (restoredFromDraft.current) {
+      clearDraft()
+    }
+  }, [clearDraft])
+
+  // Pre-populate form when editing an existing obituary — skip if draft was restored
+  useEffect(() => {
+    if (existingObituary && !restoredFromDraft.current) {
       form.reset(rowToFormValues(existingObituary))
     }
   }, [existingObituary, form])

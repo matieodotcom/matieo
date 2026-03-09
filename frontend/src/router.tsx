@@ -21,6 +21,7 @@ import CreateMemorialPage from '@/pages/app/CreateMemorialPage'
 import MemorialPreviewPage from '@/pages/app/MemorialPreviewPage'
 import MyObituariesPage from '@/pages/app/MyObituariesPage'
 import CreateObituaryPage from '@/pages/app/CreateObituaryPage'
+import ObituaryPreviewPage from '@/pages/app/ObituaryPreviewPage'
 import PublicMemorialPage from '@/pages/public/PublicMemorialPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
@@ -128,6 +129,7 @@ const router = createBrowserRouter([
           { path: 'obituary',                  element: <MyObituariesPage /> },
           { path: 'obituary/create',           element: <CreateObituaryPage /> },
           { path: 'obituary/:id/edit',         element: <CreateObituaryPage /> },
+          { path: 'obituary/preview',          element: <ObituaryPreviewPage /> },
           { path: 'services',                  element: <Placeholder name="Services" /> },
         ],
       },
