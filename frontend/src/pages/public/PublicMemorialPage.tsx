@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/DropdownMenu'
 import { usePublicMemorial } from '@/hooks/use-public-memorial'
+import { useTributes, usePostTribute } from '@/hooks/use-tributes'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
@@ -32,6 +33,16 @@ function formatDate(raw: string): string {
   } catch {
     return raw
   }
+}
+
+function timeAgo(raw: string): string {
+  const diff = Date.now() - new Date(raw).getTime()
+  const m = Math.floor(diff / 60000)
+  if (m < 1) return 'just now'
+  if (m < 60) return `${m}m ago`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h}h ago`
+  return `${Math.floor(h / 24)}d ago`
 }
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
@@ -172,9 +183,11 @@ function MemorialHeader() {
 export default function PublicMemorialPage() {
   const { slug } = useParams<{ slug: string }>()
   const { data: response, isPending, error } = usePublicMemorial(slug ?? '')
+  const user = useAuthStore((s) => s.user)
 
   const [lightboxPhotos, setLightboxPhotos] = useState<LightboxPhoto[]>([])
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const [tributeText, setTributeText] = useState('')
 
   const isOpen = lightboxIndex !== null
   const canNav = lightboxPhotos.length > 1
@@ -211,6 +224,10 @@ export default function PublicMemorialPage() {
   }, [isOpen, canNav, close, prev, next])
 
   const memorial = response?.data
+
+  const { data: tributesRes } = useTributes(memorial?.id ?? '')
+  const { mutate: postTribute, isPending: posting } = usePostTribute(memorial?.id ?? '')
+  const tributes = tributesRes?.data ?? []
 
   const is404 = !isPending && (error?.message === 'Memorial not found' || (!error && !memorial))
 
@@ -426,45 +443,74 @@ export default function PublicMemorialPage() {
                 {/* Tributes */}
                 <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
                   <h2 className="mb-5 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                    Tributes{memorial.tribute_message ? ' (1)' : ' (0)'}
+                    Tributes ({tributes.length})
                   </h2>
 
-                  <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
-                    <textarea
-                      placeholder="Share your memories and pay tribute…"
-                      rows={3}
-                      className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                    />
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-xs text-neutral-400">
-                        Your tribute will be visible to everyone
-                      </span>
-                      <button
-                        type="button"
-                        className="rounded-lg bg-brand-primary hover:bg-brand-primaryHover px-4 py-2 text-sm font-medium text-white transition-colors"
-                      >
-                        Post Tribute
-                      </button>
-                    </div>
-                  </div>
-
-                  {memorial.tribute_message && (
-                    <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="h-9 w-9 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center">
-                          <User className="h-4 w-4 text-neutral-500 dark:text-neutral-400" aria-hidden="true" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-baseline gap-2 flex-wrap">
-                            <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                              {memorial.creator_relationship ?? 'Anonymous'}
-                            </span>
-                          </div>
-                          <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
-                            {memorial.tribute_message}
-                          </p>
-                        </div>
+                  {user ? (
+                    <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
+                      <label htmlFor="tribute-input" className="sr-only">Write a tribute</label>
+                      <textarea
+                        id="tribute-input"
+                        value={tributeText}
+                        onChange={(e) => setTributeText(e.target.value)}
+                        placeholder="Share your memories and pay tribute…"
+                        rows={3}
+                        maxLength={500}
+                        className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      />
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="text-xs text-neutral-400">{tributeText.length}/500</span>
+                        <button
+                          type="button"
+                          disabled={!tributeText.trim() || posting}
+                          onClick={() => {
+                            postTribute(tributeText.trim(), {
+                              onSuccess: () => setTributeText(''),
+                            })
+                          }}
+                          className="rounded-lg bg-brand-primary hover:bg-brand-primaryHover px-4 py-2 text-sm font-medium text-white disabled:opacity-50 transition-colors"
+                        >
+                          {posting ? 'Posting…' : 'Post Tribute'}
+                        </button>
                       </div>
+                    </div>
+                  ) : (
+                    <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4 text-center">
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        <Link to="/signin" className="text-brand-primary hover:underline font-medium">Sign in</Link>
+                        {' '}to leave a tribute
+                      </p>
+                    </div>
+                  )}
+
+                  {tributes.length === 0 ? (
+                    <p className="text-sm text-neutral-400 italic text-center py-4">
+                      Be the first to leave a tribute.
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {tributes.map((t) => (
+                        <div key={t.id} className="rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
+                          <div className="flex items-start gap-3">
+                            <div className="h-9 w-9 shrink-0 rounded-full bg-brand-primary/10 flex items-center justify-center">
+                              <span className="text-xs font-semibold text-brand-primary" aria-hidden="true">
+                                {t.author_name.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-baseline gap-2 flex-wrap">
+                                <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                  {t.author_name}
+                                </span>
+                                <span className="text-xs text-neutral-400">{timeAgo(t.created_at)}</span>
+                              </div>
+                              <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
+                                {t.message}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

@@ -1,0 +1,29 @@
+import type { AuthenticatedRequest } from '@/types/memorial.types'
+
+export interface TributeRow {
+  id: string
+  memorial_id: string
+  user_id: string
+  author_name: string
+  message: string
+  created_at: string
+}
+
+export interface CondolenceRow {
+  id: string
+  obituary_id: string
+  user_id: string
+  author_name: string
+  message: string
+  created_at: string
+}
+
+export interface CreateTributePayload {
+  message: string
+}
+
+export interface CreateCondolencePayload {
+  message: string
+}
+
+export type { AuthenticatedRequest }

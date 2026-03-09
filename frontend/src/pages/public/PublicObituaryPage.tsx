@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
@@ -14,6 +15,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/lib/apiClient'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
+import { useCondolences, usePostCondolence } from '@/hooks/use-condolences'
 import type { ObituaryRow } from '@/types/obituary'
 
 interface SingleObituaryResponse {
@@ -26,6 +28,8 @@ function usePublicObituary(slug: string) {
     queryKey: ['public-obituary', slug],
     queryFn: () => apiFetch<SingleObituaryResponse>(`/api/obituaries/by-slug/${slug}`),
     enabled: !!slug,
+    staleTime: 60_000,
+    retry: false,
     select: (res) => res,
   })
 }
@@ -40,6 +44,16 @@ function formatDate(raw: string): string {
   } catch {
     return raw
   }
+}
+
+function timeAgo(raw: string): string {
+  const diff = Date.now() - new Date(raw).getTime()
+  const m = Math.floor(diff / 60000)
+  if (m < 1) return 'just now'
+  if (m < 60) return `${m}m ago`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h}h ago`
+  return `${Math.floor(h / 24)}d ago`
 }
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
@@ -172,8 +186,14 @@ function SectionCard({ title, children }: { title: string; children: React.React
 export default function PublicObituaryPage() {
   const { slug } = useParams<{ slug: string }>()
   const { data: response, isPending, error } = usePublicObituary(slug ?? '')
+  const user = useAuthStore((s) => s.user)
+  const [condolenceText, setCondolenceText] = useState('')
 
   const obituary = response?.data
+
+  const { data: condolencesRes } = useCondolences(obituary?.id ?? '')
+  const { mutate: postCondolence, isPending: posting } = usePostCondolence(obituary?.id ?? '')
+  const condolences = condolencesRes?.data ?? []
 
   const is404 = !isPending && (error?.message === 'Obituary not found' || (!error && !obituary))
 
@@ -389,6 +409,77 @@ export default function PublicObituaryPage() {
                   </div>
                 </SectionCard>
               )}
+
+              {/* Condolences */}
+              <SectionCard title={`Condolences (${condolences.length})`}>
+                {user ? (
+                  <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
+                    <label htmlFor="condolence-input" className="sr-only">Write a condolence</label>
+                    <textarea
+                      id="condolence-input"
+                      value={condolenceText}
+                      onChange={(e) => setCondolenceText(e.target.value)}
+                      placeholder="Share your condolences…"
+                      rows={3}
+                      maxLength={500}
+                      className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    />
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="text-xs text-neutral-400">{condolenceText.length}/500</span>
+                      <button
+                        type="button"
+                        disabled={!condolenceText.trim() || posting}
+                        onClick={() => {
+                          postCondolence(condolenceText.trim(), {
+                            onSuccess: () => setCondolenceText(''),
+                          })
+                        }}
+                        className="rounded-lg bg-brand-primary hover:bg-brand-primaryHover px-4 py-2 text-sm font-medium text-white disabled:opacity-50 transition-colors"
+                      >
+                        {posting ? 'Posting…' : 'Post Condolence'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4 text-center">
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                      <Link to="/signin" className="text-brand-primary hover:underline font-medium">Sign in</Link>
+                      {' '}to leave a condolence
+                    </p>
+                  </div>
+                )}
+
+                {condolences.length === 0 ? (
+                  <p className="text-sm text-neutral-400 italic text-center py-4">
+                    Be the first to leave a condolence.
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {condolences.map((c) => (
+                      <div key={c.id} className="rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="h-9 w-9 shrink-0 rounded-full bg-brand-primary/10 flex items-center justify-center">
+                            <span className="text-xs font-semibold text-brand-primary" aria-hidden="true">
+                              {c.author_name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-baseline gap-2 flex-wrap">
+                              <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                {c.author_name}
+                              </span>
+                              <span className="text-xs text-neutral-400">{timeAgo(c.created_at)}</span>
+                            </div>
+                            <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
+                              {c.message}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
 
               {/* Back link */}
               <div className="pt-4">

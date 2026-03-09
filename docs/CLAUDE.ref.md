@@ -105,6 +105,8 @@ export function ErrorMessage({ message }: { message: string }) {
 - `hooks/use-obituaries.ts` — `useObitaries({q,page,limit})` query: `GET /api/obituaries` (public)
 - `hooks/use-delete-obituary.ts` — `useDeleteObituary()` mutation: `DELETE /api/obituaries/:id/permanent`, invalidates `['my-obituaries']`
 - `hooks/use-unpublish-obituary.ts` — `useUnpublishObituary()` mutation: `POST /api/obituaries/:id/unpublish`, invalidates `['my-obituaries']`
+- `hooks/use-tributes.ts` — `useTributes(memorialId)` query: `GET /api/memorials/:id/tributes`, public; `usePostTribute(memorialId)` mutation: `POST /api/memorials/:id/tributes`, auth required; invalidates `['tributes', id]`
+- `hooks/use-condolences.ts` — `useCondolences(obituaryId)` query: `GET /api/obituaries/:id/condolences`, public; `usePostCondolence(obituaryId)` mutation: `POST /api/obituaries/:id/condolences`, auth required; invalidates `['condolences', id]`
 - `store/memorialDraftStore.ts` — Zustand store: `draft: MemorialFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists memorial form across preview navigation
 - `store/obituaryDraftStore.ts` — Zustand store: `draft: ObituaryFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists obituary form across preview navigation
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
@@ -190,8 +192,10 @@ auth.users
   │           ├─1:1─ burial_details
   │           ├─1:N─ contact_persons
   │           ├─1:N─ family_members
-  │           └─1:N─ memorial_photos
+  │           ├─1:N─ memorial_photos
+  │           └─1:N─ tributes
   └─1:N─ obituaries  (jsonb: funeral_details, burial_details, contact_person, family_members)
+              └─1:N─ condolences
 
 mortality_data  (standalone, admin-populated)
 ```
@@ -290,6 +294,22 @@ obituaries
   IDX: created_by, slug, status
   Migration: 20260309_create_obituaries.sql
   NOTE: cause_of_passing + death_cert fields are NEVER returned by public endpoints (controller strips them)
+
+tributes
+  id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),
+  user_id(uuid,fk→auth.users,cascade), author_name(text,req),
+  message(text,req,max:500), created_at(ts)
+  RLS: public SELECT; authenticated INSERT (uid=user_id); owner DELETE
+  IDX: memorial_id
+  Migration: 20260309_create_tributes_condolences.sql
+
+condolences
+  id(uuid,pk), obituary_id(uuid,fk→obituaries,cascade),
+  user_id(uuid,fk→auth.users,cascade), author_name(text,req),
+  message(text,req,max:500), created_at(ts)
+  RLS: public SELECT; authenticated INSERT (uid=user_id); owner DELETE
+  IDX: obituary_id
+  Migration: 20260309_create_tributes_condolences.sql
 ```
 
 **Migrations applied:**
@@ -299,6 +319,7 @@ obituaries
 - `20260304_create_memorial_additions.sql` — profile_cloudinary_public_id, profile_url, country, state, creator_relationship, quote on memorials
 - `20260305_add_cover_gradient.sql` — cover_gradient column on memorials
 - `20260309_create_obituaries.sql` — obituaries table with jsonb sections, RLS, indexes
+- `20260309_create_tributes_condolences.sql` — tributes + condolences tables, RLS, indexes
 
 ---
 

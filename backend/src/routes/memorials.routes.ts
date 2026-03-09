@@ -2,6 +2,7 @@ import { Router } from 'express'
 import type { RequestHandler } from 'express'
 import { requireAuth } from '@/middleware/auth.middleware'
 import * as memorials from '@/controllers/memorials.controller'
+import * as tributes from '@/controllers/tributes.controller'
 
 const router = Router()
 
@@ -13,6 +14,11 @@ router.get('/by-slug/:slug', memorials.getBySlug as unknown as RequestHandler)
 router.post('/', requireAuth as unknown as RequestHandler, memorials.create as unknown as RequestHandler)
 // /mine must come before /:id so Express doesn't treat "mine" as an id
 router.get('/mine', requireAuth as unknown as RequestHandler, memorials.list as unknown as RequestHandler)
+
+// Tributes — must be before /:id catch-all
+router.get('/:id/tributes', tributes.listTributes as unknown as RequestHandler)
+router.post('/:id/tributes', requireAuth as unknown as RequestHandler, tributes.createTribute as unknown as RequestHandler)
+
 router.get('/:id', requireAuth as unknown as RequestHandler, memorials.getById as unknown as RequestHandler)
 router.patch('/:id', requireAuth as unknown as RequestHandler, memorials.update as unknown as RequestHandler)
 router.delete('/:id', requireAuth as unknown as RequestHandler, memorials.softDelete as unknown as RequestHandler)

@@ -137,12 +137,14 @@ describe('PublicMemorialPage', () => {
     expect(screen.getByRole('img', { name: 'Family photo' })).toBeInTheDocument()
   })
 
-  it('renders tribute message', async () => {
+  it('renders Tributes section with empty state', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
-    vi.mocked(apiFetch).mockResolvedValueOnce(mockMemorialResponse)
+    vi.mocked(apiFetch)
+      .mockResolvedValueOnce(mockMemorialResponse)
+      .mockResolvedValueOnce({ data: [], error: null })
     renderPage()
     await waitFor(() =>
-      expect(screen.getByText('We will always love you.')).toBeInTheDocument(),
+      expect(screen.getByText(/Be the first to leave a tribute/i)).toBeInTheDocument(),
     )
   })
 

@@ -12,6 +12,7 @@
 -- [x] 20260305_add_cover_gradient.sql
 -- [x] 20260306_add_creator_name_to_memorials.sql
 -- [x] 20260309_create_obituaries.sql
+-- [x] 20260309_create_tributes_condolences.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.
@@ -27,3 +28,5 @@
 --   public.mortality_data         — Aggregate mortality statistics (read-only)
 --   public.waitlist_subscribers   — Email follow-up subscribers (anon insert, no public read)
 --   public.obituaries             — Obituaries (full obit with funeral/burial/family/contact jsonb)
+--   public.tributes               — Community tributes per memorial (auth insert, public read)
+--   public.condolences            — Community condolences per obituary (auth insert, public read)
