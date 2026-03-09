@@ -5,6 +5,7 @@ import FeaturesPage from '@/pages/features/FeaturesPage'
 import AboutPage from '@/pages/about/AboutPage'
 import InsightsPage from '@/pages/public/InsightsPage'
 import ObituaryPage from '@/pages/public/ObituaryPage'
+import PublicObituaryPage from '@/pages/public/PublicObituaryPage'
 import PricingPage from '@/pages/public/PricingPage'
 import TermsPage from '@/pages/legal/TermsPage'
 import PrivacyPage from '@/pages/legal/PrivacyPage'
@@ -18,6 +19,8 @@ import DashboardPage from '@/pages/app/DashboardPage'
 import MyMemorialsPage from '@/pages/app/MyMemorialsPage'
 import CreateMemorialPage from '@/pages/app/CreateMemorialPage'
 import MemorialPreviewPage from '@/pages/app/MemorialPreviewPage'
+import MyObituariesPage from '@/pages/app/MyObituariesPage'
+import CreateObituaryPage from '@/pages/app/CreateObituaryPage'
 import PublicMemorialPage from '@/pages/public/PublicMemorialPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
@@ -83,6 +86,10 @@ const router = createBrowserRouter([
         element: <ObituaryPage />,
       },
       {
+        path: '/obituary/:slug',
+        element: <PublicObituaryPage />,
+      },
+      {
         path: '/pricing',
         element: <PricingPage />,
       },
@@ -112,14 +119,16 @@ const router = createBrowserRouter([
         path: '/dashboard',
         element: <DashboardLayout />,
         children: [
-          { index: true,                     element: <DashboardPage /> },
-          { path: 'insights',                element: <Placeholder name="Insights" /> },
-          { path: 'memorials',               element: <MyMemorialsPage /> },
-          { path: 'memorials/create',        element: <CreateMemorialPage /> },
-          { path: 'memorials/:id/edit',      element: <CreateMemorialPage /> },
-          { path: 'memorials/preview',       element: <MemorialPreviewPage /> },
-          { path: 'obituary',                element: <Placeholder name="Obituary" /> },
-          { path: 'services',                element: <Placeholder name="Services" /> },
+          { index: true,                       element: <DashboardPage /> },
+          { path: 'insights',                  element: <Placeholder name="Insights" /> },
+          { path: 'memorials',                 element: <MyMemorialsPage /> },
+          { path: 'memorials/create',          element: <CreateMemorialPage /> },
+          { path: 'memorials/:id/edit',        element: <CreateMemorialPage /> },
+          { path: 'memorials/preview',         element: <MemorialPreviewPage /> },
+          { path: 'obituary',                  element: <MyObituariesPage /> },
+          { path: 'obituary/create',           element: <CreateObituaryPage /> },
+          { path: 'obituary/:id/edit',         element: <CreateObituaryPage /> },
+          { path: 'services',                  element: <Placeholder name="Services" /> },
         ],
       },
       {

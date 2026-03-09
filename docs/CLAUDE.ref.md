@@ -100,6 +100,11 @@ export function ErrorMessage({ message }: { message: string }) {
 - `hooks/use-delete-memorial.ts` — `useDeleteMemorial()` mutation: `DELETE /api/memorials/:id/permanent`, invalidates `['my-memorials']`, toasts on success
 - `hooks/use-unpublish-memorial.ts` — `useUnpublishMemorial()` mutation: `POST /api/memorials/:id/unpublish`, sets status→draft, invalidates `['my-memorials']`, toasts on success
 - `hooks/use-public-memorial.ts` — `usePublicMemorial(slug)` query: `GET /api/memorials/by-slug/:slug`, public (no auth), returns `{ data: MemorialRow }`
+- `hooks/use-create-obituary.ts` — `useObituaryForm(id?)`, `useCreateObituary()`, `useUpdateObituary()`, `useGetObituary(id?)`, `sanitiseSlug`, `deriveSlug`; manages full obituary form state with draftSchema/publishSchema
+- `hooks/use-my-obituaries.ts` — `useMyObitaries({q,page,limit})` query: `GET /api/obituaries/mine`
+- `hooks/use-obituaries.ts` — `useObitaries({q,page,limit})` query: `GET /api/obituaries` (public)
+- `hooks/use-delete-obituary.ts` — `useDeleteObituary()` mutation: `DELETE /api/obituaries/:id/permanent`, invalidates `['my-obituaries']`
+- `hooks/use-unpublish-obituary.ts` — `useUnpublishObituary()` mutation: `POST /api/obituaries/:id/unpublish`, invalidates `['my-obituaries']`
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
@@ -176,12 +181,13 @@ matieo/
 ```
 auth.users
   ├─1:1─ profiles
-  └─1:N─ memorials
-              ├─1:1─ funeral_details
-              ├─1:1─ burial_details
-              ├─1:N─ contact_persons
-              ├─1:N─ family_members
-              └─1:N─ memorial_photos
+  ├─1:N─ memorials
+  │           ├─1:1─ funeral_details
+  │           ├─1:1─ burial_details
+  │           ├─1:N─ contact_persons
+  │           ├─1:N─ family_members
+  │           └─1:N─ memorial_photos
+  └─1:N─ obituaries  (jsonb: funeral_details, burial_details, contact_person, family_members)
 
 mortality_data  (standalone, admin-populated)
 ```
@@ -258,6 +264,28 @@ waitlist_subscribers
   id(uuid,pk), name(text,req), email(text,req,unique), subscribed_at(ts)
   RLS: anyone can INSERT; no public SELECT (service role only)
   Migration: 20260304_waitlist_subscribers.sql
+
+obituaries
+  id(uuid,pk), created_by(uuid,fk→auth.users,nullable), creator_name(text,denorm),
+  full_name(text,req), age_at_death(int), date_of_birth(date), date_of_death(date),
+  gender(male|female|non-binary|prefer_not_to_say), race_ethnicity(text),
+  country(text), state(text), place_of_death(text),
+  cause_of_passing(text,PRIVATE), cause_of_passing_consented(bool,default:false),
+  profile_cloudinary_public_id(text), profile_url(text),
+  cover_cloudinary_public_id(text), cover_url(text),
+  death_cert_cloudinary_public_id(text,PRIVATE), death_cert_url(text,PRIVATE),
+  biography(text),
+  funeral_details(jsonb: {name,location,date,time,note}),
+  burial_details(jsonb: {burial_center_name,location,burial_date,burial_time,note}),
+  contact_person(jsonb: {name,relationship,phone,email}),
+  family_members(jsonb: [{name,relationship}]),
+  slug(text,unique), full_obituary_url(text),
+  status(draft|published,default:draft), deleted_at(ts,soft-delete),
+  created_at(ts), updated_at(ts,trigger)
+  RLS: public→published only (cause_of_passing stripped by controller); owner→all
+  IDX: created_by, slug, status
+  Migration: 20260309_create_obituaries.sql
+  NOTE: cause_of_passing + death_cert fields are NEVER returned by public endpoints (controller strips them)
 ```
 
 **Migrations applied:**
@@ -266,6 +294,7 @@ waitlist_subscribers
 - `20260304_waitlist_subscribers.sql` — waitlist_subscribers table
 - `20260304_create_memorial_additions.sql` — profile_cloudinary_public_id, profile_url, country, state, creator_relationship, quote on memorials
 - `20260305_add_cover_gradient.sql` — cover_gradient column on memorials
+- `20260309_create_obituaries.sql` — obituaries table with jsonb sections, RLS, indexes
 
 ---
 
@@ -719,7 +748,8 @@ CLOUDINARY_API_SECRET
 | Terms of Service | `/terms` | ✅ Complete | docs/pages/terms.md |
 | Privacy Policy | `/privacy` | ✅ Complete | docs/pages/privacy.md |
 | Insights (public) | `/insights` | ✅ Complete | docs/pages/insights-public.md |
-| Obituary (public) | `/obituary` | ✅ Complete | docs/pages/obituary-public.md |
+| Obituaries (public list) | `/obituary` | ✅ Complete | docs/pages/obituaries.md |
+| Public Obituary | `/obituary/:slug` | ✅ Complete | docs/pages/obituaries.md |
 | Pricing (public) | `/pricing` | ✅ Complete | docs/pages/pricing.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
@@ -730,7 +760,9 @@ CLOUDINARY_API_SECRET
 | My Memorials | `/dashboard/memorials` | ✅ Complete | docs/pages/my-memorials.md |
 | Create Memorial | `/dashboard/memorials/create` | ✅ Complete | docs/pages/create-memorial.md |
 | Memorial Preview | `/dashboard/memorials/preview` | ✅ Complete | docs/pages/create-memorial.md |
-| Dashboard Obituary | `/dashboard/obituary` | ⬜ Placeholder | docs/pages/dashboard.md |
+| My Obituaries | `/dashboard/obituary` | ✅ Complete | docs/pages/my-obituaries.md |
+| Create Obituary | `/dashboard/obituary/create` | ✅ Complete | docs/pages/create-obituary.md |
+| Edit Obituary | `/dashboard/obituary/:id/edit` | ✅ Complete | docs/pages/create-obituary.md |
 | Dashboard Services | `/dashboard/services` | ⬜ Placeholder | docs/pages/dashboard.md |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |

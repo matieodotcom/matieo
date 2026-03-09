@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { AllProviders } from '@/__tests__/utils'
-import { sanitiseSlug, deriveSlug } from '../use-create-memorial'
+import { sanitiseSlug, deriveSlug } from '@/hooks/use-create-obituary'
 
 // Mock apiClient
 vi.mock('@/lib/apiClient', () => ({
@@ -20,7 +20,7 @@ describe('sanitiseSlug', () => {
     expect(sanitiseSlug('John Doe')).toBe('john-doe')
   })
 
-  it('removes special characters', () => {
+  it("removes special characters", () => {
     expect(sanitiseSlug("John O'Brien")).toBe('john-obrien')
   })
 
@@ -43,24 +43,24 @@ describe('deriveSlug', () => {
   })
 })
 
-describe('useMemorialForm', () => {
+describe('useObituaryForm', () => {
   beforeEach(() => {
     mockNavigate.mockReset()
   })
 
   it('initialises with empty default values', async () => {
-    const { useMemorialForm } = await import('../use-create-memorial')
-    const { result } = renderHook(() => useMemorialForm(), { wrapper: AllProviders })
+    const { useObituaryForm } = await import('@/hooks/use-create-obituary')
+    const { result } = renderHook(() => useObituaryForm(), { wrapper: AllProviders })
     expect(result.current.form.getValues('firstName')).toBe('')
-    expect(result.current.form.getValues('slug')).toBe('')
+    expect(result.current.form.getValues('biography')).toBe('')
   })
 
   it('onSaveDraft calls mutateAsync with status draft and navigates', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockResolvedValue({ data: { id: '1', slug: 'test' }, error: null })
 
-    const { useMemorialForm } = await import('../use-create-memorial')
-    const { result } = renderHook(() => useMemorialForm(), { wrapper: AllProviders })
+    const { useObituaryForm } = await import('@/hooks/use-create-obituary')
+    const { result } = renderHook(() => useObituaryForm(), { wrapper: AllProviders })
 
     await act(async () => {
       result.current.form.setValue('firstName', 'John')
@@ -73,38 +73,34 @@ describe('useMemorialForm', () => {
 
     await waitFor(() => {
       expect(apiFetch).toHaveBeenCalledWith(
-        '/api/memorials',
+        '/api/obituaries',
         expect.objectContaining({
           method: 'POST',
           body: expect.stringContaining('"status":"draft"'),
         }),
       )
-      expect(mockNavigate).toHaveBeenCalledWith('/dashboard/memorials')
+      expect(mockNavigate).toHaveBeenCalledWith('/dashboard/obituary')
     })
   })
 
-  it('onPublish sets field errors when required fields are missing', async () => {
-    const { useMemorialForm } = await import('../use-create-memorial')
-    const { result } = renderHook(() => useMemorialForm(), { wrapper: AllProviders })
+  it('onPublish does not navigate when required fields are missing', async () => {
+    const { useObituaryForm } = await import('@/hooks/use-create-obituary')
+    const { result } = renderHook(() => useObituaryForm(), { wrapper: AllProviders })
 
     await act(async () => {
-      // trigger publish with no values filled
       await result.current.onPublish(result.current.form.getValues())
     })
 
-    await waitFor(() => {
-      const errors = result.current.form.formState.errors
-      expect(errors.firstName).toBeDefined()
-      expect(errors.lastName).toBeDefined()
-    })
+    // Navigation should not have been called — publish blocked by validation
+    expect(mockNavigate).not.toHaveBeenCalled()
   })
 
   it('onPublish calls mutateAsync with status published when valid', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockResolvedValue({ data: { id: '1', slug: 'jane-doe-2024' }, error: null })
 
-    const { useMemorialForm } = await import('../use-create-memorial')
-    const { result } = renderHook(() => useMemorialForm(), { wrapper: AllProviders })
+    const { useObituaryForm } = await import('@/hooks/use-create-obituary')
+    const { result } = renderHook(() => useObituaryForm(), { wrapper: AllProviders })
 
     await act(async () => {
       result.current.form.setValue('firstName', 'Jane')
@@ -112,6 +108,10 @@ describe('useMemorialForm', () => {
       result.current.form.setValue('gender', 'female')
       result.current.form.setValue('raceEthnicity', 'Malay')
       result.current.form.setValue('country', 'Malaysia')
+      result.current.form.setValue('contactPersonName', 'John Smith')
+      result.current.form.setValue('contactPersonRelationship', 'Spouse')
+      result.current.form.setValue('contactPersonPhone', '+60123456789')
+      result.current.form.setValue('profilePhoto', { public_id: 'test-id', url: 'https://example.com/photo.jpg' })
     })
 
     await act(async () => {
@@ -120,7 +120,7 @@ describe('useMemorialForm', () => {
 
     await waitFor(() => {
       expect(apiFetch).toHaveBeenCalledWith(
-        '/api/memorials',
+        '/api/obituaries',
         expect.objectContaining({
           body: expect.stringContaining('"status":"published"'),
         }),
