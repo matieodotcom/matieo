@@ -374,6 +374,7 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
   const [fromColor, setFromColor] = useState(parsedCustom?.from ?? '#3B5BFF')
   const [toColor, setToColor] = useState(parsedCustom?.to ?? '#1A1A2E')
   const [direction, setDirection] = useState(parsedCustom?.direction ?? 'to right')
+  const [gradientActive, setGradientActive] = useState(false)
 
   const fromInputRef = useRef<HTMLInputElement>(null)
   const toInputRef = useRef<HTMLInputElement>(null)
@@ -384,21 +385,25 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
 
   function handleFromChange(color: string) {
     setFromColor(color)
+    setGradientActive(true)
     onGradientChange(buildGradient(direction, color, toColor))
   }
 
   function handleToChange(color: string) {
     setToColor(color)
+    setGradientActive(true)
     onGradientChange(buildGradient(direction, fromColor, color))
   }
 
   function handleDirectionChange(dir: string) {
     setDirection(dir)
+    setGradientActive(true)
     onGradientChange(buildGradient(dir, fromColor, toColor))
   }
 
   function switchTab(t: 'presets' | 'custom') {
     setTab(t)
+    setGradientActive(true)
     if (t === 'custom') {
       onGradientChange(buildGradient(direction, fromColor, toColor))
     } else {
@@ -407,22 +412,51 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
   }
 
   const liveGradient = buildGradient(direction, fromColor, toColor)
+  const preset = COVER_GRADIENTS.find((g) => g.key === coverGradient)
 
   return (
     <div className="space-y-4">
-      <PhotoUpload
-        label="Cover Photo"
-        hint="Recommended 1216×282px, up to 10MB"
-        value={coverPhoto}
-        onChange={onCoverPhotoChange}
-      />
+      {/* Upload area — 3 conditions */}
+      {coverPhoto ? (
+        <PhotoUpload
+          label="Cover Background"
+          hint="Recommended 1216×282px, up to 10MB"
+          value={coverPhoto}
+          onChange={onCoverPhotoChange}
+        />
+      ) : gradientActive ? (
+        <div>
+          <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">Cover Background</p>
+          <div className="relative h-40 w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+            {preset
+              ? <div className={`h-full w-full bg-gradient-to-r ${preset.tw}`} />
+              : <div className="h-full w-full" style={{ backgroundImage: coverGradient }} />
+            }
+            <button
+              type="button"
+              onClick={() => setGradientActive(false)}
+              aria-label="Clear gradient"
+              className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center
+                rounded-full bg-neutral-900/70 text-white hover:bg-neutral-900 transition-colors"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <PhotoUpload
+          label="Cover Background"
+          hint="Recommended 1216×282px, up to 10MB"
+          value={null}
+          onChange={onCoverPhotoChange}
+          uploadText="Click or drag to upload / select gradient"
+        />
+      )}
+
       {!coverPhoto && (
         <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-4 space-y-4">
           {/* Tab header */}
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 shrink-0">
-              Cover Background
-            </p>
+          <div className="flex items-center justify-end gap-3">
             <div className="flex rounded-lg bg-neutral-100 dark:bg-neutral-800 p-0.5 gap-0.5">
               {(['presets', 'custom'] as const).map((t) => (
                 <button
@@ -449,7 +483,10 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
                   type="button"
                   aria-label={g.label}
                   aria-pressed={coverGradient === g.key}
-                  onClick={() => onGradientChange(g.key)}
+                  onClick={() => {
+                    setGradientActive(true)
+                    onGradientChange(g.key)
+                  }}
                   className="group flex flex-col items-center gap-1.5"
                 >
                   <div
@@ -477,13 +514,6 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Live preview */}
-              <div
-                className="h-14 w-full rounded-xl"
-                style={{ backgroundImage: liveGradient }}
-                aria-label="Gradient preview"
-              />
-
               {/* Direction */}
               <div>
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
@@ -520,10 +550,6 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
                     onClick={() => fromInputRef.current?.click()}
                     className="flex w-full items-center gap-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 transition-colors hover:border-brand-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40"
                   >
-                    <span
-                      className="h-6 w-6 shrink-0 rounded-md shadow-sm ring-1 ring-black/10"
-                      style={{ backgroundColor: fromColor }}
-                    />
                     <span className="text-sm font-mono text-neutral-700 dark:text-neutral-300">
                       {fromColor.toUpperCase()}
                     </span>
@@ -548,10 +574,6 @@ function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGrad
                     onClick={() => toInputRef.current?.click()}
                     className="flex w-full items-center gap-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 transition-colors hover:border-brand-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40"
                   >
-                    <span
-                      className="h-6 w-6 shrink-0 rounded-md shadow-sm ring-1 ring-black/10"
-                      style={{ backgroundColor: toColor }}
-                    />
                     <span className="text-sm font-mono text-neutral-700 dark:text-neutral-300">
                       {toColor.toUpperCase()}
                     </span>

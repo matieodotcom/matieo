@@ -17,6 +17,7 @@ interface PhotoUploadProps {
   maxSizeMb?: number
   error?: string
   uploadAreaClassName?: string
+  uploadText?: string
 }
 
 export function PhotoUpload({
@@ -28,6 +29,7 @@ export function PhotoUpload({
   maxSizeMb = 10,
   error: externalError,
   uploadAreaClassName,
+  uploadText,
 }: PhotoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const sessionUploads = useRef(new Set<string>())
@@ -73,7 +75,7 @@ export function PhotoUpload({
 
   return (
     <div>
-      <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">{label}</p>
+      {label && <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">{label}</p>}
       {hint && <p className="mb-2 text-xs text-neutral-400">{hint}</p>}
 
       {value ? (
@@ -120,7 +122,7 @@ export function PhotoUpload({
             <>
               <Upload className="h-6 w-6 text-neutral-400" />
               <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                Click or drag to upload
+                {uploadText ?? 'Click or drag to upload'}
               </span>
             </>
           )}
