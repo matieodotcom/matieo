@@ -208,12 +208,10 @@
       "hidePassword": "Sembunyikan kata laluan",
       "showConfirmPassword": "Tunjukkan pengesahan kata laluan",
       "hideConfirmPassword": "Sembunyikan pengesahan kata laluan",
-      "accountType": "Saya mendaftar sebagai",
-      "individual": "Individu",
-      "organization": "Organisasi",
+      "individual": "Daftar sebagai Individu",
+      "organization": "Daftar sebagai Organisasi",
       "organizationName": "Nama Organisasi",
       "organizationNamePlaceholder": "Masukkan nama organisasi anda",
-      "selectAccountType": "Sila pilih jenis akaun",
       "verification": {
         "title": "Pautan pengesahan dihantar",
         "message": "Sila sahkan e-mel anda. Kami telah menghantar pautan ke"

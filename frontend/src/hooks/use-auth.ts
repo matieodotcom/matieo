@@ -95,7 +95,7 @@ export function useSignUp() {
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      accountType: undefined,
+      accountType: 'individual' as const,
       firstName: '',
       lastName: '',
       organizationName: '',

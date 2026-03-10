@@ -10,9 +10,11 @@ vi.mock('@/lib/toast', () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
 }))
 
-// Select account type (Individual by default)
+// Select account type
 async function selectAccountType(type: 'Individual' | 'Organization' = 'Individual') {
-  await userEvent.click(screen.getByRole('button', { name: type }))
+  await userEvent.click(
+    screen.getByRole('button', { name: new RegExp(`sign up as ${type}`, 'i') })
+  )
 }
 
 // Helper to fill the form with valid values
@@ -27,7 +29,8 @@ async function fillForm(overrides: Partial<{
   confirmPassword: string
 }> = {}) {
   const type = overrides.accountType ?? 'Individual'
-  await selectAccountType(type)
+  // Individual is default — only click if switching to Organization
+  if (type === 'Organization') await selectAccountType('Organization')
 
   if (type === 'Individual') {
     const values = {
@@ -80,8 +83,8 @@ describe('SignUpPage', () => {
 
   it('renders account type selector with Individual and Organization buttons', () => {
     renderWithProviders(<SignUpPage />)
-    expect(screen.getByRole('button', { name: 'Individual' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Organization' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /sign up as individual/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /sign up as organization/i })).toBeInTheDocument()
   })
 
   it('renders Google Sign Up button', () => {
@@ -89,20 +92,13 @@ describe('SignUpPage', () => {
     expect(screen.getByRole('button', { name: /sign up with google/i })).toBeInTheDocument()
   })
 
-  it('Google button is disabled before account type is selected', () => {
+  it('Individual is selected by default — Google button enabled', () => {
     renderWithProviders(<SignUpPage />)
-    expect(screen.getByRole('button', { name: /sign up with google/i })).toBeDisabled()
-  })
-
-  it('Google button is enabled after account type is selected', async () => {
-    renderWithProviders(<SignUpPage />)
-    await selectAccountType('Individual')
     expect(screen.getByRole('button', { name: /sign up with google/i })).not.toBeDisabled()
   })
 
-  it('shows First name + Last name fields after selecting Individual', async () => {
+  it('Individual is selected by default — First/Last name fields visible', () => {
     renderWithProviders(<SignUpPage />)
-    await selectAccountType('Individual')
     expect(screen.getByLabelText('First name')).toBeInTheDocument()
     expect(screen.getByLabelText('Last name')).toBeInTheDocument()
   })
@@ -114,9 +110,16 @@ describe('SignUpPage', () => {
     expect(screen.queryByLabelText('First name')).not.toBeInTheDocument()
   })
 
-  it('renders Email, Confirm email, Password, Confirm password fields', async () => {
+  it('switching back to Individual hides Organization Name field', async () => {
     renderWithProviders(<SignUpPage />)
+    await selectAccountType('Organization')
     await selectAccountType('Individual')
+    expect(screen.getByLabelText('First name')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Organization Name')).not.toBeInTheDocument()
+  })
+
+  it('renders Email, Confirm email, Password, Confirm password fields', () => {
+    renderWithProviders(<SignUpPage />)
     expect(screen.getByLabelText('Email')).toBeInTheDocument()
     expect(screen.getByLabelText('Confirm email')).toBeInTheDocument()
     expect(screen.getByLabelText('Password')).toBeInTheDocument()
@@ -140,30 +143,27 @@ describe('SignUpPage', () => {
     expect(screen.getByText(/© 2026 MATIEO/i)).toBeInTheDocument()
   })
 
-  it('shows password toggle buttons with accessible labels', async () => {
+  it('shows password toggle buttons with accessible labels', () => {
     renderWithProviders(<SignUpPage />)
-    await selectAccountType('Individual')
     expect(screen.getByRole('button', { name: /show password$/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /show confirm password/i })).toBeInTheDocument()
   })
 
   it('toggles password visibility', async () => {
     renderWithProviders(<SignUpPage />)
-    await selectAccountType('Individual')
     const input = screen.getByLabelText('Password')
     expect(input).toHaveAttribute('type', 'password')
     await userEvent.click(screen.getByRole('button', { name: /show password$/i }))
     expect(input).toHaveAttribute('type', 'text')
   })
 
-  it('submit button is disabled before account type is selected', () => {
+  it('submit button is enabled by default (Individual pre-selected)', () => {
     renderWithProviders(<SignUpPage />)
-    expect(screen.getByRole('button', { name: /^sign up$/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /^sign up$/i })).not.toBeDisabled()
   })
 
   it('shows field errors when submitting empty individual form (no supabase call)', async () => {
     renderWithProviders(<SignUpPage />)
-    await selectAccountType('Individual')
     await userEvent.click(screen.getByRole('button', { name: /^sign up$/i }))
 
     await waitFor(() => {

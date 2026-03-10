@@ -296,26 +296,6 @@ describe('useSignUp', () => {
     )
   })
 
-  it('fails validation when no accountType selected', async () => {
-    const { useSignUp } = await getModule()
-    const { result } = renderHook(() => useSignUp())
-
-    act(() => {
-      result.current.form.setValue('firstName', 'Jane')
-      result.current.form.setValue('lastName', 'Smith')
-      result.current.form.setValue('email', 'jane@example.com')
-      result.current.form.setValue('confirmEmail', 'jane@example.com')
-      result.current.form.setValue('password', 'password123')
-      result.current.form.setValue('confirmPassword', 'password123')
-    })
-
-    await act(async () => {
-      await result.current.onSubmit({ preventDefault: () => {} } as never)
-    })
-
-    expect(supabase.auth.signUp).not.toHaveBeenCalled()
-  })
-
   it('fails validation for individual when firstName is missing', async () => {
     const { useSignUp } = await getModule()
     const { result } = renderHook(() => useSignUp())

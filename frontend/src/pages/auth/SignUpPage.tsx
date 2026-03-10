@@ -144,37 +144,29 @@ export default function SignUpPage() {
           </p>
 
           {/* Account type selector */}
-          <div className="mb-5">
-            <p className="text-sm font-medium text-neutral-700 mb-2">
-              {t('auth.signUp.accountType')}
-            </p>
-            <div className="grid grid-cols-2 gap-2" role="group" aria-label={t('auth.signUp.accountType')}>
-              <button
-                type="button"
-                onClick={() => setValue('accountType', 'individual')}
-                className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
-                  accountType === 'individual'
-                    ? 'bg-brand-primary text-white'
-                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                }`}
-              >
-                {t('auth.signUp.individual')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setValue('accountType', 'organization')}
-                className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
-                  accountType === 'organization'
-                    ? 'bg-brand-primary text-white'
-                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                }`}
-              >
-                {t('auth.signUp.organization')}
-              </button>
-            </div>
-            {!accountType && errors.accountType && (
-              <ErrorMessage message={t('auth.signUp.selectAccountType')} />
-            )}
+          <div className="grid grid-cols-2 gap-2 mb-5" role="group" aria-label="Account type">
+            <button
+              type="button"
+              onClick={() => setValue('accountType', 'individual')}
+              className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
+                accountType === 'individual'
+                  ? 'bg-brand-primary text-white'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              }`}
+            >
+              {t('auth.signUp.individual')}
+            </button>
+            <button
+              type="button"
+              onClick={() => setValue('accountType', 'organization')}
+              className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
+                accountType === 'organization'
+                  ? 'bg-brand-primary text-white'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+              }`}
+            >
+              {t('auth.signUp.organization')}
+            </button>
           </div>
 
           {/* Google button */}
