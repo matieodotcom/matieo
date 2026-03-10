@@ -1,20 +1,22 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 
 export default function TermsPage() {
+  const { t } = useTranslation()
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
 
       {/* Main content */}
       <main className="max-w-3xl mx-auto px-6 md:px-8 py-12">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-2">Terms of Service</h1>
-        <p className="text-sm text-neutral-400 mb-12">Last updated: December 16, 2025</p>
+        <h1 className="text-4xl font-bold text-neutral-900 mb-2">{t('terms.heading')}</h1>
+        <p className="text-sm text-neutral-400 mb-12">{t('terms.lastUpdated')}</p>
 
         {/* 1. Introduction */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">1. Introduction</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('terms.s1Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             Welcome to MATIEO. We provide a platform for creating dignified digital memorials,
             preserving the stories and legacies of loved ones for families and communities around
@@ -29,9 +31,9 @@ export default function TermsPage() {
 
         {/* 2. Use of Service */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">2. Use of Service</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('terms.s2Heading')}</h2>
 
-          <h3 className="text-base font-semibold text-neutral-800 mt-6 mb-2">2.1 Eligibility</h3>
+          <h3 className="text-base font-semibold text-neutral-800 mt-6 mb-2">{t('terms.s21Heading')}</h3>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             You must be at least 18 years of age to use MATIEO. By using the platform, you
             represent and warrant that you meet this age requirement and have the legal capacity
@@ -39,7 +41,7 @@ export default function TermsPage() {
           </p>
 
           <h3 className="text-base font-semibold text-neutral-800 mt-6 mb-2">
-            2.2 Account Registration
+            {t('terms.s22Heading')}
           </h3>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             When you create an account, you agree to:
@@ -52,7 +54,7 @@ export default function TermsPage() {
           </ul>
 
           <h3 className="text-base font-semibold text-neutral-800 mt-6 mb-2">
-            2.3 Acceptable Use
+            {t('terms.s23Heading')}
           </h3>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             You agree not to use MATIEO to:
@@ -68,11 +70,11 @@ export default function TermsPage() {
 
         {/* 3. Data and Privacy */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">3. Data and Privacy</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('terms.s3Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             Your use of MATIEO is also governed by our{' '}
             <Link to="/privacy" className="text-brand-primary underline">
-              Privacy Policy
+              {t('terms.privacyLink')}
             </Link>
             , which is incorporated into these Terms of Service by reference. By using the
             platform, you consent to the collection, use, and sharing of your information as
@@ -83,7 +85,7 @@ export default function TermsPage() {
         {/* 4. Intellectual Property */}
         <section>
           <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">
-            4. Intellectual Property
+            {t('terms.s4Heading')}
           </h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             The MATIEO platform, including its design, features, and underlying technology, is
@@ -101,7 +103,7 @@ export default function TermsPage() {
         {/* 5. Free Trial and Subscriptions */}
         <section>
           <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">
-            5. Free Trial and Subscriptions
+            {t('terms.s5Heading')}
           </h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             MATIEO offers a 14-day free trial for new accounts. During the trial period, you have
@@ -118,7 +120,7 @@ export default function TermsPage() {
         {/* 6. Limitation of Liability */}
         <section>
           <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">
-            6. Limitation of Liability
+            {t('terms.s6Heading')}
           </h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             To the maximum extent permitted by applicable law, MATIEO and its affiliates,
@@ -130,7 +132,7 @@ export default function TermsPage() {
 
         {/* 7. Termination */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">7. Termination</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('terms.s7Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We reserve the right to suspend or terminate your account and access to MATIEO at our
             sole discretion, without notice, if we believe you have violated these Terms of
@@ -141,7 +143,7 @@ export default function TermsPage() {
 
         {/* 8. Changes to Terms */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">8. Changes to Terms</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('terms.s8Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We may update these Terms of Service from time to time. When we make material changes,
             we will notify you by email or by displaying a prominent notice on the platform. Your
@@ -152,7 +154,7 @@ export default function TermsPage() {
 
         {/* 9. Contact Us */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">9. Contact Us</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('terms.s9Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             If you have any questions about these Terms of Service, please contact us:
           </p>
@@ -174,7 +176,7 @@ export default function TermsPage() {
             to="/privacy"
             className="flex items-center gap-1 text-sm text-brand-primary hover:underline"
           >
-            View Privacy Policy
+            {t('terms.viewPrivacy')}
             <ArrowRight size={14} />
           </Link>
         </div>

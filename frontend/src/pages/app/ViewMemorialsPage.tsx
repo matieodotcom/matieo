@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Search, Plus, Heart } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -35,15 +36,16 @@ interface PaginationProps {
 }
 
 function Pagination({ page, totalPages, onPage }: PaginationProps) {
+  const { t } = useTranslation()
   if (totalPages <= 1) return null
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-1 mt-10">
+    <nav aria-label={t('common.pagination')} className="flex items-center justify-center gap-1 mt-10">
       <button
         onClick={() => onPage(page - 1)}
         disabled={page <= 1}
         className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        ← Prev
+        {t('common.prev')}
       </button>
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
         <button
@@ -64,7 +66,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
         disabled={page >= totalPages}
         className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        Next →
+        {t('common.next')}
       </button>
     </nav>
   )
@@ -73,6 +75,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ViewMemorialsPage() {
+  const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
   const navigate = useNavigate()
   const [signInOpen, setSignInOpen] = useState(false)
@@ -128,9 +131,9 @@ export default function ViewMemorialsPage() {
         {/* Header row */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">Memorials</h1>
+            <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{t('viewMemorials.heading')}</h1>
             <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-              Honor and remember loved ones with digital memorials
+              {t('viewMemorials.subheading')}
             </p>
           </div>
 
@@ -145,11 +148,11 @@ export default function ViewMemorialsPage() {
                 <input
                   id="memorial-search"
                   type="search"
-                  placeholder="Search..."
+                  placeholder={t('viewMemorials.search')}
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   className="w-full pl-9 pr-4 py-2 text-sm border border-neutral-200 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-                  aria-label="Search memorials"
+                  aria-label={t('viewMemorials.searchLabel')}
                 />
               </div>
 
@@ -159,7 +162,7 @@ export default function ViewMemorialsPage() {
                 className="flex w-full sm:w-auto items-center justify-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
               >
                 <Plus size={15} />
-                Create Memorial
+                {t('viewMemorials.createBtn')}
               </button>
             </div>
           )}
@@ -185,21 +188,21 @@ export default function ViewMemorialsPage() {
             <Heart size={48} className="mx-auto text-neutral-200 dark:text-neutral-700 mb-4" />
             {q ? (
               <>
-                <p className="text-neutral-500 dark:text-neutral-400 font-medium">No memorials match "{q}"</p>
-                <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">Try a different search term.</p>
+                <p className="text-neutral-500 dark:text-neutral-400 font-medium">{t('viewMemorials.noMatch', { q })}</p>
+                <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">{t('viewMemorials.noMatchHint')}</p>
               </>
             ) : (
               <>
-                <p className="text-neutral-500 font-medium">No memorials yet</p>
+                <p className="text-neutral-500 font-medium">{t('viewMemorials.empty')}</p>
                 <p className="text-sm text-neutral-400 mt-1">
-                  Create your first memorial to get started.
+                  {t('viewMemorials.emptyHint')}
                 </p>
                 <button
                   onClick={() => user ? navigate('/dashboard/memorials/create') : setSignInOpen(true)}
                   className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
                 >
                   <Plus size={15} />
-                  Create Memorial
+                  {t('viewMemorials.createBtn')}
                 </button>
               </>
             )}

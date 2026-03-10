@@ -3,6 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import testI18n from '@/lib/i18n-test'
 import ObituaryPreviewPage from '@/pages/app/ObituaryPreviewPage'
 import type { ObituaryFormValues } from '@/hooks/use-create-obituary'
 
@@ -22,11 +24,13 @@ function makeClient() {
 
 function renderPage() {
   return render(
-    <MemoryRouter>
-      <QueryClientProvider client={makeClient()}>
-        <ObituaryPreviewPage />
-      </QueryClientProvider>
-    </MemoryRouter>
+    <I18nextProvider i18n={testI18n}>
+      <MemoryRouter>
+        <QueryClientProvider client={makeClient()}>
+          <ObituaryPreviewPage />
+        </QueryClientProvider>
+      </MemoryRouter>
+    </I18nextProvider>
   )
 }
 

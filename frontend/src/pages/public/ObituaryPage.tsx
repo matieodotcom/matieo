@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Search, Plus, ScrollText } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -36,15 +37,16 @@ interface PaginationProps {
 }
 
 function Pagination({ page, totalPages, onPage }: PaginationProps) {
+  const { t } = useTranslation()
   if (totalPages <= 1) return null
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-1 mt-10">
+    <nav aria-label={t('common.pagination')} className="flex items-center justify-center gap-1 mt-10">
       <button
         onClick={() => onPage(page - 1)}
         disabled={page <= 1}
         className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        ← Prev
+        {t('common.prev')}
       </button>
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
         <button
@@ -65,7 +67,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
         disabled={page >= totalPages}
         className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        Next →
+        {t('common.next')}
       </button>
     </nav>
   )
@@ -74,6 +76,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ObituaryPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
 
@@ -137,9 +140,9 @@ export default function ObituaryPage() {
           {/* Page header */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">Obituaries</h1>
+              <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{t('viewObituaries.heading')}</h1>
               <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-                Create and share obituaries to honor your loved ones
+                {t('viewObituaries.subheading')}
               </p>
             </div>
 
@@ -153,11 +156,11 @@ export default function ObituaryPage() {
                 <input
                   id="obituary-search"
                   type="search"
-                  placeholder="Search obituaries..."
+                  placeholder={t('viewObituaries.search')}
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   className="w-full pl-9 pr-4 py-2.5 text-sm border border-neutral-200 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-                  aria-label="Search obituaries"
+                  aria-label={t('viewObituaries.searchLabel')}
                 />
               </div>
 
@@ -166,7 +169,7 @@ export default function ObituaryPage() {
                 className="flex items-center justify-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
               >
                 <Plus size={15} />
-                Create Obituary
+                {t('viewObituaries.createBtn')}
               </button>
             </div>
           </div>
@@ -189,21 +192,21 @@ export default function ObituaryPage() {
               <ScrollText size={48} className="mx-auto text-neutral-200 dark:text-neutral-700 mb-4" />
               {q ? (
                 <>
-                  <p className="text-neutral-500 dark:text-neutral-400 font-medium">No obituaries match "{q}"</p>
-                  <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">Try a different search term.</p>
+                  <p className="text-neutral-500 dark:text-neutral-400 font-medium">{t('viewObituaries.noMatch', { q })}</p>
+                  <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">{t('viewObituaries.noMatchHint')}</p>
                 </>
               ) : (
                 <>
-                  <p className="text-neutral-500 dark:text-neutral-400 font-medium">No obituaries published yet</p>
+                  <p className="text-neutral-500 dark:text-neutral-400 font-medium">{t('viewObituaries.empty')}</p>
                   <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">
-                    Be the first to honour a loved one with an obituary.
+                    {t('viewObituaries.emptyHint')}
                   </p>
                   <button
                     onClick={handleCreateObituary}
                     className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
                   >
                     <Plus size={15} />
-                    Create Obituary
+                    {t('viewObituaries.createBtn')}
                   </button>
                 </>
               )}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useLocation, Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Calendar, MapPin, User, Images, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import type { MemorialFormValues } from '@/hooks/use-create-memorial'
@@ -27,6 +28,7 @@ function formatDate(raw: string): string {
 }
 
 export default function MemorialPreviewPage() {
+  const { t } = useTranslation()
   const { state } = useLocation() as { state: PreviewState | null }
   const [lightboxPhotos, setLightboxPhotos] = useState<LightboxPhoto[]>([])
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
@@ -85,7 +87,7 @@ export default function MemorialPreviewPage() {
   const galleryPhotos = v.galleryPhotos ?? []
   const galleryLightbox: LightboxPhoto[] = galleryPhotos.map((p, i) => ({
     url: p.url,
-    alt: `Gallery photo ${i + 1}`,
+    alt: t('publicMemorial.galleryPhoto', { n: i + 1 }),
   }))
 
   return (
@@ -95,14 +97,14 @@ export default function MemorialPreviewPage() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Photo viewer"
+          aria-label={t('publicMemorial.photoViewer')}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90"
           onClick={close}
         >
           {/* Close */}
           <button
             type="button"
-            aria-label="Close photo viewer"
+            aria-label={t('publicMemorial.closeViewer')}
             onClick={close}
             className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
@@ -113,7 +115,7 @@ export default function MemorialPreviewPage() {
           {canNav && (
             <button
               type="button"
-              aria-label="Previous photo"
+              aria-label={t('publicMemorial.prevPhoto')}
               onClick={(e) => { e.stopPropagation(); prev() }}
               className="absolute left-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
@@ -133,7 +135,7 @@ export default function MemorialPreviewPage() {
           {canNav && (
             <button
               type="button"
-              aria-label="Next photo"
+              aria-label={t('publicMemorial.nextPhoto')}
               onClick={(e) => { e.stopPropagation(); next() }}
               className="absolute right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
@@ -156,7 +158,7 @@ export default function MemorialPreviewPage() {
         {/* ── Cover ── */}
         <div className="h-52 w-full overflow-hidden">
           {v.coverPhoto ? (
-            <img src={v.coverPhoto.url} alt="Cover" className="h-full w-full object-cover" />
+            <img src={v.coverPhoto.url} alt={t('common.cover')} className="h-full w-full object-cover" />
           ) : customColor ? (
             customColor.startsWith('linear-gradient')
               ? <div className="h-full w-full" style={{ backgroundImage: customColor }} />
@@ -174,8 +176,8 @@ export default function MemorialPreviewPage() {
               {v.profilePhoto ? (
                 <button
                   type="button"
-                  aria-label="View profile photo"
-                  onClick={() => openProfile(v.profilePhoto!.url, fullName || 'Profile photo')}
+                  aria-label={t('publicMemorial.viewProfile')}
+                  onClick={() => openProfile(v.profilePhoto!.url, fullName || t('publicMemorial.viewProfile'))}
                   className="h-full w-full"
                 >
                   <img
@@ -208,7 +210,7 @@ export default function MemorialPreviewPage() {
               )}
               {v.ageAtDeath && (
                 <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                  Age: {v.ageAtDeath} years
+                  {t('publicMemorial.age', { age: v.ageAtDeath })}
                 </p>
               )}
             </div>
@@ -232,7 +234,7 @@ export default function MemorialPreviewPage() {
             {/* Photo Gallery */}
             <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
               <h2 className="mb-4 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                Photo Gallery
+                {t('publicMemorial.photoGallery')}
               </h2>
               {galleryPhotos.length > 0 ? (
                 <div className="grid grid-cols-3 gap-2">
@@ -240,13 +242,13 @@ export default function MemorialPreviewPage() {
                     <button
                       key={photo.public_id}
                       type="button"
-                      aria-label={`View gallery photo ${i + 1}`}
+                      aria-label={t('publicMemorial.viewGalleryPhoto', { n: i + 1 })}
                       onClick={() => openGallery(galleryLightbox, i)}
                       className="aspect-square overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     >
                       <img
                         src={photo.url}
-                        alt={`Gallery photo ${i + 1}`}
+                        alt={t('publicMemorial.galleryPhoto', { n: i + 1 })}
                         className="h-full w-full object-cover cursor-pointer hover:scale-105 transition-transform duration-200"
                       />
                     </button>
@@ -255,7 +257,7 @@ export default function MemorialPreviewPage() {
               ) : (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <Images className="h-8 w-8 text-neutral-300 dark:text-neutral-600 mb-2" aria-hidden="true" />
-                  <p className="text-sm text-neutral-400">No photos added yet.</p>
+                  <p className="text-sm text-neutral-400">{t('publicMemorial.noPhotos')}</p>
                 </div>
               )}
             </div>
@@ -263,14 +265,14 @@ export default function MemorialPreviewPage() {
             {/* Biography */}
             <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
               <h2 className="mb-4 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                Biography
+                {t('publicMemorial.biography')}
               </h2>
               {v.biography ? (
                 <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
                   {v.biography}
                 </p>
               ) : (
-                <p className="text-sm text-neutral-400 italic">No biography added yet.</p>
+                <p className="text-sm text-neutral-400 italic">{t('publicMemorial.noBiography')}</p>
               )}
             </div>
           </div>
@@ -278,27 +280,27 @@ export default function MemorialPreviewPage() {
           {/* Tributes */}
           <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
             <h2 className="mb-5 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-              Tributes{v.tributeMessage ? ' (1)' : ' (0)'}
+              {t('publicMemorial.tributes', { count: v.tributeMessage ? 1 : 0 })}
             </h2>
 
             {/* Input area — disabled in preview */}
             <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
               <textarea
                 disabled
-                placeholder="Share your memories and pay tribute…"
+                placeholder={t('publicMemorial.tributePlaceholder')}
                 rows={3}
                 className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-400 placeholder:text-neutral-300 dark:placeholder:text-neutral-600 resize-none cursor-not-allowed"
               />
               <div className="mt-3 flex items-center justify-between">
                 <span className="text-xs text-neutral-400">
-                  Your tribute will be visible to everyone
+                  {t('publicMemorial.tributeVisibility')}
                 </span>
                 <button
                   type="button"
                   disabled
                   className="rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white opacity-60 cursor-not-allowed"
                 >
-                  Post Tribute
+                  {t('publicMemorial.postTribute')}
                 </button>
               </div>
             </div>
@@ -313,7 +315,7 @@ export default function MemorialPreviewPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 flex-wrap">
                       <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        You
+                        {t('common.you')}
                       </span>
                       {v.creatorRelationship && (
                         <span className="text-xs text-neutral-400">· {v.creatorRelationship}</span>

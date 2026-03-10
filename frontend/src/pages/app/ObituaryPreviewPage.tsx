@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import {
   Calendar,
@@ -75,6 +76,7 @@ function DetailCard({ title, children }: { title: string; children: React.ReactN
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function ObituaryPreviewPage() {
+  const { t } = useTranslation()
   const { state } = useLocation() as { state: PreviewState | null }
   const [lightboxPhotos, setLightboxPhotos] = useState<LightboxPhoto[]>([])
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
@@ -140,13 +142,13 @@ export default function ObituaryPreviewPage() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Photo viewer"
+          aria-label={t('publicMemorial.photoViewer')}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90"
           onClick={close}
         >
           <button
             type="button"
-            aria-label="Close photo viewer"
+            aria-label={t('publicMemorial.closeViewer')}
             onClick={close}
             className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
@@ -156,7 +158,7 @@ export default function ObituaryPreviewPage() {
           {canNav && (
             <button
               type="button"
-              aria-label="Previous photo"
+              aria-label={t('publicMemorial.prevPhoto')}
               onClick={(e) => { e.stopPropagation(); prev() }}
               className="absolute left-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
@@ -174,7 +176,7 @@ export default function ObituaryPreviewPage() {
           {canNav && (
             <button
               type="button"
-              aria-label="Next photo"
+              aria-label={t('publicMemorial.nextPhoto')}
               onClick={(e) => { e.stopPropagation(); next() }}
               className="absolute right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
@@ -196,7 +198,7 @@ export default function ObituaryPreviewPage() {
         {/* ── Cover ── */}
         <div className="h-52 w-full overflow-hidden">
           {v.coverPhoto ? (
-            <img src={v.coverPhoto.url} alt="Cover" className="h-full w-full object-cover" />
+            <img src={v.coverPhoto.url} alt={t('common.cover')} className="h-full w-full object-cover" />
           ) : customColor ? (
             customColor.startsWith('linear-gradient')
               ? <div className="h-full w-full" style={{ backgroundImage: customColor }} />
@@ -214,8 +216,8 @@ export default function ObituaryPreviewPage() {
               {v.profilePhoto ? (
                 <button
                   type="button"
-                  aria-label="View profile photo"
-                  onClick={() => openProfile(v.profilePhoto!.url, fullName || 'Profile photo')}
+                  aria-label={t('publicMemorial.viewProfile')}
+                  onClick={() => openProfile(v.profilePhoto!.url, fullName || t('publicMemorial.viewProfile'))}
                   className="h-full w-full"
                 >
                   <img
@@ -232,14 +234,14 @@ export default function ObituaryPreviewPage() {
             {/* Identity */}
             <div className="flex-1 min-w-0 mt-3">
               <h1 className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-                {fullName || <span className="text-neutral-400 italic">No name provided</span>}
+                {fullName || <span className="text-neutral-400 italic">{t('common.noNameProvided')}</span>}
               </h1>
               <div className="mt-1.5 space-y-1">
                 {dateRange && (
                   <InfoRow icon={<Calendar className="h-3.5 w-3.5" />}>{dateRange}</InfoRow>
                 )}
                 {v.ageAtDeath && (
-                  <InfoRow icon={<User className="h-3.5 w-3.5" />}>Age: {v.ageAtDeath} years</InfoRow>
+                  <InfoRow icon={<User className="h-3.5 w-3.5" />}>{t('publicObituary.age', { age: v.ageAtDeath })}</InfoRow>
                 )}
                 {locationText && (
                   <InfoRow icon={<MapPin className="h-3.5 w-3.5" />}>{locationText}</InfoRow>
@@ -253,19 +255,19 @@ export default function ObituaryPreviewPage() {
         <div className="mx-auto max-w-3xl px-4 py-10 space-y-6">
 
           {/* Biography */}
-          <DetailCard title="Biography">
+          <DetailCard title={t('publicObituary.biography')}>
             {v.biography ? (
               <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
                 {v.biography}
               </p>
             ) : (
-              <p className="text-sm text-neutral-400 italic">No biography added yet.</p>
+              <p className="text-sm text-neutral-400 italic">{t('publicObituary.noBiography')}</p>
             )}
           </DetailCard>
 
           {/* Family Members */}
           {hasFamilyMembers && (
-            <DetailCard title="Family Members">
+            <DetailCard title={t('publicObituary.familyMembers')}>
               <ul className="space-y-2">
                 {(v.familyMembers ?? [])
                   .filter((m) => m.name?.trim())
@@ -290,7 +292,7 @@ export default function ObituaryPreviewPage() {
 
           {/* Funeral Details */}
           {hasFuneral && (
-            <DetailCard title="Funeral / Prayer Service">
+            <DetailCard title={t('publicObituary.funeralService')}>
               <div className="space-y-2">
                 {v.funeralName && (
                   <InfoRow icon={<MapPin className="h-3.5 w-3.5" />}>
@@ -317,7 +319,7 @@ export default function ObituaryPreviewPage() {
 
           {/* Burial Details */}
           {hasBurial && (
-            <DetailCard title="Burial">
+            <DetailCard title={t('publicObituary.burial')}>
               <div className="space-y-2">
                 {v.burialCenterName && (
                   <InfoRow icon={<MapPin className="h-3.5 w-3.5" />}>
@@ -344,7 +346,7 @@ export default function ObituaryPreviewPage() {
 
           {/* Contact Person */}
           {hasContact && (
-            <DetailCard title="Contact Person">
+            <DetailCard title={t('publicObituary.contactPerson')}>
               <div className="flex items-start gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800">
                   <User className="h-5 w-5 text-neutral-400" aria-hidden="true" />

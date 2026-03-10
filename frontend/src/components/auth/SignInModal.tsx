@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/Dialog'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
@@ -39,6 +40,7 @@ interface SignInModalProps {
 }
 
 export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps) {
+  const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
 
   const { form, onSubmit, isPending, error } = useSignIn({ onSuccess })
@@ -61,9 +63,9 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         {/* Heading */}
-        <DialogTitle className="text-2xl font-bold text-neutral-900 mb-1">Sign in</DialogTitle>
+        <DialogTitle className="text-2xl font-bold text-neutral-900 mb-1">{t('auth.signIn.heading')}</DialogTitle>
         <DialogDescription className="text-sm text-neutral-500 mb-6">
-          Welcome back! Please enter your details.
+          {t('auth.signIn.subheading')}
         </DialogDescription>
 
         {/* Form */}
@@ -71,7 +73,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
           {/* Email */}
           <div>
             <label htmlFor="modal-email" className="block text-sm font-medium text-neutral-700 mb-1">
-              Email Address
+              {t('auth.signIn.emailLabel')}
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
@@ -81,7 +83,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
                 id="modal-email"
                 type="email"
                 autoComplete="email"
-                placeholder="name@email.com"
+                placeholder={t('auth.signIn.emailPlaceholder')}
                 {...register('email')}
                 className="w-full border border-neutral-200 rounded-lg pl-9 pr-3 py-2.5 text-sm
                   text-neutral-900 placeholder:text-neutral-400 focus:outline-none
@@ -94,7 +96,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
           {/* Password */}
           <div>
             <label htmlFor="modal-password" className="block text-sm font-medium text-neutral-700 mb-1">
-              Password
+              {t('auth.signIn.passwordLabel')}
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
@@ -112,7 +114,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
               />
               <button
                 type="button"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-label={showPassword ? t('auth.signIn.hidePassword') : t('auth.signIn.showPassword')}
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400
                   hover:text-neutral-600 transition-colors"
@@ -130,7 +132,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
               onClick={() => onOpenChange(false)}
               className="text-sm text-brand-primary font-medium hover:underline"
             >
-              Forgot Password?
+              {t('auth.signIn.forgotPassword')}
             </Link>
           </div>
 
@@ -149,10 +151,10 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
                   className="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"
                   aria-hidden="true"
                 />
-                Signing in…
+                {t('auth.signIn.submitting')}
               </>
             ) : (
-              'Sign In'
+              t('auth.signIn.submit')
             )}
           </button>
 
@@ -168,13 +170,13 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
               transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <GoogleIcon />
-            Login with Google
+            {t('auth.signIn.google')}
           </button>
 
           {/* Divider */}
           <div className="relative flex items-center">
             <div className="flex-1 border-t border-neutral-200" />
-            <span className="mx-3 text-xs text-neutral-400">or</span>
+            <span className="mx-3 text-xs text-neutral-400">{t('auth.signIn.or')}</span>
             <div className="flex-1 border-t border-neutral-200" />
           </div>
 
@@ -186,23 +188,23 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
               hover:bg-neutral-50 text-sm font-medium text-neutral-700 py-2.5 rounded-lg
               transition-colors"
           >
-            Create New Account
+            {t('auth.signIn.createAccount')}
           </Link>
         </form>
 
         {/* Terms */}
         <p className="text-xs text-neutral-400 mt-5 leading-relaxed">
-          By continuing, you agree to our{' '}
+          {t('auth.terms')}{' '}
           <Link to="/terms" onClick={() => onOpenChange(false)} className="underline hover:text-neutral-600">
-            Terms of Service
+            {t('auth.termsLink')}
           </Link>{' '}
-          and{' '}
+          {t('auth.and')}{' '}
           <Link to="/privacy" onClick={() => onOpenChange(false)} className="underline hover:text-neutral-600">
-            Privacy Policy
+            {t('auth.privacyLink')}
           </Link>
         </p>
 
-        <p className="text-xs text-neutral-400 mt-3 text-center">© 2026 MATIEO</p>
+        <p className="text-xs text-neutral-400 mt-3 text-center">{t('auth.copyright')}</p>
       </DialogContent>
     </Dialog>
   )

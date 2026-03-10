@@ -1,20 +1,22 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 
 export default function PrivacyPage() {
+  const { t } = useTranslation()
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
 
       {/* Main content */}
       <main className="max-w-3xl mx-auto px-6 md:px-8 py-12">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-2">Privacy Policy</h1>
-        <p className="text-sm text-neutral-400 mb-12">Last updated: December 16, 2025</p>
+        <h1 className="text-4xl font-bold text-neutral-900 mb-2">{t('privacy.heading')}</h1>
+        <p className="text-sm text-neutral-400 mb-12">{t('privacy.lastUpdated')}</p>
 
         {/* 1. Introduction */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">1. Introduction</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('privacy.s1Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             Welcome to MATIEO ("we," "our," or "us"). This Privacy Policy explains how we collect,
             use, disclose, and safeguard your information when you visit our platform, including our
@@ -30,11 +32,11 @@ export default function PrivacyPage() {
         {/* 2. Information We Collect */}
         <section>
           <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">
-            2. Information We Collect
+            {t('privacy.s2Heading')}
           </h2>
 
           <h3 className="text-base font-semibold text-neutral-800 mt-6 mb-2">
-            2.1 Information You Provide
+            {t('privacy.s21Heading')}
           </h3>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We collect information you voluntarily provide when you register for an account or use
@@ -48,7 +50,7 @@ export default function PrivacyPage() {
           </ul>
 
           <h3 className="text-base font-semibold text-neutral-800 mt-6 mb-2">
-            2.2 Information Collected Automatically
+            {t('privacy.s22Heading')}
           </h3>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             When you use the Service, we automatically collect certain information, including:
@@ -61,7 +63,7 @@ export default function PrivacyPage() {
           </ul>
 
           <h3 className="text-base font-semibold text-neutral-800 mt-6 mb-2">
-            2.3 Information from Third Parties
+            {t('privacy.s23Heading')}
           </h3>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We may receive information about you from third parties, such as when you sign in
@@ -73,7 +75,7 @@ export default function PrivacyPage() {
         {/* 3. How We Use Your Information */}
         <section>
           <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">
-            3. How We Use Your Information
+            {t('privacy.s3Heading')}
           </h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We use the information we collect to operate and improve the Service, including to:
@@ -91,7 +93,7 @@ export default function PrivacyPage() {
         {/* 4. How We Share Your Information */}
         <section>
           <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">
-            4. How We Share Your Information
+            {t('privacy.s4Heading')}
           </h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We do not sell your personal information. We may share your information with trusted
@@ -108,7 +110,7 @@ export default function PrivacyPage() {
 
         {/* 5. Cookies */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">5. Cookies</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('privacy.s5Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We use cookies and similar tracking technologies to maintain your session, remember
             your preferences, and analyse platform usage. You can control cookie settings through
@@ -118,7 +120,7 @@ export default function PrivacyPage() {
 
         {/* 6. Data Retention */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">6. Data Retention</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('privacy.s6Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We retain your personal information for as long as your account is active or as needed
             to provide the Service. When you delete your account, we will delete or anonymise your
@@ -129,7 +131,7 @@ export default function PrivacyPage() {
 
         {/* 7. Your Rights */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">7. Your Rights</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('privacy.s7Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             Depending on your location, you may have the right to access, correct, or delete the
             personal information we hold about you, to object to or restrict certain processing,
@@ -141,7 +143,7 @@ export default function PrivacyPage() {
         {/* 8. Changes to This Policy */}
         <section>
           <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">
-            8. Changes to This Policy
+            {t('privacy.s8Heading')}
           </h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             We may update this Privacy Policy from time to time. When we make material changes, we
@@ -153,7 +155,7 @@ export default function PrivacyPage() {
 
         {/* 9. Contact Us */}
         <section>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">9. Contact Us</h2>
+          <h2 className="text-2xl font-bold text-neutral-900 mt-12 mb-4">{t('privacy.s9Heading')}</h2>
           <p className="text-sm text-neutral-600 leading-relaxed mb-4">
             If you have any questions about this Privacy Policy, please contact us:
           </p>
@@ -175,7 +177,7 @@ export default function PrivacyPage() {
             to="/terms"
             className="flex items-center gap-1 text-sm text-brand-primary hover:underline"
           >
-            View Terms of Service
+            {t('privacy.viewTerms')}
             <ArrowRight size={14} />
           </Link>
         </div>

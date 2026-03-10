@@ -228,6 +228,17 @@
         "resend": "Cliquez pour renvoyer"
       },
       "backToSignIn": "Retour à la connexion"
+    },
+    "resetPassword": {
+      "heading": "Définir un nouveau mot de passe",
+      "subheading": "Choisissez un mot de passe fort pour votre compte.",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordPlaceholder": "Min. 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Répétez votre mot de passe",
+      "submit": "Mettre à jour le mot de passe",
+      "submitting": "Mise à jour…",
+      "backToSignIn": "Retour à la connexion"
     }
   },
   "dashboard": {
@@ -346,7 +357,8 @@
     "viewGalleryPhoto": "Voir la photo de galerie {{n}}",
     "photoViewer": "Visionneuse de photos",
     "goBack": "Retour",
-    "back_label": "Retour"
+    "back_label": "Retour",
+    "tributeVisibility": "Votre hommage sera visible par tous"
   },
   "publicObituary": {
     "notFound": {
@@ -376,7 +388,10 @@
     "back": "Retour aux nécrologies",
     "age": "Âge : {{age}} ans",
     "goBack": "Retour",
-    "back_label": "Retour"
+    "back_label": "Retour",
+    "biography": "Biographie",
+    "noBiography": "Aucune biographie ajoutée pour l'instant.",
+    "familyMembers": "Membres de la famille"
   },
   "common": {
     "cancel": "Annuler",
@@ -394,7 +409,11 @@
     "justNow": "à l'instant",
     "minutesAgo": "il y a {{m}}min",
     "hoursAgo": "il y a {{h}}h",
-    "daysAgo": "il y a {{d}}j"
+    "daysAgo": "il y a {{d}}j",
+    "cover": "Couverture",
+    "you": "Vous",
+    "noNameProvided": "Aucun nom fourni",
+    "comingSoon": "Bientôt disponible"
   },
   "language": {
     "label": "Langue",
@@ -527,5 +546,171 @@
     "selectCauseOfPassing": "Sélectionner la cause du décès",
     "publishBtn": "Publier l'Avis de Décès",
     "updateBtn": "Mettre à jour l'Avis de Décès"
+  },
+  "viewMemorials": {
+    "heading": "Mémoriaux",
+    "subheading": "Honorez et souvenez-vous de vos proches avec des mémoriaux numériques",
+    "search": "Rechercher...",
+    "searchLabel": "Rechercher des mémoriaux",
+    "createBtn": "Créer un mémorial",
+    "noMatch": "Aucun mémorial ne correspond à \"{{q}}\"",
+    "noMatchHint": "Essayez un autre terme de recherche.",
+    "empty": "Aucun mémorial pour l'instant",
+    "emptyHint": "Créez votre premier mémorial pour commencer."
+  },
+  "viewObituaries": {
+    "heading": "Nécrologies",
+    "subheading": "Créez et partagez des nécrologies pour honorer vos proches",
+    "search": "Rechercher des nécrologies...",
+    "searchLabel": "Rechercher des nécrologies",
+    "createBtn": "Créer une nécrologie",
+    "noMatch": "Aucune nécrologie ne correspond à \"{{q}}\"",
+    "noMatchHint": "Essayez un autre terme de recherche.",
+    "empty": "Aucune nécrologie publiée pour l'instant",
+    "emptyHint": "Soyez le premier à honorer un proche avec une nécrologie."
+  },
+  "insights": {
+    "heading": "Analyses"
+  },
+  "pricing": {
+    "heading": "Tarification"
+  },
+  "about": {
+    "hero": {
+      "heading": "Building a Better Way to Honor Lives and Understand Mortality",
+      "subheading": "MATIEO was born from a simple belief that every life deserves to be remembered, and that mortality data should be accessible, accurate, and meaningful."
+    },
+    "mission": {
+      "badge": "Our Mission",
+      "heading": "Honoring Lives Through Comprehensive Memorial and Funeral Services",
+      "subheading": "MATIEO is dedicated to creating a comprehensive platform that honors lives through four core pillars: dignified obituaries, meaningful digital memorials, compassionate funeral services, and powerful insights analytics.",
+      "pillars": [
+        { "label": "Obituary", "text": "We provide families with an elegant obituary editor to share life stories, celebrate milestones, and arrange dignified farewells through beautifully crafted digital obituaries." },
+        { "label": "Digital Memorials", "text": "Our digital memorial platform allows every family to create lasting, vibrant memorial pages and tributes that can be shared and preserved for generations to come." },
+        { "label": "Funeral Services", "text": "We connect families with trusted funeral service providers, offering a comprehensive directory of professional services including venue arrangements and bereavement support." },
+        { "label": "Insights", "text": "We empower researchers and policy-makers with comprehensive mortality data and insights to drive better understanding in public health and demographic trends." }
+      ],
+      "teamCaption": "Our team, dedicated to every family"
+    },
+    "stats": [
+      { "value": "50K+", "label": "Obituaries Created" },
+      { "value": "2.5M+", "label": "Memorials Created" },
+      { "value": "190+", "label": "Countries Covered" },
+      { "value": "99.9%", "label": "Uptime" }
+    ],
+    "values": {
+      "heading": "Our Values",
+      "subheading": "These core principles guide our decisions and shape our culture.",
+      "items": [
+        { "title": "Compassion First", "description": "Our commitment to the genuine nature of our work shapes how we approach every interaction and decision we make." },
+        { "title": "Accuracy & Integrity", "description": "Our commitment to data accuracy and ethical standards guides everything we do, from the data we collect to the tools we build." },
+        { "title": "Community Driven", "description": "Our platform evolves around feedback from the families and researchers we serve. Their needs define our roadmap." },
+        { "title": "Continuous Innovation", "description": "We're constantly improving our platform to better serve the world's evolving needs in memorial care and mortality research." }
+      ]
+    },
+    "journey": {
+      "heading": "Our Journey",
+      "subheading": "From a simple idea to serving thousands worldwide.",
+      "milestones": [
+        { "year": "2026", "label": "MATIEO Founded", "description": "Born from a simple belief that every life deserves to be remembered." },
+        { "year": "Today", "label": "Growing Worldwide", "description": "Serving 50,000+ active users and continuing to innovate for the future." }
+      ]
+    },
+    "team": {
+      "heading": "Meet Our Team",
+      "subheading": "The passionate people behind MATIEO, dedicated to serving our global community.",
+      "members": [
+        { "name": "Shariff Saim", "role": "Co-founder & Product", "description": "Product designer with a passion for creating meaningful user experiences that put people first, making MATIEO accessible and compassionate for every family." },
+        { "name": "Avinash Kumar", "role": "Co-founder & Engineering", "description": "Passionate about using technology to drive positive impact, building the technical foundation that powers MATIEO's platform and data infrastructure." }
+      ]
+    },
+    "cta": {
+      "heading": "Get Started Today",
+      "subheading": "Join thousands of families and researchers who trust MATIEO to preserve memories and understand life and loss.",
+      "createMemorial": "Create Memorial",
+      "createObituary": "Create Obituary"
+    }
+  },
+  "featuresPage": {
+    "hero": {
+      "badge": "All Features",
+      "heading": "Powerful Features for Every Need",
+      "subheading": "From comprehensive mortality insights to complete memorial options, MATIEO provides everything you need in one compassionate platform."
+    },
+    "main": [
+      {
+        "title": "Obituary Management",
+        "description": "Create, manage, and share meaningful obituaries with our intuitive platform designed to honor lives and preserve legacies.",
+        "bullets": ["Easy-to-use obituary editor", "Professional print-ready layouts", "Multimedia photo integration", "Nationwide publishing options"]
+      },
+      {
+        "title": "Digital Memorials",
+        "description": "Create beautiful, lasting tributes for your loved ones. Share memories, photos, and stories with family and friends worldwide.",
+        "bullets": ["Customizable memorial pages", "Photo and video galleries", "Guest book and condolences", "Privacy controls and sharing options"]
+      },
+      {
+        "title": "Advanced Insights",
+        "description": "Powerful visualization and analysis tools to understand mortality data and patterns across demographics and regions.",
+        "bullets": ["Interactive charts and graphs", "Trend analysis and forecasting", "Demographic breakdowns", "Comparative analysis across regions"]
+      },
+      {
+        "title": "Funeral Services",
+        "description": "Connect with trusted funeral service providers and make comfortable arrangements during this most difficult time. Our comprehensive network helps you find compassionate care and support.",
+        "bullets": ["Verified local service providers", "Complete online arrangement planning", "Direct connections with funeral directors", "Grief support and bereavement resources"]
+      }
+    ],
+    "more": {
+      "heading": "And Much More",
+      "subheading": "Discover all the features that make MATIEO your most comprehensive platform for mortality insights and memorial creation.",
+      "items": [
+        { "title": "Global Coverage", "description": "Data spanning countries and regions worldwide" },
+        { "title": "Advanced Search", "description": "Powerful search across all memorial records" },
+        { "title": "Privacy First", "description": "Enterprise-grade security protecting your data" },
+        { "title": "Mobile-Friendly", "description": "Full-featured experience on any device" },
+        { "title": "API Integration", "description": "Connect your systems with our robust API" },
+        { "title": "Cloud Storage", "description": "Secure, reliable storage for all your media" }
+      ]
+    },
+    "cta": {
+      "heading": "Get Started Today",
+      "subheading": "Join thousands of families, researchers, and organizations who trust MATIEO to preserve memories and understand life and loss.",
+      "createObituary": "Create Obituary",
+      "learnMore": "Learn More"
+    }
+  },
+  "terms": {
+    "heading": "Terms of Service",
+    "lastUpdated": "Last updated: December 16, 2025",
+    "s1Heading": "1. Introduction",
+    "s2Heading": "2. Use of Service",
+    "s21Heading": "2.1 Eligibility",
+    "s22Heading": "2.2 Account Registration",
+    "s23Heading": "2.3 Acceptable Use",
+    "s3Heading": "3. Data and Privacy",
+    "s4Heading": "4. Intellectual Property",
+    "s5Heading": "5. Free Trial and Subscriptions",
+    "s6Heading": "6. Limitation of Liability",
+    "s7Heading": "7. Termination",
+    "s8Heading": "8. Changes to Terms",
+    "s9Heading": "9. Contact Us",
+    "privacyLink": "Privacy Policy",
+    "viewPrivacy": "View Privacy Policy"
+  },
+  "privacy": {
+    "heading": "Privacy Policy",
+    "lastUpdated": "Last updated: December 16, 2025",
+    "s1Heading": "1. Introduction",
+    "s2Heading": "2. Information We Collect",
+    "s21Heading": "2.1 Information You Provide",
+    "s22Heading": "2.2 Information Collected Automatically",
+    "s23Heading": "2.3 Information from Third Parties",
+    "s3Heading": "3. How We Use Your Information",
+    "s4Heading": "4. How We Share Your Information",
+    "s5Heading": "5. Cookies",
+    "s6Heading": "6. Data Retention",
+    "s7Heading": "7. Your Rights",
+    "s8Heading": "8. Changes to This Policy",
+    "s9Heading": "9. Contact Us",
+    "viewTerms": "View Terms of Service"
   }
 }

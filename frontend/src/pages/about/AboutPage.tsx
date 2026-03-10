@@ -1,103 +1,27 @@
 import { Link } from 'react-router-dom'
 import { Heart, Shield, Users, Zap, Check, ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 
-// ── Data ─────────────────────────────────────────────────────────────────────
+// ── Static (non-translatable) data ───────────────────────────────────────────
 
-const MISSION_PILLARS = [
-  {
-    label: 'Obituary',
-    text: 'We provide families with an elegant obituary editor to share life stories, celebrate milestones, and arrange dignified farewells through beautifully crafted digital obituaries.',
-  },
-  {
-    label: 'Digital Memorials',
-    text: 'Our digital memorial platform allows every family to create lasting, vibrant memorial pages and tributes that can be shared and preserved for generations to come.',
-  },
-  {
-    label: 'Funeral Services',
-    text: 'We connect families with trusted funeral service providers, offering a comprehensive directory of professional services including venue arrangements and bereavement support.',
-  },
-  {
-    label: 'Insights',
-    text: 'We empower researchers and policy-makers with comprehensive mortality data and insights to drive better understanding in public health and demographic trends.',
-  },
+const STAT_VALUES = ['50K+', '2.5M+', '190+', '99.9%'] as const
+
+const VALUE_ICONS = [Heart, Shield, Users, Zap] as const
+
+const TEAM_EXTRA = [
+  { initials: 'SS', avatarBg: 'bg-blue-500' },
+  { initials: 'AK', avatarBg: 'bg-brand-primary' },
 ] as const
 
-const STATS = [
-  { value: '50K+', label: 'Obituaries Created' },
-  { value: '2.5M+', label: 'Memorials Created' },
-  { value: '190+', label: 'Countries Covered' },
-  { value: '99.9%', label: 'Uptime' },
-] as const
-
-const VALUES = [
-  {
-    Icon: Heart,
-    title: 'Compassion First',
-    description:
-      'Our commitment to the genuine nature of our work shapes how we approach every interaction and decision we make.',
-  },
-  {
-    Icon: Shield,
-    title: 'Accuracy & Integrity',
-    description:
-      'Our commitment to data accuracy and ethical standards guides everything we do, from the data we collect to the tools we build.',
-  },
-  {
-    Icon: Users,
-    title: 'Community Driven',
-    description:
-      'Our platform evolves around feedback from the families and researchers we serve. Their needs define our roadmap.',
-  },
-  {
-    Icon: Zap,
-    title: 'Continuous Innovation',
-    description:
-      "We're constantly improving our platform to better serve the world's evolving needs in memorial care and mortality research.",
-  },
-] as const
-
-const MILESTONES = [
-  {
-    year: '2026',
-    label: 'MATIEO Founded',
-    description: 'Born from a simple belief that every life deserves to be remembered.',
-    filled: false,
-  },
-  {
-    year: 'Today',
-    label: 'Growing Worldwide',
-    description: 'Serving 50,000+ active users and continuing to innovate for the future.',
-    filled: true,
-  },
-] as const
-
-const TEAM = [
-  {
-    initials: 'SS',
-    name: 'Shariff Saim',
-    role: 'Co-founder & Product',
-    description:
-      'Product designer with a passion for creating meaningful user experiences that put people first, making MATIEO accessible and compassionate for every family.',
-    avatarBg: 'bg-blue-500',
-  },
-  {
-    initials: 'AK',
-    name: 'Avinash Kumar',
-    role: 'Co-founder & Engineering',
-    description:
-      "Passionate about using technology to drive positive impact, building the technical foundation that powers MATIEO's platform and data infrastructure.",
-    avatarBg: 'bg-brand-primary',
-  },
-] as const
+const MILESTONE_FILLED = [false, true] as const
 
 // ── Mission image mockup ──────────────────────────────────────────────────────
 
-function MissionVisual() {
+function MissionVisual({ caption }: { caption: string }) {
   return (
     <div className="w-full aspect-[4/3] bg-gradient-to-br from-neutral-800 to-brand-secondary rounded-2xl overflow-hidden relative">
-      {/* Background blobs */}
       <div
         aria-hidden="true"
         className="absolute -top-10 -right-10 w-48 h-48 bg-brand-primary/20 rounded-full pointer-events-none"
@@ -106,8 +30,6 @@ function MissionVisual() {
         aria-hidden="true"
         className="absolute -bottom-8 -left-8 w-36 h-36 bg-blue-400/10 rounded-full pointer-events-none"
       />
-
-      {/* Team card grid */}
       <div className="relative h-full flex flex-col items-center justify-center p-8 gap-5">
         <div className="grid grid-cols-3 gap-3 w-full max-w-[260px]">
           {([0, 1, 2, 3, 4, 5] as const).map((i) => (
@@ -118,9 +40,7 @@ function MissionVisual() {
             </div>
           ))}
         </div>
-        <p className="text-white/40 text-xs text-center tracking-wide">
-          Our team, dedicated to every family
-        </p>
+        <p className="text-white/40 text-xs text-center tracking-wide">{caption}</p>
       </div>
     </div>
   )
@@ -129,15 +49,15 @@ function MissionVisual() {
 // ── Sections ─────────────────────────────────────────────────────────────────
 
 function HeroSection() {
+  const { t } = useTranslation()
   return (
     <section className="bg-gradient-to-b from-blue-50 to-white py-20 text-center">
       <div className="max-w-3xl mx-auto px-4 md:px-8">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-brand-primary leading-tight mb-6">
-          Building a Better Way to Honor Lives and Understand Mortality
+          {t('about.hero.heading')}
         </h1>
         <p className="text-lg text-slate-500 leading-relaxed max-w-xl mx-auto">
-          MATIEO was born from a simple belief that every life deserves to be remembered, and that
-          mortality data should be accessible, accurate, and meaningful.
+          {t('about.hero.subheading')}
         </p>
       </div>
     </section>
@@ -145,28 +65,30 @@ function HeroSection() {
 }
 
 function MissionSection() {
+  const { t } = useTranslation()
+  const pillars = t('about.mission.pillars', { returnObjects: true }) as Array<{
+    label: string
+    text: string
+  }>
   return (
     <section className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center gap-12 lg:gap-20">
-        {/* Text */}
         <div className="flex-1 min-w-0">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full mb-6">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-            <span className="text-xs font-medium text-emerald-700">Our Mission</span>
+            <span className="text-xs font-medium text-emerald-700">{t('about.mission.badge')}</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-semibold text-neutral-900 mb-5">
-            Honoring Lives Through Comprehensive Memorial and Funeral Services
+            {t('about.mission.heading')}
           </h2>
 
           <p className="text-base text-slate-500 leading-relaxed mb-7">
-            MATIEO is dedicated to creating a comprehensive platform that honors lives through four
-            core pillars: dignified obituaries, meaningful digital memorials, compassionate funeral
-            services, and powerful insights analytics.
+            {t('about.mission.subheading')}
           </p>
 
           <ul className="space-y-4">
-            {MISSION_PILLARS.map(({ label, text }) => (
+            {pillars.map(({ label, text }) => (
               <li key={label} className="flex items-start gap-3">
                 <Check
                   size={16}
@@ -182,9 +104,8 @@ function MissionSection() {
           </ul>
         </div>
 
-        {/* Visual */}
         <div className="w-full md:w-[440px] lg:w-[480px] flex-shrink-0">
-          <MissionVisual />
+          <MissionVisual caption={t('about.mission.teamCaption')} />
         </div>
       </div>
     </section>
@@ -192,11 +113,16 @@ function MissionSection() {
 }
 
 function StatsSection() {
+  const { t } = useTranslation()
+  const stats = t('about.stats', { returnObjects: true }) as Array<{
+    value: string
+    label: string
+  }>
   return (
     <section className="border-t border-b border-neutral-100 bg-white">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-16">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {STATS.map(({ value, label }) => (
+          {stats.map(({ value, label }) => (
             <div key={label} className="text-center">
               <p className="text-4xl md:text-5xl font-normal text-brand-primary mb-2">{value}</p>
               <p className="text-sm font-medium text-neutral-600">{label}</p>
@@ -209,28 +135,36 @@ function StatsSection() {
 }
 
 function ValuesSection() {
+  const { t } = useTranslation()
+  const items = t('about.values.items', { returnObjects: true }) as Array<{
+    title: string
+    description: string
+  }>
   return (
     <section className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         <div className="text-center mb-14">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-4">
-            Our Values
+            {t('about.values.heading')}
           </h2>
           <p className="text-lg text-slate-500 max-w-lg mx-auto">
-            These core principles guide our decisions and shape our culture.
+            {t('about.values.subheading')}
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {VALUES.map(({ Icon, title, description }) => (
-            <div key={title} className="bg-white rounded-xl border border-neutral-200 p-6">
-              <div className="w-10 h-10 rounded-xl border border-neutral-200 flex items-center justify-center mb-4">
-                <Icon size={18} className="text-brand-primary" strokeWidth={1.5} />
+          {items.map(({ title, description }, i) => {
+            const Icon = VALUE_ICONS[i]
+            return (
+              <div key={title} className="bg-white rounded-xl border border-neutral-200 p-6">
+                <div className="w-10 h-10 rounded-xl border border-neutral-200 flex items-center justify-center mb-4">
+                  <Icon size={18} className="text-brand-primary" strokeWidth={1.5} />
+                </div>
+                <h3 className="text-base font-semibold text-neutral-900 mb-2">{title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{description}</p>
               </div>
-              <h3 className="text-base font-semibold text-neutral-900 mb-2">{title}</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">{description}</p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
@@ -238,39 +172,39 @@ function ValuesSection() {
 }
 
 function JourneySection() {
+  const { t } = useTranslation()
+  const milestones = t('about.journey.milestones', { returnObjects: true }) as Array<{
+    year: string
+    label: string
+    description: string
+  }>
   return (
     <section className="py-24 bg-blue-50">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         <div className="text-center mb-16">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-4">
-            Our Journey
+            {t('about.journey.heading')}
           </h2>
-          <p className="text-lg text-slate-500">
-            From a simple idea to serving thousands worldwide.
-          </p>
+          <p className="text-lg text-slate-500">{t('about.journey.subheading')}</p>
         </div>
 
-        {/* Timeline */}
         <div className="relative max-w-2xl mx-auto">
-          {/* Track */}
           <div
             aria-hidden="true"
             className="absolute top-3 left-0 right-0 h-0.5 bg-neutral-300"
           />
-          {/* Progress */}
           <div
             aria-hidden="true"
             className="absolute top-3 left-0 w-[65%] h-0.5 bg-brand-primary"
           />
 
           <div className="flex justify-between">
-            {MILESTONES.map(({ year, label, description, filled }) => (
+            {milestones.map(({ year, label, description }, i) => (
               <div key={year} className="flex flex-col items-center max-w-[200px]">
-                {/* Dot */}
                 <div
                   aria-hidden="true"
                   className={`w-6 h-6 rounded-full border-2 z-10 mb-5 ${
-                    filled
+                    MILESTONE_FILLED[i]
                       ? 'bg-brand-primary border-brand-primary'
                       : 'bg-white border-neutral-300'
                   }`}
@@ -288,34 +222,41 @@ function JourneySection() {
 }
 
 function TeamSection() {
+  const { t } = useTranslation()
+  const members = t('about.team.members', { returnObjects: true }) as Array<{
+    name: string
+    role: string
+    description: string
+  }>
   return (
     <section className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         <div className="text-center mb-14">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-900 mb-4">
-            Meet Our Team
+            {t('about.team.heading')}
           </h2>
-          <p className="text-lg text-slate-500 max-w-lg mx-auto">
-            The passionate people behind MATIEO, dedicated to serving our global community.
-          </p>
+          <p className="text-lg text-slate-500 max-w-lg mx-auto">{t('about.team.subheading')}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center gap-6">
-          {TEAM.map(({ initials, name, role, description, avatarBg }) => (
-            <div
-              key={name}
-              className="bg-white rounded-xl border border-neutral-200 p-8 text-center w-full sm:max-w-xs"
-            >
+          {members.map(({ name, role, description }, i) => {
+            const { initials, avatarBg } = TEAM_EXTRA[i]
+            return (
               <div
-                className={`w-20 h-20 rounded-full ${avatarBg} flex items-center justify-center mx-auto mb-5`}
+                key={name}
+                className="bg-white rounded-xl border border-neutral-200 p-8 text-center w-full sm:max-w-xs"
               >
-                <span className="text-white text-2xl font-bold">{initials}</span>
+                <div
+                  className={`w-20 h-20 rounded-full ${avatarBg} flex items-center justify-center mx-auto mb-5`}
+                >
+                  <span className="text-white text-2xl font-bold">{initials}</span>
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900 mb-1">{name}</h3>
+                <p className="text-sm text-brand-primary font-medium mb-4">{role}</p>
+                <p className="text-sm text-slate-500 leading-relaxed">{description}</p>
               </div>
-              <h3 className="text-lg font-semibold text-neutral-900 mb-1">{name}</h3>
-              <p className="text-sm text-brand-primary font-medium mb-4">{role}</p>
-              <p className="text-sm text-slate-500 leading-relaxed">{description}</p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
@@ -323,6 +264,12 @@ function TeamSection() {
 }
 
 function CTASection() {
+  const { t } = useTranslation()
+  const perks = [
+    t('landing.cta.noFees'),
+    t('landing.cta.cancelAnytime'),
+    t('landing.cta.getSupport'),
+  ]
   return (
     <section className="relative overflow-hidden bg-gradient-to-r from-brand-secondary to-brand-primary py-24">
       <div
@@ -336,11 +283,10 @@ function CTASection() {
 
       <div className="relative max-w-6xl mx-auto px-4 md:px-8 text-center">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-white mb-5">
-          Get Started Today
+          {t('about.cta.heading')}
         </h2>
         <p className="text-lg text-blue-100 max-w-xl mx-auto mb-10 leading-relaxed">
-          Join thousands of families and researchers who trust MATIEO to preserve memories and
-          understand life and loss.
+          {t('about.cta.subheading')}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-8">
@@ -348,19 +294,19 @@ function CTASection() {
             to="/signup"
             className="inline-flex items-center gap-2 bg-white hover:bg-blue-50 text-brand-primary font-medium px-7 py-4 rounded-lg transition-colors"
           >
-            Create Memorial
+            {t('about.cta.createMemorial')}
             <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             to="/signup"
             className="inline-flex items-center gap-2 border border-white/40 hover:border-white text-white font-medium px-7 py-4 rounded-lg transition-colors"
           >
-            Create Obituary
+            {t('about.cta.createObituary')}
           </Link>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm text-blue-100">
-          {(['No hidden fees', 'Cancel anytime', 'Get support'] as const).map((label) => (
+          {perks.map((label) => (
             <div key={label} className="flex items-center gap-2">
               <Check size={16} className="text-emerald-400 flex-shrink-0" aria-hidden="true" />
               <span>{label}</span>
