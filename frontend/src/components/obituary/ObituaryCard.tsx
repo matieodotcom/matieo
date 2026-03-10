@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Calendar, MapPin, MoreVertical, Trash2, EyeOff, ArrowRight } from 'lucide-react'
+import { Calendar, MapPin, MoreVertical, Trash2, EyeOff } from 'lucide-react'
 import type { ObituaryRow } from '@/types/obituary'
 import {
   DropdownMenu,
@@ -146,20 +146,11 @@ export function ObituaryCard({ obituary, onDelete, onUnpublish, showPublisher, s
         )}
 
         {showPublisher && creator_name && (
-          <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-2">
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 text-right">
             By {creator_name}
           </p>
         )}
 
-        {!showStatus && status === 'published' && (
-          <Link
-            to={href}
-            className="relative z-10 inline-flex items-center gap-1 text-sm font-medium text-brand-primary hover:underline mt-1"
-          >
-            View Obituary
-            <ArrowRight size={13} />
-          </Link>
-        )}
       </div>
     </article>
   )

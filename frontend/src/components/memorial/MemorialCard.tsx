@@ -34,7 +34,7 @@ function getInitials(name: string): string {
 }
 
 export function MemorialCard({ memorial, onDelete, onUnpublish, showPublisher, showStatus = true }: MemorialCardProps) {
-  const { full_name, date_of_birth, date_of_death, location, profile_url, status, slug, creator_name } = memorial
+  const { full_name, date_of_birth, date_of_death, location, age_at_death, profile_url, status, slug, creator_name } = memorial
 
   const dateRange = [date_of_birth, date_of_death]
     .filter(Boolean)
@@ -120,14 +120,20 @@ export function MemorialCard({ memorial, onDelete, onUnpublish, showPublisher, s
         )}
 
         {location && (
-          <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400">
+          <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 mb-1">
             <MapPin size={13} className="shrink-0" />
             <span>{location}</span>
           </div>
         )}
 
+        {age_at_death != null && (
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-2">
+            Age: {age_at_death}
+          </p>
+        )}
+
         {showPublisher && creator_name && (
-          <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 text-right">
             By {creator_name}
           </p>
         )}
