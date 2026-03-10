@@ -9,6 +9,15 @@ import { afterEach, vi } from 'vitest'
 afterEach(() => cleanup())
 
 // Supabase client mock
+const mockFromChain = {
+  select: vi.fn().mockReturnThis(),
+  update: vi.fn().mockReturnThis(),
+  insert: vi.fn().mockReturnThis(),
+  delete: vi.fn().mockReturnThis(),
+  eq: vi.fn().mockResolvedValue({ data: null, error: null }),
+  single: vi.fn().mockResolvedValue({ data: null, error: null }),
+}
+
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     auth: {
@@ -25,9 +34,20 @@ vi.mock('@/lib/supabase', () => ({
         data: { subscription: { unsubscribe: vi.fn() } },
       }),
     },
-    from: vi.fn(),
+    from: vi.fn().mockReturnValue(mockFromChain),
   },
 }))
+
+// localStorage mock
+Object.defineProperty(window, 'localStorage', {
+  writable: true,
+  value: {
+    getItem: vi.fn().mockReturnValue(null),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+  },
+})
 
 // Cloudinary mock
 vi.mock('@/lib/cloudinary', () => ({

@@ -118,9 +118,12 @@ export default function SignUpPage() {
 
   const {
     register,
+    watch,
+    setValue,
     formState: { errors },
   } = form
 
+  const accountType = watch('accountType')
   const combinedError = error ?? googleError
 
   return (
@@ -140,11 +143,45 @@ export default function SignUpPage() {
             {t('auth.signUp.subheading')}
           </p>
 
+          {/* Account type selector */}
+          <div className="mb-5">
+            <p className="text-sm font-medium text-neutral-700 mb-2">
+              {t('auth.signUp.accountType')}
+            </p>
+            <div className="grid grid-cols-2 gap-2" role="group" aria-label={t('auth.signUp.accountType')}>
+              <button
+                type="button"
+                onClick={() => setValue('accountType', 'individual')}
+                className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
+                  accountType === 'individual'
+                    ? 'bg-brand-primary text-white'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                }`}
+              >
+                {t('auth.signUp.individual')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setValue('accountType', 'organization')}
+                className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
+                  accountType === 'organization'
+                    ? 'bg-brand-primary text-white'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                }`}
+              >
+                {t('auth.signUp.organization')}
+              </button>
+            </div>
+            {!accountType && errors.accountType && (
+              <ErrorMessage message={t('auth.signUp.selectAccountType')} />
+            )}
+          </div>
+
           {/* Google button */}
           <button
             type="button"
-            onClick={handleGoogleAuth}
-            disabled={googlePending || isPending}
+            onClick={() => accountType && handleGoogleAuth(accountType)}
+            disabled={googlePending || isPending || !accountType}
             className="w-full flex items-center justify-center gap-3 bg-neutral-100 hover:bg-neutral-200
               text-sm font-medium text-neutral-700 py-2.5 rounded-lg transition-colors
               disabled:opacity-50 disabled:cursor-not-allowed mb-5"
@@ -162,51 +199,77 @@ export default function SignUpPage() {
 
           {/* Form */}
           <form onSubmit={onSubmit} noValidate className="space-y-4">
-            {/* First name + Last name */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Name fields — conditional on account type */}
+            {accountType === 'individual' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium text-neutral-700 mb-1"
+                  >
+                    {t('auth.signUp.firstName')}
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    autoComplete="given-name"
+                    placeholder="Shariff"
+                    {...register('firstName')}
+                    className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
+                      placeholder:text-neutral-400 focus:outline-none focus:ring-2
+                      focus:ring-brand-primary focus:border-transparent transition"
+                  />
+                  {errors.firstName && (
+                    <ErrorMessage message={errors.firstName.message!} />
+                  )}
+                </div>
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium text-neutral-700 mb-1"
+                  >
+                    {t('auth.signUp.lastName')}
+                  </label>
+                  <input
+                    id="lastName"
+                    type="text"
+                    autoComplete="family-name"
+                    placeholder="Saim"
+                    {...register('lastName')}
+                    className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
+                      placeholder:text-neutral-400 focus:outline-none focus:ring-2
+                      focus:ring-brand-primary focus:border-transparent transition"
+                  />
+                  {errors.lastName && (
+                    <ErrorMessage message={errors.lastName.message!} />
+                  )}
+                </div>
+              </div>
+            )}
+
+            {accountType === 'organization' && (
               <div>
                 <label
-                  htmlFor="firstName"
+                  htmlFor="organizationName"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  {t('auth.signUp.firstName')}
+                  {t('auth.signUp.organizationName')}
                 </label>
                 <input
-                  id="firstName"
+                  id="organizationName"
                   type="text"
-                  autoComplete="given-name"
-                  placeholder="Shariff"
-                  {...register('firstName')}
+                  autoComplete="organization"
+                  placeholder={t('auth.signUp.organizationNamePlaceholder')}
+                  {...register('organizationName')}
                   className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
                     placeholder:text-neutral-400 focus:outline-none focus:ring-2
                     focus:ring-brand-primary focus:border-transparent transition"
                 />
-                {errors.firstName && (
-                  <ErrorMessage message={errors.firstName.message!} />
+                {errors.organizationName && (
+                  <ErrorMessage message={errors.organizationName.message!} />
                 )}
               </div>
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-neutral-700 mb-1"
-                >
-                  {t('auth.signUp.lastName')}
-                </label>
-                <input
-                  id="lastName"
-                  type="text"
-                  autoComplete="family-name"
-                  placeholder="Saim"
-                  {...register('lastName')}
-                  className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900
-                    placeholder:text-neutral-400 focus:outline-none focus:ring-2
-                    focus:ring-brand-primary focus:border-transparent transition"
-                />
-                {errors.lastName && (
-                  <ErrorMessage message={errors.lastName.message!} />
-                )}
-              </div>
-            </div>
+            )}
 
             {/* Email + Confirm email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -323,7 +386,7 @@ export default function SignUpPage() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={isPending || googlePending}
+              disabled={isPending || googlePending || !accountType}
               className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm
                 py-2.5 rounded-lg transition-colors mt-1
                 disabled:bg-brand-primaryLight disabled:text-brand-primary disabled:cursor-not-allowed

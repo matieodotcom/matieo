@@ -208,6 +208,12 @@
       "hidePassword": "पासवर्ड छुपाएं",
       "showConfirmPassword": "पुष्टि पासवर्ड दिखाएं",
       "hideConfirmPassword": "पुष्टि पासवर्ड छुपाएं",
+      "accountType": "मैं इस रूप में साइन अप कर रहा/रही हूं",
+      "individual": "व्यक्तिगत",
+      "organization": "संगठन",
+      "organizationName": "संगठन का नाम",
+      "organizationNamePlaceholder": "अपने संगठन का नाम दर्ज करें",
+      "selectAccountType": "कृपया खाता प्रकार चुनें",
       "verification": {
         "title": "सत्यापन लिंक भेजा गया",
         "message": "कृपया अपना ईमेल सत्यापित करें। हमने एक लिंक भेजा है"

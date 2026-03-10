@@ -18,18 +18,31 @@ type SignInFormValues = z.infer<typeof signInSchema>
 
 const signUpSchema = z
   .object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
+    accountType: z.enum(['individual', 'organization']),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    organizationName: z.string().optional(),
     email: z.string().email('Enter a valid email address'),
     confirmEmail: z.string(),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.confirmEmail === data.email, {
+  .superRefine((data, ctx) => {
+    if (data.accountType === 'individual') {
+      if (!data.firstName?.trim())
+        ctx.addIssue({ code: 'custom', message: 'First name is required', path: ['firstName'] })
+      if (!data.lastName?.trim())
+        ctx.addIssue({ code: 'custom', message: 'Last name is required', path: ['lastName'] })
+    } else {
+      if (!data.organizationName?.trim())
+        ctx.addIssue({ code: 'custom', message: 'Organization name is required', path: ['organizationName'] })
+    }
+  })
+  .refine((d) => d.confirmEmail === d.email, {
     message: 'Email addresses do not match',
     path: ['confirmEmail'],
   })
-  .refine((data) => data.confirmPassword === data.password, {
+  .refine((d) => d.confirmPassword === d.password, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   })
@@ -52,10 +65,20 @@ export function useAuthListener() {
     // Subscribe to auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
+
+      // Flush account_type set during Google OAuth signup
+      const pendingType = localStorage.getItem('pending_account_type')
+      if (pendingType && session?.user) {
+        localStorage.removeItem('pending_account_type')
+        await supabase
+          .from('profiles')
+          .update({ account_type: pendingType })
+          .eq('id', session.user.id)
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -72,8 +95,10 @@ export function useSignUp() {
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+      accountType: undefined,
       firstName: '',
       lastName: '',
+      organizationName: '',
       email: '',
       confirmEmail: '',
       password: '',
@@ -85,11 +110,16 @@ export function useSignUp() {
     setIsPending(true)
     setError(null)
 
+    const full_name =
+      values.accountType === 'individual'
+        ? `${values.firstName} ${values.lastName}`
+        : values.organizationName!
+
     const { data, error: authError } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       options: {
-        data: { full_name: `${values.firstName} ${values.lastName}` },
+        data: { full_name, account_type: values.accountType },
         emailRedirectTo: window.location.origin + '/',
       },
     })
@@ -212,9 +242,11 @@ export function useGoogleAuth(options?: { redirectTo?: string }) {
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleGoogleAuth = async () => {
+  const handleGoogleAuth = async (accountType: 'individual' | 'organization') => {
     setIsPending(true)
     setError(null)
+
+    localStorage.setItem('pending_account_type', accountType)
 
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: 'google',

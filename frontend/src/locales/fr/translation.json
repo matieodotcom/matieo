@@ -208,6 +208,12 @@
       "hidePassword": "Masquer le mot de passe",
       "showConfirmPassword": "Afficher la confirmation du mot de passe",
       "hideConfirmPassword": "Masquer la confirmation du mot de passe",
+      "accountType": "Je m'inscris en tant que",
+      "individual": "Particulier",
+      "organization": "Organisation",
+      "organizationName": "Nom de l'organisation",
+      "organizationNamePlaceholder": "Entrez le nom de votre organisation",
+      "selectAccountType": "Veuillez sélectionner un type de compte",
       "verification": {
         "title": "Lien de vérification envoyé",
         "message": "Veuillez vérifier votre e-mail. Nous avons envoyé un lien à"

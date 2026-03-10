@@ -99,7 +99,7 @@ describe('useSignUp', () => {
     expect(result.current.emailSent).toBe(false)
   })
 
-  it('sets emailSent=true and calls toast on success', async () => {
+  it('sets emailSent=true and calls toast on success (individual)', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
       data: { user: { identities: [{ id: '1' }] }, session: null },
       error: null,
@@ -109,6 +109,7 @@ describe('useSignUp', () => {
     const { result } = renderHook(() => useSignUp())
 
     act(() => {
+      result.current.form.setValue('accountType', 'individual')
       result.current.form.setValue('firstName', 'Jane')
       result.current.form.setValue('lastName', 'Smith')
       result.current.form.setValue('email', 'jane@example.com')
@@ -129,6 +130,36 @@ describe('useSignUp', () => {
     )
   })
 
+  it('sets emailSent=true for organization account type', async () => {
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
+      data: { user: { identities: [{ id: '1' }] }, session: null },
+      error: null,
+    } as never)
+
+    const { useSignUp } = await getModule()
+    const { result } = renderHook(() => useSignUp())
+
+    act(() => {
+      result.current.form.setValue('accountType', 'organization')
+      result.current.form.setValue('organizationName', 'Acme Corp')
+      result.current.form.setValue('email', 'org@example.com')
+      result.current.form.setValue('confirmEmail', 'org@example.com')
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    await waitFor(() => {
+      expect(result.current.emailSent).toBe(true)
+    })
+    expect(toast.success).toHaveBeenCalledWith(
+      expect.stringContaining('org@example.com')
+    )
+  })
+
   it('sets error state on auth error (no toast)', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
       data: { user: null, session: null },
@@ -139,6 +170,7 @@ describe('useSignUp', () => {
     const { result } = renderHook(() => useSignUp())
 
     act(() => {
+      result.current.form.setValue('accountType', 'individual')
       result.current.form.setValue('firstName', 'Jane')
       result.current.form.setValue('lastName', 'Smith')
       result.current.form.setValue('email', 'jane@example.com')
@@ -168,6 +200,7 @@ describe('useSignUp', () => {
     const { result } = renderHook(() => useSignUp())
 
     act(() => {
+      result.current.form.setValue('accountType', 'individual')
       result.current.form.setValue('firstName', 'Jane')
       result.current.form.setValue('lastName', 'Smith')
       result.current.form.setValue('email', 'existing@example.com')
@@ -200,12 +233,70 @@ describe('useSignUp', () => {
     expect(supabase.auth.signUp).not.toHaveBeenCalled()
   })
 
-  it('passes full_name as firstName + lastName to supabase', async () => {
+  it('passes full_name as firstName + lastName to supabase for individual', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
       data: { user: { identities: [{ id: '1' }] }, session: null },
       error: null,
     } as never)
 
+    const { useSignUp } = await getModule()
+    const { result } = renderHook(() => useSignUp())
+
+    act(() => {
+      result.current.form.setValue('accountType', 'individual')
+      result.current.form.setValue('firstName', 'Jane')
+      result.current.form.setValue('lastName', 'Smith')
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('confirmEmail', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.signUp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          data: { full_name: 'Jane Smith', account_type: 'individual' },
+        }),
+      })
+    )
+  })
+
+  it('passes full_name as organizationName to supabase for organization', async () => {
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
+      data: { user: { identities: [{ id: '1' }] }, session: null },
+      error: null,
+    } as never)
+
+    const { useSignUp } = await getModule()
+    const { result } = renderHook(() => useSignUp())
+
+    act(() => {
+      result.current.form.setValue('accountType', 'organization')
+      result.current.form.setValue('organizationName', 'Acme Corp')
+      result.current.form.setValue('email', 'org@example.com')
+      result.current.form.setValue('confirmEmail', 'org@example.com')
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.signUp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          data: { full_name: 'Acme Corp', account_type: 'organization' },
+        }),
+      })
+    )
+  })
+
+  it('fails validation when no accountType selected', async () => {
     const { useSignUp } = await getModule()
     const { result } = renderHook(() => useSignUp())
 
@@ -222,13 +313,46 @@ describe('useSignUp', () => {
       await result.current.onSubmit({ preventDefault: () => {} } as never)
     })
 
-    expect(supabase.auth.signUp).toHaveBeenCalledWith(
-      expect.objectContaining({
-        options: expect.objectContaining({
-          data: { full_name: 'Jane Smith' },
-        }),
-      })
-    )
+    expect(supabase.auth.signUp).not.toHaveBeenCalled()
+  })
+
+  it('fails validation for individual when firstName is missing', async () => {
+    const { useSignUp } = await getModule()
+    const { result } = renderHook(() => useSignUp())
+
+    act(() => {
+      result.current.form.setValue('accountType', 'individual')
+      result.current.form.setValue('lastName', 'Smith')
+      result.current.form.setValue('email', 'jane@example.com')
+      result.current.form.setValue('confirmEmail', 'jane@example.com')
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.signUp).not.toHaveBeenCalled()
+  })
+
+  it('fails validation for organization when organizationName is missing', async () => {
+    const { useSignUp } = await getModule()
+    const { result } = renderHook(() => useSignUp())
+
+    act(() => {
+      result.current.form.setValue('accountType', 'organization')
+      result.current.form.setValue('email', 'org@example.com')
+      result.current.form.setValue('confirmEmail', 'org@example.com')
+      result.current.form.setValue('password', 'password123')
+      result.current.form.setValue('confirmPassword', 'password123')
+    })
+
+    await act(async () => {
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
+    })
+
+    expect(supabase.auth.signUp).not.toHaveBeenCalled()
   })
 })
 
@@ -465,7 +589,7 @@ describe('useGoogleAuth', () => {
     const { result } = renderHook(() => useGoogleAuth())
 
     await act(async () => {
-      await result.current.handleGoogleAuth()
+      await result.current.handleGoogleAuth('individual')
     })
 
     expect(supabase.auth.signInWithOAuth).toHaveBeenCalledWith(
@@ -483,7 +607,7 @@ describe('useGoogleAuth', () => {
     const { result } = renderHook(() => useGoogleAuth())
 
     await act(async () => {
-      await result.current.handleGoogleAuth()
+      await result.current.handleGoogleAuth('individual')
     })
 
     expect(supabase.auth.signInWithOAuth).toHaveBeenCalledWith(
@@ -491,6 +615,22 @@ describe('useGoogleAuth', () => {
         options: expect.objectContaining({ redirectTo: expect.any(String) }),
       })
     )
+  })
+
+  it('stores accountType in localStorage before OAuth redirect', async () => {
+    vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValueOnce({
+      data: { provider: 'google', url: 'https://google.com' },
+      error: null,
+    } as never)
+
+    const { useGoogleAuth } = await getModule()
+    const { result } = renderHook(() => useGoogleAuth())
+
+    await act(async () => {
+      await result.current.handleGoogleAuth('organization')
+    })
+
+    expect(localStorage.setItem).toHaveBeenCalledWith('pending_account_type', 'organization')
   })
 
   it('sets error state on auth error', async () => {
@@ -503,7 +643,7 @@ describe('useGoogleAuth', () => {
     const { result } = renderHook(() => useGoogleAuth())
 
     await act(async () => {
-      await result.current.handleGoogleAuth()
+      await result.current.handleGoogleAuth('individual')
     })
 
     expect(result.current.error).toBe('OAuth failed')

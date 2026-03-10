@@ -208,6 +208,12 @@
       "hidePassword": "Ocultar contraseña",
       "showConfirmPassword": "Mostrar confirmar contraseña",
       "hideConfirmPassword": "Ocultar confirmar contraseña",
+      "accountType": "Me registro como",
+      "individual": "Particular",
+      "organization": "Organización",
+      "organizationName": "Nombre de la organización",
+      "organizationNamePlaceholder": "Ingrese el nombre de su organización",
+      "selectAccountType": "Por favor seleccione un tipo de cuenta",
       "verification": {
         "title": "Enlace de verificación enviado",
         "message": "Por favor verifique su correo electrónico. Hemos enviado un enlace a"

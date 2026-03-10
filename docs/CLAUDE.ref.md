@@ -219,6 +219,7 @@ profiles
   id(uuid,pk→auth.users), full_name(text), email(text),
   avatar_cloudinary_public_id(text), avatar_url(text),
   role(text,default:user|admin|researcher), dark_mode(bool,default:false),
+  account_type(text,NOT NULL,default:individual,CHECK:individual|organization),
   created_at(ts), updated_at(ts,trigger)
   RLS: owner read/update only
 

@@ -1,7 +1,7 @@
 -- =============================================================
 -- MATIEO — Full Schema Snapshot
 -- Keep this file in sync with supabase/migrations/
--- Last updated: 2026-03-09 (add obituaries table)
+-- Last updated: 2026-03-10 (add account_type to profiles)
 -- =============================================================
 
 -- Migrations applied:
@@ -13,6 +13,7 @@
 -- [x] 20260306_add_creator_name_to_memorials.sql
 -- [x] 20260309_create_obituaries.sql
 -- [x] 20260309_create_tributes_condolences.sql
+-- [x] 20260310_add_account_type_to_profiles.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.

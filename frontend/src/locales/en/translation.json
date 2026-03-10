@@ -208,6 +208,12 @@
       "hidePassword": "Hide password",
       "showConfirmPassword": "Show confirm password",
       "hideConfirmPassword": "Hide confirm password",
+      "accountType": "I am signing up as",
+      "individual": "Individual",
+      "organization": "Organization",
+      "organizationName": "Organization Name",
+      "organizationNamePlaceholder": "Enter your organization name",
+      "selectAccountType": "Please select an account type",
       "verification": {
         "title": "Verification link sent",
         "message": "Please verify your email. We have sent a link to"

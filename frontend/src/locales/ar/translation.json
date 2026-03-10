@@ -208,6 +208,12 @@
       "hidePassword": "إخفاء كلمة المرور",
       "showConfirmPassword": "إظهار تأكيد كلمة المرور",
       "hideConfirmPassword": "إخفاء تأكيد كلمة المرور",
+      "accountType": "أنا أسجل بصفتي",
+      "individual": "فرد",
+      "organization": "مؤسسة",
+      "organizationName": "اسم المؤسسة",
+      "organizationNamePlaceholder": "أدخل اسم مؤسستك",
+      "selectAccountType": "يرجى اختيار نوع الحساب",
       "verification": {
         "title": "تم إرسال رابط التحقق",
         "message": "يرجى التحقق من بريدك الإلكتروني. لقد أرسلنا رابطًا إلى"
