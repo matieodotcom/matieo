@@ -244,11 +244,14 @@ export default function CreateObituaryPage() {
     register,
     control,
     watch,
+    setValue,
     formState: { errors },
     handleSubmit,
   } = form
 
   const country = watch('country')
+  const dateOfBirth = watch('dateOfBirth')
+  const dateOfDeath = watch('dateOfDeath')
   const biographyValue = watch('biography') ?? ''
 
   const [countryOptions, setCountryOptions] = useState(() => buildCountryOptions(null))
@@ -261,6 +264,17 @@ export default function CreateObituaryPage() {
       if (code) setCountryOptions(buildCountryOptions(code))
     })
   }, [])
+
+  // Auto-calculate age when both dates are present
+  useEffect(() => {
+    if (!dateOfBirth || !dateOfDeath) return
+    const dob = new Date(dateOfBirth)
+    const dod = new Date(dateOfDeath)
+    let age = dod.getFullYear() - dob.getFullYear()
+    const monthDiff = dod.getMonth() - dob.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && dod.getDate() < dob.getDate())) age -= 1
+    if (age >= 1 && age <= 120) setValue('ageAtDeath', String(age))
+  }, [dateOfBirth, dateOfDeath, setValue])
 
   const stateOptions = useMemo(() => buildStateOptions(country ?? ''), [country])
 
@@ -373,6 +387,7 @@ export default function CreateObituaryPage() {
                     id="dateOfBirth"
                     value={field.value ?? ''}
                     onChange={field.onChange}
+                    disableFuture
                   />
                 )}
               />
@@ -380,7 +395,24 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="ageAtDeath" required>Age at Death</FieldLabel>
+              <FieldLabel htmlFor="dateOfDeath" required>Date of Death</FieldLabel>
+              <Controller
+                control={control}
+                name="dateOfDeath"
+                render={({ field }) => (
+                  <DatePicker
+                    id="dateOfDeath"
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    disableFuture
+                  />
+                )}
+              />
+              {errors.dateOfDeath && <ErrorMessage message={errors.dateOfDeath.message!} />}
+            </div>
+
+            <div>
+              <FieldLabel htmlFor="ageAtDeath">Age at Death</FieldLabel>
               <Controller
                 control={control}
                 name="ageAtDeath"
@@ -395,22 +427,6 @@ export default function CreateObituaryPage() {
                 )}
               />
               {errors.ageAtDeath && <ErrorMessage message={errors.ageAtDeath.message!} />}
-            </div>
-
-            <div>
-              <FieldLabel htmlFor="dateOfDeath" required>Date of Death</FieldLabel>
-              <Controller
-                control={control}
-                name="dateOfDeath"
-                render={({ field }) => (
-                  <DatePicker
-                    id="dateOfDeath"
-                    value={field.value ?? ''}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-              {errors.dateOfDeath && <ErrorMessage message={errors.dateOfDeath.message!} />}
             </div>
 
             <div>

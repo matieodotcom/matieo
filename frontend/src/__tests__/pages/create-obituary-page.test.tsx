@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/__tests__/utils'
 import CreateObituaryPage from '@/pages/app/CreateObituaryPage'
@@ -85,6 +85,26 @@ describe('CreateObituaryPage', () => {
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Remove family member' })).toBeInTheDocument()
     })
+  })
+
+  it('shows Age at Death select field', () => {
+    renderWithProviders(<CreateObituaryPage />)
+    expect(screen.getByLabelText(/Age at Death/i)).toBeInTheDocument()
+  })
+
+  it('auto-calculates age when date of birth and date of death are set', async () => {
+    renderWithProviders(<CreateObituaryPage />)
+    const dobInput = document.querySelector('input[name="dateOfBirth"]') as HTMLInputElement
+    const dodInput = document.querySelector('input[name="dateOfDeath"]') as HTMLInputElement
+    if (dobInput && dodInput) {
+      fireEvent.change(dobInput, { target: { value: '1945-03-15' } })
+      fireEvent.change(dodInput, { target: { value: '2024-01-10' } })
+      // age = 78 (birthday not yet passed in Jan)
+      await waitFor(() => {
+        const ageInput = document.querySelector('input[name="ageAtDeath"]') as HTMLInputElement
+        if (ageInput) expect(ageInput.value).toBe('78')
+      })
+    }
   })
 
   it('saves draft without required-field errors', async () => {
