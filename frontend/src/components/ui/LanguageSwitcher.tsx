@@ -13,6 +13,7 @@ const LOCALES: { value: Locale; label: string; flag: string }[] = [
   { value: 'ms', label: 'Bahasa Melayu', flag: '🇲🇾' },
   { value: 'fr', label: 'Français', flag: '🇫🇷' },
   { value: 'es', label: 'Español', flag: '🇪🇸' },
+  { value: 'hi', label: 'हिन्दी', flag: '🇮🇳' },
 ]
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {

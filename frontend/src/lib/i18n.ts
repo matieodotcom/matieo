@@ -7,6 +7,7 @@ import ar from '@/locales/ar/translation.json'
 import ms from '@/locales/ms/translation.json'
 import fr from '@/locales/fr/translation.json'
 import es from '@/locales/es/translation.json'
+import hi from '@/locales/hi/translation.json'
 
 i18next
   .use(LanguageDetector)
@@ -18,6 +19,7 @@ i18next
       ms: { translation: ms },
       fr: { translation: fr },
       es: { translation: es },
+      hi: { translation: hi },
     },
     fallbackLng: 'en',
     lng: 'en',

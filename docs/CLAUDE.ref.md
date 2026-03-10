@@ -88,7 +88,13 @@ export function ErrorMessage({ message }: { message: string }) {
 
 ## §Stack
 
-**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`, `react-day-picker` v9, `date-fns` v4. Test: Vitest + RTL.
+**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`, `react-day-picker` v9, `date-fns` v4, `i18next` + `react-i18next` + `i18next-browser-languagedetector`. Test: Vitest + RTL.
+
+**Supported locales:** `en` (default) · `ar` (RTL) · `ms` · `fr` · `es` · `hi`. Locale stored in `localStorage` via `localeStore`. `<html dir>` set to `rtl` for Arabic only.
+
+**i18n rules — mandatory:**
+1. Every new UI string → add key to **all** existing locale files simultaneously (`en` as source of truth, others translated or English placeholder).
+2. Adding a new language → create `locales/{code}/translation.json` with **every existing key fully translated** (no placeholders). Register in `lib/i18n.ts` resources, add to `LocaleStore` type, add to `LanguageSwitcher.tsx` options, add `language.{code}` label to every existing locale file, set `dir='rtl'` in `localeStore.ts` if the language is RTL.
 
 **Frontend key lib files:**
 - `lib/supabase.ts` — Supabase singleton client (anon key, frontend only)
@@ -110,6 +116,10 @@ export function ErrorMessage({ message }: { message: string }) {
 - `store/memorialDraftStore.ts` — Zustand store: `draft: MemorialFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists memorial form across preview navigation
 - `store/obituaryDraftStore.ts` — Zustand store: `draft: ObituaryFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists obituary form across preview navigation
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
+- `lib/i18n.ts` — i18next init. Resources: 6 locale JSON files (`en`, `ar`, `ms`, `fr`, `es`, `hi`). `fallbackLng: 'en'`. `initImmediate: false` (sync for SSR compat). Side-effect import in `main.tsx` before anything else.
+- `lib/i18n-test.ts` — minimal i18next instance for Vitest (en only, `initImmediate: false`). Used in `__tests__/utils.tsx` via `<I18nextProvider>`.
+- `store/localeStore.ts` — Zustand + persist store: `locale: 'en'|'ar'|'ms'|'fr'|'es'|'hi'`, `setLocale(l)`. `setLocale` calls `i18n.changeLanguage`, sets `document.documentElement.lang`, sets `document.documentElement.dir` (`rtl` for `ar`, `ltr` for all others). Persisted as `matieo-locale` in localStorage. `index.html` has blocking inline script to set `dir`/`lang` before React hydrates (prevents RTL flash).
+- `components/ui/LanguageSwitcher.tsx` — Radix DropdownMenu; shows flag emoji + language name; calls `useLocaleStore().setLocale(locale)`. Rendered in `Navbar.tsx` (desktop) and `DashboardLayout.tsx` (sidebar).
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
 - `lib/emailClient.ts` — Resend singleton + `sendWaitlistConfirmation(name, email)` helper
@@ -149,8 +159,10 @@ matieo/
 ├── frontend/src/
 │   ├── router.tsx         ← All routes
 │   ├── lib/               ← supabase.ts, api.ts, cloudinary.ts, queryClient.ts
+│   ├── locales/en|ar|ms|fr|es|hi/translation.json  ← i18n strings (ALL 6 updated together)
 │   ├── store/authStore.ts
 │   ├── store/themeStore.ts
+│   ├── store/localeStore.ts
 │   ├── store/memorialDraftStore.ts
 │   ├── store/obituaryDraftStore.ts
 │   ├── hooks/             ← All data logic (useAuth, useMemorials, useInsights, useProfile)
@@ -467,7 +479,8 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 |------------|-----------|---------|--------------|
 | Dialog.tsx | Dialog | `@radix-ui/react-dialog` | SignInModal (Create Memorial flow) |
 | Select.tsx | Select (combobox) | `@radix-ui/react-popover` | Create Memorial (personal info + gallery dropdowns) — inline-searchable; typing filters options in real time |
-| DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | Navbar (user menu) |
+| DropdownMenu.tsx | DropdownMenu | `@radix-ui/react-dropdown-menu` | Navbar (user menu), LanguageSwitcher |
+| LanguageSwitcher.tsx | DropdownMenu (via DropdownMenu.tsx) | — | Navbar + DashboardLayout — locale selection (en/ar/ms/fr/es/hi) |
 | AlertDialog.tsx | AlertDialog | `@radix-ui/react-alert-dialog` | MyMemorialsPage (delete draft confirmation) |
 | Switch.tsx | Switch | `@radix-ui/react-switch` | — |
 | Tabs.tsx | Tabs | `@radix-ui/react-tabs` | — |
