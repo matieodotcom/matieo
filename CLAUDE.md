@@ -185,6 +185,9 @@ NEVER  use div for interactive elements    → semantic HTML first
 NEVER  skip id/htmlFor on form fields      → accessibility non-negotiable
 NEVER  finish without updating docs        → self-maintenance checklist
 NEVER  leave orphaned docs behind          → rename/delete with the feature
+NEVER  navigate to /signin for user-triggered actions → show <SignInModal> instead
+       (route guards like DashboardLayout and post-auth redirects are the only valid
+        cases for navigate('/signin') or <Navigate to="/signin">)
 ```
 
 ---

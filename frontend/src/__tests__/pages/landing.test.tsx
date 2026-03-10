@@ -58,10 +58,28 @@ describe('LandingPage', () => {
       expect(buttons.length).toBeGreaterThan(0)
     })
 
-    it('renders Create Obituary CTA links', () => {
+    it('renders Create Obituary CTA buttons', () => {
       renderWithProviders(<LandingPage />)
-      const links = screen.getAllByRole('link', { name: /Create Obituary/i })
-      expect(links.length).toBeGreaterThan(0)
+      const buttons = screen.getAllByRole('button', { name: /Create Obituary/i })
+      expect(buttons.length).toBeGreaterThan(0)
+    })
+
+    it('opens sign-in modal when unauthenticated user clicks Create Obituary', async () => {
+      setAuthState(null, false)
+      renderWithProviders(<LandingPage />)
+      const [firstButton] = screen.getAllByRole('button', { name: /Create Obituary/i })
+      fireEvent.click(firstButton)
+      await waitFor(() => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument()
+      })
+    })
+
+    it('does not open sign-in modal when authenticated user clicks Create Obituary', () => {
+      setAuthState({ id: 'user-1', email: 'user@matieo.com' }, false)
+      renderWithProviders(<LandingPage />)
+      const [firstButton] = screen.getAllByRole('button', { name: /Create Obituary/i })
+      fireEvent.click(firstButton)
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
 
     it('renders trust badge', () => {

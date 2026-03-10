@@ -15,6 +15,7 @@ import { usePublicMemorial } from '@/hooks/use-public-memorial'
 import { useTributes, usePostTribute } from '@/hooks/use-tributes'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
+import { SignInModal } from '@/components/auth/SignInModal'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import type { MemorialPhoto } from '@/types/memorial'
 
@@ -188,6 +189,7 @@ export default function PublicMemorialPage() {
   const [lightboxPhotos, setLightboxPhotos] = useState<LightboxPhoto[]>([])
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [tributeText, setTributeText] = useState('')
+  const [signInOpen, setSignInOpen] = useState(false)
 
   const isOpen = lightboxIndex !== null
   const canNav = lightboxPhotos.length > 1
@@ -477,7 +479,13 @@ export default function PublicMemorialPage() {
                   ) : (
                     <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4 text-center">
                       <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                        <Link to="/signin" className="text-brand-primary hover:underline font-medium">Sign in</Link>
+                        <button
+                          type="button"
+                          onClick={() => setSignInOpen(true)}
+                          className="text-brand-primary hover:underline font-medium"
+                        >
+                          Sign in
+                        </button>
                         {' '}to leave a tribute
                       </p>
                     </div>
@@ -522,6 +530,7 @@ export default function PublicMemorialPage() {
 
         <Footer />
       </div>
+      <SignInModal open={signInOpen} onOpenChange={setSignInOpen} onSuccess={() => setSignInOpen(false)} />
     </>
   )
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders, mockUser } from '@/__tests__/utils'
 import { useAuthStore } from '@/store/authStore'
@@ -120,16 +120,27 @@ describe('PublicMemorialPage — Tributes section', () => {
   })
 
   describe('logged out', () => {
-    it('shows "Sign in" prompt instead of form', async () => {
+    it('shows "Sign in" button instead of form', async () => {
       const { apiFetch } = await import('@/lib/apiClient')
       vi.mocked(apiFetch)
         .mockResolvedValueOnce({ data: mockMemorial, error: null })
         .mockResolvedValueOnce({ data: [], error: null })
       renderPage()
       await waitFor(() =>
-        expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument(),
+        expect(screen.getByRole('button', { name: /^sign in$/i })).toBeInTheDocument(),
       )
       expect(screen.queryByRole('textbox', { name: /write a tribute/i })).not.toBeInTheDocument()
+    })
+
+    it('opens sign-in modal when "Sign in" button is clicked', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      vi.mocked(apiFetch)
+        .mockResolvedValueOnce({ data: mockMemorial, error: null })
+        .mockResolvedValueOnce({ data: [], error: null })
+      renderPage()
+      await waitFor(() => screen.getByRole('button', { name: /^sign in$/i }))
+      fireEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument())
     })
 
     it('shows empty tributes message when no tributes', async () => {

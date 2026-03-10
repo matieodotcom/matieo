@@ -7,6 +7,7 @@ import { ObituaryCard } from '@/components/obituary/ObituaryCard'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useObitaries } from '@/hooks/use-obituaries'
 import { useAuthStore } from '@/store/authStore'
+import { SignInModal } from '@/components/auth/SignInModal'
 
 const LIMIT = 12
 
@@ -78,6 +79,7 @@ export default function ObituaryPage() {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchInput, setSearchInput] = useState(searchParams.get('q') ?? '')
+  const [signInOpen, setSignInOpen] = useState(false)
 
   const q = searchParams.get('q') ?? ''
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1'))
@@ -120,7 +122,7 @@ export default function ObituaryPage() {
 
   function handleCreateObituary() {
     if (!user) {
-      navigate('/signin')
+      setSignInOpen(true)
       return
     }
     navigate('/dashboard/obituary/create')
@@ -229,6 +231,11 @@ export default function ObituaryPage() {
       </main>
 
       <Footer />
+      <SignInModal
+        open={signInOpen}
+        onOpenChange={setSignInOpen}
+        onSuccess={() => navigate('/dashboard/obituary/create')}
+      />
     </div>
   )
 }

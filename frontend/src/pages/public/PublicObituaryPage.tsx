@@ -16,6 +16,7 @@ import { apiFetch } from '@/lib/apiClient'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { useCondolences, usePostCondolence } from '@/hooks/use-condolences'
+import { SignInModal } from '@/components/auth/SignInModal'
 import type { ObituaryRow } from '@/types/obituary'
 
 interface SingleObituaryResponse {
@@ -188,6 +189,7 @@ export default function PublicObituaryPage() {
   const { data: response, isPending, error } = usePublicObituary(slug ?? '')
   const user = useAuthStore((s) => s.user)
   const [condolenceText, setCondolenceText] = useState('')
+  const [signInOpen, setSignInOpen] = useState(false)
 
   const obituary = response?.data
 
@@ -443,7 +445,13 @@ export default function PublicObituaryPage() {
                 ) : (
                   <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4 text-center">
                     <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                      <Link to="/signin" className="text-brand-primary hover:underline font-medium">Sign in</Link>
+                      <button
+                        type="button"
+                        onClick={() => setSignInOpen(true)}
+                        className="text-brand-primary hover:underline font-medium"
+                      >
+                        Sign in
+                      </button>
                       {' '}to leave a condolence
                     </p>
                   </div>
@@ -498,6 +506,7 @@ export default function PublicObituaryPage() {
       </main>
 
       <Footer />
+      <SignInModal open={signInOpen} onOpenChange={setSignInOpen} onSuccess={() => setSignInOpen(false)} />
     </div>
   )
 }

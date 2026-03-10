@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   FileText,
   Heart,
@@ -135,7 +135,13 @@ const TESTIMONIALS = [
 
 // ── Sections ─────────────────────────────────────────────────────────────────
 
-function HeroSection({ onCreateMemorial }: { onCreateMemorial: () => void }) {
+function HeroSection({
+  onCreateMemorial,
+  onCreateObituary,
+}: {
+  onCreateMemorial: () => void
+  onCreateObituary: () => void
+}) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-blue-50 to-brand-primaryLight/40 min-h-[680px] flex items-center">
       {/* Decorative blobs */}
@@ -187,12 +193,12 @@ function HeroSection({ onCreateMemorial }: { onCreateMemorial: () => void }) {
               Create Memorial
               <ArrowRight size={16} aria-hidden="true" />
             </button>
-            <Link
-              to="/signup"
+            <button
+              onClick={onCreateObituary}
               className="inline-flex items-center gap-2 border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 font-medium text-sm px-7 py-3.5 rounded-lg transition-colors"
             >
               Create Obituary
-            </Link>
+            </button>
           </div>
 
           {/* Social proof stats */}
@@ -446,7 +452,13 @@ function TestimonialsSection() {
   )
 }
 
-function CTASection({ onCreateMemorial }: { onCreateMemorial: () => void }) {
+function CTASection({
+  onCreateMemorial,
+  onCreateObituary,
+}: {
+  onCreateMemorial: () => void
+  onCreateObituary: () => void
+}) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-r from-brand-secondary to-brand-primary py-24">
       {/* Decorative circles matching Figma */}
@@ -468,13 +480,13 @@ function CTASection({ onCreateMemorial }: { onCreateMemorial: () => void }) {
 
         {/* CTA buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-8">
-          <Link
-            to="/signup"
+          <button
+            onClick={onCreateObituary}
             className="inline-flex items-center gap-2 bg-white hover:bg-blue-50 text-brand-primary font-medium px-7 py-4 rounded-lg transition-colors"
           >
             Create Obituary
             <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          </button>
           <button
             onClick={onCreateMemorial}
             className="inline-flex items-center gap-2 border border-white/40 hover:border-white text-white font-medium px-7 py-4 rounded-lg transition-colors"
@@ -591,11 +603,22 @@ export default function LandingPage() {
   const isLoading = useAuthStore((s) => s.isLoading)
   const navigate = useNavigate()
   const [signInOpen, setSignInOpen] = useState(false)
+  const [signInDest, setSignInDest] = useState('/dashboard/memorials/create')
 
   function handleCreateMemorial() {
     if (user) {
       navigate('/dashboard/memorials/create')
     } else {
+      setSignInDest('/dashboard/memorials/create')
+      setSignInOpen(true)
+    }
+  }
+
+  function handleCreateObituary() {
+    if (user) {
+      navigate('/dashboard/obituary/create')
+    } else {
+      setSignInDest('/dashboard/obituary/create')
       setSignInOpen(true)
     }
   }
@@ -604,19 +627,19 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col dark:bg-neutral-950">
       <Navbar />
       <main className="flex-1">
-        <HeroSection onCreateMemorial={handleCreateMemorial} />
+        <HeroSection onCreateMemorial={handleCreateMemorial} onCreateObituary={handleCreateObituary} />
         <FeaturesSection />
         <HowItWorksSection />
         <StatsSection />
         <TestimonialsSection />
-        <CTASection onCreateMemorial={handleCreateMemorial} />
+        <CTASection onCreateMemorial={handleCreateMemorial} onCreateObituary={handleCreateObituary} />
         {!isLoading && user === null && <WaitlistSection />}
       </main>
       <Footer />
       <SignInModal
         open={signInOpen}
         onOpenChange={setSignInOpen}
-        onSuccess={() => navigate('/dashboard/memorials/create')}
+        onSuccess={() => navigate(signInDest)}
       />
     </div>
   )
