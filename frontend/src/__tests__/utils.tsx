@@ -7,6 +7,8 @@ import React from 'react'
 import { render, RenderOptions } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router-dom'
+import { I18nextProvider } from 'react-i18next'
+import testI18n from '@/lib/i18n-test'
 
 function makeTestQueryClient() {
   return new QueryClient({
@@ -20,9 +22,11 @@ function makeTestQueryClient() {
 export function AllProviders({ children, initialRoute = '/' }: { children: React.ReactNode; initialRoute?: string }) {
   const queryClient = makeTestQueryClient()
   return (
-    <MemoryRouter initialEntries={[initialRoute]}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </MemoryRouter>
+    <I18nextProvider i18n={testI18n}>
+      <MemoryRouter initialEntries={[initialRoute]}>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </MemoryRouter>
+    </I18nextProvider>
   )
 }
 

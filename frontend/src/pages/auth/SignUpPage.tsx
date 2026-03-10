@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useSignUp, useGoogleAuth } from '@/hooks/use-auth'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
@@ -34,9 +35,7 @@ function GoogleIcon() {
 function AppMockup() {
   return (
     <div className="relative w-full max-w-lg">
-      {/* Tablet frame */}
       <div className="rounded-2xl bg-white border border-neutral-200 shadow-xl overflow-hidden">
-        {/* Mockup top bar */}
         <div className="bg-white border-b border-neutral-100 px-4 py-3 flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full bg-brand-secondary" />
@@ -44,7 +43,6 @@ function AppMockup() {
           </div>
           <div className="flex-1 bg-neutral-100 rounded-full h-5" />
         </div>
-        {/* Mockup content */}
         <div className="p-4 bg-neutral-50">
           <div className="bg-white rounded-xl border border-neutral-100 p-4 mb-3">
             <p className="text-xs font-semibold text-neutral-700 mb-3">Memorial Gallery</p>
@@ -60,7 +58,6 @@ function AppMockup() {
               ))}
             </div>
           </div>
-          {/* Stats row */}
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-white rounded-xl border border-neutral-100 p-3">
               <div className="h-2 bg-neutral-100 rounded w-1/2 mb-2" />
@@ -73,7 +70,6 @@ function AppMockup() {
           </div>
         </div>
       </div>
-      {/* Floating phone frame */}
       <div className="absolute -bottom-4 -left-6 w-28 rounded-2xl bg-white border border-neutral-200 shadow-xl overflow-hidden">
         <div className="bg-brand-primary px-2 py-2">
           <div className="h-1.5 bg-white/30 rounded w-2/3 mb-1" />
@@ -92,6 +88,7 @@ function AppMockup() {
 // ── VerificationBanner ────────────────────────────────────────────────────────
 
 function VerificationBanner({ email }: { email: string }) {
+  const { t } = useTranslation()
   return (
     <div
       role="status"
@@ -99,9 +96,9 @@ function VerificationBanner({ email }: { email: string }) {
     >
       <CheckCircle size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
       <div>
-        <p className="text-sm font-semibold text-green-800">Verification link sent</p>
+        <p className="text-sm font-semibold text-green-800">{t('auth.signUp.verification.title')}</p>
         <p className="text-xs text-green-700 mt-0.5">
-          Please verify your email. We have sent a link to{' '}
+          {t('auth.signUp.verification.message')}{' '}
           <span className="font-medium">{email}</span>.
         </p>
       </div>
@@ -112,6 +109,7 @@ function VerificationBanner({ email }: { email: string }) {
 // ── SignUpPage ────────────────────────────────────────────────────────────────
 
 export default function SignUpPage() {
+  const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -137,9 +135,9 @@ export default function SignUpPage() {
 
         <div className="flex-1 flex flex-col justify-center max-w-sm w-full mx-auto">
           {/* Heading */}
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Sign up</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('auth.signUp.heading')}</h1>
           <p className="text-sm text-neutral-500 mb-6">
-            Let's get started with your 14 days free trial
+            {t('auth.signUp.subheading')}
           </p>
 
           {/* Google button */}
@@ -152,13 +150,13 @@ export default function SignUpPage() {
               disabled:opacity-50 disabled:cursor-not-allowed mb-5"
           >
             <GoogleIcon />
-            Sign up with Google
+            {t('auth.signUp.google')}
           </button>
 
           {/* Divider */}
           <div className="relative flex items-center mb-5">
             <div className="flex-1 border-t border-neutral-200" />
-            <span className="mx-3 text-xs text-neutral-400">or</span>
+            <span className="mx-3 text-xs text-neutral-400">{t('auth.signUp.or')}</span>
             <div className="flex-1 border-t border-neutral-200" />
           </div>
 
@@ -171,7 +169,7 @@ export default function SignUpPage() {
                   htmlFor="firstName"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  First name
+                  {t('auth.signUp.firstName')}
                 </label>
                 <input
                   id="firstName"
@@ -192,7 +190,7 @@ export default function SignUpPage() {
                   htmlFor="lastName"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  Last name
+                  {t('auth.signUp.lastName')}
                 </label>
                 <input
                   id="lastName"
@@ -217,7 +215,7 @@ export default function SignUpPage() {
                   htmlFor="email"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  Email
+                  {t('auth.signUp.email')}
                 </label>
                 <input
                   id="email"
@@ -238,7 +236,7 @@ export default function SignUpPage() {
                   htmlFor="confirmEmail"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  Confirm email
+                  {t('auth.signUp.confirmEmail')}
                 </label>
                 <input
                   id="confirmEmail"
@@ -263,7 +261,7 @@ export default function SignUpPage() {
                   htmlFor="password"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  Password
+                  {t('auth.signUp.password')}
                 </label>
                 <div className="relative">
                   <input
@@ -278,7 +276,7 @@ export default function SignUpPage() {
                   />
                   <button
                     type="button"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? t('auth.signUp.hidePassword') : t('auth.signUp.showPassword')}
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
                   >
@@ -294,7 +292,7 @@ export default function SignUpPage() {
                   htmlFor="confirmPassword"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  Confirm password
+                  {t('auth.signUp.confirmPassword')}
                 </label>
                 <div className="relative">
                   <input
@@ -309,7 +307,7 @@ export default function SignUpPage() {
                   />
                   <button
                     type="button"
-                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                    aria-label={showConfirmPassword ? t('auth.signUp.hideConfirmPassword') : t('auth.signUp.showConfirmPassword')}
                     onClick={() => setShowConfirmPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
                   >
@@ -337,10 +335,10 @@ export default function SignUpPage() {
                     className="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"
                     aria-hidden="true"
                   />
-                  Creating account…
+                  {t('auth.signUp.submitting')}
                 </>
               ) : (
-                'Sign up'
+                t('auth.signUp.submit')
               )}
             </button>
 
@@ -353,38 +351,37 @@ export default function SignUpPage() {
 
           {/* Already a member */}
           <p className="text-sm text-neutral-500 mt-5">
-            Already a member?{' '}
+            {t('auth.signUp.alreadyMember')}{' '}
             <Link to="/signin" className="text-brand-primary font-semibold hover:underline">
-              Log in now
+              {t('auth.signUp.login')}
             </Link>
           </p>
 
           {/* Terms */}
           <p className="text-xs text-neutral-400 mt-4 leading-relaxed">
-            By continuing, you agree to our{' '}
+            {t('auth.terms')}{' '}
             <a href="/terms" className="underline hover:text-neutral-600 transition-colors">
-              Terms of Service
+              {t('auth.termsLink')}
             </a>{' '}
-            and{' '}
+            {t('auth.and')}{' '}
             <a href="/privacy" className="underline hover:text-neutral-600 transition-colors">
-              Privacy Policy
+              {t('auth.privacyLink')}
             </a>
           </p>
         </div>
 
         {/* Footer */}
-        <p className="text-xs text-neutral-400 mt-8 text-center">© 2026 MATIEO</p>
+        <p className="text-xs text-neutral-400 mt-8 text-center">{t('auth.copyright')}</p>
       </div>
 
       {/* ── Right: Product panel ── */}
       <div className="hidden md:flex flex-1 bg-neutral-50 flex-col justify-center px-14 py-16">
         <div className="max-w-md">
           <h2 className="text-3xl font-bold text-neutral-800 leading-snug mb-3">
-            A Modern Way to Remember
+            {t('auth.rightPanel.heading')}
           </h2>
           <p className="text-sm text-neutral-500 leading-relaxed mb-12">
-            Create and share digital obituaries and memorials with dignity,
-            simplicity, and care.
+            {t('auth.rightPanel.subheading')}
           </p>
           <AppMockup />
         </div>

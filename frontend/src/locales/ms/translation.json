@@ -1,0 +1,531 @@
+{
+  "nav": {
+    "memorials": "Peringatan",
+    "obituary": "Obituari",
+    "insights": "Wawasan",
+    "features": "Ciri-ciri",
+    "pricing": "Harga",
+    "about": "Tentang",
+    "dashboard": "Papan Pemuka",
+    "signIn": "Log masuk",
+    "signUp": "Daftar",
+    "profile": "Profil",
+    "settings": "Tetapan",
+    "signOut": "Log keluar",
+    "userMenu": "Menu pengguna",
+    "openMenu": "Buka menu",
+    "closeMenu": "Tutup menu"
+  },
+  "landing": {
+    "hero": {
+      "trusted": "Dipercayai oleh 30,000+ Keluarga",
+      "heading": "Menghormati Kehidupan,\nMemelihara\nKenangan",
+      "description": "Kami membantu keluarga dan orang tersayang untuk mencipta obituari yang bermartabat dan peringatan digital, memelihara cerita, foto, dan penghargaan—sambil menyumbang kepada wawasan yang lebih luas.",
+      "createMemorial": "Cipta Peringatan",
+      "createObituary": "Cipta Obituari",
+      "support": "Sokongan",
+      "secure": "Selamat",
+      "memorialPublished": "Peringatan Diterbitkan",
+      "support247": "24/7",
+      "secure100": "100%"
+    },
+    "features": {
+      "heading": "Semua Yang Anda Perlukan dalam Satu Platform",
+      "subheading": "Cipta Obituari yang tulus, simpan kenangan dengan Peringatan Digital, dan terokai Wawasan yang komprehensif—semuanya dalam satu platform yang berkuasa.",
+      "obituary": {
+        "title": "Obituari",
+        "description": "Cipta Obituari untuk menghormati orang tersayang anda. Kongsi cerita mereka, raikan kehidupan mereka, dan tinggalkan penghargaan yang kekal untuk keluarga dan rakan."
+      },
+      "memorials": {
+        "title": "Peringatan Digital",
+        "description": "Cipta penghargaan yang indah dan berkekalan untuk orang tersayang anda. Kongsi kenangan, foto, dan cerita dengan keluarga dan rakan di seluruh dunia."
+      },
+      "services": {
+        "title": "Perkhidmatan Pengebumian",
+        "description": "Hubungi pembekal perkhidmatan pengebumian yang dipercayai untuk urusan, lokasi, dan sokongan komuniti pada masa yang sukar."
+      },
+      "insights": {
+        "title": "Wawasan",
+        "description": "Alat visualisasi yang berkuasa membantu anda memahami trend, corak, dan wawasan daripada data kematian."
+      },
+      "privacy": {
+        "title": "Privasi & Keselamatan",
+        "description": "Data anda dilindungi dengan penyulitan gred perusahaan. Kami tidak pernah berkongsi maklumat anda tanpa persetujuan anda."
+      },
+      "community": {
+        "title": "Sokongan Komuniti",
+        "description": "Sertai ribuan keluarga dan penyelidik. Kongsi pengalaman, cari sokongan, dan sumbang kepada pengetahuan kolektif kami."
+      }
+    },
+    "howItWorks": {
+      "heading": "Cara Kerjanya",
+      "subheading": "Tonton panduan video langkah demi langkah kami untuk mempelajari cara menggunakan ciri-ciri MATIEO yang berkuasa.",
+      "memorials": {
+        "title": "Peringatan",
+        "description": "Ketahui cara membina peringatan digital yang indah untuk memelihara kenangan berharga."
+      },
+      "obituary": {
+        "title": "Obituari",
+        "description": "Pelajari cara mencipta obituari yang bermakna yang menghormati kehidupan dan warisan orang tersayang anda."
+      },
+      "insights": {
+        "title": "Wawasan",
+        "description": "Terokai alat analitik yang berkuasa yang menyediakan wawasan kematian dan penyelidikan yang komprehensif."
+      },
+      "playTutorial": "Main tutorial {{title}}"
+    },
+    "stats": {
+      "heading": "Dipercayai oleh Ribuan",
+      "subheading": "Platform kami melayani keluarga, penyelidik, dan organisasi dengan data yang boleh dipercayai dan perkhidmatan yang penuh belas kasihan.",
+      "obituaries": {
+        "value": "500K+",
+        "label": "Obituari Dicipta",
+        "description": "Menghormati kehidupan dengan penghargaan bermakna"
+      },
+      "memorials": {
+        "value": "2.5J+",
+        "label": "Peringatan Digital",
+        "description": "Memelihara kenangan untuk generasi akan datang"
+      },
+      "insights": {
+        "value": "1B+",
+        "label": "Wawasan",
+        "description": "Wawasan kematian yang komprehensif"
+      },
+      "satisfaction": {
+        "value": "99.9%",
+        "label": "Kepuasan Pengguna",
+        "description": "Dipercayai oleh kebanyakan keluarga"
+      }
+    },
+    "testimonials": {
+      "heading": "Apa Pengguna Kami Katakan",
+      "subheading": "Sertai ribuan keluarga, penyelidik, dan organisasi yang berpuas hati yang mempercayai MATIEO.",
+      "rating": "4.9 daripada 5 bintang daripada lebih 12,000 ulasan",
+      "starsLabel": "5 daripada 5 bintang",
+      "items": [
+        {
+          "quote": "\"Pangkalan data komprehensif MATIEO sangat bernilai untuk penyelidikan kematian kami. Kedalaman data dan kemudahan akses telah mempercepatkan kerja kami dengan ketara.\"",
+          "name": "Dr. Sarah Chen",
+          "role": "Penyelidik Penyakit"
+        },
+        {
+          "quote": "\"Mencipta peringatan untuk ayah saya adalah pengalaman yang indah. Platform ini memudahkan berkongsi kenangan dan berhubung dengan keluarga di seluruh dunia.\"",
+          "name": "Michael Rodriguez",
+          "role": "Ahli Keluarga"
+        },
+        {
+          "quote": "\"Data sejarah dan keupayaan carian sangat luar biasa. Saya dapat mengesan sejarah keluarga merentasi berbilang generasi dengan mudah yang luar biasa.\"",
+          "name": "Emma Thompson",
+          "role": "Pakar Genealogi"
+        },
+        {
+          "quote": "\"Kami menggunakan MATIEO untuk keperluan pelaporan sistem hospital kami. Data masa nyata dan papan pemuka yang intuitif telah mengubah cara kami menganalisis hasil pesakit.\"",
+          "name": "Jordan Park",
+          "role": "Pentadbir Penjagaan Kesihatan"
+        },
+        {
+          "quote": "\"Sokongan yang kami terima pada masa yang sukar adalah luar biasa. MATIEO benar-benar memahami keperluan keluarga yang berduka dan menyediakan alat yang penuh pertimbangan.\"",
+          "name": "Lisa Anderson",
+          "role": "Ahli Keluarga"
+        },
+        {
+          "quote": "\"Integrasi API sangat lancar, dan kualiti data secara konsisten cemerlang. Platform analitik kami telah mendapat manfaat besar daripada perkongsian ini.\"",
+          "name": "David Kim",
+          "role": "Jurutera Data"
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Mulakan Hari Ini",
+      "subheading": "Cipta Obituari yang bermakna, bina Peringatan Digital yang berkekalan, Perkhidmatan Pengebumian & berhubung dengan orang tersayang, dan terokai Wawasan yang berkuasa—semuanya dalam satu platform.",
+      "createObituary": "Cipta Obituari",
+      "createMemorial": "Cipta Peringatan",
+      "noFees": "Tiada yuran tersembunyi",
+      "cancelAnytime": "Batal bila-bila masa",
+      "getSupport": "Dapatkan sokongan"
+    },
+    "waitlist": {
+      "heading": "Belum Bersedia untuk Mendaftar?",
+      "subheading": "Kekal berhubung dengan kami! Ikuti perjalanan kami dan dapatkan kemas kini tentang ciri baharu, cerita, dan wawasan yang dihantar ke e-mel anda.",
+      "namePlaceholder": "Masukkan nama anda",
+      "nameLabel": "Nama anda",
+      "emailPlaceholder": "Masukkan e-mel anda",
+      "emailLabel": "E-mel anda",
+      "submit": "Ikuti Kami",
+      "submitting": "Menghantar…",
+      "success": "Anda sudah masuk! Kami akan memastikan anda dikemas kini dengan berita MATIEO."
+    }
+  },
+  "auth": {
+    "rightPanel": {
+      "heading": "Cara Moden untuk Mengenang",
+      "subheading": "Cipta dan kongsi obituari dan peringatan digital dengan maruah, kesederhanaan, dan kasih sayang."
+    },
+    "copyright": "© 2026 MATIEO",
+    "terms": "Dengan meneruskan, anda bersetuju dengan",
+    "termsLink": "Terma Perkhidmatan",
+    "and": "dan",
+    "privacyLink": "Dasar Privasi",
+    "signIn": {
+      "heading": "Log masuk",
+      "subheading": "Selamat kembali! Sila masukkan butiran anda.",
+      "emailLabel": "Alamat E-mel",
+      "emailPlaceholder": "nama@emel.com",
+      "passwordLabel": "Kata laluan",
+      "forgotPassword": "Lupa Kata Laluan?",
+      "submit": "Log Masuk",
+      "submitting": "Sedang log masuk…",
+      "google": "Log masuk dengan Google",
+      "or": "atau",
+      "createAccount": "Cipta Akaun Baharu",
+      "showPassword": "Tunjukkan kata laluan",
+      "hidePassword": "Sembunyikan kata laluan",
+      "emailNotVerified": {
+        "title": "E-mel belum disahkan",
+        "message": "Sila sahkan e-mel anda sebelum log masuk.",
+        "resend": "Hantar semula e-mel pengesahan",
+        "resending": "Menghantar…",
+        "resendIn": "Hantar semula dalam {{count}}s"
+      }
+    },
+    "signUp": {
+      "heading": "Daftar",
+      "subheading": "Mari mulakan dengan percubaan percuma 14 hari anda",
+      "firstName": "Nama pertama",
+      "lastName": "Nama keluarga",
+      "email": "E-mel",
+      "confirmEmail": "Sahkan e-mel",
+      "password": "Kata laluan",
+      "confirmPassword": "Sahkan kata laluan",
+      "google": "Daftar dengan Google",
+      "or": "atau",
+      "submit": "Daftar",
+      "submitting": "Mencipta akaun…",
+      "alreadyMember": "Sudah menjadi ahli?",
+      "login": "Log masuk sekarang",
+      "showPassword": "Tunjukkan kata laluan",
+      "hidePassword": "Sembunyikan kata laluan",
+      "showConfirmPassword": "Tunjukkan pengesahan kata laluan",
+      "hideConfirmPassword": "Sembunyikan pengesahan kata laluan",
+      "verification": {
+        "title": "Pautan pengesahan dihantar",
+        "message": "Sila sahkan e-mel anda. Kami telah menghantar pautan ke"
+      }
+    },
+    "forgotPassword": {
+      "heading": "Lupa Kata Laluan?",
+      "subheading": "Jangan risau, kami akan menghantar arahan penetapan semula.",
+      "emailLabel": "Alamat E-mel",
+      "emailPlaceholder": "nama@emel.com",
+      "submit": "Tetapkan Semula Kata Laluan",
+      "submitting": "Menghantar…",
+      "checkEmail": {
+        "heading": "Semak e-mel anda",
+        "message": "Kami telah menghantar pautan penetapan semula kata laluan ke",
+        "openEmail": "Buka e-mel",
+        "notReceived": "Tidak menerima e-mel?",
+        "resend": "Klik untuk hantar semula"
+      },
+      "backToSignIn": "Kembali ke Log Masuk"
+    }
+  },
+  "dashboard": {
+    "welcome": "Selamat kembali, {{name}}!",
+    "subtitle": "Ini yang sedang berlaku.",
+    "quickActions": {
+      "createMemorial": "Cipta Peringatan",
+      "createMemorialDesc": "Hormati orang tersayang",
+      "browseMemorials": "Semak Imbas Peringatan",
+      "browseMemorialsDesc": "Lihat semua peringatan",
+      "insights": "Wawasan",
+      "insightsDesc": "Analitik kematian",
+      "services": "Perkhidmatan",
+      "servicesDesc": "Perkhidmatan pengebumian & sokongan"
+    }
+  },
+  "layout": {
+    "navigate": "Navigasi",
+    "backToEditing": "Kembali ke penyuntingan",
+    "myMemorials": "Peringatan Saya",
+    "myObituaries": "Obituari Saya",
+    "home": "Laman Utama",
+    "toggleNav": "Togol navigasi",
+    "lightMode": "Mod terang",
+    "darkMode": "Mod gelap",
+    "switchToLight": "Tukar ke mod terang",
+    "switchToDark": "Tukar ke mod gelap"
+  },
+  "sidebar": {
+    "insights": "Wawasan",
+    "memorials": "Peringatan",
+    "obituary": "Obituari",
+    "services": "Perkhidmatan"
+  },
+  "memorials": {
+    "heading": "Peringatan Saya",
+    "subheading": "Urus dan lihat semua peringatan yang anda cipta",
+    "search": "Cari...",
+    "searchLabel": "Cari peringatan",
+    "createBtn": "Cipta Peringatan",
+    "emptySearch": "Tiada peringatan sepadan dengan \"{{q}}\"",
+    "emptySearchHint": "Cuba istilah carian yang berbeza.",
+    "empty": "Anda belum mencipta sebarang peringatan",
+    "emptyHint": "Cipta peringatan pertama anda untuk menghormati orang tersayang.",
+    "deleteDraft": {
+      "title": "Padam draf ini?",
+      "description": "Ini akan memadamkan draf dan semua fotonya secara kekal. Ini tidak boleh dibatalkan.",
+      "confirm": "Padam",
+      "confirming": "Memadamkan…"
+    },
+    "unpublish": {
+      "title": "Nyahterbit peringatan ini?",
+      "description": "Peringatan tidak lagi boleh diakses oleh umum. Ia akan disimpan sebagai draf dan anda boleh menerbitkannya semula bila-bila masa.",
+      "confirm": "Nyahterbit",
+      "confirming": "Menyahterbit…"
+    }
+  },
+  "obituaries": {
+    "heading": "Obituari Saya",
+    "subheading": "Urus dan lihat semua obituari yang anda cipta",
+    "search": "Cari...",
+    "searchLabel": "Cari obituari",
+    "createBtn": "Cipta Obituari",
+    "emptySearch": "Tiada obituari sepadan dengan \"{{q}}\"",
+    "emptySearchHint": "Cuba istilah carian yang berbeza.",
+    "empty": "Anda belum mencipta sebarang obituari",
+    "emptyHint": "Cipta obituari pertama anda untuk menghormati orang tersayang.",
+    "deleteDraft": {
+      "title": "Padam draf ini?",
+      "description": "Ini akan memadamkan draf dan semua fotonya secara kekal. Ini tidak boleh dibatalkan.",
+      "confirm": "Padam",
+      "confirming": "Memadamkan…"
+    },
+    "unpublish": {
+      "title": "Nyahterbit obituari ini?",
+      "description": "Obituari tidak lagi boleh diakses oleh umum. Ia akan disimpan sebagai draf dan anda boleh menerbitkannya semula bila-bila masa.",
+      "confirm": "Nyahterbit",
+      "confirming": "Menyahterbit…"
+    }
+  },
+  "card": {
+    "published": "Diterbitkan",
+    "draft": "Draf",
+    "deleteDraft": "Padam Draf",
+    "unpublish": "Nyahterbit",
+    "memorialOptions": "Pilihan peringatan",
+    "obituaryOptions": "Pilihan obituari",
+    "age": "Umur: {{age}}",
+    "by": "Oleh {{name}}"
+  },
+  "publicMemorial": {
+    "notFound": {
+      "heading": "Peringatan tidak dijumpai",
+      "message": "Peringatan ini mungkin telah dibuang atau pautan tidak betul.",
+      "browse": "Semak imbas peringatan"
+    },
+    "error": "Ada yang tidak kena. Sila cuba lagi.",
+    "photoGallery": "Galeri Foto",
+    "biography": "Biografi",
+    "noPhotos": "Tiada foto yang ditambah lagi.",
+    "noBiography": "Tiada biografi yang ditambah lagi.",
+    "tributes": "Penghargaan ({{count}})",
+    "tributeInputLabel": "Tulis penghargaan",
+    "tributePlaceholder": "Kongsi kenangan anda dan berikan penghargaan…",
+    "postTribute": "Hantar Penghargaan",
+    "posting": "Menghantar…",
+    "signInToTribute": "untuk meninggalkan penghargaan",
+    "firstTribute": "Jadilah yang pertama meninggalkan penghargaan.",
+    "back": "Kembali ke Peringatan",
+    "age": "Umur: {{age}} tahun",
+    "viewProfile": "Lihat foto profil",
+    "closeViewer": "Tutup pemapar foto",
+    "prevPhoto": "Foto sebelumnya",
+    "nextPhoto": "Foto seterusnya",
+    "galleryPhoto": "Foto galeri {{n}}",
+    "viewGalleryPhoto": "Lihat foto galeri {{n}}",
+    "photoViewer": "Pemapar foto",
+    "goBack": "Kembali",
+    "back_label": "Kembali"
+  },
+  "publicObituary": {
+    "notFound": {
+      "heading": "Obituari tidak dijumpai",
+      "message": "Obituari ini mungkin telah dibuang atau pautan tidak betul.",
+      "browse": "Semak imbas obituari"
+    },
+    "error": "Ada yang tidak kena. Sila cuba lagi.",
+    "obituarySection": "Obituari",
+    "funeralService": "Pengebumian / Khidmat Solat",
+    "burial": "Pengebumian",
+    "venue": "Tempat",
+    "location": "Lokasi",
+    "dateAndTime": "Tarikh & Masa",
+    "at": "pada",
+    "note": "Nota",
+    "cemetery": "Kubur / Pusat",
+    "survivedBy": "Ditinggalkan Oleh",
+    "contactPerson": "Orang Hubungi",
+    "condolences": "Takziah ({{count}})",
+    "condolenceInputLabel": "Tulis takziah",
+    "condolencePlaceholder": "Kongsi takziah anda…",
+    "postCondolence": "Hantar Takziah",
+    "posting": "Menghantar…",
+    "signInToCondolence": "untuk meninggalkan takziah",
+    "firstCondolence": "Jadilah yang pertama meninggalkan takziah.",
+    "back": "Kembali ke Obituari",
+    "age": "Umur: {{age}} tahun",
+    "goBack": "Kembali",
+    "back_label": "Kembali"
+  },
+  "common": {
+    "cancel": "Batal",
+    "delete": "Padam",
+    "deleting": "Memadamkan…",
+    "unpublish": "Nyahterbit",
+    "unpublishing": "Menyahterbit…",
+    "prev": "← Prev",
+    "next": "Next →",
+    "or": "atau",
+    "search": "Cari",
+    "signIn": "Log masuk",
+    "pagination": "Halaman",
+    "somethingWrong": "Ada yang tidak kena. Sila cuba lagi.",
+    "justNow": "baru sahaja",
+    "minutesAgo": "{{m}}m lalu",
+    "hoursAgo": "{{h}}j lalu",
+    "daysAgo": "{{d}}h lalu"
+  },
+  "language": {
+    "label": "Bahasa",
+    "en": "English",
+    "ar": "العربية",
+    "ms": "Bahasa Melayu",
+    "fr": "Français",
+    "es": "Español"
+  },
+  "form": {
+    "firstName": "Nama Pertama",
+    "lastName": "Nama Belakang",
+    "dateOfBirth": "Tarikh Lahir",
+    "dateOfDeath": "Tarikh Kematian",
+    "ageAtDeath": "Umur Semasa Meninggal",
+    "gender": "Jantina",
+    "raceEthnicity": "Bangsa / Etnik",
+    "country": "Negara",
+    "state": "Negeri",
+    "biography": "Biografi",
+    "name": "Nama",
+    "relationship": "Hubungan",
+    "saveDraft": "Simpan sebagai Draf",
+    "preview": "Pratonton",
+    "cancel": "Batal",
+    "saving": "Menyimpan…",
+    "gender_male": "Lelaki",
+    "gender_female": "Perempuan",
+    "gender_nonBinary": "Bukan Binari",
+    "gender_preferNotToSay": "Lebih suka tidak memberitahu",
+    "selectAge": "Pilih umur",
+    "selectGender": "Pilih jantina",
+    "selectRace": "Pilih bangsa/etnik",
+    "selectCountry": "Pilih negara",
+    "selectState": "Pilih negeri / wilayah",
+    "noStates": "Tiada negeri untuk negara ini",
+    "selectRelationship": "Pilih hubungan anda",
+    "selectTime": "Pilih masa",
+    "addressOrCity": "Alamat atau bandar",
+    "enterFirstName": "Masukkan nama pertama",
+    "enterLastName": "Masukkan nama akhir",
+    "pickDateOfBirth": "Pilih tarikh lahir",
+    "pickDateOfDeath": "Pilih tarikh kematian",
+    "quote": "Petikan",
+    "tributeMessage": "Mesej Penghargaan",
+    "creatorRelationship": "Hubungan Anda dengan Simati"
+  },
+  "createMemorial": {
+    "heading": "Cipta Tanda Peringatan",
+    "editHeading": "Edit Tanda Peringatan",
+    "subheading": "Hormati kehidupan orang yang anda sayangi. Anda boleh simpan draf pada bila-bila masa.",
+    "editSubheading": "Kemaskini butiran tanda peringatan di bawah.",
+    "sectionPhotos": "Foto",
+    "sectionPersonalInfo": "Maklumat Peribadi",
+    "sectionQuote": "Petikan Peringatan",
+    "sectionMessage": "Mesej Peringatan",
+    "sectionGallery": "Galeri Foto",
+    "sectionWebAddress": "Cipta Alamat Web Tanda Peringatan",
+    "fieldQuote": "Petikan",
+    "fieldBiography": "Biografi",
+    "fieldTributeMessage": "Mesej Penghormatan",
+    "fieldMemorialUrl": "URL Tanda Peringatan",
+    "fieldCreatorRelationship": "Hubungan Anda dengan Simati",
+    "quotePlaceholder": "Petikan bermakna untuk mengenang mereka…",
+    "biographyPlaceholder": "Kongsikan kisah kehidupan mereka…",
+    "tributePlaceholder": "Penghormatan peribadi daripada anda…",
+    "urlPlaceholder": "alamat-web-peringatan",
+    "urlPreview": "Pratonton: {{domain}}/memorial/{{slug}}",
+    "publishBtn": "Terbitkan Tanda Peringatan",
+    "photoLabel": "Foto Tanda Peringatan",
+    "photoHint": "Disyorkan 360×360px, sehingga 10MB",
+    "coverLabel": "Latar Belakang Kulit",
+    "coverHint": "Disyorkan 1216×282px, sehingga 10MB",
+    "coverUploadText": "Klik atau seret untuk muat naik / pilih kecerunan",
+    "gradientPresets": "Pratetap",
+    "gradientCustom": "Kecerunan Tersuai",
+    "gradientDirection": "Arah",
+    "gradientFrom": "Dari",
+    "gradientTo": "Ke",
+    "gradientClear": "Buang kecerunan"
+  },
+  "createObituary": {
+    "heading": "Mari cipta obituari dalam talian",
+    "editHeading": "Edit Obituari",
+    "subheading": "Kami turut berdukacita atas pemergian anda dan komited untuk membantu anda mencipta obituari yang indah.",
+    "sectionPhotos": "Foto",
+    "sectionPersonalInfo": "Maklumat Peribadi",
+    "sectionCauseOfPassing": "Sebab Kematian (Pilihan)",
+    "sectionFuneral": "Butiran Jenazah/Solat (Pilihan)",
+    "sectionFuneralSubtitle": "Rumah penduduk, rumah agama, pusat pengurusan jenazah, dll.",
+    "sectionBurial": "Butiran Pengebumian (Pilihan)",
+    "sectionContact": "Orang Hubungan",
+    "sectionFamily": "Ahli Keluarga (Pilihan)",
+    "sectionMessage": "Mesej Peringatan (Pilihan)",
+    "sectionDeathCert": "Sijil Kematian (Pilihan)",
+    "fieldObitPhoto": "Foto Obituari",
+    "fieldPlaceOfDeath": "Tempat Kematian",
+    "fieldCauseOfPassing": "Sebab Kematian",
+    "consentLabel": "Saya bersetuju maklumat ini digunakan secara tanpa nama untuk penyelidikan wawasan kematian",
+    "funeralName": "Nama",
+    "funeralLocation": "Lokasi",
+    "funeralDate": "Tarikh",
+    "funeralTime": "Masa",
+    "funeralNote": "Nota",
+    "burialCenterName": "Nama Pusat Pengebumian",
+    "burialLocation": "Lokasi",
+    "burialDate": "Tarikh Pengebumian",
+    "burialTime": "Masa Pengebumian",
+    "burialNote": "Nota",
+    "contactName": "Nama",
+    "contactRelationship": "Hubungan",
+    "contactPhone": "Nombor Telefon",
+    "contactEmail": "Alamat E-mel",
+    "memberName": "Nama",
+    "memberRelationship": "Hubungan",
+    "addMember": "Tambah Ahli Keluarga",
+    "removeMember": "Buang ahli keluarga",
+    "deathCertUpload": "Muat naik sijil kematian (PDF, PNG, JPG sehingga 10MB)",
+    "causePrivateNote": "Maklumat ini tidak akan muncul dalam obituari awam. Dengan kebenaran anda, ia mungkin digunakan secara tanpa nama untuk wawasan.",
+    "deathCertPrivateNote": "Dokumen ini akan dirahsiakan dan digunakan hanya untuk tujuan pengesahan.",
+    "deathCertDesc": "Muat naik salinan sijil kematian untuk tujuan pengesahan",
+    "funeralPlaceholder": "cth. Kapel Peringatan Grace",
+    "funeralNotePlaceholder": "Nota tambahan tentang perkhidmatan jenazah...",
+    "burialCenterPlaceholder": "Nama tanah perkuburan atau pusat pengebumian",
+    "burialNotePlaceholder": "Nota tambahan tentang pengebumian...",
+    "contactNamePlaceholder": "Nama penuh orang hubungan",
+    "biographyPlaceholder": "Kongsikan kisah hidup, kenangan, dan warisan orang tersayang anda...",
+    "memberNamePlaceholder": "Nama ahli keluarga",
+    "selectPlaceOfDeath": "Pilih tempat kematian",
+    "selectCauseOfPassing": "Pilih sebab kematian",
+    "publishBtn": "Terbitkan Obituari",
+    "updateBtn": "Kemaskini Obituari"
+  }
+}

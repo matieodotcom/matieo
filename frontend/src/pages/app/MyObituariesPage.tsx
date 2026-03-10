@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { Search, Plus, ScrollText } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { ObituaryCard } from '@/components/obituary/ObituaryCard'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import { useMyObitaries } from '@/hooks/use-my-obituaries'
@@ -41,15 +42,16 @@ interface PaginationProps {
 }
 
 function Pagination({ page, totalPages, onPage }: PaginationProps) {
+  const { t } = useTranslation()
   if (totalPages <= 1) return null
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-1 mt-10">
+    <nav aria-label={t('common.pagination')} className="flex items-center justify-center gap-1 mt-10">
       <button
         onClick={() => onPage(page - 1)}
         disabled={page <= 1}
         className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        ← Prev
+        {t('common.prev')}
       </button>
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
         <button
@@ -70,7 +72,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
         disabled={page >= totalPages}
         className="px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        Next →
+        {t('common.next')}
       </button>
     </nav>
   )
@@ -79,6 +81,7 @@ function Pagination({ page, totalPages, onPage }: PaginationProps) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function MyObituariesPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -89,9 +92,8 @@ export default function MyObituariesPage() {
   const q = searchParams.get('q') ?? ''
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1'))
 
-  // Debounce: write ?q= to URL after 300ms idle; reset page on new search
   useEffect(() => {
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       setSearchParams(
         (prev) => {
           const next = new URLSearchParams(prev)
@@ -106,7 +108,7 @@ export default function MyObituariesPage() {
         { replace: true },
       )
     }, 300)
-    return () => clearTimeout(t)
+    return () => clearTimeout(timer)
   }, [searchInput, setSearchParams])
 
   const setPage = (n: number) => {
@@ -147,15 +149,14 @@ export default function MyObituariesPage() {
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">My Obituaries</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{t('obituaries.heading')}</h1>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-            Manage and view all obituaries you have created
+            {t('obituaries.subheading')}
           </p>
         </div>
 
         {showControls && (
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-            {/* Search */}
             <div className="relative w-full sm:w-52">
               <Search
                 size={15}
@@ -164,11 +165,11 @@ export default function MyObituariesPage() {
               <input
                 id="obituary-search"
                 type="search"
-                placeholder="Search..."
+                placeholder={t('obituaries.search')}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 text-sm border border-neutral-200 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-                aria-label="Search obituaries"
+                aria-label={t('obituaries.searchLabel')}
               />
             </div>
 
@@ -177,7 +178,7 @@ export default function MyObituariesPage() {
               className="flex w-full sm:w-auto items-center justify-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
             >
               <Plus size={15} />
-              Create Obituary
+              {t('obituaries.createBtn')}
             </button>
           </div>
         )}
@@ -201,21 +202,21 @@ export default function MyObituariesPage() {
           <ScrollText size={48} className="mx-auto text-neutral-200 dark:text-neutral-700 mb-4" />
           {q ? (
             <>
-              <p className="text-neutral-500 dark:text-neutral-400 font-medium">No obituaries match "{q}"</p>
-              <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">Try a different search term.</p>
+              <p className="text-neutral-500 dark:text-neutral-400 font-medium">{t('obituaries.emptySearch', { q })}</p>
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">{t('obituaries.emptySearchHint')}</p>
             </>
           ) : (
             <>
-              <p className="text-neutral-500 dark:text-neutral-400 font-medium">You haven't created any obituaries yet</p>
+              <p className="text-neutral-500 dark:text-neutral-400 font-medium">{t('obituaries.empty')}</p>
               <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">
-                Create your first obituary to honour a loved one.
+                {t('obituaries.emptyHint')}
               </p>
               <button
                 onClick={() => navigate('/dashboard/obituary/create')}
                 className="inline-flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors mt-6"
               >
                 <Plus size={15} />
-                Create Obituary
+                {t('obituaries.createBtn')}
               </button>
             </>
           )}
@@ -247,10 +248,10 @@ export default function MyObituariesPage() {
       >
         <AlertDialogContent>
           <AlertDialogTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-            Delete this draft?
+            {t('obituaries.deleteDraft.title')}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
-            This will permanently delete the draft and all its photos. This cannot be undone.
+            {t('obituaries.deleteDraft.description')}
           </AlertDialogDescription>
           {deleteError && (
             <p role="alert" className="text-sm text-red-600 dark:text-red-400 mb-4">
@@ -258,7 +259,7 @@ export default function MyObituariesPage() {
             </p>
           )}
           <div className="flex justify-end gap-3">
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>{t('common.cancel')}</AlertDialogCancel>
             <button
               onClick={handleConfirmDelete}
               disabled={isDeleting}
@@ -267,7 +268,7 @@ export default function MyObituariesPage() {
                 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
                 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isDeleting ? 'Deleting…' : 'Delete'}
+              {isDeleting ? t('obituaries.deleteDraft.confirming') : t('obituaries.deleteDraft.confirm')}
             </button>
           </div>
         </AlertDialogContent>
@@ -280,10 +281,10 @@ export default function MyObituariesPage() {
       >
         <AlertDialogContent>
           <AlertDialogTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-            Unpublish this obituary?
+            {t('obituaries.unpublish.title')}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
-            The obituary will no longer be publicly accessible. It will be saved as a draft and you can republish it at any time.
+            {t('obituaries.unpublish.description')}
           </AlertDialogDescription>
           {unpublishError && (
             <p role="alert" className="text-sm text-red-600 dark:text-red-400 mb-4">
@@ -291,7 +292,7 @@ export default function MyObituariesPage() {
             </p>
           )}
           <div className="flex justify-end gap-3">
-            <AlertDialogCancel disabled={isUnpublishing}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isUnpublishing}>{t('common.cancel')}</AlertDialogCancel>
             <button
               onClick={handleConfirmUnpublish}
               disabled={isUnpublishing}
@@ -300,7 +301,7 @@ export default function MyObituariesPage() {
                 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2
                 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isUnpublishing ? 'Unpublishing…' : 'Unpublish'}
+              {isUnpublishing ? t('obituaries.unpublish.confirming') : t('obituaries.unpublish.confirm')}
             </button>
           </div>
         </AlertDialogContent>

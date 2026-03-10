@@ -6,4 +6,8 @@
   html {
     font-family: 'Montserrat', sans-serif;
   }
+
+  html[lang="ar"] {
+    font-family: 'Noto Sans Arabic', 'Montserrat', sans-serif;
+  }
 }

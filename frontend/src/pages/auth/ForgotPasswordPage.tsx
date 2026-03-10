@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Mail, ChevronLeft, CircleCheck } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useForgotPassword } from '@/hooks/use-auth'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
 // ── ForgotPasswordPage ────────────────────────────────────────────────────────
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation()
   const { form, onSubmit, isPending, error, emailSent, submittedEmail, resend } =
     useForgotPassword()
 
@@ -27,9 +29,9 @@ export default function ForgotPasswordPage() {
           /* ── Screen 1: Enter email ── */
           <>
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-neutral-900">Forgot Password?</h1>
+              <h1 className="text-2xl font-bold text-neutral-900">{t('auth.forgotPassword.heading')}</h1>
               <p className="text-sm text-neutral-500 mt-1">
-                No worries, we'll send you reset instructions.
+                {t('auth.forgotPassword.subheading')}
               </p>
             </div>
 
@@ -39,7 +41,7 @@ export default function ForgotPasswordPage() {
                   htmlFor="email"
                   className="block text-sm font-medium text-neutral-700 mb-1"
                 >
-                  Email Address
+                  {t('auth.forgotPassword.emailLabel')}
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
@@ -49,7 +51,7 @@ export default function ForgotPasswordPage() {
                     id="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="name@email.com"
+                    placeholder={t('auth.forgotPassword.emailPlaceholder')}
                     {...register('email')}
                     className="w-full border border-neutral-200 rounded-lg pl-9 pr-3 py-2.5 text-sm
                       text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2
@@ -73,10 +75,10 @@ export default function ForgotPasswordPage() {
                       className="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"
                       aria-hidden="true"
                     />
-                    Sending…
+                    {t('auth.forgotPassword.submitting')}
                   </>
                 ) : (
-                  'Reset Password'
+                  t('auth.forgotPassword.submit')
                 )}
               </button>
 
@@ -91,8 +93,8 @@ export default function ForgotPasswordPage() {
             </div>
 
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-neutral-900">Check your email</h1>
-              <p className="text-sm text-neutral-500 mt-1">We sent a password reset link to</p>
+              <h1 className="text-2xl font-bold text-neutral-900">{t('auth.forgotPassword.checkEmail.heading')}</h1>
+              <p className="text-sm text-neutral-500 mt-1">{t('auth.forgotPassword.checkEmail.message')}</p>
               <p className="text-sm font-semibold text-neutral-900 mt-1">{submittedEmail}</p>
             </div>
 
@@ -102,17 +104,17 @@ export default function ForgotPasswordPage() {
               className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-medium
                 text-sm py-2.5 rounded-lg transition-colors"
             >
-              Open email
+              {t('auth.forgotPassword.checkEmail.openEmail')}
             </button>
 
             <p className="text-sm text-neutral-500">
-              Didn't receive the email?{' '}
+              {t('auth.forgotPassword.checkEmail.notReceived')}{' '}
               <button
                 type="button"
                 onClick={resend}
                 className="text-brand-primary font-medium hover:underline"
               >
-                Click to resend
+                {t('auth.forgotPassword.checkEmail.resend')}
               </button>
             </p>
           </>
@@ -124,11 +126,11 @@ export default function ForgotPasswordPage() {
           className="flex items-center gap-1 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
         >
           <ChevronLeft size={16} aria-hidden="true" />
-          Back to Sign in
+          {t('auth.forgotPassword.backToSignIn')}
         </Link>
 
         {/* Footer — both screens */}
-        <p className="text-xs text-neutral-400">© 2026 MATIEO</p>
+        <p className="text-xs text-neutral-400">{t('auth.copyright')}</p>
       </div>
     </main>
   )

@@ -1,0 +1,531 @@
+{
+  "nav": {
+    "memorials": "Mémoriaux",
+    "obituary": "Nécrologie",
+    "insights": "Analyses",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "about": "À propos",
+    "dashboard": "Tableau de bord",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "signOut": "Se déconnecter",
+    "userMenu": "Menu utilisateur",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
+  },
+  "landing": {
+    "hero": {
+      "trusted": "Fait confiance par plus de 30 000 familles",
+      "heading": "Honorer les vies,\nPréserver\nles souvenirs",
+      "description": "Nous aidons les familles et les proches à créer des nécrologies dignes et des mémoriaux numériques, en préservant histoires, photos et hommages—tout en contribuant à une meilleure compréhension de la vie et du deuil.",
+      "createMemorial": "Créer un mémorial",
+      "createObituary": "Créer une nécrologie",
+      "support": "Support",
+      "secure": "Sécurisé",
+      "memorialPublished": "Mémorial publié",
+      "support247": "24h/24",
+      "secure100": "100%"
+    },
+    "features": {
+      "heading": "Tout ce dont vous avez besoin en une seule plateforme",
+      "subheading": "Créez des nécrologies sincères, préservez les souvenirs avec des mémoriaux numériques, et explorez des analyses complètes—le tout sur une plateforme puissante.",
+      "obituary": {
+        "title": "Nécrologie",
+        "description": "Créez une nécrologie pour honorer votre proche. Partagez son histoire, célébrez sa vie et laissez un hommage durable pour la famille et les amis."
+      },
+      "memorials": {
+        "title": "Mémoriaux numériques",
+        "description": "Créez de beaux hommages durables pour vos proches. Partagez souvenirs, photos et histoires avec la famille et les amis du monde entier."
+      },
+      "services": {
+        "title": "Services funèbres",
+        "description": "Connectez-vous avec des prestataires de services funèbres de confiance pour les arrangements, les lieux et le soutien communautaire dans les moments difficiles."
+      },
+      "insights": {
+        "title": "Analyses",
+        "description": "Des outils de visualisation puissants vous aident à comprendre les tendances, les schémas et les analyses des données de mortalité."
+      },
+      "privacy": {
+        "title": "Confidentialité & Sécurité",
+        "description": "Vos données sont protégées par un chiffrement de niveau entreprise. Nous ne partageons jamais vos informations sans votre consentement."
+      },
+      "community": {
+        "title": "Soutien communautaire",
+        "description": "Rejoignez des milliers de familles et de chercheurs. Partagez des expériences, trouvez du soutien et contribuez à notre connaissance collective."
+      }
+    },
+    "howItWorks": {
+      "heading": "Comment ça marche",
+      "subheading": "Regardez nos guides vidéo étape par étape pour apprendre à utiliser les fonctionnalités puissantes de MATIEO.",
+      "memorials": {
+        "title": "Mémoriaux",
+        "description": "Découvrez comment créer un magnifique mémorial numérique pour préserver les souvenirs précieux."
+      },
+      "obituary": {
+        "title": "Nécrologie",
+        "description": "Apprenez à créer une nécrologie significative qui honore la vie et l'héritage de votre proche."
+      },
+      "insights": {
+        "title": "Analyses",
+        "description": "Explorez des outils analytiques puissants qui fournissent des analyses complètes de la mortalité et de la recherche."
+      },
+      "playTutorial": "Lire le tutoriel {{title}}"
+    },
+    "stats": {
+      "heading": "Fait confiance par des milliers",
+      "subheading": "Notre plateforme sert les familles, les chercheurs et les organisations avec des données fiables et des services bienveillants.",
+      "obituaries": {
+        "value": "500K+",
+        "label": "Nécrologies créées",
+        "description": "Honorer les vies avec des hommages significatifs"
+      },
+      "memorials": {
+        "value": "2,5M+",
+        "label": "Mémoriaux numériques",
+        "description": "Préserver les souvenirs pour les générations futures"
+      },
+      "insights": {
+        "value": "1Md+",
+        "label": "Analyses",
+        "description": "Analyses complètes de la mortalité"
+      },
+      "satisfaction": {
+        "value": "99,9%",
+        "label": "Satisfaction des utilisateurs",
+        "description": "Fait confiance par la plupart des familles"
+      }
+    },
+    "testimonials": {
+      "heading": "Ce que disent nos utilisateurs",
+      "subheading": "Rejoignez des milliers de familles, chercheurs et organisations satisfaits qui font confiance à MATIEO.",
+      "rating": "4,9 sur 5 étoiles de plus de 12 000 avis",
+      "starsLabel": "5 sur 5 étoiles",
+      "items": [
+        {
+          "quote": "\"La base de données complète de MATIEO a été inestimable pour notre recherche sur la mortalité. La profondeur des données et la facilité d'accès ont considérablement accéléré notre travail.\"",
+          "name": "Dr Sarah Chen",
+          "role": "Chercheur en maladies"
+        },
+        {
+          "quote": "\"Créer un mémorial pour mon père a été une belle expérience. La plateforme a facilité le partage de souvenirs et la connexion avec la famille à travers le monde.\"",
+          "name": "Michael Rodriguez",
+          "role": "Membre de la famille"
+        },
+        {
+          "quote": "\"Les données historiques et les capacités de recherche sont remarquables. J'ai pu retracer des histoires familiales sur plusieurs générations avec une facilité remarquable.\"",
+          "name": "Emma Thompson",
+          "role": "Généalogiste"
+        },
+        {
+          "quote": "\"Nous utilisons MATIEO pour les besoins de rapport de notre système hospitalier. Les données en temps réel et le tableau de bord intuitif ont transformé notre façon d'analyser les résultats des patients.\"",
+          "name": "Jordan Park",
+          "role": "Administrateur de santé"
+        },
+        {
+          "quote": "\"Le soutien que nous avons reçu dans un moment difficile était exceptionnel. MATIEO comprend vraiment les besoins des familles en deuil et fournit des outils attentionnés.\"",
+          "name": "Lisa Anderson",
+          "role": "Membre de la famille"
+        },
+        {
+          "quote": "\"L'intégration API était transparente et la qualité des données est constamment excellente. Notre plateforme d'analyse a grandement bénéficié de ce partenariat.\"",
+          "name": "David Kim",
+          "role": "Ingénieur de données"
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Commencez aujourd'hui",
+      "subheading": "Créez des nécrologies significatives, construisez des mémoriaux numériques durables, des services funèbres & connectez-vous avec vos proches, et explorez des analyses puissantes—le tout sur une plateforme.",
+      "createObituary": "Créer une nécrologie",
+      "createMemorial": "Créer un mémorial",
+      "noFees": "Pas de frais cachés",
+      "cancelAnytime": "Annuler à tout moment",
+      "getSupport": "Obtenir de l'aide"
+    },
+    "waitlist": {
+      "heading": "Pas encore prêt à vous inscrire ?",
+      "subheading": "Restez connecté avec nous ! Suivez notre parcours et recevez des mises à jour sur les nouvelles fonctionnalités, histoires et analyses envoyées à votre e-mail.",
+      "namePlaceholder": "Entrez votre nom",
+      "nameLabel": "Votre nom",
+      "emailPlaceholder": "Entrez votre e-mail",
+      "emailLabel": "Votre e-mail",
+      "submit": "Nous suivre",
+      "submitting": "Envoi en cours…",
+      "success": "Vous êtes inscrit ! Nous vous tiendrons informé des nouvelles de MATIEO."
+    }
+  },
+  "auth": {
+    "rightPanel": {
+      "heading": "Une façon moderne de se souvenir",
+      "subheading": "Créez et partagez des nécrologies et mémoriaux numériques avec dignité, simplicité et soin."
+    },
+    "copyright": "© 2026 MATIEO",
+    "terms": "En continuant, vous acceptez nos",
+    "termsLink": "Conditions d'utilisation",
+    "and": "et notre",
+    "privacyLink": "Politique de confidentialité",
+    "signIn": {
+      "heading": "Se connecter",
+      "subheading": "Bon retour ! Veuillez entrer vos informations.",
+      "emailLabel": "Adresse e-mail",
+      "emailPlaceholder": "nom@email.com",
+      "passwordLabel": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours…",
+      "google": "Se connecter avec Google",
+      "or": "ou",
+      "createAccount": "Créer un nouveau compte",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "emailNotVerified": {
+        "title": "E-mail non vérifié",
+        "message": "Veuillez vérifier votre e-mail avant de vous connecter.",
+        "resend": "Renvoyer l'e-mail de vérification",
+        "resending": "Envoi en cours…",
+        "resendIn": "Renvoyer dans {{count}}s"
+      }
+    },
+    "signUp": {
+      "heading": "S'inscrire",
+      "subheading": "Commencez votre essai gratuit de 14 jours",
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "email": "E-mail",
+      "confirmEmail": "Confirmer l'e-mail",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "google": "S'inscrire avec Google",
+      "or": "ou",
+      "submit": "S'inscrire",
+      "submitting": "Création du compte…",
+      "alreadyMember": "Déjà membre ?",
+      "login": "Se connecter maintenant",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "showConfirmPassword": "Afficher la confirmation du mot de passe",
+      "hideConfirmPassword": "Masquer la confirmation du mot de passe",
+      "verification": {
+        "title": "Lien de vérification envoyé",
+        "message": "Veuillez vérifier votre e-mail. Nous avons envoyé un lien à"
+      }
+    },
+    "forgotPassword": {
+      "heading": "Mot de passe oublié ?",
+      "subheading": "Ne vous inquiétez pas, nous vous enverrons des instructions de réinitialisation.",
+      "emailLabel": "Adresse e-mail",
+      "emailPlaceholder": "nom@email.com",
+      "submit": "Réinitialiser le mot de passe",
+      "submitting": "Envoi en cours…",
+      "checkEmail": {
+        "heading": "Vérifiez votre e-mail",
+        "message": "Nous avons envoyé un lien de réinitialisation à",
+        "openEmail": "Ouvrir l'e-mail",
+        "notReceived": "Vous n'avez pas reçu l'e-mail ?",
+        "resend": "Cliquez pour renvoyer"
+      },
+      "backToSignIn": "Retour à la connexion"
+    }
+  },
+  "dashboard": {
+    "welcome": "Bon retour, {{name}} !",
+    "subtitle": "Voici ce qui se passe.",
+    "quickActions": {
+      "createMemorial": "Créer un mémorial",
+      "createMemorialDesc": "Honorer un proche",
+      "browseMemorials": "Parcourir les mémoriaux",
+      "browseMemorialsDesc": "Voir tous les mémoriaux",
+      "insights": "Analyses",
+      "insightsDesc": "Analyses de mortalité",
+      "services": "Services",
+      "servicesDesc": "Services funèbres & soutien"
+    }
+  },
+  "layout": {
+    "navigate": "Navigation",
+    "backToEditing": "Retour à l'édition",
+    "myMemorials": "Mes mémoriaux",
+    "myObituaries": "Mes nécrologies",
+    "home": "Accueil",
+    "toggleNav": "Afficher/masquer la navigation",
+    "lightMode": "Mode clair",
+    "darkMode": "Mode sombre",
+    "switchToLight": "Passer au mode clair",
+    "switchToDark": "Passer au mode sombre"
+  },
+  "sidebar": {
+    "insights": "Analyses",
+    "memorials": "Mémoriaux",
+    "obituary": "Nécrologie",
+    "services": "Services"
+  },
+  "memorials": {
+    "heading": "Mes mémoriaux",
+    "subheading": "Gérez et consultez tous les mémoriaux que vous avez créés",
+    "search": "Rechercher...",
+    "searchLabel": "Rechercher des mémoriaux",
+    "createBtn": "Créer un mémorial",
+    "emptySearch": "Aucun mémorial ne correspond à \"{{q}}\"",
+    "emptySearchHint": "Essayez un autre terme de recherche.",
+    "empty": "Vous n'avez pas encore créé de mémoriaux",
+    "emptyHint": "Créez votre premier mémorial pour honorer un proche.",
+    "deleteDraft": {
+      "title": "Supprimer ce brouillon ?",
+      "description": "Cela supprimera définitivement le brouillon et toutes ses photos. Cette action est irréversible.",
+      "confirm": "Supprimer",
+      "confirming": "Suppression…"
+    },
+    "unpublish": {
+      "title": "Dépublier ce mémorial ?",
+      "description": "Le mémorial ne sera plus accessible au public. Il sera sauvegardé comme brouillon et vous pourrez le republier à tout moment.",
+      "confirm": "Dépublier",
+      "confirming": "Dépublication…"
+    }
+  },
+  "obituaries": {
+    "heading": "Mes nécrologies",
+    "subheading": "Gérez et consultez toutes les nécrologies que vous avez créées",
+    "search": "Rechercher...",
+    "searchLabel": "Rechercher des nécrologies",
+    "createBtn": "Créer une nécrologie",
+    "emptySearch": "Aucune nécrologie ne correspond à \"{{q}}\"",
+    "emptySearchHint": "Essayez un autre terme de recherche.",
+    "empty": "Vous n'avez pas encore créé de nécrologies",
+    "emptyHint": "Créez votre première nécrologie pour honorer un proche.",
+    "deleteDraft": {
+      "title": "Supprimer ce brouillon ?",
+      "description": "Cela supprimera définitivement le brouillon et toutes ses photos. Cette action est irréversible.",
+      "confirm": "Supprimer",
+      "confirming": "Suppression…"
+    },
+    "unpublish": {
+      "title": "Dépublier cette nécrologie ?",
+      "description": "La nécrologie ne sera plus accessible au public. Elle sera sauvegardée comme brouillon et vous pourrez la republier à tout moment.",
+      "confirm": "Dépublier",
+      "confirming": "Dépublication…"
+    }
+  },
+  "card": {
+    "published": "Publié",
+    "draft": "Brouillon",
+    "deleteDraft": "Supprimer le brouillon",
+    "unpublish": "Dépublier",
+    "memorialOptions": "Options du mémorial",
+    "obituaryOptions": "Options de la nécrologie",
+    "age": "Âge : {{age}}",
+    "by": "Par {{name}}"
+  },
+  "publicMemorial": {
+    "notFound": {
+      "heading": "Mémorial introuvable",
+      "message": "Ce mémorial a peut-être été supprimé ou le lien est incorrect.",
+      "browse": "Parcourir les mémoriaux"
+    },
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "photoGallery": "Galerie photos",
+    "biography": "Biographie",
+    "noPhotos": "Aucune photo ajoutée pour l'instant.",
+    "noBiography": "Aucune biographie ajoutée pour l'instant.",
+    "tributes": "Hommages ({{count}})",
+    "tributeInputLabel": "Écrire un hommage",
+    "tributePlaceholder": "Partagez vos souvenirs et rendez hommage…",
+    "postTribute": "Publier l'hommage",
+    "posting": "Publication…",
+    "signInToTribute": "pour laisser un hommage",
+    "firstTribute": "Soyez le premier à laisser un hommage.",
+    "back": "Retour aux mémoriaux",
+    "age": "Âge : {{age}} ans",
+    "viewProfile": "Voir la photo de profil",
+    "closeViewer": "Fermer le visualiseur de photos",
+    "prevPhoto": "Photo précédente",
+    "nextPhoto": "Photo suivante",
+    "galleryPhoto": "Photo de galerie {{n}}",
+    "viewGalleryPhoto": "Voir la photo de galerie {{n}}",
+    "photoViewer": "Visionneuse de photos",
+    "goBack": "Retour",
+    "back_label": "Retour"
+  },
+  "publicObituary": {
+    "notFound": {
+      "heading": "Nécrologie introuvable",
+      "message": "Cette nécrologie a peut-être été supprimée ou le lien est incorrect.",
+      "browse": "Parcourir les nécrologies"
+    },
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "obituarySection": "Nécrologie",
+    "funeralService": "Funérailles / Service de prière",
+    "burial": "Inhumation",
+    "venue": "Lieu",
+    "location": "Localisation",
+    "dateAndTime": "Date & Heure",
+    "at": "à",
+    "note": "Note",
+    "cemetery": "Cimetière / Centre",
+    "survivedBy": "Survivants",
+    "contactPerson": "Personne de contact",
+    "condolences": "Condoléances ({{count}})",
+    "condolenceInputLabel": "Écrire une condoléance",
+    "condolencePlaceholder": "Partagez vos condoléances…",
+    "postCondolence": "Publier les condoléances",
+    "posting": "Publication…",
+    "signInToCondolence": "pour laisser des condoléances",
+    "firstCondolence": "Soyez le premier à laisser des condoléances.",
+    "back": "Retour aux nécrologies",
+    "age": "Âge : {{age}} ans",
+    "goBack": "Retour",
+    "back_label": "Retour"
+  },
+  "common": {
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "deleting": "Suppression…",
+    "unpublish": "Dépublier",
+    "unpublishing": "Dépublication…",
+    "prev": "← Préc.",
+    "next": "Suiv. →",
+    "or": "ou",
+    "search": "Rechercher",
+    "signIn": "Se connecter",
+    "pagination": "Pagination",
+    "somethingWrong": "Une erreur s'est produite. Veuillez réessayer.",
+    "justNow": "à l'instant",
+    "minutesAgo": "il y a {{m}}min",
+    "hoursAgo": "il y a {{h}}h",
+    "daysAgo": "il y a {{d}}j"
+  },
+  "language": {
+    "label": "Langue",
+    "en": "English",
+    "ar": "العربية",
+    "ms": "Bahasa Melayu",
+    "fr": "Français",
+    "es": "Español"
+  },
+  "form": {
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "dateOfBirth": "Date de naissance",
+    "dateOfDeath": "Date de décès",
+    "ageAtDeath": "Âge au décès",
+    "gender": "Genre",
+    "raceEthnicity": "Race / Ethnicité",
+    "country": "Pays",
+    "state": "État / Province",
+    "biography": "Biographie",
+    "name": "Nom",
+    "relationship": "Relation",
+    "saveDraft": "Enregistrer comme brouillon",
+    "preview": "Aperçu",
+    "cancel": "Annuler",
+    "saving": "Enregistrement…",
+    "gender_male": "Homme",
+    "gender_female": "Femme",
+    "gender_nonBinary": "Non-binaire",
+    "gender_preferNotToSay": "Préfère ne pas répondre",
+    "selectAge": "Sélectionner l'âge",
+    "selectGender": "Sélectionner le genre",
+    "selectRace": "Sélectionner la race/ethnicité",
+    "selectCountry": "Sélectionner le pays",
+    "selectState": "Sélectionner l'état / la province",
+    "noStates": "Pas d'états pour ce pays",
+    "selectRelationship": "Sélectionner votre relation",
+    "selectTime": "Sélectionner l'heure",
+    "addressOrCity": "Adresse ou ville",
+    "enterFirstName": "Entrez le prénom",
+    "enterLastName": "Entrez le nom de famille",
+    "pickDateOfBirth": "Choisir la date de naissance",
+    "pickDateOfDeath": "Choisir la date de décès",
+    "quote": "Citation",
+    "tributeMessage": "Message d'hommage",
+    "creatorRelationship": "Votre relation avec le défunt"
+  },
+  "createMemorial": {
+    "heading": "Créer un Mémorial",
+    "editHeading": "Modifier le Mémorial",
+    "subheading": "Honorez la vie de votre proche. Vous pouvez enregistrer un brouillon à tout moment.",
+    "editSubheading": "Mettez à jour les détails du mémorial ci-dessous.",
+    "sectionPhotos": "Photos",
+    "sectionPersonalInfo": "Informations Personnelles",
+    "sectionQuote": "Citation Commémorative",
+    "sectionMessage": "Message Commémoratif",
+    "sectionGallery": "Galerie de Photos",
+    "sectionWebAddress": "Créer une Adresse Web du Mémorial",
+    "fieldQuote": "Citation",
+    "fieldBiography": "Biographie",
+    "fieldTributeMessage": "Message d'hommage",
+    "fieldMemorialUrl": "URL du Mémorial",
+    "fieldCreatorRelationship": "Votre Lien avec le Défunt",
+    "quotePlaceholder": "Une citation significative pour se souvenir d'eux…",
+    "biographyPlaceholder": "Partagez l'histoire de leur vie…",
+    "tributePlaceholder": "Un hommage personnel de votre part…",
+    "urlPlaceholder": "adresse-web-memorial",
+    "urlPreview": "Aperçu : {{domain}}/memorial/{{slug}}",
+    "publishBtn": "Publier le Mémorial",
+    "photoLabel": "Photo du Mémorial",
+    "photoHint": "Recommandé 360×360px, jusqu'à 10Mo",
+    "coverLabel": "Arrière-plan de Couverture",
+    "coverHint": "Recommandé 1216×282px, jusqu'à 10Mo",
+    "coverUploadText": "Cliquer ou glisser pour télécharger / sélectionner un dégradé",
+    "gradientPresets": "Préréglages",
+    "gradientCustom": "Dégradé Personnalisé",
+    "gradientDirection": "Direction",
+    "gradientFrom": "De",
+    "gradientTo": "À",
+    "gradientClear": "Effacer le dégradé"
+  },
+  "createObituary": {
+    "heading": "Créons un avis de décès en ligne",
+    "editHeading": "Modifier l'Avis de Décès",
+    "subheading": "Nous sommes profondément désolés pour votre perte et nous nous engageons à vous aider à créer un bel avis de décès.",
+    "sectionPhotos": "Photos",
+    "sectionPersonalInfo": "Informations Personnelles",
+    "sectionCauseOfPassing": "Cause du Décès (Optionnel)",
+    "sectionFuneral": "Détails des Funérailles/Prières (Optionnel)",
+    "sectionFuneralSubtitle": "Maison de résidence, maison religieuse, centre funéraire, etc.",
+    "sectionBurial": "Détails de l'Inhumation (Optionnel)",
+    "sectionContact": "Personne de Contact",
+    "sectionFamily": "Membres de la Famille (Optionnel)",
+    "sectionMessage": "Message Commémoratif (Optionnel)",
+    "sectionDeathCert": "Certificat de Décès (Optionnel)",
+    "fieldObitPhoto": "Photo de l'Avis de Décès",
+    "fieldPlaceOfDeath": "Lieu de Décès",
+    "fieldCauseOfPassing": "Cause du Décès",
+    "consentLabel": "Je consens à ce que ces informations soient utilisées anonymement pour la recherche sur les données de mortalité",
+    "funeralName": "Nom",
+    "funeralLocation": "Lieu",
+    "funeralDate": "Date",
+    "funeralTime": "Heure",
+    "funeralNote": "Note",
+    "burialCenterName": "Nom du Centre d'Inhumation",
+    "burialLocation": "Lieu",
+    "burialDate": "Date d'Inhumation",
+    "burialTime": "Heure d'Inhumation",
+    "burialNote": "Note",
+    "contactName": "Nom",
+    "contactRelationship": "Relation",
+    "contactPhone": "Numéro de Téléphone",
+    "contactEmail": "Adresse E-mail",
+    "memberName": "Nom",
+    "memberRelationship": "Relation",
+    "addMember": "Ajouter un Membre de la Famille",
+    "removeMember": "Supprimer le membre de la famille",
+    "deathCertUpload": "Télécharger le certificat de décès (PDF, PNG, JPG jusqu'à 10Mo)",
+    "causePrivateNote": "Ces informations n'apparaîtront jamais sur l'avis de décès public. Avec votre consentement, elles peuvent être utilisées anonymement pour des analyses.",
+    "deathCertPrivateNote": "Ce document restera privé et utilisé uniquement à des fins de vérification.",
+    "deathCertDesc": "Télécharger une copie du certificat de décès à des fins de vérification",
+    "funeralPlaceholder": "ex. Chapelle Commémorative de la Grâce",
+    "funeralNotePlaceholder": "Notes supplémentaires sur le service funèbre...",
+    "burialCenterPlaceholder": "Nom du cimetière ou du centre d'inhumation",
+    "burialNotePlaceholder": "Notes supplémentaires sur l'inhumation...",
+    "contactNamePlaceholder": "Nom complet de la personne de contact",
+    "biographyPlaceholder": "Partagez l'histoire de vie, les souvenirs et l'héritage de votre proche...",
+    "memberNamePlaceholder": "Nom du membre de la famille",
+    "selectPlaceOfDeath": "Sélectionner le lieu de décès",
+    "selectCauseOfPassing": "Sélectionner la cause du décès",
+    "publishBtn": "Publier l'Avis de Décès",
+    "updateBtn": "Mettre à jour l'Avis de Décès"
+  }
+}

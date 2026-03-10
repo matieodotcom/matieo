@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff, MailWarning } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useSignIn, useGoogleAuth } from '@/hooks/use-auth'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
@@ -15,13 +16,14 @@ function UnconfirmedEmailBanner({
   isResending: boolean
   cooldown: number
 }) {
+  const { t } = useTranslation()
   return (
     <div role="alert" className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
       <MailWarning size={18} className="text-amber-500 mt-0.5 flex-shrink-0" />
       <div className="flex-1">
-        <p className="text-sm font-semibold text-amber-800">Email not verified</p>
+        <p className="text-sm font-semibold text-amber-800">{t('auth.signIn.emailNotVerified.title')}</p>
         <p className="text-xs text-amber-700 mt-0.5">
-          Please verify your email before signing in.
+          {t('auth.signIn.emailNotVerified.message')}
         </p>
         <button
           type="button"
@@ -31,10 +33,10 @@ function UnconfirmedEmailBanner({
             disabled:no-underline disabled:text-amber-400 disabled:cursor-not-allowed"
         >
           {isResending
-            ? 'Sending…'
+            ? t('auth.signIn.emailNotVerified.resending')
             : cooldown > 0
-            ? `Resend in ${cooldown}s`
-            : 'Resend verification email'}
+            ? t('auth.signIn.emailNotVerified.resendIn', { count: cooldown })
+            : t('auth.signIn.emailNotVerified.resend')}
         </button>
       </div>
     </div>
@@ -71,7 +73,6 @@ function GoogleIcon() {
 function AppMockup() {
   return (
     <div className="relative w-full max-w-lg">
-      {/* Tablet frame */}
       <div className="rounded-2xl bg-white border border-neutral-200 shadow-xl overflow-hidden">
         <div className="bg-white border-b border-neutral-100 px-4 py-3 flex items-center gap-3">
           <div className="flex items-center gap-1.5">
@@ -107,7 +108,6 @@ function AppMockup() {
           </div>
         </div>
       </div>
-      {/* Floating phone frame */}
       <div className="absolute -bottom-4 -left-6 w-28 rounded-2xl bg-white border border-neutral-200 shadow-xl overflow-hidden">
         <div className="bg-brand-primary px-2 py-2">
           <div className="h-1.5 bg-white/30 rounded w-2/3 mb-1" />
@@ -126,6 +126,7 @@ function AppMockup() {
 // ── SignInPage ────────────────────────────────────────────────────────────────
 
 export default function SignInPage() {
+  const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
 
   const {
@@ -159,9 +160,9 @@ export default function SignInPage() {
 
         <div className="flex-1 flex flex-col justify-center max-w-sm w-full mx-auto">
           {/* Heading */}
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Sign in</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('auth.signIn.heading')}</h1>
           <p className="text-sm text-neutral-500 mb-6">
-            Welcome back! Please enter your details.
+            {t('auth.signIn.subheading')}
           </p>
 
           {/* Form */}
@@ -172,7 +173,7 @@ export default function SignInPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-neutral-700 mb-1"
               >
-                Email Address
+                {t('auth.signIn.emailLabel')}
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
@@ -182,7 +183,7 @@ export default function SignInPage() {
                   id="email"
                   type="email"
                   autoComplete="email"
-                  placeholder="name@email.com"
+                  placeholder={t('auth.signIn.emailPlaceholder')}
                   {...register('email')}
                   className="w-full border border-neutral-200 rounded-lg pl-9 pr-3 py-2.5 text-sm text-neutral-900
                     placeholder:text-neutral-400 focus:outline-none focus:ring-2
@@ -198,7 +199,7 @@ export default function SignInPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-neutral-700 mb-1"
               >
-                Password
+                {t('auth.signIn.passwordLabel')}
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
@@ -216,7 +217,7 @@ export default function SignInPage() {
                 />
                 <button
                   type="button"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t('auth.signIn.hidePassword') : t('auth.signIn.showPassword')}
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
@@ -232,7 +233,7 @@ export default function SignInPage() {
                 to="/forgot-password"
                 className="text-sm text-brand-primary font-medium hover:underline"
               >
-                Forgot Password?
+                {t('auth.signIn.forgotPassword')}
               </Link>
             </div>
 
@@ -251,10 +252,10 @@ export default function SignInPage() {
                     className="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"
                     aria-hidden="true"
                   />
-                  Signing in…
+                  {t('auth.signIn.submitting')}
                 </>
               ) : (
-                'Sign In'
+                t('auth.signIn.submit')
               )}
             </button>
 
@@ -279,13 +280,13 @@ export default function SignInPage() {
                 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <GoogleIcon />
-              Login with Google
+              {t('auth.signIn.google')}
             </button>
 
             {/* Divider */}
             <div className="relative flex items-center">
               <div className="flex-1 border-t border-neutral-200" />
-              <span className="mx-3 text-xs text-neutral-400">or</span>
+              <span className="mx-3 text-xs text-neutral-400">{t('auth.signIn.or')}</span>
               <div className="flex-1 border-t border-neutral-200" />
             </div>
 
@@ -296,36 +297,35 @@ export default function SignInPage() {
                 hover:bg-neutral-50 text-sm font-medium text-neutral-700 py-2.5 rounded-lg
                 transition-colors"
             >
-              Create New Account
+              {t('auth.signIn.createAccount')}
             </Link>
           </form>
 
           {/* Terms */}
           <p className="text-xs text-neutral-400 mt-5 leading-relaxed">
-            By continuing, you agree to our{' '}
+            {t('auth.terms')}{' '}
             <a href="/terms" className="underline hover:text-neutral-600 transition-colors">
-              Terms of Service
+              {t('auth.termsLink')}
             </a>{' '}
-            and{' '}
+            {t('auth.and')}{' '}
             <a href="/privacy" className="underline hover:text-neutral-600 transition-colors">
-              Privacy Policy
+              {t('auth.privacyLink')}
             </a>
           </p>
         </div>
 
         {/* Footer */}
-        <p className="text-xs text-neutral-400 mt-8 text-center">© 2026 MATIEO</p>
+        <p className="text-xs text-neutral-400 mt-8 text-center">{t('auth.copyright')}</p>
       </div>
 
       {/* ── Right: Product panel ── */}
       <div className="hidden md:flex flex-1 bg-neutral-50 flex-col justify-center px-8 md:px-14 py-16">
         <div className="max-w-md">
           <h2 className="text-3xl font-bold text-neutral-800 leading-snug mb-3">
-            A Modern Way to Remember
+            {t('auth.rightPanel.heading')}
           </h2>
           <p className="text-sm text-neutral-500 leading-relaxed mb-12">
-            Create and share digital obituaries and memorials with dignity,
-            simplicity, and care.
+            {t('auth.rightPanel.subheading')}
           </p>
           <AppMockup />
         </div>

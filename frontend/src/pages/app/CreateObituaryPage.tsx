@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Controller } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { ArrowRight, Plus, Trash2 } from 'lucide-react'
 import { PhotoUpload } from '@/components/ui/PhotoUpload'
 import { Select } from '@/components/ui/Select'
@@ -18,11 +19,12 @@ const AGE_OPTIONS = Array.from({ length: 120 }, (_, i) => ({
   label: String(i + 1),
 }))
 
-const GENDER_OPTIONS = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'non-binary', label: 'Non-binary' },
-  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+// GENDER_OPTIONS labels resolved via t() inside the component
+const GENDER_OPTION_KEYS = [
+  { value: 'male', tKey: 'form.gender_male' },
+  { value: 'female', tKey: 'form.gender_female' },
+  { value: 'non-binary', tKey: 'form.gender_nonBinary' },
+  { value: 'prefer_not_to_say', tKey: 'form.gender_preferNotToSay' },
 ]
 
 const RACE_OPTIONS = [
@@ -226,6 +228,7 @@ const textareaClass = `${inputClass} resize-none`
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function CreateObituaryPage() {
+  const { t } = useTranslation()
   const { id: obituaryId } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
@@ -277,6 +280,7 @@ export default function CreateObituaryPage() {
   }, [dateOfBirth, dateOfDeath, setValue])
 
   const stateOptions = useMemo(() => buildStateOptions(country ?? ''), [country])
+  const genderOptions = GENDER_OPTION_KEYS.map(({ value, tKey }) => ({ value, label: t(tKey) }))
 
   if (isLoading) {
     return (
@@ -300,10 +304,10 @@ export default function CreateObituaryPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-          {isEdit ? 'Edit Obituary' : "Let's create an online obituary"}
+          {isEdit ? t('createObituary.editHeading') : t('createObituary.heading')}
         </h1>
         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-          We are deeply sorry for your loss and are committed to helping you create a beautiful obituary.
+          {t('createObituary.subheading')}
         </p>
       </div>
 
@@ -312,7 +316,7 @@ export default function CreateObituaryPage() {
       <form onSubmit={handleSubmit(onPublish)} noValidate className="space-y-6">
 
         {/* ── Photos ── */}
-        <Section title="Photos">
+        <Section title={t('createObituary.sectionPhotos')}>
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
             {/* Obituary Photo */}
             <div className="w-full sm:w-[360px] sm:shrink-0">
@@ -321,8 +325,8 @@ export default function CreateObituaryPage() {
                 name="profilePhoto"
                 render={({ field }) => (
                   <PhotoUpload
-                    label="Obituary Photo"
-                    hint="Recommended 360×360px, up to 10MB"
+                    label={t('createObituary.fieldObitPhoto')}
+                    hint={t('createMemorial.photoHint')}
                     value={field.value ?? null}
                     onChange={field.onChange}
                     uploadAreaClassName="h-48 sm:h-[360px]"
@@ -351,14 +355,14 @@ export default function CreateObituaryPage() {
         </Section>
 
         {/* ── Personal Information ── */}
-        <Section title="Personal Information">
+        <Section title={t('createObituary.sectionPersonalInfo')}>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <FieldLabel htmlFor="firstName" required>First Name</FieldLabel>
+              <FieldLabel htmlFor="firstName" required>{t('form.firstName')}</FieldLabel>
               <input
                 id="firstName"
                 type="text"
-                placeholder="First name"
+                placeholder={t('form.firstName')}
                 className={inputClass}
                 {...register('firstName')}
               />
@@ -366,11 +370,11 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="lastName" required>Last Name</FieldLabel>
+              <FieldLabel htmlFor="lastName" required>{t('form.lastName')}</FieldLabel>
               <input
                 id="lastName"
                 type="text"
-                placeholder="Last name"
+                placeholder={t('form.lastName')}
                 className={inputClass}
                 {...register('lastName')}
               />
@@ -378,7 +382,7 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="dateOfBirth">Date of Birth</FieldLabel>
+              <FieldLabel htmlFor="dateOfBirth">{t('form.dateOfBirth')}</FieldLabel>
               <Controller
                 control={control}
                 name="dateOfBirth"
@@ -395,7 +399,7 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="dateOfDeath" required>Date of Death</FieldLabel>
+              <FieldLabel htmlFor="dateOfDeath" required>{t('form.dateOfDeath')}</FieldLabel>
               <Controller
                 control={control}
                 name="dateOfDeath"
@@ -412,14 +416,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="ageAtDeath">Age at Death</FieldLabel>
+              <FieldLabel htmlFor="ageAtDeath">{t('form.ageAtDeath')}</FieldLabel>
               <Controller
                 control={control}
                 name="ageAtDeath"
                 render={({ field }) => (
                   <Select
                     id="ageAtDeath"
-                    placeholder="Select age"
+                    placeholder={t('form.selectAge')}
                     options={AGE_OPTIONS}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -430,14 +434,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="country" required>Country</FieldLabel>
+              <FieldLabel htmlFor="country" required>{t('form.country')}</FieldLabel>
               <Controller
                 control={control}
                 name="country"
                 render={({ field }) => (
                   <Select
                     id="country"
-                    placeholder="Select country"
+                    placeholder={t('form.selectCountry')}
                     options={countryOptions}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -448,14 +452,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="state">State</FieldLabel>
+              <FieldLabel htmlFor="state">{t('form.state')}</FieldLabel>
               <Controller
                 control={control}
                 name="state"
                 render={({ field }) => (
                   <Select
                     id="state"
-                    placeholder={stateOptions.length > 0 ? 'Select state / province' : 'No states for this country'}
+                    placeholder={stateOptions.length > 0 ? t('form.selectState') : t('form.noStates')}
                     options={stateOptions}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -467,14 +471,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="placeOfDeath" required>Place of Death</FieldLabel>
+              <FieldLabel htmlFor="placeOfDeath" required>{t('createObituary.fieldPlaceOfDeath')}</FieldLabel>
               <Controller
                 control={control}
                 name="placeOfDeath"
                 render={({ field }) => (
                   <Select
                     id="placeOfDeath"
-                    placeholder="Select place of death"
+                    placeholder={t('createObituary.selectPlaceOfDeath')}
                     options={PLACE_OF_DEATH_OPTIONS}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -485,15 +489,15 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="gender" required>Gender</FieldLabel>
+              <FieldLabel htmlFor="gender" required>{t('form.gender')}</FieldLabel>
               <Controller
                 control={control}
                 name="gender"
                 render={({ field }) => (
                   <Select
                     id="gender"
-                    placeholder="Select gender"
-                    options={GENDER_OPTIONS}
+                    placeholder={t('form.selectGender')}
+                    options={genderOptions}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
                   />
@@ -503,14 +507,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="raceEthnicity" required>Race / Ethnicity</FieldLabel>
+              <FieldLabel htmlFor="raceEthnicity" required>{t('form.raceEthnicity')}</FieldLabel>
               <Controller
                 control={control}
                 name="raceEthnicity"
                 render={({ field }) => (
                   <Select
                     id="raceEthnicity"
-                    placeholder="Select race/ethnicity"
+                    placeholder={t('form.selectRace')}
                     options={RACE_OPTIONS}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -523,22 +527,22 @@ export default function CreateObituaryPage() {
         </Section>
 
         {/* ── Cause of Passing (Private) ── */}
-        <Section title="Cause of Passing (Optional)">
+        <Section title={t('createObituary.sectionCauseOfPassing')}>
           <div className="mb-4 p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-100 dark:border-neutral-700">
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              This information will never appear on the public obituary. With consent, it may be used anonymously for insights.
+              {t('createObituary.causePrivateNote')}
             </p>
           </div>
           <div className="space-y-4">
             <div>
-              <FieldLabel htmlFor="causeOfPassing">Cause of Passing</FieldLabel>
+              <FieldLabel htmlFor="causeOfPassing">{t('createObituary.fieldCauseOfPassing')}</FieldLabel>
               <Controller
                 control={control}
                 name="causeOfPassing"
                 render={({ field }) => (
                   <Select
                     id="causeOfPassing"
-                    placeholder="Select cause of passing"
+                    placeholder={t('createObituary.selectCauseOfPassing')}
                     options={CAUSE_OF_PASSING_OPTIONS}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -559,7 +563,7 @@ export default function CreateObituaryPage() {
                 htmlFor="causeOfPassingConsented"
                 className="text-sm text-neutral-600 dark:text-neutral-400"
               >
-                I consent to this information being used anonymously for mortality insights research
+                {t('createObituary.consentLabel')}
               </label>
             </div>
           </div>
@@ -567,16 +571,16 @@ export default function CreateObituaryPage() {
 
         {/* ── Funeral/Prayers Details ── */}
         <Section
-          title="Funeral/Prayers Details (Optional)"
-          subtitle="Resident, religious home, funeral center, etc."
+          title={t('createObituary.sectionFuneral')}
+          subtitle={t('createObituary.sectionFuneralSubtitle')}
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <FieldLabel htmlFor="funeralName">Name</FieldLabel>
+              <FieldLabel htmlFor="funeralName">{t('createObituary.funeralName')}</FieldLabel>
               <input
                 id="funeralName"
                 type="text"
-                placeholder="e.g. Grace Memorial Chapel"
+                placeholder={t('createObituary.funeralPlaceholder')}
                 className={inputClass}
                 {...register('funeralName')}
               />
@@ -584,11 +588,11 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="funeralLocation">Location</FieldLabel>
+              <FieldLabel htmlFor="funeralLocation">{t('createObituary.funeralLocation')}</FieldLabel>
               <input
                 id="funeralLocation"
                 type="text"
-                placeholder="Address or city"
+                placeholder={t('form.addressOrCity')}
                 className={inputClass}
                 {...register('funeralLocation')}
               />
@@ -596,7 +600,7 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="funeralDate">Date</FieldLabel>
+              <FieldLabel htmlFor="funeralDate">{t('createObituary.funeralDate')}</FieldLabel>
               <Controller
                 control={control}
                 name="funeralDate"
@@ -612,14 +616,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="funeralTime">Time</FieldLabel>
+              <FieldLabel htmlFor="funeralTime">{t('createObituary.funeralTime')}</FieldLabel>
               <Controller
                 control={control}
                 name="funeralTime"
                 render={({ field }) => (
                   <Select
                     id="funeralTime"
-                    placeholder="Select time"
+                    placeholder={t('form.selectTime')}
                     options={TIME_OPTIONS}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -630,11 +634,11 @@ export default function CreateObituaryPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <FieldLabel htmlFor="funeralNote">Note</FieldLabel>
+              <FieldLabel htmlFor="funeralNote">{t('createObituary.funeralNote')}</FieldLabel>
               <textarea
                 id="funeralNote"
                 rows={3}
-                placeholder="Additional notes about the funeral service..."
+                placeholder={t('createObituary.funeralNotePlaceholder')}
                 className={textareaClass}
                 {...register('funeralNote')}
               />
@@ -644,14 +648,14 @@ export default function CreateObituaryPage() {
         </Section>
 
         {/* ── Burial Details ── */}
-        <Section title="Burial Details (Optional)">
+        <Section title={t('createObituary.sectionBurial')}>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <FieldLabel htmlFor="burialCenterName">Burial Center Name</FieldLabel>
+              <FieldLabel htmlFor="burialCenterName">{t('createObituary.burialCenterName')}</FieldLabel>
               <input
                 id="burialCenterName"
                 type="text"
-                placeholder="Cemetery or burial center name"
+                placeholder={t('createObituary.burialCenterPlaceholder')}
                 className={inputClass}
                 {...register('burialCenterName')}
               />
@@ -659,11 +663,11 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="burialLocation">Location</FieldLabel>
+              <FieldLabel htmlFor="burialLocation">{t('createObituary.burialLocation')}</FieldLabel>
               <input
                 id="burialLocation"
                 type="text"
-                placeholder="Address or city"
+                placeholder={t('form.addressOrCity')}
                 className={inputClass}
                 {...register('burialLocation')}
               />
@@ -671,7 +675,7 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="burialDate">Burial Date</FieldLabel>
+              <FieldLabel htmlFor="burialDate">{t('createObituary.burialDate')}</FieldLabel>
               <Controller
                 control={control}
                 name="burialDate"
@@ -687,14 +691,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="burialTime">Burial Time</FieldLabel>
+              <FieldLabel htmlFor="burialTime">{t('createObituary.burialTime')}</FieldLabel>
               <Controller
                 control={control}
                 name="burialTime"
                 render={({ field }) => (
                   <Select
                     id="burialTime"
-                    placeholder="Select time"
+                    placeholder={t('form.selectTime')}
                     options={TIME_OPTIONS}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -705,11 +709,11 @@ export default function CreateObituaryPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <FieldLabel htmlFor="burialNote">Note</FieldLabel>
+              <FieldLabel htmlFor="burialNote">{t('createObituary.burialNote')}</FieldLabel>
               <textarea
                 id="burialNote"
                 rows={3}
-                placeholder="Additional notes about the burial..."
+                placeholder={t('createObituary.burialNotePlaceholder')}
                 className={textareaClass}
                 {...register('burialNote')}
               />
@@ -719,14 +723,14 @@ export default function CreateObituaryPage() {
         </Section>
 
         {/* ── Contact Person ── */}
-        <Section title="Contact Person">
+        <Section title={t('createObituary.sectionContact')}>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <FieldLabel htmlFor="contactPersonName" required>Name</FieldLabel>
+              <FieldLabel htmlFor="contactPersonName" required>{t('createObituary.contactName')}</FieldLabel>
               <input
                 id="contactPersonName"
                 type="text"
-                placeholder="Contact person's full name"
+                placeholder={t('createObituary.contactNamePlaceholder')}
                 className={inputClass}
                 {...register('contactPersonName')}
               />
@@ -734,14 +738,14 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="contactPersonRelationship" required>Relationship</FieldLabel>
+              <FieldLabel htmlFor="contactPersonRelationship" required>{t('createObituary.contactRelationship')}</FieldLabel>
               <Controller
                 control={control}
                 name="contactPersonRelationship"
                 render={({ field }) => (
                   <Select
                     id="contactPersonRelationship"
-                    placeholder="Select relationship"
+                    placeholder={t('form.selectRelationship')}
                     options={RELATIONSHIP_OPTIONS}
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
@@ -752,7 +756,7 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="contactPersonPhone" required>Phone Number</FieldLabel>
+              <FieldLabel htmlFor="contactPersonPhone" required>{t('createObituary.contactPhone')}</FieldLabel>
               <input
                 id="contactPersonPhone"
                 type="tel"
@@ -764,7 +768,7 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="contactPersonEmail">Email Address</FieldLabel>
+              <FieldLabel htmlFor="contactPersonEmail">{t('createObituary.contactEmail')}</FieldLabel>
               <input
                 id="contactPersonEmail"
                 type="email"
@@ -778,7 +782,7 @@ export default function CreateObituaryPage() {
         </Section>
 
         {/* ── Family Members ── */}
-        <Section title="Family Members (Optional)">
+        <Section title={t('createObituary.sectionFamily')}>
           <div className="space-y-3">
             {familyMembersField.fields.map((field, index) => (
               <div key={field.id} className="flex items-start gap-2">
@@ -788,12 +792,12 @@ export default function CreateObituaryPage() {
                       htmlFor={`familyMembers.${index}.name`}
                       className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
                     >
-                      Name
+                      {t('createObituary.memberName')}
                     </label>
                     <input
                       id={`familyMembers.${index}.name`}
                       type="text"
-                      placeholder="Family member name"
+                      placeholder={t('createObituary.memberNamePlaceholder')}
                       className={inputClass}
                       {...register(`familyMembers.${index}.name`)}
                     />
@@ -803,7 +807,7 @@ export default function CreateObituaryPage() {
                       htmlFor={`familyMembers.${index}.relationship`}
                       className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
                     >
-                      Relationship
+                      {t('createObituary.memberRelationship')}
                     </label>
                     <Controller
                       control={control}
@@ -811,7 +815,7 @@ export default function CreateObituaryPage() {
                       render={({ field: f }) => (
                         <Select
                           id={`familyMembers.${index}.relationship`}
-                          placeholder="Select relationship"
+                          placeholder={t('form.selectRelationship')}
                           options={RELATIONSHIP_OPTIONS}
                           value={f.value ?? ''}
                           onValueChange={f.onChange}
@@ -823,7 +827,7 @@ export default function CreateObituaryPage() {
                 <button
                   type="button"
                   onClick={() => familyMembersField.remove(index)}
-                  aria-label="Remove family member"
+                  aria-label={t('createObituary.removeMember')}
                   className="mt-6 flex h-10 w-10 items-center justify-center rounded-lg text-neutral-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 >
                   <Trash2 size={15} />
@@ -837,20 +841,20 @@ export default function CreateObituaryPage() {
               className="flex items-center gap-1.5 text-sm font-medium text-brand-primary hover:text-brand-primaryHover transition-colors"
             >
               <Plus size={15} />
-              Add Family Member
+              {t('createObituary.addMember')}
             </button>
           </div>
         </Section>
 
         {/* ── Memorial Message ── */}
-        <Section title="Memorial Message (Optional)">
+        <Section title={t('createObituary.sectionMessage')}>
           <div>
-            <FieldLabel htmlFor="biography">Biography</FieldLabel>
+            <FieldLabel htmlFor="biography">{t('form.biography')}</FieldLabel>
             <textarea
               id="biography"
               rows={6}
               maxLength={4000}
-              placeholder="Share the life story, memories, and legacy of your loved one..."
+              placeholder={t('createObituary.biographyPlaceholder')}
               className={textareaClass}
               {...register('biography')}
             />
@@ -860,13 +864,13 @@ export default function CreateObituaryPage() {
         </Section>
 
         {/* ── Death Certificate ── */}
-        <Section title="Death Certificate (Optional)">
+        <Section title={t('createObituary.sectionDeathCert')}>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
-            Upload a copy of the death certificate for verification purposes
+            {t('createObituary.deathCertDesc')}
           </p>
           <div className="mb-4 p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-100 dark:border-neutral-700">
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              This document will be kept private and used only for verification purposes.
+              {t('createObituary.deathCertPrivateNote')}
             </p>
           </div>
           <Controller
@@ -878,7 +882,7 @@ export default function CreateObituaryPage() {
                 onChange={field.onChange}
                 aspect={undefined}
                 uploadPreset="obituary_documents"
-                label="Upload death certificate (PDF, PNG, JPG up to 10MB)"
+                label={t('createObituary.deathCertUpload')}
               />
             )}
           />
@@ -893,7 +897,7 @@ export default function CreateObituaryPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-primary px-5 py-3 text-sm font-medium
               text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors sm:hidden"
           >
-            {isPending ? 'Saving…' : isEdit ? 'Update Obituary' : 'Publish Obituary'}
+            {isPending ? t('form.saving') : isEdit ? t('createObituary.updateBtn') : t('createObituary.publishBtn')}
             {!isPending && <ArrowRight className="h-4 w-4" />}
           </button>
 
@@ -907,7 +911,7 @@ export default function CreateObituaryPage() {
                 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800
                 disabled:opacity-50 transition-colors sm:flex-none"
             >
-              Save as Draft
+              {t('form.saveDraft')}
             </button>
             <button
               type="button"
@@ -921,7 +925,7 @@ export default function CreateObituaryPage() {
                 text-brand-primary hover:bg-brand-primaryLight/40 dark:hover:bg-brand-primary/10
                 disabled:opacity-50 transition-colors sm:flex-none"
             >
-              Preview
+              {t('form.preview')}
             </button>
           </div>
 
@@ -933,7 +937,7 @@ export default function CreateObituaryPage() {
               disabled={isPending}
               className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors disabled:opacity-50"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
 
             <button
@@ -942,7 +946,7 @@ export default function CreateObituaryPage() {
               className="hidden sm:flex items-center gap-2 rounded-lg bg-brand-primary px-5 py-2.5 text-sm font-medium
                 text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors"
             >
-              {isPending ? 'Saving…' : isEdit ? 'Update Obituary' : 'Publish Obituary'}
+              {isPending ? t('form.saving') : isEdit ? t('createObituary.updateBtn') : t('createObituary.publishBtn')}
               {!isPending && <ArrowRight className="h-4 w-4" />}
             </button>
           </div>

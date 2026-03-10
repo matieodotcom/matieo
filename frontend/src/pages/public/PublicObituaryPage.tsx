@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { UserAvatar } from '@/components/ui/Avatar'
@@ -17,7 +18,9 @@ import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { useCondolences, usePostCondolence } from '@/hooks/use-condolences'
 import { SignInModal } from '@/components/auth/SignInModal'
+import { useLocaleStore } from '@/store/localeStore'
 import type { ObituaryRow } from '@/types/obituary'
+import type { TFunction } from 'i18next'
 
 interface SingleObituaryResponse {
   data: ObituaryRow | null
@@ -35,9 +38,9 @@ function usePublicObituary(slug: string) {
   })
 }
 
-function formatDate(raw: string): string {
+function formatDate(raw: string, locale: string): string {
   try {
-    return new Intl.DateTimeFormat('en-GB', {
+    return new Intl.DateTimeFormat(locale, {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
@@ -47,14 +50,14 @@ function formatDate(raw: string): string {
   }
 }
 
-function timeAgo(raw: string): string {
+function timeAgo(raw: string, t: TFunction): string {
   const diff = Date.now() - new Date(raw).getTime()
   const m = Math.floor(diff / 60000)
-  if (m < 1) return 'just now'
-  if (m < 60) return `${m}m ago`
+  if (m < 1) return t('common.justNow')
+  if (m < 60) return t('common.minutesAgo', { m })
   const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
-  return `${Math.floor(h / 24)}d ago`
+  if (h < 24) return t('common.hoursAgo', { h })
+  return t('common.daysAgo', { d: Math.floor(h / 24) })
 }
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
@@ -92,21 +95,22 @@ function Skeleton() {
 // ── 404 ───────────────────────────────────────────────────────────────────────
 
 function NotFound() {
+  const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center py-32 text-center px-4">
       <p className="text-5xl font-bold text-neutral-200 dark:text-neutral-800 mb-4">404</p>
       <h1 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
-        Obituary not found
+        {t('publicObituary.notFound.heading')}
       </h1>
       <p className="text-sm text-neutral-400 mb-8">
-        This obituary may have been removed or the link is incorrect.
+        {t('publicObituary.notFound.message')}
       </p>
       <Link
         to="/obituary"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-primary hover:underline"
       >
         <ArrowLeft size={14} />
-        Browse obituaries
+        {t('publicObituary.notFound.browse')}
       </Link>
     </div>
   )
@@ -115,6 +119,7 @@ function NotFound() {
 // ── Obituary header (Navbar variant) ─────────────────────────────────────────
 
 function ObituaryHeader() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const user = useAuthStore((s) => s.user)
@@ -145,12 +150,12 @@ function ObituaryHeader() {
       <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         <button
           type="button"
-          aria-label="Go back"
+          aria-label={t('publicObituary.goBack')}
           onClick={() => (canGoBack ? navigate(-1) : navigate('/obituary'))}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
         >
           <ArrowLeft size={15} />
-          <span className="hidden sm:inline">Back</span>
+          <span className="hidden sm:inline">{t('publicObituary.back_label')}</span>
         </button>
 
         <Link to="/" className="flex items-center gap-2">
@@ -161,7 +166,7 @@ function ObituaryHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              aria-label="User menu"
+              aria-label={t('nav.userMenu')}
               className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
             >
               <UserAvatar src={avatarUrl} name={displayName} size="md" />
@@ -169,13 +174,13 @@ function ObituaryHeader() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem asChild>
-              <Link to="/settings">Profile</Link>
+              <Link to="/settings">{t('nav.profile')}</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/settings">Settings</Link>
+              <Link to="/settings">{t('nav.settings')}</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem onSelect={signOut}>{t('nav.signOut')}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -197,6 +202,8 @@ function SectionCard({ title, children }: { title: string; children: React.React
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function PublicObituaryPage() {
+  const { t } = useTranslation()
+  const { locale } = useLocaleStore()
   const { slug } = useParams<{ slug: string }>()
   const { data: response, isPending, error } = usePublicObituary(slug ?? '')
   const user = useAuthStore((s) => s.user)
@@ -214,7 +221,7 @@ export default function PublicObituaryPage() {
   const fullName = obituary?.full_name ?? ''
   const dateRange = [obituary?.date_of_birth, obituary?.date_of_death]
     .filter(Boolean)
-    .map((d) => formatDate(d!))
+    .map((d) => formatDate(d!, locale))
     .join(' · ')
 
   const location = [obituary?.state, obituary?.country].filter(Boolean).join(', ')
@@ -229,7 +236,7 @@ export default function PublicObituaryPage() {
         {!isPending && error && !is404 && (
           <div className="mx-auto max-w-3xl px-4 py-20 text-center">
             <p className="text-neutral-500 dark:text-neutral-400">
-              Something went wrong. Please try again.
+              {t('publicObituary.error')}
             </p>
           </div>
         )}
@@ -280,7 +287,7 @@ export default function PublicObituaryPage() {
                   )}
                   {obituary.age_at_death && (
                     <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                      Age: {obituary.age_at_death} years
+                      {t('publicObituary.age', { age: obituary.age_at_death })}
                     </p>
                   )}
                 </div>
@@ -292,7 +299,7 @@ export default function PublicObituaryPage() {
 
               {/* Biography */}
               {obituary.biography && (
-                <SectionCard title="Obituary">
+                <SectionCard title={t('publicObituary.obituarySection')}>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
                     {obituary.biography}
                   </p>
@@ -301,33 +308,33 @@ export default function PublicObituaryPage() {
 
               {/* Funeral Details */}
               {obituary.funeral_details && (
-                <SectionCard title="Funeral / Prayer Service">
+                <SectionCard title={t('publicObituary.funeralService')}>
                   <dl className="space-y-2">
                     {obituary.funeral_details.name && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Venue</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.venue')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5">{obituary.funeral_details.name}</dd>
                       </div>
                     )}
                     {obituary.funeral_details.location && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Location</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.location')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5">{obituary.funeral_details.location}</dd>
                       </div>
                     )}
                     {(obituary.funeral_details.date || obituary.funeral_details.time) && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Date &amp; Time</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.dateAndTime')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5">
-                          {[obituary.funeral_details.date && formatDate(obituary.funeral_details.date), obituary.funeral_details.time]
+                          {[obituary.funeral_details.date && formatDate(obituary.funeral_details.date, locale), obituary.funeral_details.time]
                             .filter(Boolean)
-                            .join(' at ')}
+                            .join(` ${t('publicObituary.at')} `)}
                         </dd>
                       </div>
                     )}
                     {obituary.funeral_details.note && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Note</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.note')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5 whitespace-pre-wrap">{obituary.funeral_details.note}</dd>
                       </div>
                     )}
@@ -337,33 +344,33 @@ export default function PublicObituaryPage() {
 
               {/* Burial Details */}
               {obituary.burial_details && (
-                <SectionCard title="Burial">
+                <SectionCard title={t('publicObituary.burial')}>
                   <dl className="space-y-2">
                     {obituary.burial_details.burial_center_name && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Cemetery / Center</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.cemetery')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5">{obituary.burial_details.burial_center_name}</dd>
                       </div>
                     )}
                     {obituary.burial_details.location && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Location</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.location')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5">{obituary.burial_details.location}</dd>
                       </div>
                     )}
                     {(obituary.burial_details.burial_date || obituary.burial_details.burial_time) && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Date &amp; Time</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.dateAndTime')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5">
-                          {[obituary.burial_details.burial_date && formatDate(obituary.burial_details.burial_date), obituary.burial_details.burial_time]
+                          {[obituary.burial_details.burial_date && formatDate(obituary.burial_details.burial_date, locale), obituary.burial_details.burial_time]
                             .filter(Boolean)
-                            .join(' at ')}
+                            .join(` ${t('publicObituary.at')} `)}
                         </dd>
                       </div>
                     )}
                     {obituary.burial_details.note && (
                       <div>
-                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">Note</dt>
+                        <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">{t('publicObituary.note')}</dt>
                         <dd className="text-sm text-neutral-700 dark:text-neutral-300 mt-0.5 whitespace-pre-wrap">{obituary.burial_details.note}</dd>
                       </div>
                     )}
@@ -373,7 +380,7 @@ export default function PublicObituaryPage() {
 
               {/* Family Members */}
               {obituary.family_members && obituary.family_members.length > 0 && (
-                <SectionCard title="Survived By">
+                <SectionCard title={t('publicObituary.survivedBy')}>
                   <ul className="space-y-2">
                     {obituary.family_members.map((member, i) => (
                       <li key={i} className="flex items-center gap-2">
@@ -392,7 +399,7 @@ export default function PublicObituaryPage() {
 
               {/* Contact Person */}
               {obituary.contact_person && (
-                <SectionCard title="Contact Person">
+                <SectionCard title={t('publicObituary.contactPerson')}>
                   <div className="space-y-2">
                     {obituary.contact_person.name && (
                       <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
@@ -425,15 +432,15 @@ export default function PublicObituaryPage() {
               )}
 
               {/* Condolences */}
-              <SectionCard title={`Condolences (${condolences.length})`}>
+              <SectionCard title={t('publicObituary.condolences', { count: condolences.length })}>
                 {user ? (
                   <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
-                    <label htmlFor="condolence-input" className="sr-only">Write a condolence</label>
+                    <label htmlFor="condolence-input" className="sr-only">{t('publicObituary.condolenceInputLabel')}</label>
                     <textarea
                       id="condolence-input"
                       value={condolenceText}
                       onChange={(e) => setCondolenceText(e.target.value)}
-                      placeholder="Share your condolences…"
+                      placeholder={t('publicObituary.condolencePlaceholder')}
                       rows={3}
                       maxLength={500}
                       className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
@@ -450,7 +457,7 @@ export default function PublicObituaryPage() {
                         }}
                         className="rounded-lg bg-brand-primary hover:bg-brand-primaryHover px-4 py-2 text-sm font-medium text-white disabled:opacity-50 transition-colors"
                       >
-                        {posting ? 'Posting…' : 'Post Condolence'}
+                        {posting ? t('publicObituary.posting') : t('publicObituary.postCondolence')}
                       </button>
                     </div>
                   </div>
@@ -462,16 +469,16 @@ export default function PublicObituaryPage() {
                         onClick={() => setSignInOpen(true)}
                         className="text-brand-primary hover:underline font-medium"
                       >
-                        Sign in
+                        {t('common.signIn')}
                       </button>
-                      {' '}to leave a condolence
+                      {' '}{t('publicObituary.signInToCondolence')}
                     </p>
                   </div>
                 )}
 
                 {condolences.length === 0 ? (
                   <p className="text-sm text-neutral-400 italic text-center py-4">
-                    Be the first to leave a condolence.
+                    {t('publicObituary.firstCondolence')}
                   </p>
                 ) : (
                   <div className="space-y-4">
@@ -488,7 +495,7 @@ export default function PublicObituaryPage() {
                               <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                                 {c.author_name}
                               </span>
-                              <span className="text-xs text-neutral-400">{timeAgo(c.created_at)}</span>
+                              <span className="text-xs text-neutral-400">{timeAgo(c.created_at, t)}</span>
                             </div>
                             <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
                               {c.message}
@@ -508,7 +515,7 @@ export default function PublicObituaryPage() {
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-primary hover:underline"
                 >
                   <ArrowLeft size={14} />
-                  Back to Obituaries
+                  {t('publicObituary.back')}
                 </Link>
               </div>
 

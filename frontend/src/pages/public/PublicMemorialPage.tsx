@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Calendar, MapPin, User, Images, X, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { UserAvatar } from '@/components/ui/Avatar'
@@ -16,17 +17,19 @@ import { useTributes, usePostTribute } from '@/hooks/use-tributes'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { SignInModal } from '@/components/auth/SignInModal'
+import { useLocaleStore } from '@/store/localeStore'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import type { MemorialPhoto } from '@/types/memorial'
+import type { TFunction } from 'i18next'
 
 interface LightboxPhoto {
   url: string
   alt: string
 }
 
-function formatDate(raw: string): string {
+function formatDate(raw: string, locale: string): string {
   try {
-    return new Intl.DateTimeFormat('en-GB', {
+    return new Intl.DateTimeFormat(locale, {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
@@ -36,14 +39,14 @@ function formatDate(raw: string): string {
   }
 }
 
-function timeAgo(raw: string): string {
+function timeAgo(raw: string, t: TFunction): string {
   const diff = Date.now() - new Date(raw).getTime()
   const m = Math.floor(diff / 60000)
-  if (m < 1) return 'just now'
-  if (m < 60) return `${m}m ago`
+  if (m < 1) return t('common.justNow')
+  if (m < 60) return t('common.minutesAgo', { m })
   const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
-  return `${Math.floor(h / 24)}d ago`
+  if (h < 24) return t('common.hoursAgo', { h })
+  return t('common.daysAgo', { d: Math.floor(h / 24) })
 }
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
@@ -84,21 +87,22 @@ function Skeleton() {
 // ── 404 ───────────────────────────────────────────────────────────────────────
 
 function NotFound() {
+  const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center py-32 text-center px-4">
       <p className="text-5xl font-bold text-neutral-200 dark:text-neutral-800 mb-4">404</p>
       <h1 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
-        Memorial not found
+        {t('publicMemorial.notFound.heading')}
       </h1>
       <p className="text-sm text-neutral-400 mb-8">
-        This memorial may have been removed or the link is incorrect.
+        {t('publicMemorial.notFound.message')}
       </p>
       <Link
         to="/memorials"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-primary hover:underline"
       >
         <ArrowLeft size={14} />
-        Browse memorials
+        {t('publicMemorial.notFound.browse')}
       </Link>
     </div>
   )
@@ -107,6 +111,7 @@ function NotFound() {
 // ── Memorial header ───────────────────────────────────────────────────────────
 
 function MemorialHeader() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const user = useAuthStore((s) => s.user)
@@ -141,12 +146,12 @@ function MemorialHeader() {
       <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         <button
           type="button"
-          aria-label="Go back"
+          aria-label={t('publicMemorial.goBack')}
           onClick={() => (canGoBack ? navigate(-1) : navigate('/'))}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
         >
           <ArrowLeft size={15} />
-          <span className="hidden sm:inline">Back</span>
+          <span className="hidden sm:inline">{t('publicMemorial.back_label')}</span>
         </button>
 
         <Link to="/" className="flex items-center gap-2">
@@ -157,7 +162,7 @@ function MemorialHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              aria-label="User menu"
+              aria-label={t('nav.userMenu')}
               className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
             >
               <UserAvatar src={avatarUrl} name={displayName} size="md" />
@@ -165,13 +170,13 @@ function MemorialHeader() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem asChild>
-              <Link to="/settings">Profile</Link>
+              <Link to="/settings">{t('nav.profile')}</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/settings">Settings</Link>
+              <Link to="/settings">{t('nav.settings')}</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem onSelect={signOut}>{t('nav.signOut')}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -182,6 +187,8 @@ function MemorialHeader() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function PublicMemorialPage() {
+  const { t } = useTranslation()
+  const { locale } = useLocaleStore()
   const { slug } = useParams<{ slug: string }>()
   const { data: response, isPending, error } = usePublicMemorial(slug ?? '')
   const user = useAuthStore((s) => s.user)
@@ -242,13 +249,13 @@ export default function PublicMemorialPage() {
   const galleryPhotos: MemorialPhoto[] = memorial?.memorial_photos ?? []
   const galleryLightbox: LightboxPhoto[] = galleryPhotos.map((p, i) => ({
     url: p.cloudinary_url,
-    alt: `Gallery photo ${i + 1}`,
+    alt: t('publicMemorial.galleryPhoto', { n: i + 1 }),
   }))
 
   const fullName = memorial?.full_name ?? ''
   const dateRange = [memorial?.date_of_birth, memorial?.date_of_death]
     .filter(Boolean)
-    .map((d) => formatDate(d!))
+    .map((d) => formatDate(d!, locale))
     .join(' · ')
 
   return (
@@ -258,13 +265,13 @@ export default function PublicMemorialPage() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Photo viewer"
+          aria-label={t('publicMemorial.photoViewer')}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90"
           onClick={close}
         >
           <button
             type="button"
-            aria-label="Close photo viewer"
+            aria-label={t('publicMemorial.closeViewer')}
             onClick={close}
             className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
@@ -273,7 +280,7 @@ export default function PublicMemorialPage() {
           {canNav && (
             <button
               type="button"
-              aria-label="Previous photo"
+              aria-label={t('publicMemorial.prevPhoto')}
               onClick={(e) => { e.stopPropagation(); prev() }}
               className="absolute left-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
@@ -289,7 +296,7 @@ export default function PublicMemorialPage() {
           {canNav && (
             <button
               type="button"
-              aria-label="Next photo"
+              aria-label={t('publicMemorial.nextPhoto')}
               onClick={(e) => { e.stopPropagation(); next() }}
               className="absolute right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
@@ -313,7 +320,7 @@ export default function PublicMemorialPage() {
           {!isPending && (error && !is404) && (
             <div className="mx-auto max-w-3xl px-4 py-20 text-center">
               <p className="text-neutral-500 dark:text-neutral-400">
-                Something went wrong. Please try again.
+                {t('publicMemorial.error')}
               </p>
             </div>
           )}
@@ -342,8 +349,8 @@ export default function PublicMemorialPage() {
                     {memorial.profile_url ? (
                       <button
                         type="button"
-                        aria-label="View profile photo"
-                        onClick={() => openProfile(memorial.profile_url!, fullName || 'Profile photo')}
+                        aria-label={t('publicMemorial.viewProfile')}
+                        onClick={() => openProfile(memorial.profile_url!, fullName || t('publicMemorial.viewProfile'))}
                         className="h-full w-full"
                       >
                         <img
@@ -375,7 +382,7 @@ export default function PublicMemorialPage() {
                     )}
                     {memorial.age_at_death && (
                       <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                        Age: {memorial.age_at_death} years
+                        {t('publicMemorial.age', { age: memorial.age_at_death })}
                       </p>
                     )}
                   </div>
@@ -399,7 +406,7 @@ export default function PublicMemorialPage() {
                   {/* Photo Gallery */}
                   <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
                     <h2 className="mb-4 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                      Photo Gallery
+                      {t('publicMemorial.photoGallery')}
                     </h2>
                     {galleryPhotos.length > 0 ? (
                       <div className="grid grid-cols-3 gap-2">
@@ -407,13 +414,13 @@ export default function PublicMemorialPage() {
                           <button
                             key={photo.id}
                             type="button"
-                            aria-label={`View gallery photo ${i + 1}`}
+                            aria-label={t('publicMemorial.viewGalleryPhoto', { n: i + 1 })}
                             onClick={() => openGallery(galleryLightbox, i)}
                             className="aspect-square overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-primary"
                           >
                             <img
                               src={photo.cloudinary_url}
-                              alt={photo.caption ?? `Gallery photo ${i + 1}`}
+                              alt={photo.caption ?? t('publicMemorial.galleryPhoto', { n: i + 1 })}
                               className="h-full w-full object-cover cursor-pointer hover:scale-105 transition-transform duration-200"
                             />
                           </button>
@@ -422,7 +429,7 @@ export default function PublicMemorialPage() {
                     ) : (
                       <div className="flex flex-col items-center justify-center py-10 text-center">
                         <Images className="h-8 w-8 text-neutral-300 dark:text-neutral-600 mb-2" aria-hidden="true" />
-                        <p className="text-sm text-neutral-400">No photos added yet.</p>
+                        <p className="text-sm text-neutral-400">{t('publicMemorial.noPhotos')}</p>
                       </div>
                     )}
                   </div>
@@ -430,14 +437,14 @@ export default function PublicMemorialPage() {
                   {/* Biography */}
                   <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
                     <h2 className="mb-4 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                      Biography
+                      {t('publicMemorial.biography')}
                     </h2>
                     {memorial.biography ? (
                       <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
                         {memorial.biography}
                       </p>
                     ) : (
-                      <p className="text-sm text-neutral-400 italic">No biography added yet.</p>
+                      <p className="text-sm text-neutral-400 italic">{t('publicMemorial.noBiography')}</p>
                     )}
                   </div>
                 </div>
@@ -445,17 +452,17 @@ export default function PublicMemorialPage() {
                 {/* Tributes */}
                 <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
                   <h2 className="mb-5 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                    Tributes ({tributes.length})
+                    {t('publicMemorial.tributes', { count: tributes.length })}
                   </h2>
 
                   {user ? (
                     <div className="mb-6 rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
-                      <label htmlFor="tribute-input" className="sr-only">Write a tribute</label>
+                      <label htmlFor="tribute-input" className="sr-only">{t('publicMemorial.tributeInputLabel')}</label>
                       <textarea
                         id="tribute-input"
                         value={tributeText}
                         onChange={(e) => setTributeText(e.target.value)}
-                        placeholder="Share your memories and pay tribute…"
+                        placeholder={t('publicMemorial.tributePlaceholder')}
                         rows={3}
                         maxLength={500}
                         className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
@@ -472,7 +479,7 @@ export default function PublicMemorialPage() {
                           }}
                           className="rounded-lg bg-brand-primary hover:bg-brand-primaryHover px-4 py-2 text-sm font-medium text-white disabled:opacity-50 transition-colors"
                         >
-                          {posting ? 'Posting…' : 'Post Tribute'}
+                          {posting ? t('publicMemorial.posting') : t('publicMemorial.postTribute')}
                         </button>
                       </div>
                     </div>
@@ -484,36 +491,36 @@ export default function PublicMemorialPage() {
                           onClick={() => setSignInOpen(true)}
                           className="text-brand-primary hover:underline font-medium"
                         >
-                          Sign in
+                          {t('common.signIn')}
                         </button>
-                        {' '}to leave a tribute
+                        {' '}{t('publicMemorial.signInToTribute')}
                       </p>
                     </div>
                   )}
 
                   {tributes.length === 0 ? (
                     <p className="text-sm text-neutral-400 italic text-center py-4">
-                      Be the first to leave a tribute.
+                      {t('publicMemorial.firstTribute')}
                     </p>
                   ) : (
                     <div className="space-y-4">
-                      {tributes.map((t) => (
-                        <div key={t.id} className="rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
+                      {tributes.map((tribute) => (
+                        <div key={tribute.id} className="rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
                           <div className="flex items-start gap-3">
                             <div className="h-9 w-9 shrink-0 rounded-full bg-brand-primary/10 flex items-center justify-center">
                               <span className="text-xs font-semibold text-brand-primary" aria-hidden="true">
-                                {t.author_name.charAt(0).toUpperCase()}
+                                {tribute.author_name.charAt(0).toUpperCase()}
                               </span>
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-baseline gap-2 flex-wrap">
                                 <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                                  {t.author_name}
+                                  {tribute.author_name}
                                 </span>
-                                <span className="text-xs text-neutral-400">{timeAgo(t.created_at)}</span>
+                                <span className="text-xs text-neutral-400">{timeAgo(tribute.created_at, t)}</span>
                               </div>
                               <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">
-                                {t.message}
+                                {tribute.message}
                               </p>
                             </div>
                           </div>
@@ -530,7 +537,7 @@ export default function PublicMemorialPage() {
                     className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-primary hover:underline"
                   >
                     <ArrowLeft size={14} />
-                    Back to Memorials
+                    {t('publicMemorial.back')}
                   </Link>
                 </div>
 

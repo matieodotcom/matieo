@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Controller } from 'react-hook-form'
 import { ArrowRight, Check, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { PhotoUpload, GalleryUpload } from '@/components/ui/PhotoUpload'
 import { Select } from '@/components/ui/Select'
 import { DatePicker } from '@/components/ui/DatePicker'
@@ -17,11 +18,12 @@ const AGE_OPTIONS = Array.from({ length: 120 }, (_, i) => ({
   label: String(i + 1),
 }))
 
-const GENDER_OPTIONS = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'non-binary', label: 'Non-binary' },
-  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+// GENDER_OPTIONS labels are resolved via t() inside the component
+const GENDER_OPTION_KEYS = [
+  { value: 'male', tKey: 'form.gender_male' },
+  { value: 'female', tKey: 'form.gender_female' },
+  { value: 'non-binary', tKey: 'form.gender_nonBinary' },
+  { value: 'prefer_not_to_say', tKey: 'form.gender_preferNotToSay' },
 ]
 
 const RACE_OPTIONS = [
@@ -364,6 +366,7 @@ interface CoverPhotoFieldProps {
 }
 
 export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient, onGradientChange }: CoverPhotoFieldProps) {
+  const { t } = useTranslation()
   const parsedCustom = coverGradient.startsWith('linear-gradient')
     ? parseLinearGradient(coverGradient)
     : null
@@ -419,14 +422,14 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
       {/* Upload area — 3 conditions */}
       {coverPhoto ? (
         <PhotoUpload
-          label="Cover Background"
-          hint="Recommended 1216×282px, up to 10MB"
+          label={t('createMemorial.coverLabel')}
+          hint={t('createMemorial.coverHint')}
           value={coverPhoto}
           onChange={onCoverPhotoChange}
         />
       ) : gradientActive ? (
         <div>
-          <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">Cover Background</p>
+          <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('createMemorial.coverLabel')}</p>
           <div className="relative h-40 w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             {preset
               ? <div className={`h-full w-full bg-gradient-to-r ${preset.tw}`} />
@@ -435,7 +438,7 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
             <button
               type="button"
               onClick={() => setGradientActive(false)}
-              aria-label="Clear gradient"
+              aria-label={t('createMemorial.gradientClear')}
               className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center
                 rounded-full bg-neutral-900/70 text-white hover:bg-neutral-900 transition-colors"
             >
@@ -445,11 +448,11 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
         </div>
       ) : (
         <PhotoUpload
-          label="Cover Background"
-          hint="Recommended 1216×282px, up to 10MB"
+          label={t('createMemorial.coverLabel')}
+          hint={t('createMemorial.coverHint')}
           value={null}
           onChange={onCoverPhotoChange}
-          uploadText="Click or drag to upload / select gradient"
+          uploadText={t('createMemorial.coverUploadText')}
         />
       )}
 
@@ -458,18 +461,18 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
           {/* Tab header */}
           <div className="flex items-center justify-end gap-3">
             <div className="flex rounded-lg bg-neutral-100 dark:bg-neutral-800 p-0.5 gap-0.5">
-              {(['presets', 'custom'] as const).map((t) => (
+              {(['presets', 'custom'] as const).map((tabKey) => (
                 <button
-                  key={t}
+                  key={tabKey}
                   type="button"
-                  onClick={() => switchTab(t)}
+                  onClick={() => switchTab(tabKey)}
                   className={`rounded-md px-3 py-1 text-xs font-medium transition-all ${
-                    tab === t
+                    tab === tabKey
                       ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 shadow-sm'
                       : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200'
                   }`}
                 >
-                  {t === 'presets' ? 'Presets' : 'Custom Gradient'}
+                  {tabKey === 'presets' ? t('createMemorial.gradientPresets') : t('createMemorial.gradientCustom')}
                 </button>
               ))}
             </div>
@@ -517,7 +520,7 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
               {/* Direction */}
               <div>
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                  Direction
+                  {t('createMemorial.gradientDirection')}
                 </p>
                 <div className="flex gap-1.5">
                   {GRADIENT_DIRECTIONS.map((d) => (
@@ -543,7 +546,7 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                    From
+                    {t('createMemorial.gradientFrom')}
                   </p>
                   <button
                     type="button"
@@ -567,7 +570,7 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
 
                 <div>
                   <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                    To
+                    {t('createMemorial.gradientTo')}
                   </p>
                   <button
                     type="button"
@@ -600,6 +603,7 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function CreateMemorialPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { form, onSaveDraft, onPublish, isPending, isLoading, isEdit, error } = useMemorialForm(id)
@@ -652,6 +656,7 @@ export default function CreateMemorialPage() {
 
   const domain = getDomain()
   const displaySlug = slug || '…'
+  const genderOptions = GENDER_OPTION_KEYS.map(({ value, tKey }) => ({ value, label: t(tKey) }))
 
   if (isLoading) {
     return (
@@ -672,18 +677,16 @@ export default function CreateMemorialPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-          {isEdit ? 'Edit Memorial' : 'Create a Memorial'}
+          {isEdit ? t('createMemorial.editHeading') : t('createMemorial.heading')}
         </h1>
         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-          {isEdit
-            ? 'Update the memorial details below.'
-            : 'Honour the life of your loved one. You can save a draft at any time.'}
+          {isEdit ? t('createMemorial.editSubheading') : t('createMemorial.subheading')}
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onPublish)} noValidate className="space-y-6">
         {/* Photos */}
-        <Section title="Photos">
+        <Section title={t('createMemorial.sectionPhotos')}>
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
             <div className="w-full sm:w-[360px] sm:shrink-0">
               <Controller
@@ -691,8 +694,8 @@ export default function CreateMemorialPage() {
                 control={control}
                 render={({ field }) => (
                   <PhotoUpload
-                    label="Memorial Photo"
-                    hint="Recommended 360×360px, up to 10MB"
+                    label={t('createMemorial.photoLabel')}
+                    hint={t('createMemorial.photoHint')}
                     value={field.value ?? null}
                     onChange={field.onChange}
                     uploadAreaClassName="h-48 sm:h-[360px]"
@@ -725,15 +728,15 @@ export default function CreateMemorialPage() {
         </Section>
 
         {/* Personal Information */}
-        <Section title="Personal Information">
+        <Section title={t('createMemorial.sectionPersonalInfo')}>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {/* First Name */}
             <div>
-              <FieldLabel htmlFor="firstName" required>First Name</FieldLabel>
+              <FieldLabel htmlFor="firstName" required>{t('form.firstName')}</FieldLabel>
               <input
                 id="firstName"
                 type="text"
-                placeholder="Enter first name"
+                placeholder={t('form.enterFirstName')}
                 className={inputClass}
                 {...register('firstName')}
               />
@@ -742,11 +745,11 @@ export default function CreateMemorialPage() {
 
             {/* Last Name */}
             <div>
-              <FieldLabel htmlFor="lastName" required>Last Name</FieldLabel>
+              <FieldLabel htmlFor="lastName" required>{t('form.lastName')}</FieldLabel>
               <input
                 id="lastName"
                 type="text"
-                placeholder="Enter last name"
+                placeholder={t('form.enterLastName')}
                 className={inputClass}
                 {...register('lastName')}
               />
@@ -755,7 +758,7 @@ export default function CreateMemorialPage() {
 
             {/* Date of Birth */}
             <div>
-              <FieldLabel htmlFor="dateOfBirth">Date of Birth</FieldLabel>
+              <FieldLabel htmlFor="dateOfBirth">{t('form.dateOfBirth')}</FieldLabel>
               <Controller
                 name="dateOfBirth"
                 control={control}
@@ -764,7 +767,7 @@ export default function CreateMemorialPage() {
                     id="dateOfBirth"
                     value={field.value ?? undefined}
                     onChange={field.onChange}
-                    placeholder="Pick date of birth"
+                    placeholder={t('form.pickDateOfBirth')}
                     disableFuture
                   />
                 )}
@@ -774,7 +777,7 @@ export default function CreateMemorialPage() {
 
             {/* Date of Death */}
             <div>
-              <FieldLabel htmlFor="dateOfDeath">Date of Death</FieldLabel>
+              <FieldLabel htmlFor="dateOfDeath">{t('form.dateOfDeath')}</FieldLabel>
               <Controller
                 name="dateOfDeath"
                 control={control}
@@ -783,7 +786,7 @@ export default function CreateMemorialPage() {
                     id="dateOfDeath"
                     value={field.value ?? undefined}
                     onChange={field.onChange}
-                    placeholder="Pick date of death"
+                    placeholder={t('form.pickDateOfDeath')}
                     disableFuture
                   />
                 )}
@@ -793,7 +796,7 @@ export default function CreateMemorialPage() {
 
             {/* Age at Death */}
             <div>
-              <FieldLabel htmlFor="ageAtDeath">Age at Death</FieldLabel>
+              <FieldLabel htmlFor="ageAtDeath">{t('form.ageAtDeath')}</FieldLabel>
               <Controller
                 name="ageAtDeath"
                 control={control}
@@ -802,7 +805,7 @@ export default function CreateMemorialPage() {
                     id="ageAtDeath"
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
-                    placeholder="Select age"
+                    placeholder={t('form.selectAge')}
                     options={AGE_OPTIONS}
                   />
                 )}
@@ -811,7 +814,7 @@ export default function CreateMemorialPage() {
 
             {/* Gender */}
             <div>
-              <FieldLabel htmlFor="gender" required>Gender</FieldLabel>
+              <FieldLabel htmlFor="gender" required>{t('form.gender')}</FieldLabel>
               <Controller
                 name="gender"
                 control={control}
@@ -820,8 +823,8 @@ export default function CreateMemorialPage() {
                     id="gender"
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
-                    placeholder="Select gender"
-                    options={GENDER_OPTIONS}
+                    placeholder={t('form.selectGender')}
+                    options={genderOptions}
                   />
                 )}
               />
@@ -830,7 +833,7 @@ export default function CreateMemorialPage() {
 
             {/* Race / Ethnicity */}
             <div>
-              <FieldLabel htmlFor="raceEthnicity" required>Race / Ethnicity</FieldLabel>
+              <FieldLabel htmlFor="raceEthnicity" required>{t('form.raceEthnicity')}</FieldLabel>
               <Controller
                 name="raceEthnicity"
                 control={control}
@@ -839,7 +842,7 @@ export default function CreateMemorialPage() {
                     id="raceEthnicity"
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
-                    placeholder="Select race/ethnicity"
+                    placeholder={t('form.selectRace')}
                     options={RACE_OPTIONS}
                   />
                 )}
@@ -849,7 +852,7 @@ export default function CreateMemorialPage() {
 
             {/* Country */}
             <div>
-              <FieldLabel htmlFor="country" required>Country</FieldLabel>
+              <FieldLabel htmlFor="country" required>{t('form.country')}</FieldLabel>
               <Controller
                 name="country"
                 control={control}
@@ -862,7 +865,7 @@ export default function CreateMemorialPage() {
                       // Reset state when country changes
                       setValue('state', '')
                     }}
-                    placeholder="Select country"
+                    placeholder={t('form.selectCountry')}
                     options={countryOptions}
                   />
                 )}
@@ -872,7 +875,7 @@ export default function CreateMemorialPage() {
 
             {/* State (Malaysia only) */}
             <div>
-              <FieldLabel htmlFor="state">State</FieldLabel>
+              <FieldLabel htmlFor="state">{t('form.state')}</FieldLabel>
               <Controller
                 name="state"
                 control={control}
@@ -881,7 +884,7 @@ export default function CreateMemorialPage() {
                     id="state"
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
-                    placeholder={stateOptions.length > 0 ? 'Select state / province' : 'No states for this country'}
+                    placeholder={stateOptions.length > 0 ? t('form.selectState') : t('form.noStates')}
                     options={stateOptions}
                     disabled={stateOptions.length === 0}
                   />
@@ -891,7 +894,7 @@ export default function CreateMemorialPage() {
 
             {/* Creator Relationship */}
             <div>
-              <FieldLabel htmlFor="creatorRelationship">Your Relationship to the Deceased</FieldLabel>
+              <FieldLabel htmlFor="creatorRelationship">{t('form.creatorRelationship')}</FieldLabel>
               <Controller
                 name="creatorRelationship"
                 control={control}
@@ -900,7 +903,7 @@ export default function CreateMemorialPage() {
                     id="creatorRelationship"
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
-                    placeholder="Select your relationship"
+                    placeholder={t('form.selectRelationship')}
                     options={RELATIONSHIP_OPTIONS}
                   />
                 )}
@@ -910,14 +913,14 @@ export default function CreateMemorialPage() {
         </Section>
 
         {/* Memorial Quote */}
-        <Section title="Memorial Quote">
+        <Section title={t('createMemorial.sectionQuote')}>
           <div>
-            <FieldLabel htmlFor="quote">Quote</FieldLabel>
+            <FieldLabel htmlFor="quote">{t('createMemorial.fieldQuote')}</FieldLabel>
             <textarea
               id="quote"
               rows={3}
               maxLength={2000}
-              placeholder="A meaningful quote to remember them by…"
+              placeholder={t('createMemorial.quotePlaceholder')}
               className={textareaClass}
               {...register('quote')}
             />
@@ -927,15 +930,15 @@ export default function CreateMemorialPage() {
         </Section>
 
         {/* Memorial Message */}
-        <Section title="Memorial Message">
+        <Section title={t('createMemorial.sectionMessage')}>
           <div className="space-y-5">
             <div>
-              <FieldLabel htmlFor="biography">Biography</FieldLabel>
+              <FieldLabel htmlFor="biography">{t('form.biography')}</FieldLabel>
               <textarea
                 id="biography"
                 rows={6}
                 maxLength={4000}
-                placeholder="Share the story of their life…"
+                placeholder={t('createMemorial.biographyPlaceholder')}
                 className={textareaClass}
                 {...register('biography')}
               />
@@ -944,12 +947,12 @@ export default function CreateMemorialPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="tributeMessage">Tribute Message</FieldLabel>
+              <FieldLabel htmlFor="tributeMessage">{t('createMemorial.fieldTributeMessage')}</FieldLabel>
               <textarea
                 id="tributeMessage"
                 rows={4}
                 maxLength={1500}
-                placeholder="A personal tribute from you…"
+                placeholder={t('createMemorial.tributePlaceholder')}
                 className={textareaClass}
                 {...register('tributeMessage')}
               />
@@ -960,7 +963,7 @@ export default function CreateMemorialPage() {
         </Section>
 
         {/* Photo Gallery */}
-        <Section title="Photo Gallery">
+        <Section title={t('createMemorial.sectionGallery')}>
           <Controller
             name="galleryPhotos"
             control={control}
@@ -975,9 +978,9 @@ export default function CreateMemorialPage() {
         </Section>
 
         {/* Web Address */}
-        <Section title="Create Memorial Web Address">
+        <Section title={t('createMemorial.sectionWebAddress')}>
           <div>
-            <FieldLabel htmlFor="slug">Memorial URL</FieldLabel>
+            <FieldLabel htmlFor="slug">{t('createMemorial.fieldMemorialUrl')}</FieldLabel>
             <div className="flex items-center gap-2">
               <span className="shrink-0 text-sm text-neutral-500 dark:text-neutral-400 hidden sm:inline">
                 {domain}/memorial/
@@ -997,7 +1000,7 @@ export default function CreateMemorialPage() {
               />
             </div>
             <p className="mt-1.5 text-xs text-neutral-400 break-all">
-              Preview: {domain}/memorial/{displaySlug}
+              {t('createMemorial.urlPreview', { domain, slug: displaySlug })}
             </p>
             {errors.slug && <ErrorMessage message={errors.slug.message!} />}
           </div>
@@ -1005,7 +1008,7 @@ export default function CreateMemorialPage() {
 
         {/* Global mutation error */}
         {error && (
-          <ErrorMessage message={error instanceof Error ? error.message : 'Something went wrong'} />
+          <ErrorMessage message={error instanceof Error ? error.message : t('common.somethingWrong')} />
         )}
 
         {/* Bottom actions */}
@@ -1017,7 +1020,7 @@ export default function CreateMemorialPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-primary px-5 py-3 text-sm font-medium
               text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors sm:hidden"
           >
-            {isPending ? 'Saving…' : 'Publish Memorial'}
+            {isPending ? t('form.saving') : t('createMemorial.publishBtn')}
             {!isPending && <ArrowRight className="h-4 w-4" />}
           </button>
 
@@ -1031,7 +1034,7 @@ export default function CreateMemorialPage() {
                 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800
                 disabled:opacity-50 transition-colors sm:flex-none"
             >
-              Save as Draft
+              {t('form.saveDraft')}
             </button>
             <button
               type="button"
@@ -1045,7 +1048,7 @@ export default function CreateMemorialPage() {
                 text-brand-primary hover:bg-brand-primaryLight/40 dark:hover:bg-brand-primary/10
                 disabled:opacity-50 transition-colors sm:flex-none"
             >
-              Preview
+              {t('form.preview')}
             </button>
           </div>
 
@@ -1057,7 +1060,7 @@ export default function CreateMemorialPage() {
               disabled={isPending}
               className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors disabled:opacity-50"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
 
             {/* Desktop Publish (hidden on mobile — shown above instead) */}
@@ -1067,7 +1070,7 @@ export default function CreateMemorialPage() {
               className="hidden sm:flex items-center gap-2 rounded-lg bg-brand-primary px-5 py-2.5 text-sm font-medium
                 text-white hover:bg-brand-primaryHover disabled:opacity-50 transition-colors"
             >
-              {isPending ? 'Saving…' : 'Publish Memorial'}
+              {isPending ? t('form.saving') : t('createMemorial.publishBtn')}
               {!isPending && <ArrowRight className="h-4 w-4" />}
             </button>
           </div>

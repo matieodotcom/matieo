@@ -1,0 +1,531 @@
+{
+  "nav": {
+    "memorials": "النصب التذكارية",
+    "obituary": "نعي",
+    "insights": "رؤى",
+    "features": "الميزات",
+    "pricing": "الأسعار",
+    "about": "حول",
+    "dashboard": "لوحة التحكم",
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "signOut": "تسجيل الخروج",
+    "userMenu": "قائمة المستخدم",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة"
+  },
+  "landing": {
+    "hero": {
+      "trusted": "موثوق به من قِبل أكثر من 30,000 عائلة",
+      "heading": "تكريم الأرواح،\nحفظ\nالذكريات",
+      "description": "نساعد العائلات والأحباء على إنشاء نعي كريم ونصب تذكارية رقمية، مع الحفاظ على القصص والصور والتحيات—مع المساهمة باحترام في رؤى أوسع تساعدنا على فهم الحياة والخسارة.",
+      "createMemorial": "إنشاء نصب تذكاري",
+      "createObituary": "إنشاء نعي",
+      "support": "دعم",
+      "secure": "آمن",
+      "memorialPublished": "تم نشر النصب التذكاري",
+      "support247": "24/7",
+      "secure100": "100%"
+    },
+    "features": {
+      "heading": "كل ما تحتاجه في منصة واحدة",
+      "subheading": "أنشئ نعيًا صادقًا، احفظ الذكريات بالنصب التذكارية الرقمية، واستكشف رؤى شاملة—كل ذلك في منصة واحدة قوية.",
+      "obituary": {
+        "title": "نعي",
+        "description": "أنشئ نعيًا لتكريم عزيز عليك. شارك قصته، احتفل بحياته، واترك تحية دائمة للأصدقاء والعائلة."
+      },
+      "memorials": {
+        "title": "النصب التذكارية الرقمية",
+        "description": "أنشئ نصبًا تذكارية جميلة ودائمة لأحبائك. شارك الذكريات والصور والقصص مع العائلة والأصدقاء في جميع أنحاء العالم."
+      },
+      "services": {
+        "title": "خدمات الجنازة",
+        "description": "تواصل مع مزودي خدمات الجنازة الموثوقين للترتيبات والمواقع ودعم المجتمع في وقت صعب."
+      },
+      "insights": {
+        "title": "رؤى",
+        "description": "أدوات تصور قوية تساعدك على فهم الاتجاهات والأنماط والرؤى من بيانات الوفيات."
+      },
+      "privacy": {
+        "title": "الخصوصية والأمان",
+        "description": "بياناتك محمية بتشفير على مستوى المؤسسات. نحن لا نشارك معلوماتك أبدًا دون موافقتك."
+      },
+      "community": {
+        "title": "دعم المجتمع",
+        "description": "انضم إلى آلاف العائلات والباحثين. شارك التجارب، ابحث عن الدعم، وساهم في معرفتنا الجماعية."
+      }
+    },
+    "howItWorks": {
+      "heading": "كيف يعمل",
+      "subheading": "شاهد أدلة الفيديو خطوة بخطوة لتعلم كيفية استخدام ميزات MATIEO القوية.",
+      "memorials": {
+        "title": "النصب التذكارية",
+        "description": "اكتشف كيفية بناء نصب تذكاري رقمي جميل للحفاظ على الذكريات العزيزة."
+      },
+      "obituary": {
+        "title": "نعي",
+        "description": "تعلم كيفية إنشاء نعي ذي معنى يكرم حياة وإرث عزيز عليك."
+      },
+      "insights": {
+        "title": "رؤى",
+        "description": "استكشف أدوات تحليلية قوية توفر رؤى شاملة للوفيات والبحث."
+      },
+      "playTutorial": "تشغيل البرنامج التعليمي {{title}}"
+    },
+    "stats": {
+      "heading": "موثوق به من قِبل الآلاف",
+      "subheading": "منصتنا تخدم العائلات والباحثين والمنظمات ببيانات موثوقة وخدمات رحيمة.",
+      "obituaries": {
+        "value": "+500K",
+        "label": "نعي منشأ",
+        "description": "تكريم الأرواح بتحيات ذات معنى"
+      },
+      "memorials": {
+        "value": "+2.5M",
+        "label": "نصب تذكاري رقمي",
+        "description": "حفظ الذكريات للأجيال القادمة"
+      },
+      "insights": {
+        "value": "+1B",
+        "label": "رؤى",
+        "description": "رؤى شاملة للوفيات"
+      },
+      "satisfaction": {
+        "value": "99.9%",
+        "label": "رضا المستخدم",
+        "description": "موثوق به من معظم العائلات"
+      }
+    },
+    "testimonials": {
+      "heading": "ما يقوله مستخدمونا",
+      "subheading": "انضم إلى آلاف العائلات والباحثين والمنظمات الراضية التي تثق في MATIEO.",
+      "rating": "4.9 من 5 نجوم من أكثر من 12,000 مراجعة",
+      "starsLabel": "5 من 5 نجوم",
+      "items": [
+        {
+          "quote": "\"قاعدة بيانات MATIEO الشاملة كانت لا تقدر بثمن لبحثنا في الوفيات. عمق البيانات وسهولة الوصول سرّع عملنا بشكل كبير.\"",
+          "name": "د. سارة تشن",
+          "role": "باحثة في الأمراض"
+        },
+        {
+          "quote": "\"كان إنشاء نصب تذكاري لأبي تجربة جميلة. سهّلت المنصة مشاركة الذكريات والتواصل مع العائلة في جميع أنحاء العالم.\"",
+          "name": "مايكل رودريغيز",
+          "role": "أحد أفراد العائلة"
+        },
+        {
+          "quote": "\"البيانات التاريخية وإمكانيات البحث رائعة. تمكنت من تتبع تاريخ العائلة عبر أجيال متعددة بسهولة ملحوظة.\"",
+          "name": "إيما طومسون",
+          "role": "علم الأنساب"
+        },
+        {
+          "quote": "\"نستخدم MATIEO لاحتياجات إعداد تقارير نظام مستشفانا. البيانات الفورية ولوحة التحكم البديهية غيّرت طريقة تحليلنا لنتائج المرضى.\"",
+          "name": "جوردان بارك",
+          "role": "مدير الرعاية الصحية"
+        },
+        {
+          "quote": "\"الدعم الذي تلقيناه في وقت صعب كان استثنائيًا. MATIEO يفهم حقًا احتياجات العائلات الحزينة ويوفر أدوات مدروسة.\"",
+          "name": "ليزا أندرسون",
+          "role": "أحد أفراد العائلة"
+        },
+        {
+          "quote": "\"كان تكامل API سلسًا، وجودة البيانات ممتازة باستمرار. استفادت منصة التحليلات لدينا كثيرًا من هذه الشراكة.\"",
+          "name": "ديفيد كيم",
+          "role": "مهندس البيانات"
+        }
+      ]
+    },
+    "cta": {
+      "heading": "ابدأ اليوم",
+      "subheading": "أنشئ نعيًا ذا معنى، وابنِ نصبًا تذكارية رقمية دائمة، وخدمات الجنازة والتواصل مع الأحباء، واستكشف رؤى قوية—كل ذلك في منصة واحدة.",
+      "createObituary": "إنشاء نعي",
+      "createMemorial": "إنشاء نصب تذكاري",
+      "noFees": "لا رسوم خفية",
+      "cancelAnytime": "إلغاء في أي وقت",
+      "getSupport": "احصل على دعم"
+    },
+    "waitlist": {
+      "heading": "لست مستعدًا للتسجيل بعد؟",
+      "subheading": "ابقَ على تواصل معنا! تابع رحلتنا واحصل على تحديثات حول الميزات الجديدة والقصص والرؤى المُوصلة إلى بريدك الإلكتروني.",
+      "namePlaceholder": "أدخل اسمك",
+      "nameLabel": "اسمك",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "emailLabel": "بريدك الإلكتروني",
+      "submit": "تابعنا",
+      "submitting": "جارٍ الإرسال…",
+      "success": "أنت معنا! سنبقيك على اطلاع بأخبار MATIEO."
+    }
+  },
+  "auth": {
+    "rightPanel": {
+      "heading": "طريقة حديثة للتذكر",
+      "subheading": "أنشئ وشارك نعيًا رقميًا ونصبًا تذكارية بكرامة وبساطة ورعاية."
+    },
+    "copyright": "© 2026 MATIEO",
+    "terms": "بالمتابعة، أنت توافق على",
+    "termsLink": "شروط الخدمة",
+    "and": "و",
+    "privacyLink": "سياسة الخصوصية",
+    "signIn": {
+      "heading": "تسجيل الدخول",
+      "subheading": "مرحبًا بعودتك! يرجى إدخال تفاصيلك.",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "name@email.com",
+      "passwordLabel": "كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "submit": "تسجيل الدخول",
+      "submitting": "جارٍ تسجيل الدخول…",
+      "google": "تسجيل الدخول بـ Google",
+      "or": "أو",
+      "createAccount": "إنشاء حساب جديد",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "emailNotVerified": {
+        "title": "البريد الإلكتروني غير مُتحقق منه",
+        "message": "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول.",
+        "resend": "إعادة إرسال رسالة التحقق",
+        "resending": "جارٍ الإرسال…",
+        "resendIn": "أعد الإرسال خلال {{count}} ث"
+      }
+    },
+    "signUp": {
+      "heading": "إنشاء حساب",
+      "subheading": "لنبدأ بتجربتك المجانية لمدة 14 يومًا",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "email": "البريد الإلكتروني",
+      "confirmEmail": "تأكيد البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "google": "التسجيل بـ Google",
+      "or": "أو",
+      "submit": "إنشاء حساب",
+      "submitting": "جارٍ إنشاء الحساب…",
+      "alreadyMember": "هل أنت عضو بالفعل؟",
+      "login": "سجّل الدخول الآن",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "showConfirmPassword": "إظهار تأكيد كلمة المرور",
+      "hideConfirmPassword": "إخفاء تأكيد كلمة المرور",
+      "verification": {
+        "title": "تم إرسال رابط التحقق",
+        "message": "يرجى التحقق من بريدك الإلكتروني. لقد أرسلنا رابطًا إلى"
+      }
+    },
+    "forgotPassword": {
+      "heading": "نسيت كلمة المرور؟",
+      "subheading": "لا تقلق، سنرسل لك تعليمات إعادة التعيين.",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "name@email.com",
+      "submit": "إعادة تعيين كلمة المرور",
+      "submitting": "جارٍ الإرسال…",
+      "checkEmail": {
+        "heading": "تحقق من بريدك الإلكتروني",
+        "message": "لقد أرسلنا رابط إعادة تعيين كلمة المرور إلى",
+        "openEmail": "فتح البريد الإلكتروني",
+        "notReceived": "لم تستلم البريد الإلكتروني؟",
+        "resend": "انقر للإعادة"
+      },
+      "backToSignIn": "العودة إلى تسجيل الدخول"
+    }
+  },
+  "dashboard": {
+    "welcome": "مرحبًا بعودتك، {{name}}!",
+    "subtitle": "إليك ما يحدث.",
+    "quickActions": {
+      "createMemorial": "إنشاء نصب تذكاري",
+      "createMemorialDesc": "تكريم عزيز عليك",
+      "browseMemorials": "استعراض النصب التذكارية",
+      "browseMemorialsDesc": "عرض كل النصب التذكارية",
+      "insights": "رؤى",
+      "insightsDesc": "تحليلات الوفيات",
+      "services": "الخدمات",
+      "servicesDesc": "خدمات الجنازة والدعم"
+    }
+  },
+  "layout": {
+    "navigate": "التنقل",
+    "backToEditing": "العودة إلى التحرير",
+    "myMemorials": "نصبي التذكارية",
+    "myObituaries": "نعياتي",
+    "home": "الرئيسية",
+    "toggleNav": "تبديل التنقل",
+    "lightMode": "الوضع الفاتح",
+    "darkMode": "الوضع الداكن",
+    "switchToLight": "التبديل إلى الوضع الفاتح",
+    "switchToDark": "التبديل إلى الوضع الداكن"
+  },
+  "sidebar": {
+    "insights": "رؤى",
+    "memorials": "النصب التذكارية",
+    "obituary": "نعي",
+    "services": "الخدمات"
+  },
+  "memorials": {
+    "heading": "نصبي التذكارية",
+    "subheading": "إدارة وعرض جميع النصب التذكارية التي أنشأتها",
+    "search": "بحث...",
+    "searchLabel": "البحث في النصب التذكارية",
+    "createBtn": "إنشاء نصب تذكاري",
+    "emptySearch": "لا توجد نصب تذكارية تطابق \"{{q}}\"",
+    "emptySearchHint": "جرّب مصطلح بحث مختلفًا.",
+    "empty": "لم تنشئ أي نصب تذكارية بعد",
+    "emptyHint": "أنشئ أول نصب تذكاري لتكريم أحد أحبائك.",
+    "deleteDraft": {
+      "title": "حذف هذه المسودة؟",
+      "description": "سيؤدي هذا إلى حذف المسودة وجميع صورها نهائيًا. لا يمكن التراجع عن هذا.",
+      "confirm": "حذف",
+      "confirming": "جارٍ الحذف…"
+    },
+    "unpublish": {
+      "title": "إلغاء نشر هذا النصب التذكاري؟",
+      "description": "لن يكون النصب التذكاري متاحًا للعموم بعد الآن. سيُحفظ كمسودة ويمكنك إعادة نشره في أي وقت.",
+      "confirm": "إلغاء النشر",
+      "confirming": "جارٍ إلغاء النشر…"
+    }
+  },
+  "obituaries": {
+    "heading": "نعياتي",
+    "subheading": "إدارة وعرض جميع النعيات التي أنشأتها",
+    "search": "بحث...",
+    "searchLabel": "البحث في النعيات",
+    "createBtn": "إنشاء نعي",
+    "emptySearch": "لا توجد نعيات تطابق \"{{q}}\"",
+    "emptySearchHint": "جرّب مصطلح بحث مختلفًا.",
+    "empty": "لم تنشئ أي نعيات بعد",
+    "emptyHint": "أنشئ أول نعي لتكريم أحد أحبائك.",
+    "deleteDraft": {
+      "title": "حذف هذه المسودة؟",
+      "description": "سيؤدي هذا إلى حذف المسودة وجميع صورها نهائيًا. لا يمكن التراجع عن هذا.",
+      "confirm": "حذف",
+      "confirming": "جارٍ الحذف…"
+    },
+    "unpublish": {
+      "title": "إلغاء نشر هذا النعي؟",
+      "description": "لن يكون النعي متاحًا للعموم بعد الآن. سيُحفظ كمسودة ويمكنك إعادة نشره في أي وقت.",
+      "confirm": "إلغاء النشر",
+      "confirming": "جارٍ إلغاء النشر…"
+    }
+  },
+  "card": {
+    "published": "منشور",
+    "draft": "مسودة",
+    "deleteDraft": "حذف المسودة",
+    "unpublish": "إلغاء النشر",
+    "memorialOptions": "خيارات النصب التذكاري",
+    "obituaryOptions": "خيارات النعي",
+    "age": "العمر: {{age}}",
+    "by": "بواسطة {{name}}"
+  },
+  "publicMemorial": {
+    "notFound": {
+      "heading": "النصب التذكاري غير موجود",
+      "message": "ربما تم إزالة هذا النصب التذكاري أو الرابط غير صحيح.",
+      "browse": "استعراض النصب التذكارية"
+    },
+    "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "photoGallery": "معرض الصور",
+    "biography": "السيرة الذاتية",
+    "noPhotos": "لم تُضف أي صور بعد.",
+    "noBiography": "لم تُضف أي سيرة ذاتية بعد.",
+    "tributes": "التحيات ({{count}})",
+    "tributeInputLabel": "اكتب تحية",
+    "tributePlaceholder": "شارك ذكرياتك وقدّم تحيتك…",
+    "postTribute": "نشر التحية",
+    "posting": "جارٍ النشر…",
+    "signInToTribute": "لترك تحية",
+    "firstTribute": "كن أول من يترك تحية.",
+    "back": "العودة إلى النصب التذكارية",
+    "age": "العمر: {{age}} سنة",
+    "viewProfile": "عرض صورة الملف الشخصي",
+    "closeViewer": "إغلاق عارض الصور",
+    "prevPhoto": "الصورة السابقة",
+    "nextPhoto": "الصورة التالية",
+    "galleryPhoto": "صورة المعرض {{n}}",
+    "viewGalleryPhoto": "عرض صورة المعرض {{n}}",
+    "photoViewer": "عارض الصور",
+    "goBack": "العودة",
+    "back_label": "رجوع"
+  },
+  "publicObituary": {
+    "notFound": {
+      "heading": "النعي غير موجود",
+      "message": "ربما تم إزالة هذا النعي أو الرابط غير صحيح.",
+      "browse": "استعراض النعيات"
+    },
+    "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "obituarySection": "نعي",
+    "funeralService": "مراسم الجنازة / الصلاة",
+    "burial": "الدفن",
+    "venue": "المكان",
+    "location": "الموقع",
+    "dateAndTime": "التاريخ والوقت",
+    "at": "في",
+    "note": "ملاحظة",
+    "cemetery": "المقبرة / المركز",
+    "survivedBy": "الناجون",
+    "contactPerson": "الشخص المسؤول",
+    "condolences": "التعازي ({{count}})",
+    "condolenceInputLabel": "اكتب تعزية",
+    "condolencePlaceholder": "شارك تعازيك…",
+    "postCondolence": "نشر التعزية",
+    "posting": "جارٍ النشر…",
+    "signInToCondolence": "لترك تعزية",
+    "firstCondolence": "كن أول من يترك تعزية.",
+    "back": "العودة إلى النعيات",
+    "age": "العمر: {{age}} سنة",
+    "goBack": "العودة",
+    "back_label": "رجوع"
+  },
+  "common": {
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "deleting": "جارٍ الحذف…",
+    "unpublish": "إلغاء النشر",
+    "unpublishing": "جارٍ إلغاء النشر…",
+    "prev": "السابق →",
+    "next": "← التالي",
+    "or": "أو",
+    "search": "بحث",
+    "signIn": "تسجيل الدخول",
+    "pagination": "التنقل بين الصفحات",
+    "somethingWrong": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "justNow": "الآن",
+    "minutesAgo": "منذ {{m}} د",
+    "hoursAgo": "منذ {{h}} س",
+    "daysAgo": "منذ {{d}} ي"
+  },
+  "language": {
+    "label": "اللغة",
+    "en": "English",
+    "ar": "العربية",
+    "ms": "Bahasa Melayu",
+    "fr": "Français",
+    "es": "Español"
+  },
+  "form": {
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "dateOfBirth": "تاريخ الميلاد",
+    "dateOfDeath": "تاريخ الوفاة",
+    "ageAtDeath": "العمر عند الوفاة",
+    "gender": "الجنس",
+    "raceEthnicity": "العرق / الأصل العرقي",
+    "country": "البلد",
+    "state": "المقاطعة",
+    "biography": "السيرة الذاتية",
+    "name": "الاسم",
+    "relationship": "العلاقة",
+    "saveDraft": "حفظ كمسودة",
+    "preview": "معاينة",
+    "cancel": "إلغاء",
+    "saving": "جارٍ الحفظ…",
+    "gender_male": "ذكر",
+    "gender_female": "أنثى",
+    "gender_nonBinary": "غير ثنائي",
+    "gender_preferNotToSay": "أفضل عدم الإجابة",
+    "selectAge": "اختر العمر",
+    "selectGender": "اختر الجنس",
+    "selectRace": "اختر العرق/الأصل",
+    "selectCountry": "اختر البلد",
+    "selectState": "اختر الولاية / المقاطعة",
+    "noStates": "لا توجد ولايات لهذا البلد",
+    "selectRelationship": "اختر علاقتك",
+    "selectTime": "اختر الوقت",
+    "addressOrCity": "العنوان أو المدينة",
+    "enterFirstName": "أدخل الاسم الأول",
+    "enterLastName": "أدخل اسم العائلة",
+    "pickDateOfBirth": "اختر تاريخ الميلاد",
+    "pickDateOfDeath": "اختر تاريخ الوفاة",
+    "quote": "اقتباس",
+    "tributeMessage": "رسالة تكريم",
+    "creatorRelationship": "علاقتك بالمتوفى"
+  },
+  "createMemorial": {
+    "heading": "إنشاء نصب تذكاري",
+    "editHeading": "تعديل النصب التذكاري",
+    "subheading": "كرّم حياة عزيز عليك. يمكنك حفظ مسودة في أي وقت.",
+    "editSubheading": "قم بتحديث تفاصيل النصب التذكاري أدناه.",
+    "sectionPhotos": "الصور",
+    "sectionPersonalInfo": "المعلومات الشخصية",
+    "sectionQuote": "اقتباس تذكاري",
+    "sectionMessage": "رسالة تذكارية",
+    "sectionGallery": "معرض الصور",
+    "sectionWebAddress": "إنشاء عنوان ويب للنصب التذكاري",
+    "fieldQuote": "اقتباس",
+    "fieldBiography": "السيرة الذاتية",
+    "fieldTributeMessage": "رسالة التكريم",
+    "fieldMemorialUrl": "رابط النصب التذكاري",
+    "fieldCreatorRelationship": "علاقتك بالمتوفى",
+    "quotePlaceholder": "اقتباس ذو معنى لتذكره…",
+    "biographyPlaceholder": "شارك قصة حياته…",
+    "tributePlaceholder": "تكريم شخصي منك…",
+    "urlPlaceholder": "عنوان-النصب-التذكاري",
+    "urlPreview": "معاينة: {{domain}}/memorial/{{slug}}",
+    "publishBtn": "نشر النصب التذكاري",
+    "photoLabel": "صورة النصب التذكاري",
+    "photoHint": "يُنصح بـ 360×360 بكسل، حتى 10 ميغابايت",
+    "coverLabel": "خلفية الغلاف",
+    "coverHint": "يُنصح بـ 1216×282 بكسل، حتى 10 ميغابايت",
+    "coverUploadText": "انقر أو اسحب للرفع / اختر تدرجًا",
+    "gradientPresets": "إعدادات مسبقة",
+    "gradientCustom": "تدرج مخصص",
+    "gradientDirection": "الاتجاه",
+    "gradientFrom": "من",
+    "gradientTo": "إلى",
+    "gradientClear": "إزالة التدرج"
+  },
+  "createObituary": {
+    "heading": "لنكتب إشعار وفاة إلكتروني",
+    "editHeading": "تعديل النعي",
+    "subheading": "نحن نشاركك الحزن العميق ونلتزم بمساعدتك في كتابة نعي جميل.",
+    "sectionPhotos": "الصور",
+    "sectionPersonalInfo": "المعلومات الشخصية",
+    "sectionCauseOfPassing": "سبب الوفاة (اختياري)",
+    "sectionFuneral": "تفاصيل الجنازة/الصلاة (اختياري)",
+    "sectionFuneralSubtitle": "دار إقامة، دار دينية، مركز جنائزي، إلخ.",
+    "sectionBurial": "تفاصيل الدفن (اختياري)",
+    "sectionContact": "شخص التواصل",
+    "sectionFamily": "أفراد الأسرة (اختياري)",
+    "sectionMessage": "رسالة تذكارية (اختياري)",
+    "sectionDeathCert": "شهادة الوفاة (اختياري)",
+    "fieldObitPhoto": "صورة النعي",
+    "fieldPlaceOfDeath": "مكان الوفاة",
+    "fieldCauseOfPassing": "سبب الوفاة",
+    "consentLabel": "أوافق على استخدام هذه المعلومات بشكل مجهول لأبحاث رؤى الوفيات",
+    "funeralName": "الاسم",
+    "funeralLocation": "الموقع",
+    "funeralDate": "التاريخ",
+    "funeralTime": "الوقت",
+    "funeralNote": "ملاحظة",
+    "burialCenterName": "اسم مركز الدفن",
+    "burialLocation": "الموقع",
+    "burialDate": "تاريخ الدفن",
+    "burialTime": "وقت الدفن",
+    "burialNote": "ملاحظة",
+    "contactName": "الاسم",
+    "contactRelationship": "العلاقة",
+    "contactPhone": "رقم الهاتف",
+    "contactEmail": "البريد الإلكتروني",
+    "memberName": "الاسم",
+    "memberRelationship": "العلاقة",
+    "addMember": "إضافة فرد من الأسرة",
+    "removeMember": "إزالة فرد من الأسرة",
+    "deathCertUpload": "رفع شهادة الوفاة (PDF، PNG، JPG حتى 10 ميغابايت)",
+    "causePrivateNote": "لن تظهر هذه المعلومات في النعي العام. بموافقتك، قد تُستخدم بشكل مجهول للرؤى.",
+    "deathCertPrivateNote": "ستظل هذه الوثيقة خاصة وتُستخدم فقط لأغراض التحقق.",
+    "deathCertDesc": "قم برفع نسخة من شهادة الوفاة لأغراض التحقق",
+    "funeralPlaceholder": "مثال: كنيسة نصب النعمة التذكارية",
+    "funeralNotePlaceholder": "ملاحظات إضافية حول خدمة الجنازة...",
+    "burialCenterPlaceholder": "اسم المقبرة أو مركز الدفن",
+    "burialNotePlaceholder": "ملاحظات إضافية حول الدفن...",
+    "contactNamePlaceholder": "الاسم الكامل لشخص التواصل",
+    "biographyPlaceholder": "شارك قصة الحياة والذكريات وإرث عزيزك...",
+    "memberNamePlaceholder": "اسم فرد الأسرة",
+    "selectPlaceOfDeath": "اختر مكان الوفاة",
+    "selectCauseOfPassing": "اختر سبب الوفاة",
+    "publishBtn": "نشر النعي",
+    "updateBtn": "تحديث النعي"
+  }
+}

@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Calendar, MapPin, MoreVertical, Trash2, EyeOff } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { MemorialRow } from '@/types/memorial'
+import { useLocaleStore } from '@/store/localeStore'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -16,14 +18,6 @@ interface MemorialCardProps {
   showStatus?: boolean
 }
 
-function formatDate(dateStr: string): string {
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(dateStr))
-}
-
 function getInitials(name: string): string {
   return name
     .split(' ')
@@ -34,7 +28,17 @@ function getInitials(name: string): string {
 }
 
 export function MemorialCard({ memorial, onDelete, onUnpublish, showPublisher, showStatus = true }: MemorialCardProps) {
+  const { t } = useTranslation()
+  const locale = useLocaleStore((s) => s.locale)
   const { full_name, date_of_birth, date_of_death, location, age_at_death, profile_url, status, slug, creator_name } = memorial
+
+  function formatDate(dateStr: string): string {
+    return new Intl.DateTimeFormat(locale, {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(new Date(dateStr))
+  }
 
   const dateRange = [date_of_birth, date_of_death]
     .filter(Boolean)
@@ -77,14 +81,14 @@ export function MemorialCard({ memorial, onDelete, onUnpublish, showPublisher, s
                     : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
                 }`}
               >
-                {status === 'published' ? 'Published' : 'Draft'}
+                {status === 'published' ? t('card.published') : t('card.draft')}
               </span>
             )}
             {(status === 'draft' ? !!onDelete : !!onUnpublish) && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    aria-label="Memorial options"
+                    aria-label={t('card.memorialOptions')}
                     className="flex items-center justify-center h-8 w-8 rounded-lg text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   >
                     <MoreVertical size={15} />
@@ -97,13 +101,13 @@ export function MemorialCard({ memorial, onDelete, onUnpublish, showPublisher, s
                       onSelect={() => onDelete(memorial.id)}
                     >
                       <Trash2 size={14} className="mr-2 shrink-0" />
-                      Delete Draft
+                      {t('card.deleteDraft')}
                     </DropdownMenuItem>
                   )}
                   {status === 'published' && onUnpublish && (
                     <DropdownMenuItem onSelect={() => onUnpublish(memorial.id)}>
                       <EyeOff size={14} className="mr-2 shrink-0" />
-                      Unpublish
+                      {t('card.unpublish')}
                     </DropdownMenuItem>
                   )}
                 </DropdownMenuContent>
@@ -128,13 +132,13 @@ export function MemorialCard({ memorial, onDelete, onUnpublish, showPublisher, s
 
         {age_at_death != null && (
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-2">
-            Age: {age_at_death}
+            {t('card.age', { age: age_at_death })}
           </p>
         )}
 
         {showPublisher && creator_name && (
           <p className="text-xs text-neutral-400 dark:text-neutral-500 text-right">
-            By {creator_name}
+            {t('card.by', { name: creator_name })}
           </p>
         )}
       </div>

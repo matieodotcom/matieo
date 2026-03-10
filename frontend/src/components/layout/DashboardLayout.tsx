@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase, Menu, Moon, Sun } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { useThemeStore } from '@/store/themeStore'
 import { UserAvatar } from '@/components/ui/Avatar'
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,14 +15,15 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/DropdownMenu'
 
-const SIDEBAR_LINKS = [
-  { label: 'Insights',  to: '/dashboard/insights',  icon: BarChart2  },
-  { label: 'Memorials', to: '/dashboard/memorials', icon: Heart      },
-  { label: 'Obituary',  to: '/dashboard/obituary',  icon: ScrollText },
-  { label: 'Services',  to: '/dashboard/services',  icon: Briefcase  },
+const SIDEBAR_LINK_KEYS = [
+  { key: 'sidebar.insights',  to: '/dashboard/insights',  icon: BarChart2  },
+  { key: 'sidebar.memorials', to: '/dashboard/memorials', icon: Heart      },
+  { key: 'sidebar.obituary',  to: '/dashboard/obituary',  icon: ScrollText },
+  { key: 'sidebar.services',  to: '/dashboard/services',  icon: Briefcase  },
 ] as const
 
 export function DashboardLayout() {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
   const isLoading = useAuthStore((s) => s.isLoading)
@@ -73,7 +76,7 @@ export function DashboardLayout() {
         {/* Left: toggle + back link */}
         <div className="flex items-center gap-3">
           <button
-            aria-label="Toggle navigation"
+            aria-label={t('layout.toggleNav')}
             aria-expanded={isOpen}
             onClick={() => setIsOpen((v) => !v)}
             className="text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary p-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
@@ -87,7 +90,7 @@ export function DashboardLayout() {
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
-              <span className="hidden sm:inline">Back to editing</span>
+              <span className="hidden sm:inline">{t('layout.backToEditing')}</span>
             </button>
           ) : isCreateOrEdit ? (
             <Link
@@ -95,7 +98,7 @@ export function DashboardLayout() {
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
-              <span className="hidden sm:inline">My Memorials</span>
+              <span className="hidden sm:inline">{t('layout.myMemorials')}</span>
             </Link>
           ) : isObituaryCreateOrEdit ? (
             <Link
@@ -103,7 +106,7 @@ export function DashboardLayout() {
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
-              <span className="hidden sm:inline">My Obituaries</span>
+              <span className="hidden sm:inline">{t('layout.myObituaries')}</span>
             </Link>
           ) : (
             <Link
@@ -111,7 +114,7 @@ export function DashboardLayout() {
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
-              <span className="hidden sm:inline">Home</span>
+              <span className="hidden sm:inline">{t('layout.home')}</span>
             </Link>
           )}
         </div>
@@ -122,27 +125,30 @@ export function DashboardLayout() {
           <span className="text-brand-secondary dark:text-white font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 
-        {/* Right: user avatar dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              aria-label="User menu"
-              className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
-            >
-              <UserAvatar src={avatarUrl} name={displayName} size="md" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem asChild>
-              <Link to="/settings">Profile</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings">Settings</Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={signOut}>Sign Out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Right: language switcher + user avatar dropdown */}
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher compact />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                aria-label={t('nav.userMenu')}
+                className="rounded-full focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+              >
+                <UserAvatar src={avatarUrl} name={displayName} size="md" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem asChild>
+                <Link to="/settings">{t('nav.profile')}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/settings">{t('nav.settings')}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={signOut}>{t('nav.signOut')}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </header>
 
       {/* Mobile backdrop — closes drawer on outside tap */}
@@ -183,16 +189,16 @@ export function DashboardLayout() {
                 isOpen ? 'opacity-100' : 'opacity-0',
               ].join(' ')}
             >
-              Navigate
+              {t('layout.navigate')}
             </p>
 
             <nav aria-label="Dashboard navigation" className="flex-1 px-2 overflow-y-auto">
               <ul className="flex flex-col gap-0.5 list-none">
-                {SIDEBAR_LINKS.map(({ label, to, icon: Icon }) => (
-                  <li key={label}>
+                {SIDEBAR_LINK_KEYS.map(({ key, to, icon: Icon }) => (
+                  <li key={key}>
                     <NavLink
                       to={to}
-                      title={label}
+                      title={t(key)}
                       className={({ isActive }) =>
                         [
                           'flex items-center py-3 text-sm transition-colors rounded-xl overflow-hidden',
@@ -211,7 +217,7 @@ export function DashboardLayout() {
                           isOpen ? 'opacity-100' : 'opacity-0',
                         ].join(' ')}
                       >
-                        {label}
+                        {t(key)}
                       </span>
                     </NavLink>
                   </li>
@@ -224,7 +230,7 @@ export function DashboardLayout() {
               <div className="mx-1 mb-2 h-px bg-neutral-100 dark:bg-neutral-800" />
               <button
                 onClick={toggle}
-                title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                title={isDark ? t('layout.switchToLight') : t('layout.switchToDark')}
                 className="flex items-center py-3 w-full text-sm transition-colors rounded-xl overflow-hidden text-neutral-600 dark:text-neutral-400 font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100"
               >
                 <span className="w-12 flex-shrink-0 flex items-center justify-center">
@@ -238,7 +244,7 @@ export function DashboardLayout() {
                     isOpen ? 'opacity-100' : 'opacity-0',
                   ].join(' ')}
                 >
-                  {isDark ? 'Light mode' : 'Dark mode'}
+                  {isDark ? t('layout.lightMode') : t('layout.darkMode')}
                 </span>
               </button>
             </div>
