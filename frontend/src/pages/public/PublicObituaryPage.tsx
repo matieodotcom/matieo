@@ -61,17 +61,29 @@ function timeAgo(raw: string): string {
 
 function Skeleton() {
   return (
-    <div className="animate-pulse max-w-3xl mx-auto px-4 py-10 space-y-6">
-      <div className="h-52 w-full bg-neutral-200 dark:bg-neutral-800 rounded-xl" />
-      <div className="space-y-3">
-        <div className="h-7 w-48 rounded bg-neutral-200 dark:bg-neutral-700" />
-        <div className="h-4 w-32 rounded bg-neutral-200 dark:bg-neutral-700" />
-        <div className="h-4 w-24 rounded bg-neutral-200 dark:bg-neutral-700" />
+    <div className="animate-pulse bg-neutral-50 dark:bg-neutral-950 min-h-screen">
+      <div className="h-52 w-full bg-neutral-200 dark:bg-neutral-800" />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+        <div className="flex items-start gap-6">
+          <div className="-mt-16 sm:-mt-20 h-40 w-40 sm:h-52 sm:w-52 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-700 border-4 border-neutral-50 dark:border-neutral-950" />
+          <div className="flex-1 mt-3 space-y-3">
+            <div className="h-7 w-48 rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-4 w-32 rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-4 w-24 rounded bg-neutral-200 dark:bg-neutral-700" />
+          </div>
+        </div>
       </div>
-      <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 space-y-3">
-        <div className="h-5 w-32 rounded bg-neutral-200 dark:bg-neutral-700" />
-        <div className="h-4 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
-        <div className="h-4 w-3/4 rounded bg-neutral-100 dark:bg-neutral-800" />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 space-y-6">
+        <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 space-y-3">
+          <div className="h-5 w-32 rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-4 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-4 w-3/4 rounded bg-neutral-100 dark:bg-neutral-800" />
+        </div>
+        <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 space-y-3">
+          <div className="h-5 w-32 rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-4 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-4 w-3/4 rounded bg-neutral-100 dark:bg-neutral-800" />
+        </div>
       </div>
     </div>
   )
@@ -227,18 +239,18 @@ export default function PublicObituaryPage() {
         {!isPending && !error && obituary && (
           <>
             {/* ── Cover photo ── */}
-            {obituary.cover_url ? (
-              <div className="h-52 w-full overflow-hidden">
+            <div className="h-52 w-full overflow-hidden">
+              {obituary.cover_url ? (
                 <img src={obituary.cover_url} alt="Cover" className="h-full w-full object-cover" />
-              </div>
-            ) : (
-              <div className="h-52 w-full bg-gradient-to-r from-brand-primary/20 to-brand-primary/5" />
-            )}
+              ) : (
+                <div className="h-full w-full bg-gradient-to-r from-brand-secondary to-brand-primary" />
+              )}
+            </div>
 
             {/* ── Profile zone ── */}
-            <div className="mx-auto max-w-3xl px-4">
+            <div className="mx-auto max-w-3xl px-4 sm:px-6">
               <div className="flex items-start gap-6">
-                <div className="shrink-0 -mt-16 h-32 w-32 sm:-mt-20 sm:h-40 sm:w-40 rounded-2xl border-4 border-neutral-50 dark:border-neutral-950 overflow-hidden shadow-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                <div className="shrink-0 -mt-16 h-40 w-40 sm:-mt-20 sm:h-52 sm:w-52 rounded-full border-4 border-neutral-50 dark:border-neutral-950 overflow-hidden shadow-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
                   {obituary.profile_url ? (
                     <img
                       src={obituary.profile_url}
@@ -246,7 +258,7 @@ export default function PublicObituaryPage() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <User className="h-10 w-10 text-neutral-400" />
+                    <User className="h-12 w-12 text-neutral-400" />
                   )}
                 </div>
 
@@ -276,7 +288,7 @@ export default function PublicObituaryPage() {
             </div>
 
             {/* ── Body ── */}
-            <div className="mx-auto max-w-3xl px-4 py-10 space-y-6">
+            <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 space-y-6">
 
               {/* Biography */}
               {obituary.biography && (

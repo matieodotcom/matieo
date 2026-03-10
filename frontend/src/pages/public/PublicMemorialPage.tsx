@@ -52,9 +52,9 @@ function Skeleton() {
   return (
     <div className="animate-pulse bg-neutral-50 dark:bg-neutral-950 min-h-screen">
       <div className="h-52 w-full bg-neutral-200 dark:bg-neutral-800" />
-      <div className="mx-auto max-w-3xl px-4">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="flex items-start gap-6">
-          <div className="-mt-20 h-60 w-60 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-700 border-4 border-neutral-50 dark:border-neutral-950" />
+          <div className="-mt-16 h-40 w-40 sm:-mt-20 sm:h-52 sm:w-52 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-700 border-4 border-neutral-50 dark:border-neutral-950" />
           <div className="flex-1 mt-3 space-y-3">
             <div className="h-7 w-48 rounded bg-neutral-200 dark:bg-neutral-700" />
             <div className="h-4 w-32 rounded bg-neutral-200 dark:bg-neutral-700" />
@@ -62,7 +62,7 @@ function Skeleton() {
           </div>
         </div>
       </div>
-      <div className="mx-auto max-w-3xl px-4 py-10 space-y-6">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 space-y-6">
         <div className="rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 space-y-3">
           <div className="h-5 w-32 rounded bg-neutral-200 dark:bg-neutral-700" />
           <div className="h-4 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
@@ -336,9 +336,9 @@ export default function PublicMemorialPage() {
               </div>
 
               {/* ── Profile zone ── */}
-              <div className="mx-auto max-w-3xl px-4">
+              <div className="mx-auto max-w-3xl px-4 sm:px-6">
                 <div className="flex items-start gap-6">
-                  <div className="shrink-0 -mt-20 h-60 w-60 rounded-full border-4 border-neutral-50 dark:border-neutral-950 overflow-hidden shadow-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                  <div className="shrink-0 -mt-16 h-40 w-40 sm:-mt-20 sm:h-52 sm:w-52 rounded-full border-4 border-neutral-50 dark:border-neutral-950 overflow-hidden shadow-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
                     {memorial.profile_url ? (
                       <button
                         type="button"
@@ -383,7 +383,7 @@ export default function PublicMemorialPage() {
               </div>
 
               {/* ── Body ── */}
-              <div className="mx-auto max-w-3xl px-4 py-10 space-y-6">
+              <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 space-y-6">
 
                 {/* Quote */}
                 {memorial.quote && (
@@ -521,6 +521,17 @@ export default function PublicMemorialPage() {
                       ))}
                     </div>
                   )}
+                </div>
+
+                {/* Back link */}
+                <div className="pt-4">
+                  <Link
+                    to="/memorials"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-primary hover:underline"
+                  >
+                    <ArrowLeft size={14} />
+                    Back to Memorials
+                  </Link>
                 </div>
 
               </div>
