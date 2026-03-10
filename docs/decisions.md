@@ -98,6 +98,18 @@
 
 <!-- New entries added below by Claude as decisions are made during development -->
 
+## 2026-03-10 — i18next for multi-language support (en/ar/ms/fr/es)
+
+**Decision:** Use `i18next` + `react-i18next` + `i18next-browser-languagedetector` for internationalisation. 5 supported locales: English (default), Arabic (RTL), Malay, French, Spanish. Locale stored in `localStorage` via a Zustand `localeStore`. No URL prefix changes (`/en/`, `/ar/`). Only `dir`/`lang` on `<html>` changes for RTL.
+**Why:** i18next is the most mature i18n library for React with a huge ecosystem. Flat JSON locale files (`locales/*/translation.json`) are human-readable and easy for translators. localStorage persistence avoids round-trips and works offline. URL-prefix-free design keeps React Router flat and avoids refactoring all links.
+**Alternatives considered:** `react-intl` (FormatJS) — heavier, ICU message format requires more ceremony. URL-based locale switching — would require updating every `<Link>` and `navigate()` call across 22 pages. `Lingui` — excellent but less ecosystem support than i18next.
+**Consequences:**
+- Every new UI string MUST be added to all existing locale JSON files simultaneously (`en` as source of truth, others as English placeholders until translated).
+- Adding a new language requires: creating `locales/{code}/translation.json` with EVERY existing key fully translated (no English placeholders allowed for a new locale), registering it in `lib/i18n.ts`, adding the type to `localeStore.ts`, adding the option to `LanguageSwitcher.tsx`, adding a `language.{code}` label to every existing locale file, and setting `dir='rtl'` in `localeStore.ts` if the language is RTL.
+- Non-English translations for existing locales are filled in Phase 3 (dedicated translation pass).
+- Arabic triggers `dir="rtl"` on `<html>` — components must use Tailwind `rtl:` variants for directional layouts.
+- Legal pages (Terms, Privacy) keep prose in English by design — only headings/labels are translated (legal text requires jurisdictional review before translation).
+
 ## 2026-03-05 — Backend owns Cloudinary cleanup on memorial hard-delete
 
 **Decision:** When a draft memorial is permanently deleted, the backend (`permanentDelete` controller) fetches all Cloudinary public_ids (cover, profile, gallery photos), calls `cloudinary.uploader.destroy()` in parallel with `Promise.allSettled`, then hard-deletes the DB row regardless of Cloudinary results.

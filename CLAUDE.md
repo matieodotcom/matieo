@@ -48,6 +48,8 @@ Every task is incomplete until affected files are updated.
 | New `lib/` file | `docs/CLAUDE.ref.md §Stack` — add entry under "Frontend key lib files" |
 | Architecture decision made | `docs/decisions.md` |
 | Bug or limitation found | `docs/known-issues.md` |
+| **New UI string added anywhere** | **`frontend/src/locales/en/translation.json` (source of truth) + same key in `ar`, `ms`, `fr`, `es` translation.json — ALL 5 files every time, no exceptions** |
+| **New language added** | **Create `frontend/src/locales/{code}/translation.json` with EVERY existing key fully translated — no English placeholders. Register in `lib/i18n.ts` resources. Add locale type to `localeStore.ts`. Add option to `LanguageSwitcher.tsx`. Add `language.{code}` entry to all existing locale files. Set `dir="rtl"` in `localeStore.ts` if RTL.** |
 
 **Self-check before closing any task:**
 ```
@@ -60,6 +62,8 @@ Every task is incomplete until affected files are updated.
 [ ] Architecture decision?   → docs/decisions.md entry added
 [ ] Bug/limitation found?    → docs/known-issues.md entry added
 [ ] Feature built?           → tests written and passing
+[ ] UI string added?         → key added to ALL 5 locale files (en + ar + ms + fr + es)
+[ ] New language added?      → ALL existing keys translated + registered in i18n.ts + localeStore + LanguageSwitcher + language.{code} in every locale file
 [ ] Anything changed?        → relevant .env.example + ref.md updated
 [ ] All of the above done?   → commit + push to dev (automatic, no prompting)
 ```
