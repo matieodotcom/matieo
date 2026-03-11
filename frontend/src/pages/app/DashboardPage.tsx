@@ -2,12 +2,15 @@ import { Link } from 'react-router-dom'
 import { Plus, Heart, BarChart2, Briefcase } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/store/authStore'
+import { useProfile } from '@/hooks/use-profile'
 
 export default function DashboardPage() {
   const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
   const fullName = user?.user_metadata?.full_name as string | undefined
   const firstName = fullName?.split(' ')[0] ?? 'there'
+  const { data: profile } = useProfile()
+  const isOrganization = profile?.account_type === 'organization'
 
   const QUICK_ACTIONS = [
     {
@@ -28,12 +31,14 @@ export default function DashboardPage() {
       icon: BarChart2,
       to: '/dashboard/insights',
     },
-    {
-      label: t('dashboard.quickActions.services'),
-      description: t('dashboard.quickActions.servicesDesc'),
-      icon: Briefcase,
-      to: '/dashboard/services',
-    },
+    ...(isOrganization
+      ? [{
+          label: t('dashboard.quickActions.services'),
+          description: t('dashboard.quickActions.servicesDesc'),
+          icon: Briefcase,
+          to: '/dashboard/services',
+        }]
+      : []),
   ]
 
   return (

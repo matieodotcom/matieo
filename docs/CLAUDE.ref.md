@@ -97,6 +97,7 @@ export function ErrorMessage({ message }: { message: string }) {
 2. Adding a new language → create `locales/{code}/translation.json` with **every existing key fully translated** (no placeholders). Register in `lib/i18n.ts` resources, add to `LocaleStore` type, add to `LanguageSwitcher.tsx` options, add `language.{code}` label to every existing locale file, set `dir='rtl'` in `localeStore.ts` if the language is RTL.
 
 **Frontend key lib files:**
+- `hooks/use-profile.ts` — `useProfile()` — fetches the current user's `profiles` row (id, full_name, email, avatar, role, dark_mode, account_type); React Query, enabled only when user is logged in
 - `lib/supabase.ts` — Supabase singleton client (anon key, frontend only)
 - `lib/apiClient.ts` — `apiFetch<T>(path, init?)` — authenticated fetch to Node API; reads Supabase JWT, attaches Bearer token, handles 401 redirect. **Use for ALL frontend→Node API calls. Never inline fetch with Bearer token.**
 - `lib/toast.ts` — Sonner wrapper (success/error/info)

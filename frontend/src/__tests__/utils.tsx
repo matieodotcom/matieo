@@ -81,8 +81,10 @@ export function mockProfile(overrides = {}) {
     full_name: 'Test User',
     email: 'test@matieo.com',
     avatar_url: null,
+    avatar_cloudinary_public_id: null,
     role: 'user',
     dark_mode: false,
+    account_type: 'individual',
     ...overrides,
   }
 }
