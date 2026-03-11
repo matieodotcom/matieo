@@ -8,6 +8,7 @@ import { useProfile } from '@/hooks/use-profile'
 import { useThemeStore } from '@/store/themeStore'
 import { UserAvatar } from '@/components/ui/Avatar'
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
+import { NotificationBell } from '@/components/shared/NotificationBell'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -131,9 +132,10 @@ export function DashboardLayout() {
           <span className="text-brand-secondary dark:text-white font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 
-        {/* Right: language switcher + user avatar dropdown */}
+        {/* Right: language switcher + notifications + user avatar dropdown */}
         <div className="flex items-center gap-2">
           <LanguageSwitcher compact />
+          <NotificationBell />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button

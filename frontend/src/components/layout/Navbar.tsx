@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { UserAvatar } from '@/components/ui/Avatar'
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
+import { NotificationBell } from '@/components/shared/NotificationBell'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -40,6 +41,7 @@ function AuthActions() {
     return (
       <div className="flex items-center gap-2">
         <LanguageSwitcher compact />
+        <NotificationBell />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button

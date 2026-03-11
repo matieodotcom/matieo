@@ -24,6 +24,16 @@ jest.mock('@/lib/mlClient', () => ({
   isMLServiceHealthy: jest.fn(),
 }))
 
+jest.mock('@/lib/notificationsClient', () => ({
+  NOTIFICATION_TYPES: {
+    TRIBUTE_POSTED:     'tribute_posted',
+    CONDOLENCE_POSTED:  'condolence_posted',
+    MEMORIAL_PUBLISHED: 'memorial_published',
+    OBITUARY_PUBLISHED: 'obituary_published',
+  },
+  createNotification: jest.fn().mockImplementation(() => Promise.resolve()),
+}))
+
 jest.mock('@/lib/emailClient', () => ({
   resend: {},
   sendWaitlistConfirmation:  jest.fn().mockImplementation(() => Promise.resolve()),

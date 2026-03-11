@@ -727,6 +727,13 @@
       "linkedin": "LinkedIn"
     }
   },
+  "notifications": {
+    "heading": "सूचनाएं",
+    "empty": "अभी तक कोई सूचना नहीं",
+    "markAllRead": "सभी को पढ़ा हुआ चिह्नित करें",
+    "markRead": "पढ़ा हुआ चिह्नित करें",
+    "delete": "सूचना हटाएं"
+  },
   "terms": {
     "heading": "सेवा की शर्तें",
     "s1Heading": "1. परिचय",

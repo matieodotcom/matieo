@@ -124,9 +124,12 @@ export function ErrorMessage({ message }: { message: string }) {
 - `lib/i18n-test.ts` — minimal i18next instance for Vitest (en only, `initImmediate: false`). Used in `__tests__/utils.tsx` via `<I18nextProvider>`.
 - `store/localeStore.ts` — Zustand + persist store: `locale: 'en'|'ar'|'ms'|'fr'|'es'|'hi'`, `setLocale(l)`. `setLocale` calls `i18n.changeLanguage`, sets `document.documentElement.lang`, sets `document.documentElement.dir` (`rtl` for `ar`, `ltr` for all others). Persisted as `matieo-locale` in localStorage. `index.html` has blocking inline script to set `dir`/`lang` before React hydrates (prevents RTL flash).
 - `components/ui/LanguageSwitcher.tsx` — Radix DropdownMenu; shows flag emoji + language name; calls `useLocaleStore().setLocale(locale)`. Rendered in `Navbar.tsx` (desktop) and `DashboardLayout.tsx` (sidebar).
+- `hooks/use-notifications.ts` — `useNotifications(userId)` query: `GET /api/notifications` + Supabase Realtime channel (`notifications:{userId}`) invalidates cache on INSERT; `useMarkNotificationRead`, `useMarkAllRead`, `useDeleteNotification` mutations. `useNotifications` is enabled only when `userId != null`.
+- `components/shared/NotificationBell.tsx` — Bell icon with unread count badge; opens Radix Dialog slide-in-from-right panel listing notifications. Rendered in `Navbar.tsx` (authenticated branch) and `DashboardLayout.tsx` header. Returns null when not authenticated.
 
 **Backend (Node):** Node 20 LTS, Express, TypeScript, Supabase JS SDK (service role), Cloudinary SDK, Resend (transactional email). Test: Jest + Supertest. Host: Render.
 - `lib/emailClient.ts` — Resend singleton, `EMAIL_EVENTS` registry, `buildEmailHtml`, `getEmailForUser`, and all transactional send functions. Email trigger map → `docs/email-trigger-map.md`
+- `lib/notificationsClient.ts` — `NOTIFICATION_TYPES` registry + `createNotification(params)` helper; inserts into `notifications` table via service role. Called fire-and-forget from tributes/condolences/memorials/obituaries controllers after res.json(). Self-notify guard applied in tribute/condolence IIFEs.
 - **Resend MCP** configured in `.mcp.json` — use for testing/sending emails, domain verification, contact management. Requires `RESEND_API_KEY` in `.env.mcp`.
 
 **ML Service (Python):** Python 3.11, FastAPI, scikit-learn, pandas, numpy, spaCy / HuggingFace. Test: pytest. Host: Render (separate service).
@@ -210,8 +213,9 @@ auth.users
   │           ├─1:N─ family_members
   │           ├─1:N─ memorial_photos
   │           └─1:N─ tributes
-  └─1:N─ obituaries  (jsonb: funeral_details, burial_details, contact_person, family_members)
-              └─1:N─ condolences
+  ├─1:N─ obituaries  (jsonb: funeral_details, burial_details, contact_person, family_members)
+  │           └─1:N─ condolences
+  └─1:N─ notifications
 
 mortality_data  (standalone, admin-populated)
 ```
@@ -327,6 +331,17 @@ condolences
   RLS: public SELECT; authenticated INSERT (uid=user_id); owner DELETE
   IDX: obituary_id
   Migration: 20260309_create_tributes_condolences.sql
+
+notifications
+  id(uuid,pk), user_id(uuid,fk→auth.users,cascade),
+  type(notification_type enum: tribute_posted|condolence_posted|memorial_published|obituary_published),
+  title(text,req), message(text,req),
+  resource_id(uuid,nullable), resource_slug(text,nullable),
+  is_read(bool,default:false), read_at(ts,nullable),
+  created_at(ts)
+  RLS: owner SELECT/UPDATE/DELETE; INSERT via service role (bypasses RLS)
+  IDX: user_id; (user_id, is_read)
+  Migration: 20260311_create_notifications.sql
 ```
 
 **Migrations applied:**
@@ -337,6 +352,7 @@ condolences
 - `20260305_add_cover_gradient.sql` — cover_gradient column on memorials
 - `20260309_create_obituaries.sql` — obituaries table with jsonb sections, RLS, indexes
 - `20260309_create_tributes_condolences.sql` — tributes + condolences tables, RLS, indexes
+- `20260311_create_notifications.sql` — notifications table + notification_type enum + RLS
 
 ---
 

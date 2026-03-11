@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { cloudinary } from '@/lib/cloudinary'
 import { sendObituaryPublished } from '@/lib/emailClient'
+import { createNotification, NOTIFICATION_TYPES } from '@/lib/notificationsClient'
 import type {
   AuthenticatedRequest,
   CreateObituaryPayload,
@@ -399,6 +400,14 @@ export async function publish(
     res.json({ data, error: null })
     sendObituaryPublished(data.created_by, data.full_name, data.slug)
       .catch((err) => console.error('[email] sendObituaryPublished failed', err))
+    createNotification({
+      userId:       data.created_by,
+      type:         NOTIFICATION_TYPES.OBITUARY_PUBLISHED,
+      title:        'Obituary published',
+      message:      `Your obituary for ${data.full_name} is now live`,
+      resourceId:   data.id,
+      resourceSlug: data.slug,
+    }).catch((err) => console.error('[notification] createNotification (obituary) failed', err))
   } catch (err) {
     next(err)
   }

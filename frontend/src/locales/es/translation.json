@@ -727,6 +727,13 @@
       "linkedin": "LinkedIn"
     }
   },
+  "notifications": {
+    "heading": "Notificaciones",
+    "empty": "Aún no hay notificaciones",
+    "markAllRead": "Marcar todo como leído",
+    "markRead": "Marcar como leído",
+    "delete": "Eliminar notificación"
+  },
   "terms": {
     "heading": "Terms of Service",
     "s1Heading": "1. Introduction",

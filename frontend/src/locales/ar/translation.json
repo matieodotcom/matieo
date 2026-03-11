@@ -727,6 +727,13 @@
       "linkedin": "LinkedIn"
     }
   },
+  "notifications": {
+    "heading": "الإشعارات",
+    "empty": "لا إشعارات بعد",
+    "markAllRead": "تحديد الكل كمقروء",
+    "markRead": "تحديد كمقروء",
+    "delete": "حذف الإشعار"
+  },
   "terms": {
     "heading": "Terms of Service",
     "s1Heading": "1. Introduction",

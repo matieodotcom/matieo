@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { sendCondolencePosted } from '@/lib/emailClient'
+import { createNotification, NOTIFICATION_TYPES } from '@/lib/notificationsClient'
 import type { AuthenticatedRequest } from '@/types/memorial.types'
 
 export async function deleteCondolence(
@@ -113,15 +114,29 @@ export async function createCondolence(
         .select('created_by, full_name, slug')
         .eq('id', obituary_id)
         .single()
-      if (!obituary) return
-      await sendCondolencePosted(
+      if (!obituary || !obituary.created_by) return
+
+      // Email — independent; failure must not block notification
+      sendCondolencePosted(
         obituary.created_by,
         authReq.user.id,
         obituary.full_name,
         obituary.slug,
         author_name,
-      )
-    })().catch((err) => console.error('[email] sendCondolencePosted failed', err))
+      ).catch((err) => console.error('[email] sendCondolencePosted failed', err))
+
+      // Self-notify guard: don't notify page owner of their own action
+      if (obituary.created_by === authReq.user.id) return
+
+      createNotification({
+        userId:       obituary.created_by,
+        type:         NOTIFICATION_TYPES.CONDOLENCE_POSTED,
+        title:        'New condolence',
+        message:      `${author_name} left a condolence on ${obituary.full_name}`,
+        resourceId:   obituary_id,
+        resourceSlug: obituary.slug,
+      }).catch((err) => console.error('[notification] createNotification (condolence) failed', err))
+    })().catch((err) => console.error('[condolence] post-response IIFE failed', err));
   } catch (err) {
     next(err)
   }

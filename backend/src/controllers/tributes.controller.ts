@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { sendTributePosted } from '@/lib/emailClient'
+import { createNotification, NOTIFICATION_TYPES } from '@/lib/notificationsClient'
 import type { AuthenticatedRequest } from '@/types/memorial.types'
 
 export async function deleteTribute(
@@ -115,14 +116,28 @@ export async function createTribute(
         .eq('id', memorial_id)
         .single()
       if (!memorial) return
-      await sendTributePosted(
+
+      // Email — independent; failure must not block notification
+      sendTributePosted(
         memorial.created_by,
         authReq.user.id,
         memorial.full_name,
         memorial.slug,
         author_name,
-      )
-    })().catch((err) => console.error('[email] sendTributePosted failed', err))
+      ).catch((err) => console.error('[email] sendTributePosted failed', err))
+
+      // Self-notify guard: don't notify page owner of their own action
+      if (memorial.created_by === authReq.user.id) return
+
+      createNotification({
+        userId:       memorial.created_by,
+        type:         NOTIFICATION_TYPES.TRIBUTE_POSTED,
+        title:        'New tribute',
+        message:      `${author_name} left a tribute on ${memorial.full_name}`,
+        resourceId:   memorial_id,
+        resourceSlug: memorial.slug,
+      }).catch((err) => console.error('[notification] createNotification (tribute) failed', err))
+    })().catch((err) => console.error('[tribute] post-response IIFE failed', err));
   } catch (err) {
     next(err)
   }

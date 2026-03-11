@@ -11,6 +11,7 @@ import memorialsRouter from './routes/memorials.routes'
 import obituariesRouter from './routes/obituaries.routes'
 import cloudinaryRouter from './routes/cloudinary.routes'
 import waitlistRouter from './routes/waitlist.routes'
+import notificationsRouter from './routes/notifications.routes'
 import { errorHandler } from './middleware/error.middleware'
 
 const app = express()
@@ -24,12 +25,16 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }))
 
 // ── Rate limiting ────────────────────────────────────────────────────────────
-app.use(rateLimit({
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 900_000),
-  max: Number(process.env.RATE_LIMIT_MAX_REQUESTS ?? 100),
-  standardHeaders: true,
-  legacyHeaders: false,
-}))
+// Skip entirely in development — pollers + hot reloads burn through limits fast.
+// Production default: 500 req / 15 min per IP (env vars override both).
+if (process.env.NODE_ENV !== 'development') {
+  app.use(rateLimit({
+    windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 900_000),
+    max:      Number(process.env.RATE_LIMIT_MAX_REQUESTS ?? 500),
+    standardHeaders: true,
+    legacyHeaders:   false,
+  }))
+}
 
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use(healthRouter)
@@ -37,6 +42,7 @@ app.use('/api/memorials', memorialsRouter)
 app.use('/api/obituaries', obituariesRouter)
 app.use('/api/cloudinary', cloudinaryRouter)
 app.use('/api/waitlist', waitlistRouter)
+app.use('/api/notifications', notificationsRouter)
 
 // ── Error handler (must be last) ─────────────────────────────────────────────
 app.use(errorHandler)

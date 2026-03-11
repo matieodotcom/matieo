@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { cloudinary } from '@/lib/cloudinary'
 import { sendMemorialPublished } from '@/lib/emailClient'
+import { createNotification, NOTIFICATION_TYPES } from '@/lib/notificationsClient'
 import type {
   AuthenticatedRequest,
   CreateMemorialPayload,
@@ -420,6 +421,14 @@ export async function publish(
     res.json({ data, error: null })
     sendMemorialPublished(data.created_by, data.full_name, data.slug)
       .catch((err) => console.error('[email] sendMemorialPublished failed', err))
+    createNotification({
+      userId:       data.created_by,
+      type:         NOTIFICATION_TYPES.MEMORIAL_PUBLISHED,
+      title:        'Memorial published',
+      message:      `Your memorial for ${data.full_name} is now live`,
+      resourceId:   data.id,
+      resourceSlug: data.slug,
+    }).catch((err) => console.error('[notification] createNotification (memorial) failed', err))
   } catch (err) {
     next(err)
   }

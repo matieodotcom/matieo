@@ -727,6 +727,13 @@
       "linkedin": "LinkedIn"
     }
   },
+  "notifications": {
+    "heading": "Pemberitahuan",
+    "empty": "Tiada pemberitahuan lagi",
+    "markAllRead": "Tandakan semua sebagai dibaca",
+    "markRead": "Tandakan sebagai dibaca",
+    "delete": "Padam pemberitahuan"
+  },
   "terms": {
     "heading": "Terms of Service",
     "s1Heading": "1. Introduction",
