@@ -686,6 +686,44 @@
   "policy": {
     "lastUpdatedLabel": "Dernière mise à jour :"
   },
+  "footer": {
+    "tagline": "Nous aidons les familles et les proches à créer des avis de décès dignes et des mémoriaux numériques, préservant histoires, photos et hommages qui honorent leur héritage.",
+    "copyright": "© 2026 MATIEO. Tous droits réservés.",
+    "columns": {
+      "product": "Produit",
+      "company": "Entreprise",
+      "resources": "Ressources"
+    },
+    "product": {
+      "memorials": "Mémoriaux",
+      "obituary": "Avis de décès",
+      "insights": "Analyses",
+      "pricing": "Tarifs"
+    },
+    "company": {
+      "about": "À propos",
+      "blog": "Blog",
+      "careers": "Carrières",
+      "contact": "Contact"
+    },
+    "resources": {
+      "documentation": "Documentation",
+      "api": "API",
+      "support": "Assistance",
+      "privacy": "Confidentialité"
+    },
+    "legal": {
+      "privacyPolicy": "Politique de confidentialité",
+      "termsOfService": "Conditions d'utilisation",
+      "cookiePolicy": "Politique de cookies"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
+  },
   "terms": {
     "heading": "Terms of Service",
     "s1Heading": "1. Introduction",

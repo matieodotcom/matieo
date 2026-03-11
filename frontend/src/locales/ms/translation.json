@@ -686,6 +686,44 @@
   "policy": {
     "lastUpdatedLabel": "Dikemas kini pada:"
   },
+  "footer": {
+    "tagline": "Kami membantu keluarga dan orang tersayang untuk mencipta obituari yang bermartabat dan memorial digital, memelihara cerita, foto, dan penghormatan yang memuliakan warisan mereka.",
+    "copyright": "© 2026 MATIEO. Hak cipta terpelihara.",
+    "columns": {
+      "product": "Produk",
+      "company": "Syarikat",
+      "resources": "Sumber"
+    },
+    "product": {
+      "memorials": "Memorial",
+      "obituary": "Obituari",
+      "insights": "Wawasan",
+      "pricing": "Harga"
+    },
+    "company": {
+      "about": "Tentang",
+      "blog": "Blog",
+      "careers": "Kerjaya",
+      "contact": "Hubungi"
+    },
+    "resources": {
+      "documentation": "Dokumentasi",
+      "api": "API",
+      "support": "Sokongan",
+      "privacy": "Privasi"
+    },
+    "legal": {
+      "privacyPolicy": "Polisi Privasi",
+      "termsOfService": "Terma Perkhidmatan",
+      "cookiePolicy": "Polisi Kuki"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
+  },
   "terms": {
     "heading": "Terms of Service",
     "s1Heading": "1. Introduction",

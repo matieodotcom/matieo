@@ -21,11 +21,14 @@ describe('Footer', () => {
     expect(screen.getByText(/© 2026 MATIEO/)).toBeInTheDocument()
   })
 
-  it('renders legal links', () => {
+  it('renders legal links with correct hrefs', () => {
     renderWithProviders(<Footer />)
-    expect(screen.getByText('Privacy Policy')).toBeInTheDocument()
-    expect(screen.getByText('Terms of Service')).toBeInTheDocument()
-    expect(screen.getByText('Cookie Policy')).toBeInTheDocument()
+    const privacy = screen.getByRole('link', { name: 'Privacy Policy' })
+    const terms = screen.getByRole('link', { name: 'Terms of Service' })
+    const cookie = screen.getByRole('link', { name: 'Cookie Policy' })
+    expect(privacy).toHaveAttribute('href', '/privacy')
+    expect(terms).toHaveAttribute('href', '/terms')
+    expect(cookie).toHaveAttribute('href', '/cookie-policy')
   })
 
   it('renders social icon links with aria-labels', () => {
@@ -34,5 +37,10 @@ describe('Footer', () => {
     expect(screen.getByRole('link', { name: 'Twitter' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Instagram' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'LinkedIn' })).toBeInTheDocument()
+  })
+
+  it('renders tagline text', () => {
+    renderWithProviders(<Footer />)
+    expect(screen.getByText(/dignified obituaries/i)).toBeInTheDocument()
   })
 })

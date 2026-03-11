@@ -686,6 +686,44 @@
   "policy": {
     "lastUpdatedLabel": "آخر تحديث:"
   },
+  "footer": {
+    "tagline": "نساعد العائلات والأحباء على إنشاء نعي كريم ونصب تذكارية رقمية، مع الحفاظ على القصص والصور والتحيات التي تكرم إرثهم.",
+    "copyright": "© 2026 MATIEO. جميع الحقوق محفوظة.",
+    "columns": {
+      "product": "المنتج",
+      "company": "الشركة",
+      "resources": "الموارد"
+    },
+    "product": {
+      "memorials": "النصب التذكارية",
+      "obituary": "نعي",
+      "insights": "رؤى",
+      "pricing": "الأسعار"
+    },
+    "company": {
+      "about": "حول",
+      "blog": "المدونة",
+      "careers": "وظائف",
+      "contact": "اتصل بنا"
+    },
+    "resources": {
+      "documentation": "التوثيق",
+      "api": "API",
+      "support": "الدعم",
+      "privacy": "الخصوصية"
+    },
+    "legal": {
+      "privacyPolicy": "سياسة الخصوصية",
+      "termsOfService": "شروط الخدمة",
+      "cookiePolicy": "سياسة ملفات تعريف الارتباط"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
+  },
   "terms": {
     "heading": "Terms of Service",
     "s1Heading": "1. Introduction",

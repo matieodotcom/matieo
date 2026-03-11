@@ -686,6 +686,44 @@
   "policy": {
     "lastUpdatedLabel": "Last updated:"
   },
+  "footer": {
+    "tagline": "We help families and loved ones to create dignified obituaries and digital memorials, preserving stories, photos, and tributes that honor their legacy.",
+    "copyright": "© 2026 MATIEO. All rights reserved.",
+    "columns": {
+      "product": "Product",
+      "company": "Company",
+      "resources": "Resources"
+    },
+    "product": {
+      "memorials": "Memorials",
+      "obituary": "Obituary",
+      "insights": "Insights",
+      "pricing": "Pricing"
+    },
+    "company": {
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact"
+    },
+    "resources": {
+      "documentation": "Documentation",
+      "api": "API",
+      "support": "Support",
+      "privacy": "Privacy"
+    },
+    "legal": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "cookiePolicy": "Cookie Policy"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
+  },
   "terms": {
     "heading": "Terms of Service",
     "s1Heading": "1. Introduction",

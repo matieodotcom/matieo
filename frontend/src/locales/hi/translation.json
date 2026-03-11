@@ -686,6 +686,44 @@
   "policy": {
     "lastUpdatedLabel": "अंतिम अपडेट:"
   },
+  "footer": {
+    "tagline": "हम परिवारों और प्रियजनों को गरिमामय श्रद्धांजलि और डिजिटल स्मारक बनाने में मदद करते हैं, उनकी विरासत को सम्मानित करने वाली कहानियाँ, तस्वीरें और श्रद्धांजलि संरक्षित करते हैं।",
+    "copyright": "© 2026 MATIEO. सर्वाधिकार सुरक्षित।",
+    "columns": {
+      "product": "उत्पाद",
+      "company": "कंपनी",
+      "resources": "संसाधन"
+    },
+    "product": {
+      "memorials": "स्मारक",
+      "obituary": "श्रद्धांजलि",
+      "insights": "अंतर्दृष्टि",
+      "pricing": "मूल्य निर्धारण"
+    },
+    "company": {
+      "about": "हमारे बारे में",
+      "blog": "ब्लॉग",
+      "careers": "करियर",
+      "contact": "संपर्क करें"
+    },
+    "resources": {
+      "documentation": "दस्तावेज़ीकरण",
+      "api": "API",
+      "support": "सहायता",
+      "privacy": "गोपनीयता"
+    },
+    "legal": {
+      "privacyPolicy": "गोपनीयता नीति",
+      "termsOfService": "सेवा की शर्तें",
+      "cookiePolicy": "कुकी नीति"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
+  },
   "terms": {
     "heading": "सेवा की शर्तें",
     "s1Heading": "1. परिचय",

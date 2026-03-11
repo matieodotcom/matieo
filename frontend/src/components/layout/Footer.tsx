@@ -1,41 +1,53 @@
 import { Link } from 'react-router-dom'
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
-
-const FOOTER_LINKS = {
-  Product: [
-    { label: 'Memorials', to: '/memorials' },
-    { label: 'Obituary', to: '/obituary' },
-    { label: 'Insights', to: '/insights' },
-    { label: 'Pricing', to: '/pricing' },
-  ],
-  Company: [
-    { label: 'About', to: '/about' },
-    { label: 'Blog', to: '/blog' },
-    { label: 'Careers', to: '/careers' },
-    { label: 'Contact', to: '/contact' },
-  ],
-  Resources: [
-    { label: 'Documentation', to: '/docs' },
-    { label: 'API', to: '/api' },
-    { label: 'Support', to: '/support' },
-    { label: 'Privacy', to: '/privacy' },
-  ],
-} as const
-
-const LEGAL_LINKS = [
-  { label: 'Privacy Policy', to: '/privacy' },
-  { label: 'Terms of Service', to: '/terms' },
-  { label: 'Cookie Policy', to: '#' },
-] as const
+import { useTranslation } from 'react-i18next'
 
 const SOCIAL_LINKS = [
-  { Icon: Facebook, href: '#', label: 'Facebook' },
-  { Icon: Twitter, href: '#', label: 'Twitter' },
-  { Icon: Instagram, href: '#', label: 'Instagram' },
-  { Icon: Linkedin, href: '#', label: 'LinkedIn' },
-] as const
+  { key: 'facebook' as const, Icon: Facebook, href: '#' },
+  { key: 'twitter' as const, Icon: Twitter, href: '#' },
+  { key: 'instagram' as const, Icon: Instagram, href: '#' },
+  { key: 'linkedin' as const, Icon: Linkedin, href: '#' },
+]
 
 export function Footer() {
+  const { t } = useTranslation()
+
+  const FOOTER_COLUMNS = [
+    {
+      heading: t('footer.columns.product'),
+      links: [
+        { label: t('footer.product.memorials'), to: '/memorials' },
+        { label: t('footer.product.obituary'), to: '/obituary' },
+        { label: t('footer.product.insights'), to: '/insights' },
+        { label: t('footer.product.pricing'), to: '/pricing' },
+      ],
+    },
+    {
+      heading: t('footer.columns.company'),
+      links: [
+        { label: t('footer.company.about'), to: '/about' },
+        { label: t('footer.company.blog'), to: '/blog' },
+        { label: t('footer.company.careers'), to: '/careers' },
+        { label: t('footer.company.contact'), to: '/contact' },
+      ],
+    },
+    {
+      heading: t('footer.columns.resources'),
+      links: [
+        { label: t('footer.resources.documentation'), to: '/docs' },
+        { label: t('footer.resources.api'), to: '/api' },
+        { label: t('footer.resources.support'), to: '/support' },
+        { label: t('footer.resources.privacy'), to: '/privacy' },
+      ],
+    },
+  ]
+
+  const LEGAL_LINKS = [
+    { label: t('footer.legal.privacyPolicy'), to: '/privacy' },
+    { label: t('footer.legal.termsOfService'), to: '/terms' },
+    { label: t('footer.legal.cookiePolicy'), to: '/cookie-policy' },
+  ]
+
   return (
     <footer className="bg-brand-secondary">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-12 md:pt-16 pb-8">
@@ -48,16 +60,15 @@ export function Footer() {
               <span className="text-white font-bold text-lg tracking-tight">MATIEO</span>
             </Link>
             <p className="text-sm text-[#99A1AF] leading-relaxed mb-6 max-w-[300px]">
-              We help families and loved ones to create dignified obituaries and digital
-              memorials, preserving stories, photos, and tributes that honor their legacy.
+              {t('footer.tagline')}
             </p>
             {/* Social icons */}
             <div className="flex items-center gap-3">
-              {SOCIAL_LINKS.map(({ Icon, href, label }) => (
+              {SOCIAL_LINKS.map(({ key, Icon, href }) => (
                 <a
-                  key={label}
+                  key={key}
                   href={href}
-                  aria-label={label}
+                  aria-label={t(`footer.social.${key}`)}
                   className="w-10 h-10 rounded-full bg-[#1E2939] flex items-center justify-center text-[#99A1AF] hover:text-white hover:bg-[#2a3546] transition-colors"
                 >
                   <Icon size={18} />
@@ -68,34 +79,32 @@ export function Footer() {
 
           {/* Link columns */}
           <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-8">
-            {(Object.entries(FOOTER_LINKS) as [string, readonly { label: string; to: string }[]][]).map(
-              ([column, links]) => (
-                <div key={column}>
-                  <h3 className="text-white text-sm font-semibold mb-5">{column}</h3>
-                  <ul className="space-y-3">
-                    {links.map((link) => (
-                      <li key={link.label}>
-                        <Link
-                          to={link.to}
-                          className="text-sm text-[#99A1AF] hover:text-white transition-colors"
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ),
-            )}
+            {FOOTER_COLUMNS.map(({ heading, links }) => (
+              <div key={heading}>
+                <h3 className="text-white text-sm font-semibold mb-5">{heading}</h3>
+                <ul className="space-y-3">
+                  {links.map((link) => (
+                    <li key={link.to}>
+                      <Link
+                        to={link.to}
+                        className="text-sm text-[#99A1AF] hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between pt-8">
-          <p className="text-sm text-[#99A1AF]">© 2026 MATIEO. All rights reserved.</p>
+          <p className="text-sm text-[#99A1AF]">{t('footer.copyright')}</p>
           <div className="flex flex-wrap gap-4 md:gap-6">
             {LEGAL_LINKS.map(({ label, to }) => (
-              <Link key={label} to={to} className="text-sm text-[#99A1AF] hover:text-white transition-colors">
+              <Link key={to} to={to} className="text-sm text-[#99A1AF] hover:text-white transition-colors">
                 {label}
               </Link>
             ))}
