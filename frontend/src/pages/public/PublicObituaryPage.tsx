@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +19,7 @@ import { useSignOut } from '@/hooks/use-auth'
 import { useCondolences, usePostCondolence } from '@/hooks/use-condolences'
 import { SignInModal } from '@/components/auth/SignInModal'
 import { useLocaleStore } from '@/store/localeStore'
+import { EmojiPickerButton } from '@/components/ui/EmojiPickerButton'
 import type { ObituaryRow } from '@/types/obituary'
 import type { TFunction } from 'i18next'
 
@@ -210,11 +211,25 @@ export default function PublicObituaryPage() {
   const [condolenceText, setCondolenceText] = useState('')
   const [signInOpen, setSignInOpen] = useState(false)
 
+  const PAGE_SIZE = 10
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
   const obituary = response?.data
 
   const { data: condolencesRes } = useCondolences(obituary?.id ?? '')
   const { mutate: postCondolence, isPending: posting } = usePostCondolence(obituary?.id ?? '')
   const condolences = condolencesRes?.data ?? []
+
+  useEffect(() => {
+    if (!sentinelRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisibleCount((n) => n + PAGE_SIZE) },
+      { threshold: 0.1 },
+    )
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [condolences.length])
 
   const is404 = !isPending && (error?.message === 'Obituary not found' || (!error && !obituary))
 
@@ -446,13 +461,16 @@ export default function PublicObituaryPage() {
                       className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     />
                     <div className="mt-3 flex items-center justify-between">
-                      <span className="text-xs text-neutral-400">{condolenceText.length}/500</span>
+                      <div className="flex items-center gap-2">
+                        <EmojiPickerButton onEmojiSelect={(emoji) => setCondolenceText((prev) => prev + emoji)} />
+                        <span className="text-xs text-neutral-400">{condolenceText.length}/500</span>
+                      </div>
                       <button
                         type="button"
                         disabled={!condolenceText.trim() || posting}
                         onClick={() => {
                           postCondolence(condolenceText.trim(), {
-                            onSuccess: () => setCondolenceText(''),
+                            onSuccess: () => { setCondolenceText(''); setVisibleCount(PAGE_SIZE) },
                           })
                         }}
                         className="rounded-lg bg-brand-primary hover:bg-brand-primaryHover px-4 py-2 text-sm font-medium text-white disabled:opacity-50 transition-colors"
@@ -482,7 +500,7 @@ export default function PublicObituaryPage() {
                   </p>
                 ) : (
                   <div className="space-y-4">
-                    {condolences.map((c) => (
+                    {condolences.slice(0, visibleCount).map((c) => (
                       <div key={c.id} className="rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
                         <div className="flex items-start gap-3">
                           <div className="h-9 w-9 shrink-0 rounded-full bg-brand-primary/10 flex items-center justify-center">
@@ -504,6 +522,11 @@ export default function PublicObituaryPage() {
                         </div>
                       </div>
                     ))}
+                    {visibleCount < condolences.length && (
+                      <div ref={sentinelRef} className="flex justify-center py-4">
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
+                      </div>
+                    )}
                   </div>
                 )}
               </SectionCard>

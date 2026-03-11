@@ -88,7 +88,7 @@ export function ErrorMessage({ message }: { message: string }) {
 
 ## §Stack
 
-**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`, `react-day-picker` v9, `date-fns` v4, `i18next` + `react-i18next` + `i18next-browser-languagedetector`. Test: Vitest + RTL.
+**Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`, `react-day-picker` v9, `date-fns` v4, `i18next` + `react-i18next` + `i18next-browser-languagedetector`, `emoji-picker-react` (emoji input on tribute/condolence forms). Test: Vitest + RTL.
 
 **Supported locales:** `en` (default) · `ar` (RTL) · `ms` · `fr` · `es` · `hi`. Locale stored in `localStorage` via `localeStore`. `<html dir>` set to `rtl` for Arabic only.
 
@@ -491,6 +491,7 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | Avatar.tsx | Avatar | `@radix-ui/react-avatar` | Navbar (user avatar) |
 | Popover.tsx | Popover | `@radix-ui/react-popover` | DatePicker.tsx (standalone wrapper with Portal) |
 | DatePicker.tsx | DatePicker | `react-day-picker` v9 + `date-fns` v4 | CreateMemorialPage (dateOfBirth / dateOfDeath) — YYYY-MM-DD string; `disableFuture` prop disables future days; custom `CalendarSelect` for fully-themed month/year dropdowns |
+| EmojiPickerButton.tsx | Custom popover (no Radix) | `emoji-picker-react` | PublicMemorialPage (tribute input), PublicObituaryPage (condolence input) — `onEmojiSelect(emoji: string)` appends emoji to parent text state; closes on outside click |
 
 ### Dark mode patterns
 - Toggle: `darkMode: 'class'` in `tailwind.config.ts`. Class `dark` on `<html>` element.

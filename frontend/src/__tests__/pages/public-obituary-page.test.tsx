@@ -254,5 +254,55 @@ describe('PublicObituaryPage — Condolences section', () => {
         { timeout: 3000 },
       )
     })
+
+    it('renders emoji button when logged in', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      vi.mocked(apiFetch)
+        .mockResolvedValueOnce({ data: mockObituary, error: null })
+        .mockResolvedValueOnce({ data: [], error: null })
+      renderPage()
+      await waitFor(() => screen.getByLabelText(/write a condolence/i))
+      expect(screen.getByRole('button', { name: /insert emoji/i })).toBeInTheDocument()
+    })
+
+    it('appends emoji to condolence text when emoji selected', async () => {
+      const user = userEvent.setup()
+      const { apiFetch } = await import('@/lib/apiClient')
+      vi.mocked(apiFetch)
+        .mockResolvedValueOnce({ data: mockObituary, error: null })
+        .mockResolvedValueOnce({ data: [], error: null })
+      renderPage()
+      await waitFor(() => screen.getByLabelText(/write a condolence/i))
+
+      await user.type(screen.getByLabelText(/write a condolence/i), 'Hello')
+      await user.click(screen.getByRole('button', { name: /insert emoji/i }))
+      await user.click(screen.getByText('mock-emoji-picker'))
+
+      expect((screen.getByLabelText(/write a condolence/i) as HTMLTextAreaElement).value).toBe('Hello😊')
+    })
+
+    it('shows only 10 condolences initially when more than 10 exist', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      const manyCondolences = Array.from({ length: 12 }, (_, i) => ({
+        id: `condolence-${i}`,
+        obituary_id: 'obit-1',
+        user_id: 'user-2',
+        author_name: `Author ${i}`,
+        message: `Message ${i}`,
+        created_at: new Date().toISOString(),
+      }))
+      vi.mocked(apiFetch).mockImplementation((url: string) =>
+        Promise.resolve(
+          (url as string).includes('/condolences')
+            ? { data: manyCondolences, error: null }
+            : { data: mockObituary, error: null },
+        ),
+      )
+      renderPage()
+      await waitFor(() => expect(screen.getByText('Author 0')).toBeInTheDocument(), { timeout: 3000 })
+      expect(screen.getByText('Author 9')).toBeInTheDocument()
+      expect(screen.queryByText('Author 10')).not.toBeInTheDocument()
+      expect(screen.queryByText('Author 11')).not.toBeInTheDocument()
+    })
   })
 })

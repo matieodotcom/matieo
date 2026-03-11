@@ -255,5 +255,57 @@ describe('PublicMemorialPage — Tributes section', () => {
         { timeout: 3000 },
       )
     })
+
+    it('renders emoji button when logged in', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      vi.mocked(apiFetch)
+        .mockResolvedValueOnce({ data: mockMemorial, error: null })
+        .mockResolvedValueOnce({ data: [], error: null })
+      renderPage()
+      await waitFor(() => screen.getByLabelText(/write a tribute/i))
+      expect(screen.getByRole('button', { name: /insert emoji/i })).toBeInTheDocument()
+    })
+
+    it('appends emoji to tribute text when emoji selected', async () => {
+      const user = userEvent.setup()
+      const { apiFetch } = await import('@/lib/apiClient')
+      vi.mocked(apiFetch)
+        .mockResolvedValueOnce({ data: mockMemorial, error: null })
+        .mockResolvedValueOnce({ data: [], error: null })
+      renderPage()
+      await waitFor(() => screen.getByLabelText(/write a tribute/i))
+
+      // Type some text then click emoji button to open picker, then click mock picker to insert emoji
+      await user.type(screen.getByLabelText(/write a tribute/i), 'Hello')
+      await user.click(screen.getByRole('button', { name: /insert emoji/i }))
+      await user.click(screen.getByText('mock-emoji-picker'))
+
+      expect((screen.getByLabelText(/write a tribute/i) as HTMLTextAreaElement).value).toBe('Hello😊')
+    })
+
+    it('shows only 10 tributes initially when more than 10 exist', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      const manyTributes = Array.from({ length: 12 }, (_, i) => ({
+        id: `tribute-${i}`,
+        memorial_id: 'mem-1',
+        user_id: 'user-2',
+        author_name: `Author ${i}`,
+        message: `Message ${i}`,
+        created_at: new Date().toISOString(),
+      }))
+      vi.mocked(apiFetch).mockImplementation((url: string) =>
+        Promise.resolve(
+          (url as string).includes('/tributes')
+            ? { data: manyTributes, error: null }
+            : { data: mockMemorial, error: null },
+        ),
+      )
+      renderPage()
+      await waitFor(() => expect(screen.getByText('Author 0')).toBeInTheDocument(), { timeout: 3000 })
+      // Only first 10 should be visible
+      expect(screen.getByText('Author 9')).toBeInTheDocument()
+      expect(screen.queryByText('Author 10')).not.toBeInTheDocument()
+      expect(screen.queryByText('Author 11')).not.toBeInTheDocument()
+    })
   })
 })

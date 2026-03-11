@@ -75,6 +75,23 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
+// emoji-picker-react mock
+vi.mock('emoji-picker-react', () => ({
+  default: ({ onEmojiClick }: { onEmojiClick: (d: { emoji: string }) => void }) => {
+    const { createElement } = require('react')
+    return createElement('button', { onClick: () => onEmojiClick({ emoji: '😊' }) }, 'mock-emoji-picker')
+  },
+  Theme: { AUTO: 'auto' },
+}))
+
+// IntersectionObserver mock
+class MockIntersectionObserver {
+  observe = vi.fn()
+  unobserve = vi.fn()
+  disconnect = vi.fn()
+}
+global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver
+
 // Suppress noise
 global.console.error = vi.fn()
 global.console.warn = vi.fn()

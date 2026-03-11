@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Calendar, MapPin, User, Images, X, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +18,7 @@ import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { SignInModal } from '@/components/auth/SignInModal'
 import { useLocaleStore } from '@/store/localeStore'
+import { EmojiPickerButton } from '@/components/ui/EmojiPickerButton'
 import { COVER_GRADIENTS, isCustomColor } from '@/pages/app/CreateMemorialPage'
 import type { MemorialPhoto } from '@/types/memorial'
 import type { TFunction } from 'i18next'
@@ -198,6 +199,10 @@ export default function PublicMemorialPage() {
   const [tributeText, setTributeText] = useState('')
   const [signInOpen, setSignInOpen] = useState(false)
 
+  const PAGE_SIZE = 10
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
   const isOpen = lightboxIndex !== null
   const canNav = lightboxPhotos.length > 1
 
@@ -237,6 +242,16 @@ export default function PublicMemorialPage() {
   const { data: tributesRes } = useTributes(memorial?.id ?? '')
   const { mutate: postTribute, isPending: posting } = usePostTribute(memorial?.id ?? '')
   const tributes = tributesRes?.data ?? []
+
+  useEffect(() => {
+    if (!sentinelRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisibleCount((n) => n + PAGE_SIZE) },
+      { threshold: 0.1 },
+    )
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [tributes.length])
 
   const is404 = !isPending && (error?.message === 'Memorial not found' || (!error && !memorial))
 
@@ -468,13 +483,16 @@ export default function PublicMemorialPage() {
                         className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 px-3 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
                       />
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="text-xs text-neutral-400">{tributeText.length}/500</span>
+                        <div className="flex items-center gap-2">
+                          <EmojiPickerButton onEmojiSelect={(emoji) => setTributeText((prev) => prev + emoji)} />
+                          <span className="text-xs text-neutral-400">{tributeText.length}/500</span>
+                        </div>
                         <button
                           type="button"
                           disabled={!tributeText.trim() || posting}
                           onClick={() => {
                             postTribute(tributeText.trim(), {
-                              onSuccess: () => setTributeText(''),
+                              onSuccess: () => { setTributeText(''); setVisibleCount(PAGE_SIZE) },
                             })
                           }}
                           className="rounded-lg bg-brand-primary hover:bg-brand-primaryHover px-4 py-2 text-sm font-medium text-white disabled:opacity-50 transition-colors"
@@ -504,7 +522,7 @@ export default function PublicMemorialPage() {
                     </p>
                   ) : (
                     <div className="space-y-4">
-                      {tributes.map((tribute) => (
+                      {tributes.slice(0, visibleCount).map((tribute) => (
                         <div key={tribute.id} className="rounded-xl border border-neutral-100 dark:border-neutral-800 p-4">
                           <div className="flex items-start gap-3">
                             <div className="h-9 w-9 shrink-0 rounded-full bg-brand-primary/10 flex items-center justify-center">
@@ -526,6 +544,11 @@ export default function PublicMemorialPage() {
                           </div>
                         </div>
                       ))}
+                      {visibleCount < tributes.length && (
+                        <div ref={sentinelRef} className="flex justify-center py-4">
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
