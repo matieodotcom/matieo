@@ -683,9 +683,11 @@
       "learnMore": "Learn More"
     }
   },
+  "policy": {
+    "lastUpdatedLabel": "آخر تحديث:"
+  },
   "terms": {
     "heading": "Terms of Service",
-    "lastUpdated": "Last updated: December 16, 2025",
     "s1Heading": "1. Introduction",
     "s2Heading": "2. Use of Service",
     "s21Heading": "2.1 Eligibility",
@@ -699,11 +701,25 @@
     "s8Heading": "8. Changes to Terms",
     "s9Heading": "9. Contact Us",
     "privacyLink": "Privacy Policy",
-    "viewPrivacy": "View Privacy Policy"
+    "viewPrivacy": "View Privacy Policy",
+    "viewCookie": "عرض سياسة ملفات تعريف الارتباط"
+  },
+  "cookie": {
+    "heading": "سياسة ملفات تعريف الارتباط",
+    "s1Heading": "1. ما هي ملفات تعريف الارتباط",
+    "s2Heading": "2. أنواع ملفات تعريف الارتباط التي نستخدمها",
+    "s21Heading": "2.1 ملفات تعريف الارتباط الأساسية",
+    "s22Heading": "2.2 ملفات تعريف الارتباط التحليلية",
+    "s23Heading": "2.3 ملفات تعريف الارتباط الوظيفية",
+    "s3Heading": "3. ملفات تعريف الارتباط من أطراف ثالثة",
+    "s4Heading": "4. إدارة ملفات تعريف الارتباط",
+    "s5Heading": "5. التغييرات على هذه السياسة",
+    "s6Heading": "6. اتصل بنا",
+    "viewPrivacy": "عرض سياسة الخصوصية",
+    "viewTerms": "عرض شروط الخدمة"
   },
   "privacy": {
     "heading": "Privacy Policy",
-    "lastUpdated": "Last updated: December 16, 2025",
     "s1Heading": "1. Introduction",
     "s2Heading": "2. Information We Collect",
     "s21Heading": "2.1 Information You Provide",
@@ -716,6 +732,7 @@
     "s7Heading": "7. Your Rights",
     "s8Heading": "8. Changes to This Policy",
     "s9Heading": "9. Contact Us",
-    "viewTerms": "View Terms of Service"
+    "viewTerms": "View Terms of Service",
+    "viewCookie": "عرض سياسة ملفات تعريف الارتباط"
   }
 }

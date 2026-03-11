@@ -98,6 +98,13 @@
 
 <!-- New entries added below by Claude as decisions are made during development -->
 
+## 2026-03-11 — Policy dates centralized in `config/policy-versions.ts`, formatted via `Intl.DateTimeFormat`
+
+**Decision:** Policy last-updated dates (Terms, Privacy, Cookie) are stored as `Date` objects in a single `frontend/src/config/policy-versions.ts` file and formatted at render time using `toLocaleDateString(i18n.language, { year, month, day })`. Locale files retain only the label key (`policy.lastUpdatedLabel`), not the date value.
+**Why:** The old approach embedded the full date string in all 6 locale files (18 keys total). This caused drift — cookie had per-locale translations while terms/privacy had English-only strings in non-English locales. Centralizing removes the 18-key burden: updating one date now means editing one line in one file. `Intl.DateTimeFormat` renders the date natively in whatever language the user has selected, so Arabic users see `١١ مارس ٢٠٢٦` automatically.
+**Alternatives considered:** Keep locale keys but add a CI lint rule to enforce they match — rejected because it still requires editing 6 files per update and doesn't eliminate drift. Store ISO string in locale + format at render — same problem as above (still 6 files). Server-side rendering of the date — unnecessary complexity.
+**Consequences:** To change a policy date, edit only `frontend/src/config/policy-versions.ts`. Never add `*.lastUpdated` date strings back to locale files. The `policy.lastUpdatedLabel` key (label only, no date) must be present in all 6 locale files.
+
 ## 2026-03-10 — i18next for multi-language support (en/ar/ms/fr/es)
 
 **Decision:** Use `i18next` + `react-i18next` + `i18next-browser-languagedetector` for internationalisation. 5 supported locales: English (default), Arabic (RTL), Malay, French, Spanish. Locale stored in `localStorage` via a Zustand `localeStore`. No URL prefix changes (`/en/`, `/ar/`). Only `dir`/`lang` on `<html>` changes for RTL.

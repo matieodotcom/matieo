@@ -683,9 +683,11 @@
       "learnMore": "Learn More"
     }
   },
+  "policy": {
+    "lastUpdatedLabel": "Last updated:"
+  },
   "terms": {
     "heading": "Terms of Service",
-    "lastUpdated": "Last updated: December 16, 2025",
     "s1Heading": "1. Introduction",
     "s2Heading": "2. Use of Service",
     "s21Heading": "2.1 Eligibility",
@@ -699,11 +701,25 @@
     "s8Heading": "8. Changes to Terms",
     "s9Heading": "9. Contact Us",
     "privacyLink": "Privacy Policy",
-    "viewPrivacy": "View Privacy Policy"
+    "viewPrivacy": "View Privacy Policy",
+    "viewCookie": "View Cookie Policy"
+  },
+  "cookie": {
+    "heading": "Cookie Policy",
+    "s1Heading": "1. What Are Cookies",
+    "s2Heading": "2. Types of Cookies We Use",
+    "s21Heading": "2.1 Essential Cookies",
+    "s22Heading": "2.2 Analytics Cookies",
+    "s23Heading": "2.3 Functional Cookies",
+    "s3Heading": "3. Third-Party Cookies",
+    "s4Heading": "4. Managing Your Cookies",
+    "s5Heading": "5. Changes to This Policy",
+    "s6Heading": "6. Contact Us",
+    "viewPrivacy": "View Privacy Policy",
+    "viewTerms": "View Terms of Service"
   },
   "privacy": {
     "heading": "Privacy Policy",
-    "lastUpdated": "Last updated: December 16, 2025",
     "s1Heading": "1. Introduction",
     "s2Heading": "2. Information We Collect",
     "s21Heading": "2.1 Information You Provide",
@@ -716,6 +732,7 @@
     "s7Heading": "7. Your Rights",
     "s8Heading": "8. Changes to This Policy",
     "s9Heading": "9. Contact Us",
-    "viewTerms": "View Terms of Service"
+    "viewTerms": "View Terms of Service",
+    "viewCookie": "View Cookie Policy"
   }
 }

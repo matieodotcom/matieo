@@ -2,9 +2,15 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
+import { POLICY_VERSIONS } from '@/config/policy-versions'
 
 export default function PrivacyPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const lastUpdated = POLICY_VERSIONS.privacy.toLocaleDateString(i18n.language, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
@@ -12,7 +18,7 @@ export default function PrivacyPage() {
       {/* Main content */}
       <main className="max-w-3xl mx-auto px-6 md:px-8 py-12">
         <h1 className="text-4xl font-bold text-neutral-900 mb-2">{t('privacy.heading')}</h1>
-        <p className="text-sm text-neutral-400 mb-12">{t('privacy.lastUpdated')}</p>
+        <p className="text-sm text-neutral-400 mb-12">{t('policy.lastUpdatedLabel')} {lastUpdated}</p>
 
         {/* 1. Introduction */}
         <section>
@@ -172,12 +178,19 @@ export default function PrivacyPage() {
         </section>
 
         {/* Bottom bar */}
-        <div className="mt-16 pt-8 border-t border-neutral-100">
+        <div className="mt-16 pt-8 border-t border-neutral-100 flex flex-col sm:flex-row gap-4">
           <Link
             to="/terms"
             className="flex items-center gap-1 text-sm text-brand-primary hover:underline"
           >
             {t('privacy.viewTerms')}
+            <ArrowRight size={14} />
+          </Link>
+          <Link
+            to="/cookie-policy"
+            className="flex items-center gap-1 text-sm text-brand-primary hover:underline"
+          >
+            {t('privacy.viewCookie')}
             <ArrowRight size={14} />
           </Link>
         </div>

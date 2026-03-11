@@ -11,7 +11,7 @@ describe('PrivacyPage', () => {
   })
 
   it('renders "Last updated" text', () => {
-    expect(screen.getByText(/Last updated: December 16, 2025/i)).toBeInTheDocument()
+    expect(screen.getByText(/last updated:/i)).toBeInTheDocument()
   })
 
   it('renders "1. Introduction" section heading', () => {
@@ -60,6 +60,11 @@ describe('PrivacyPage', () => {
   it('renders "View Terms of Service" link pointing to /terms', () => {
     const link = screen.getByRole('link', { name: /view terms of service/i })
     expect(link).toHaveAttribute('href', '/terms')
+  })
+
+  it('renders "View Cookie Policy" link pointing to /cookie-policy', () => {
+    const link = screen.getByRole('link', { name: /view cookie policy/i })
+    expect(link).toHaveAttribute('href', '/cookie-policy')
   })
 
   it('does not render a "Back to Sign Up" link', () => {

@@ -683,9 +683,11 @@
       "learnMore": "Learn More"
     }
   },
+  "policy": {
+    "lastUpdatedLabel": "Dikemas kini pada:"
+  },
   "terms": {
     "heading": "Terms of Service",
-    "lastUpdated": "Last updated: December 16, 2025",
     "s1Heading": "1. Introduction",
     "s2Heading": "2. Use of Service",
     "s21Heading": "2.1 Eligibility",
@@ -699,11 +701,25 @@
     "s8Heading": "8. Changes to Terms",
     "s9Heading": "9. Contact Us",
     "privacyLink": "Privacy Policy",
-    "viewPrivacy": "View Privacy Policy"
+    "viewPrivacy": "View Privacy Policy",
+    "viewCookie": "Lihat Polisi Kuki"
+  },
+  "cookie": {
+    "heading": "Polisi Kuki",
+    "s1Heading": "1. Apakah Kuki",
+    "s2Heading": "2. Jenis Kuki yang Kami Gunakan",
+    "s21Heading": "2.1 Kuki Penting",
+    "s22Heading": "2.2 Kuki Analitik",
+    "s23Heading": "2.3 Kuki Fungsional",
+    "s3Heading": "3. Kuki Pihak Ketiga",
+    "s4Heading": "4. Mengurus Kuki Anda",
+    "s5Heading": "5. Perubahan pada Polisi Ini",
+    "s6Heading": "6. Hubungi Kami",
+    "viewPrivacy": "Lihat Polisi Privasi",
+    "viewTerms": "Lihat Terma Perkhidmatan"
   },
   "privacy": {
     "heading": "Privacy Policy",
-    "lastUpdated": "Last updated: December 16, 2025",
     "s1Heading": "1. Introduction",
     "s2Heading": "2. Information We Collect",
     "s21Heading": "2.1 Information You Provide",
@@ -716,6 +732,7 @@
     "s7Heading": "7. Your Rights",
     "s8Heading": "8. Changes to This Policy",
     "s9Heading": "9. Contact Us",
-    "viewTerms": "View Terms of Service"
+    "viewTerms": "View Terms of Service",
+    "viewCookie": "Lihat Polisi Kuki"
   }
 }

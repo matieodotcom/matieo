@@ -11,7 +11,7 @@ describe('TermsPage', () => {
   })
 
   it('renders "Last updated" text', () => {
-    expect(screen.getByText(/Last updated: December 16, 2025/i)).toBeInTheDocument()
+    expect(screen.getByText(/last updated:/i)).toBeInTheDocument()
   })
 
   it('renders "1. Introduction" section heading', () => {
@@ -59,5 +59,10 @@ describe('TermsPage', () => {
   it('renders "View Privacy Policy" link pointing to /privacy', () => {
     const link = screen.getByRole('link', { name: /view privacy policy/i })
     expect(link).toHaveAttribute('href', '/privacy')
+  })
+
+  it('renders "View Cookie Policy" link pointing to /cookie-policy', () => {
+    const link = screen.getByRole('link', { name: /view cookie policy/i })
+    expect(link).toHaveAttribute('href', '/cookie-policy')
   })
 })

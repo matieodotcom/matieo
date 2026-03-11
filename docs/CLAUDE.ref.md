@@ -117,6 +117,7 @@ export function ErrorMessage({ message }: { message: string }) {
 - `store/memorialDraftStore.ts` — Zustand store: `draft: MemorialFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists memorial form across preview navigation
 - `store/obituaryDraftStore.ts` — Zustand store: `draft: ObituaryFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists obituary form across preview navigation
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
+- `config/policy-versions.ts` — `POLICY_VERSIONS` object (`terms`, `privacy`, `cookie` as `Date`). Pages format via `toLocaleDateString(i18n.language, { year, month, long, day })`. Update only this file when a policy date changes — no locale files needed.
 - `lib/i18n.ts` — i18next init. Resources: 6 locale JSON files (`en`, `ar`, `ms`, `fr`, `es`, `hi`). `fallbackLng: 'en'`. `initImmediate: false` (sync for SSR compat). Side-effect import in `main.tsx` before anything else.
 - `lib/i18n-test.ts` — minimal i18next instance for Vitest (en only, `initImmediate: false`). Used in `__tests__/utils.tsx` via `<I18nextProvider>`.
 - `store/localeStore.ts` — Zustand + persist store: `locale: 'en'|'ar'|'ms'|'fr'|'es'|'hi'`, `setLocale(l)`. `setLocale` calls `i18n.changeLanguage`, sets `document.documentElement.lang`, sets `document.documentElement.dir` (`rtl` for `ar`, `ltr` for all others). Persisted as `matieo-locale` in localStorage. `index.html` has blocking inline script to set `dir`/`lang` before React hydrates (prevents RTL flash).
@@ -787,6 +788,7 @@ CLOUDINARY_API_SECRET
 | About | `/about` | ✅ Complete | docs/pages/about.md |
 | Terms of Service | `/terms` | ✅ Complete | docs/pages/terms.md |
 | Privacy Policy | `/privacy` | ✅ Complete | docs/pages/privacy.md |
+| Cookie Policy | `/cookie-policy` | ✅ Complete | docs/pages/cookie-policy.md |
 | Insights (public) | `/insights` | ✅ Complete | docs/pages/insights-public.md |
 | Obituaries (public list) | `/obituary` | ✅ Complete | docs/pages/obituaries.md |
 | Public Obituary | `/obituary/:slug` | ✅ Complete | docs/pages/obituaries.md |
