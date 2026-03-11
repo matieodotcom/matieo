@@ -281,11 +281,32 @@ export function useForgotPassword() {
   const [error, setError] = useState<string | null>(null)
   const [emailSent, setEmailSent] = useState(false)
   const [submittedEmail, setSubmittedEmail] = useState('')
+  const [resendCooldown, setResendCooldown] = useState(0)
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: '' },
   })
+
+  useEffect(() => {
+    return () => {
+      if (cooldownRef.current) clearInterval(cooldownRef.current)
+    }
+  }, [])
+
+  const startCooldown = (seconds = 60) => {
+    setResendCooldown(seconds)
+    cooldownRef.current = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(cooldownRef.current!)
+          return 0
+        }
+        return s - 1
+      })
+    }, 1000)
+  }
 
   const submitReset = async (email: string) => {
     setIsPending(true)
@@ -304,12 +325,17 @@ export function useForgotPassword() {
 
     setSubmittedEmail(email)
     setEmailSent(true)
+    startCooldown()
   }
 
   const onSubmit = form.handleSubmit((values) => submitReset(values.email))
-  const resend = () => submitReset(submittedEmail)
 
-  return { form, onSubmit, isPending, error, emailSent, submittedEmail, resend }
+  const resend = () => {
+    if (resendCooldown > 0 || isPending) return
+    submitReset(submittedEmail)
+  }
+
+  return { form, onSubmit, isPending, error, emailSent, submittedEmail, resend, resendCooldown }
 }
 
 // ── useResetPassword ──────────────────────────────────────────────────────────

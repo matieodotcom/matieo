@@ -229,7 +229,8 @@
         "message": "Hemos enviado un enlace de restablecimiento de contraseña a",
         "openEmail": "Abrir correo electrónico",
         "notReceived": "¿No recibió el correo electrónico?",
-        "resend": "Haga clic para reenviar"
+        "resend": "Haga clic para reenviar",
+        "resendIn": "Reenviar en {{count}}s"
       },
       "backToSignIn": "Volver a iniciar sesión"
     },

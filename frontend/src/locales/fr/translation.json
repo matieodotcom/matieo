@@ -229,7 +229,8 @@
         "message": "Nous avons envoyé un lien de réinitialisation à",
         "openEmail": "Ouvrir l'e-mail",
         "notReceived": "Vous n'avez pas reçu l'e-mail ?",
-        "resend": "Cliquez pour renvoyer"
+        "resend": "Cliquez pour renvoyer",
+        "resendIn": "Renvoi dans {{count}}s"
       },
       "backToSignIn": "Retour à la connexion"
     },

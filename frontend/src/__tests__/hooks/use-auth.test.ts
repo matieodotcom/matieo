@@ -707,7 +707,7 @@ describe('useForgotPassword', () => {
     expect(supabase.auth.resetPasswordForEmail).not.toHaveBeenCalled()
   })
 
-  it('resend — calling resend() calls resetPasswordForEmail again', async () => {
+  it('successful submit starts 60s cooldown', async () => {
     vi.mocked(supabase.auth.resetPasswordForEmail).mockResolvedValue({
       data: {},
       error: null,
@@ -716,23 +716,39 @@ describe('useForgotPassword', () => {
     const { useForgotPassword } = await getModule()
     const { result } = renderHook(() => useForgotPassword())
 
-    act(() => {
-      result.current.form.setValue('email', 'jane@example.com')
-    })
+    act(() => { result.current.form.setValue('email', 'jane@example.com') })
 
     await act(async () => {
       await result.current.onSubmit({ preventDefault: () => {} } as never)
     })
 
-    await waitFor(() => {
-      expect(result.current.emailSent).toBe(true)
-    })
+    await waitFor(() => expect(result.current.emailSent).toBe(true))
+
+    expect(result.current.resendCooldown).toBe(60)
+  })
+
+  it('resend is blocked while cooldown is active', async () => {
+    vi.mocked(supabase.auth.resetPasswordForEmail).mockResolvedValue({
+      data: {},
+      error: null,
+    } as never)
+
+    const { useForgotPassword } = await getModule()
+    const { result } = renderHook(() => useForgotPassword())
+
+    act(() => { result.current.form.setValue('email', 'jane@example.com') })
 
     await act(async () => {
-      await result.current.resend()
+      await result.current.onSubmit({ preventDefault: () => {} } as never)
     })
 
-    expect(supabase.auth.resetPasswordForEmail).toHaveBeenCalledTimes(2)
+    await waitFor(() => expect(result.current.emailSent).toBe(true))
+
+    // cooldown is active — resend should be a no-op
+    await act(async () => { result.current.resend() })
+
+    // still only called once (from the initial submit)
+    expect(supabase.auth.resetPasswordForEmail).toHaveBeenCalledTimes(1)
   })
 })
 

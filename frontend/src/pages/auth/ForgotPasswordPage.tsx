@@ -8,7 +8,7 @@ import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation()
-  const { form, onSubmit, isPending, error, emailSent, submittedEmail, resend } =
+  const { form, onSubmit, isPending, error, emailSent, submittedEmail, resend, resendCooldown } =
     useForgotPassword()
 
   const {
@@ -107,15 +107,24 @@ export default function ForgotPasswordPage() {
               {t('auth.forgotPassword.checkEmail.openEmail')}
             </button>
 
+            {error && <ErrorMessage message={error} />}
+
             <p className="text-sm text-neutral-500">
               {t('auth.forgotPassword.checkEmail.notReceived')}{' '}
-              <button
-                type="button"
-                onClick={resend}
-                className="text-brand-primary font-medium hover:underline"
-              >
-                {t('auth.forgotPassword.checkEmail.resend')}
-              </button>
+              {resendCooldown > 0 ? (
+                <span className="text-neutral-400">
+                  {t('auth.forgotPassword.checkEmail.resendIn', { count: resendCooldown })}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={resend}
+                  disabled={isPending}
+                  className="text-brand-primary font-medium hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isPending ? t('auth.forgotPassword.submitting') : t('auth.forgotPassword.checkEmail.resend')}
+                </button>
+              )}
             </p>
           </>
         )}

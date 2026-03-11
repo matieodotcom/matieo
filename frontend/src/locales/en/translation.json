@@ -229,7 +229,8 @@
         "message": "We sent a password reset link to",
         "openEmail": "Open email",
         "notReceived": "Didn't receive the email?",
-        "resend": "Click to resend"
+        "resend": "Click to resend",
+        "resendIn": "Resend in {{count}}s"
       },
       "backToSignIn": "Back to Sign in"
     },

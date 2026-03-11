@@ -229,7 +229,8 @@
         "message": "Kami telah menghantar pautan penetapan semula kata laluan ke",
         "openEmail": "Buka e-mel",
         "notReceived": "Tidak menerima e-mel?",
-        "resend": "Klik untuk hantar semula"
+        "resend": "Klik untuk hantar semula",
+        "resendIn": "Hantar semula dalam {{count}}s"
       },
       "backToSignIn": "Kembali ke Log Masuk"
     },
