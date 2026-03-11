@@ -4,7 +4,14 @@ import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/__tests__/utils'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { useAuthStore } from '@/store/authStore'
+import { mockProfile } from '@/__tests__/utils'
 import type { User } from '@supabase/supabase-js'
+
+vi.mock('@/hooks/use-profile', () => ({
+  useProfile: vi.fn(),
+}))
+
+import { useProfile } from '@/hooks/use-profile'
 
 const mockUser = {
   id: 'test-user-id',
@@ -22,6 +29,11 @@ HTMLElement.prototype.scrollTo = vi.fn()
 describe('DashboardLayout — authenticated', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
+    vi.mocked(useProfile).mockReturnValue({
+      data: mockProfile({ account_type: 'individual' }) as never,
+      isLoading: false,
+      error: null,
+    } as never)
     vi.clearAllMocks()
   })
 
@@ -61,11 +73,25 @@ describe('DashboardLayout — authenticated', () => {
     expect(screen.getByRole('button', { name: /user menu/i })).toBeInTheDocument()
   })
 
-  it('renders all nav labels in the sidebar', () => {
+  it('renders core nav labels for individual users', () => {
     renderLayout()
     expect(screen.getByText('Insights')).toBeInTheDocument()
     expect(screen.getByText('Memorials')).toBeInTheDocument()
     expect(screen.getByText('Obituary')).toBeInTheDocument()
+  })
+
+  it('hides Services link for individual users', () => {
+    renderLayout()
+    expect(screen.queryByText('Services')).not.toBeInTheDocument()
+  })
+
+  it('shows Services link for organization users', () => {
+    vi.mocked(useProfile).mockReturnValue({
+      data: mockProfile({ account_type: 'organization' }) as never,
+      isLoading: false,
+      error: null,
+    } as never)
+    renderLayout()
     expect(screen.getByText('Services')).toBeInTheDocument()
   })
 
@@ -87,7 +113,12 @@ describe('DashboardLayout — authenticated', () => {
       .toHaveAttribute('href', '/dashboard/obituary')
   })
 
-  it('Services link points to /dashboard/services', () => {
+  it('Services link points to /dashboard/services for org users', () => {
+    vi.mocked(useProfile).mockReturnValue({
+      data: mockProfile({ account_type: 'organization' }) as never,
+      isLoading: false,
+      error: null,
+    } as never)
     renderLayout()
     expect(screen.getByRole('link', { name: /services/i }))
       .toHaveAttribute('href', '/dashboard/services')
@@ -97,6 +128,11 @@ describe('DashboardLayout — authenticated', () => {
 describe('DashboardLayout — preview route', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
+    vi.mocked(useProfile).mockReturnValue({
+      data: mockProfile({ account_type: 'individual' }) as never,
+      isLoading: false,
+      error: null,
+    } as never)
     vi.clearAllMocks()
   })
 
@@ -131,6 +167,11 @@ describe('DashboardLayout — preview route', () => {
 describe('DashboardLayout — mobile drawer', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
+    vi.mocked(useProfile).mockReturnValue({
+      data: mockProfile({ account_type: 'individual' }) as never,
+      isLoading: false,
+      error: null,
+    } as never)
     vi.clearAllMocks()
   })
 
@@ -158,6 +199,11 @@ describe('DashboardLayout — mobile drawer', () => {
 describe('DashboardLayout — unauthenticated', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: null, session: null, isLoading: false })
+    vi.mocked(useProfile).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: null,
+    } as never)
     vi.clearAllMocks()
   })
 

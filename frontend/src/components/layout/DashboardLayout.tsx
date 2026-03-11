@@ -4,6 +4,7 @@ import { ArrowLeft, BarChart2, Heart, ScrollText, Briefcase, Menu, Moon, Sun } f
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
+import { useProfile } from '@/hooks/use-profile'
 import { useThemeStore } from '@/store/themeStore'
 import { UserAvatar } from '@/components/ui/Avatar'
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
@@ -15,18 +16,23 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/DropdownMenu'
 
-const SIDEBAR_LINK_KEYS = [
+const BASE_SIDEBAR_LINKS = [
   { key: 'sidebar.insights',  to: '/dashboard/insights',  icon: BarChart2  },
   { key: 'sidebar.memorials', to: '/dashboard/memorials', icon: Heart      },
   { key: 'sidebar.obituary',  to: '/dashboard/obituary',  icon: ScrollText },
-  { key: 'sidebar.services',  to: '/dashboard/services',  icon: Briefcase  },
 ] as const
+
+const SERVICES_LINK = { key: 'sidebar.services', to: '/dashboard/services', icon: Briefcase } as const
 
 export function DashboardLayout() {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
   const isLoading = useAuthStore((s) => s.isLoading)
+  const { data: profile } = useProfile()
+  const sidebarLinks = profile?.account_type === 'organization'
+    ? [...BASE_SIDEBAR_LINKS, SERVICES_LINK]
+    : BASE_SIDEBAR_LINKS
   const { signOut } = useSignOut()
   const isDark = useThemeStore((s) => s.isDark)
   const toggle = useThemeStore((s) => s.toggle)
@@ -194,7 +200,7 @@ export function DashboardLayout() {
 
             <nav aria-label="Dashboard navigation" className="flex-1 px-2 overflow-y-auto">
               <ul className="flex flex-col gap-0.5 list-none">
-                {SIDEBAR_LINK_KEYS.map(({ key, to, icon: Icon }) => (
+                {sidebarLinks.map(({ key, to, icon: Icon }) => (
                   <li key={key}>
                     <NavLink
                       to={to}
