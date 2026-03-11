@@ -16,6 +16,14 @@ const FRONTEND_URL = process.env.FRONTEND_URL ?? 'https://matieo.com'
 // ── Email event registry ───────────────────────────────────────────────────────
 
 export const EMAIL_EVENTS = {
+  // ── Supabase-managed (Go templates in supabase/templates/) ──────────────────
+  // These are sent automatically by Supabase Auth. Do NOT intercept with Resend.
+  // Template files must match MATIEO branding manually (no buildEmailHtml helper).
+  SIGNUP_CONFIRMATION:  'auth.signup.confirmation',  // supabase/templates/confirm-signup.html
+  EMAIL_CHANGE:         'auth.email.change',          // supabase/templates/email-change.html
+  PASSWORD_RESET:       'auth.password.reset',        // supabase/templates/reset-password.html
+
+  // ── Resend (custom send functions below) ────────────────────────────────────
   WAITLIST_CONFIRMATION: 'waitlist.confirmation',
   MEMORIAL_PUBLISHED:    'memorial.published',
   OBITUARY_PUBLISHED:    'obituary.published',
