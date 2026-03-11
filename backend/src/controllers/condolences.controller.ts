@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { sendCondolencePosted } from '@/lib/emailClient'
 import type { AuthenticatedRequest } from '@/types/memorial.types'
 
 export async function deleteCondolence(
@@ -106,6 +107,21 @@ export async function createCondolence(
     }
 
     res.status(201).json({ data, error: null })
+    ;(async () => {
+      const { data: obituary } = await supabaseAdmin
+        .from('obituaries')
+        .select('created_by, full_name, slug')
+        .eq('id', obituary_id)
+        .single()
+      if (!obituary) return
+      await sendCondolencePosted(
+        obituary.created_by,
+        authReq.user.id,
+        obituary.full_name,
+        obituary.slug,
+        author_name,
+      )
+    })().catch((err) => console.error('[email] sendCondolencePosted failed', err))
   } catch (err) {
     next(err)
   }

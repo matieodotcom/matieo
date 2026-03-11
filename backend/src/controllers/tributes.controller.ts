@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { sendTributePosted } from '@/lib/emailClient'
 import type { AuthenticatedRequest } from '@/types/memorial.types'
 
 export async function deleteTribute(
@@ -107,6 +108,21 @@ export async function createTribute(
     }
 
     res.status(201).json({ data, error: null })
+    ;(async () => {
+      const { data: memorial } = await supabaseAdmin
+        .from('memorials')
+        .select('created_by, full_name, slug')
+        .eq('id', memorial_id)
+        .single()
+      if (!memorial) return
+      await sendTributePosted(
+        memorial.created_by,
+        authReq.user.id,
+        memorial.full_name,
+        memorial.slug,
+        author_name,
+      )
+    })().catch((err) => console.error('[email] sendTributePosted failed', err))
   } catch (err) {
     next(err)
   }

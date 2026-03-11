@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { cloudinary } from '@/lib/cloudinary'
+import { sendMemorialPublished } from '@/lib/emailClient'
 import type {
   AuthenticatedRequest,
   CreateMemorialPayload,
@@ -417,6 +418,8 @@ export async function publish(
     }
 
     res.json({ data, error: null })
+    sendMemorialPublished(data.created_by, data.full_name, data.slug)
+      .catch((err) => console.error('[email] sendMemorialPublished failed', err))
   } catch (err) {
     next(err)
   }
