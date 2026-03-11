@@ -9,6 +9,7 @@ import PublicObituaryPage from '@/pages/public/PublicObituaryPage'
 import PricingPage from '@/pages/public/PricingPage'
 import TermsPage from '@/pages/legal/TermsPage'
 import PrivacyPage from '@/pages/legal/PrivacyPage'
+import CookiePage from '@/pages/legal/CookiePage'
 import ViewMemorialsPage from '@/pages/app/ViewMemorialsPage'
 import SignInPage from '@/pages/auth/SignInPage'
 import SignUpPage from '@/pages/auth/SignUpPage'
@@ -103,6 +104,10 @@ const router = createBrowserRouter([
       {
         path: '/privacy',
         element: <PrivacyPage />,
+      },
+      {
+        path: '/cookie-policy',
+        element: <CookiePage />,
       },
 
       // Public memorial browsing + individual pages
