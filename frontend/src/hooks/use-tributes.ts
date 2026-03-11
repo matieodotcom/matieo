@@ -27,3 +27,12 @@ export function usePostTribute(memorialId: string) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['tributes', memorialId] }),
   })
 }
+
+export function useDeleteTribute(memorialId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (tributeId: string) =>
+      apiFetch(`/api/memorials/${memorialId}/tributes/${tributeId}`, { method: 'DELETE' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['tributes', memorialId] }),
+  })
+}

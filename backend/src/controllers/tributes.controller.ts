@@ -2,6 +2,45 @@ import type { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import type { AuthenticatedRequest } from '@/types/memorial.types'
 
+export async function deleteTribute(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const authReq = req as AuthenticatedRequest
+    const { tributeId } = req.params
+
+    // Fetch to verify ownership
+    const { data: tribute, error: fetchError } = await supabaseAdmin
+      .from('tributes')
+      .select('user_id')
+      .eq('id', tributeId)
+      .single()
+
+    if (fetchError || !tribute) {
+      res.status(404).json({ data: null, error: 'Tribute not found' })
+      return
+    }
+
+    if (tribute.user_id !== authReq.user.id) {
+      res.status(403).json({ data: null, error: 'Not authorised to delete this tribute' })
+      return
+    }
+
+    const { error } = await supabaseAdmin.from('tributes').delete().eq('id', tributeId)
+
+    if (error) {
+      res.status(500).json({ data: null, error: error.message })
+      return
+    }
+
+    res.status(200).json({ data: { id: tributeId }, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export async function listTributes(
   req: Request,
   res: Response,

@@ -283,6 +283,43 @@ describe('PublicMemorialPage — Tributes section', () => {
       expect((screen.getByLabelText(/write a tribute/i) as HTMLTextAreaElement).value).toBe('Hello😊')
     })
 
+    it('shows delete button only on own tributes', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      const ownTribute = { ...mockTributes[0], user_id: mockUser().id }
+      const otherTribute = { id: 'tribute-2', memorial_id: 'mem-1', user_id: 'other-user', author_name: 'Bob', message: 'Hi', created_at: new Date().toISOString() }
+      vi.mocked(apiFetch).mockImplementation((url: string) =>
+        Promise.resolve(
+          (url as string).includes('/tributes')
+            ? { data: [ownTribute, otherTribute], error: null }
+            : { data: mockMemorial, error: null },
+        ),
+      )
+      renderPage()
+      await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument(), { timeout: 3000 })
+      // Only one delete button (for own post)
+      expect(screen.getAllByRole('button', { name: /delete tribute/i })).toHaveLength(1)
+    })
+
+    it('calls DELETE when delete tribute button clicked', async () => {
+      const user = userEvent.setup()
+      const { apiFetch } = await import('@/lib/apiClient')
+      const ownTribute = { ...mockTributes[0], user_id: mockUser().id }
+      vi.mocked(apiFetch).mockImplementation((url: string, opts?: RequestInit) => {
+        if ((opts as RequestInit)?.method === 'DELETE') return Promise.resolve({ data: { id: ownTribute.id }, error: null })
+        if ((url as string).includes('/tributes')) return Promise.resolve({ data: [ownTribute], error: null })
+        return Promise.resolve({ data: mockMemorial, error: null })
+      })
+      renderPage()
+      await waitFor(() => screen.getByRole('button', { name: /delete tribute/i }), { timeout: 3000 })
+      await user.click(screen.getByRole('button', { name: /delete tribute/i }))
+      await waitFor(() => {
+        const deleteCall = vi.mocked(apiFetch).mock.calls.find(
+          ([url, opts]) => (url as string).includes('/tributes/') && (opts as RequestInit)?.method === 'DELETE',
+        )
+        expect(deleteCall).toBeDefined()
+      })
+    })
+
     it('shows only 10 tributes initially when more than 10 exist', async () => {
       const { apiFetch } = await import('@/lib/apiClient')
       const manyTributes = Array.from({ length: 12 }, (_, i) => ({

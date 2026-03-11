@@ -362,7 +362,8 @@
     "photoViewer": "عارض الصور",
     "goBack": "العودة",
     "back_label": "رجوع",
-    "tributeVisibility": "ستكون تحيتك مرئية للجميع"
+    "tributeVisibility": "ستكون تحيتك مرئية للجميع",
+    "deleteTribute": "حذف التحية"
   },
   "publicObituary": {
     "notFound": {
@@ -395,7 +396,8 @@
     "back_label": "رجوع",
     "biography": "السيرة الذاتية",
     "noBiography": "لم تُضف أي سيرة ذاتية بعد.",
-    "familyMembers": "أفراد الأسرة"
+    "familyMembers": "أفراد الأسرة",
+    "deleteCondolence": "حذف التعزية"
   },
   "common": {
     "cancel": "إلغاء",

@@ -362,7 +362,8 @@
     "photoViewer": "Visionneuse de photos",
     "goBack": "Retour",
     "back_label": "Retour",
-    "tributeVisibility": "Votre hommage sera visible par tous"
+    "tributeVisibility": "Votre hommage sera visible par tous",
+    "deleteTribute": "Supprimer l'hommage"
   },
   "publicObituary": {
     "notFound": {
@@ -395,7 +396,8 @@
     "back_label": "Retour",
     "biography": "Biographie",
     "noBiography": "Aucune biographie ajoutée pour l'instant.",
-    "familyMembers": "Membres de la famille"
+    "familyMembers": "Membres de la famille",
+    "deleteCondolence": "Supprimer la condoléance"
   },
   "common": {
     "cancel": "Annuler",

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
-import { Calendar, MapPin, User, Images, X, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react'
+import { Calendar, MapPin, User, Images, X, ChevronLeft, ChevronRight, ArrowLeft, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/DropdownMenu'
 import { usePublicMemorial } from '@/hooks/use-public-memorial'
-import { useTributes, usePostTribute } from '@/hooks/use-tributes'
+import { useTributes, usePostTribute, useDeleteTribute } from '@/hooks/use-tributes'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { SignInModal } from '@/components/auth/SignInModal'
@@ -241,6 +241,7 @@ export default function PublicMemorialPage() {
 
   const { data: tributesRes } = useTributes(memorial?.id ?? '')
   const { mutate: postTribute, isPending: posting } = usePostTribute(memorial?.id ?? '')
+  const { mutate: deleteTribute } = useDeleteTribute(memorial?.id ?? '')
   const tributes = tributesRes?.data ?? []
 
   useEffect(() => {
@@ -541,6 +542,16 @@ export default function PublicMemorialPage() {
                                 {tribute.message}
                               </p>
                             </div>
+                            {user && tribute.user_id === user.id && (
+                              <button
+                                type="button"
+                                aria-label={t('publicMemorial.deleteTribute')}
+                                onClick={() => deleteTribute(tribute.id)}
+                                className="shrink-0 flex h-8 w-8 items-center justify-center rounded-lg text-neutral-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                              >
+                                <Trash2 size={15} />
+                              </button>
+                            )}
                           </div>
                         </div>
                       ))}

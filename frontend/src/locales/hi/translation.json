@@ -362,7 +362,8 @@
     "photoViewer": "फोटो व्यूअर",
     "goBack": "वापस जाएं",
     "back_label": "वापस",
-    "tributeVisibility": "आपकी श्रद्धांजलि सभी को दिखेगी"
+    "tributeVisibility": "आपकी श्रद्धांजलि सभी को दिखेगी",
+    "deleteTribute": "श्रद्धांजलि हटाएं"
   },
   "publicObituary": {
     "notFound": {
@@ -395,7 +396,8 @@
     "back_label": "वापस",
     "biography": "जीवनी",
     "noBiography": "अभी तक कोई जीवनी नहीं जोड़ी गई।",
-    "familyMembers": "परिवार के सदस्य"
+    "familyMembers": "परिवार के सदस्य",
+    "deleteCondolence": "संवेदना हटाएं"
   },
   "common": {
     "cancel": "रद्द करें",

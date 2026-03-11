@@ -281,6 +281,42 @@ describe('PublicObituaryPage — Condolences section', () => {
       expect((screen.getByLabelText(/write a condolence/i) as HTMLTextAreaElement).value).toBe('Hello😊')
     })
 
+    it('shows delete button only on own condolences', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      const ownCondolence = { ...mockCondolences[0], user_id: mockUser().id }
+      const otherCondolence = { id: 'condolence-2', obituary_id: 'obit-1', user_id: 'other-user', author_name: 'Bob', message: 'Hi', created_at: new Date().toISOString() }
+      vi.mocked(apiFetch).mockImplementation((url: string) =>
+        Promise.resolve(
+          (url as string).includes('/condolences')
+            ? { data: [ownCondolence, otherCondolence], error: null }
+            : { data: mockObituary, error: null },
+        ),
+      )
+      renderPage()
+      await waitFor(() => expect(screen.getByText('Alice Wong')).toBeInTheDocument(), { timeout: 3000 })
+      expect(screen.getAllByRole('button', { name: /delete condolence/i })).toHaveLength(1)
+    })
+
+    it('calls DELETE when delete condolence button clicked', async () => {
+      const user = userEvent.setup()
+      const { apiFetch } = await import('@/lib/apiClient')
+      const ownCondolence = { ...mockCondolences[0], user_id: mockUser().id }
+      vi.mocked(apiFetch).mockImplementation((url: string, opts?: RequestInit) => {
+        if ((opts as RequestInit)?.method === 'DELETE') return Promise.resolve({ data: { id: ownCondolence.id }, error: null })
+        if ((url as string).includes('/condolences')) return Promise.resolve({ data: [ownCondolence], error: null })
+        return Promise.resolve({ data: mockObituary, error: null })
+      })
+      renderPage()
+      await waitFor(() => screen.getByRole('button', { name: /delete condolence/i }), { timeout: 3000 })
+      await user.click(screen.getByRole('button', { name: /delete condolence/i }))
+      await waitFor(() => {
+        const deleteCall = vi.mocked(apiFetch).mock.calls.find(
+          ([url, opts]) => (url as string).includes('/condolences/') && (opts as RequestInit)?.method === 'DELETE',
+        )
+        expect(deleteCall).toBeDefined()
+      })
+    })
+
     it('shows only 10 condolences initially when more than 10 exist', async () => {
       const { apiFetch } = await import('@/lib/apiClient')
       const manyCondolences = Array.from({ length: 12 }, (_, i) => ({

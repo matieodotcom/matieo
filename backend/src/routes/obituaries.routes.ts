@@ -18,6 +18,7 @@ router.get('/mine', requireAuth as unknown as RequestHandler, obituaries.list as
 // Condolences — must be before /:id catch-all
 router.get('/:id/condolences', condolences.listCondolences as unknown as RequestHandler)
 router.post('/:id/condolences', requireAuth as unknown as RequestHandler, condolences.createCondolence as unknown as RequestHandler)
+router.delete('/:id/condolences/:condolenceId', requireAuth as unknown as RequestHandler, condolences.deleteCondolence as unknown as RequestHandler)
 
 router.get('/:id', requireAuth as unknown as RequestHandler, obituaries.getById as unknown as RequestHandler)
 router.patch('/:id', requireAuth as unknown as RequestHandler, obituaries.update as unknown as RequestHandler)

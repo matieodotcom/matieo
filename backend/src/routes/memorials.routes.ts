@@ -18,6 +18,7 @@ router.get('/mine', requireAuth as unknown as RequestHandler, memorials.list as 
 // Tributes — must be before /:id catch-all
 router.get('/:id/tributes', tributes.listTributes as unknown as RequestHandler)
 router.post('/:id/tributes', requireAuth as unknown as RequestHandler, tributes.createTribute as unknown as RequestHandler)
+router.delete('/:id/tributes/:tributeId', requireAuth as unknown as RequestHandler, tributes.deleteTribute as unknown as RequestHandler)
 
 router.get('/:id', requireAuth as unknown as RequestHandler, memorials.getById as unknown as RequestHandler)
 router.patch('/:id', requireAuth as unknown as RequestHandler, memorials.update as unknown as RequestHandler)

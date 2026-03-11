@@ -27,3 +27,12 @@ export function usePostCondolence(obituaryId: string) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['condolences', obituaryId] }),
   })
 }
+
+export function useDeleteCondolence(obituaryId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (condolenceId: string) =>
+      apiFetch(`/api/obituaries/${obituaryId}/condolences/${condolenceId}`, { method: 'DELETE' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['condolences', obituaryId] }),
+  })
+}

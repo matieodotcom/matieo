@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
-import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users } from 'lucide-react'
+import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -16,7 +16,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/lib/apiClient'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
-import { useCondolences, usePostCondolence } from '@/hooks/use-condolences'
+import { useCondolences, usePostCondolence, useDeleteCondolence } from '@/hooks/use-condolences'
 import { SignInModal } from '@/components/auth/SignInModal'
 import { useLocaleStore } from '@/store/localeStore'
 import { EmojiPickerButton } from '@/components/ui/EmojiPickerButton'
@@ -219,6 +219,7 @@ export default function PublicObituaryPage() {
 
   const { data: condolencesRes } = useCondolences(obituary?.id ?? '')
   const { mutate: postCondolence, isPending: posting } = usePostCondolence(obituary?.id ?? '')
+  const { mutate: deleteCondolence } = useDeleteCondolence(obituary?.id ?? '')
   const condolences = condolencesRes?.data ?? []
 
   useEffect(() => {
@@ -519,6 +520,16 @@ export default function PublicObituaryPage() {
                               {c.message}
                             </p>
                           </div>
+                          {user && c.user_id === user.id && (
+                            <button
+                              type="button"
+                              aria-label={t('publicObituary.deleteCondolence')}
+                              onClick={() => deleteCondolence(c.id)}
+                              className="shrink-0 flex h-8 w-8 items-center justify-center rounded-lg text-neutral-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

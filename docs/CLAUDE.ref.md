@@ -90,6 +90,8 @@ export function ErrorMessage({ message }: { message: string }) {
 
 **Frontend:** React 18, Vite 5, TypeScript, Radix UI, Tailwind CSS v3, React Hook Form + Zod, TanStack Query v5, Zustand v4, Lucide React, country-state-city, `@radix-ui/react-alert-dialog`, `react-day-picker` v9, `date-fns` v4, `i18next` + `react-i18next` + `i18next-browser-languagedetector`, `emoji-picker-react` (emoji input on tribute/condolence forms). Test: Vitest + RTL.
 
+**Tributes & Condolences delete:** `DELETE /api/memorials/:id/tributes/:tributeId` and `DELETE /api/obituaries/:id/condolences/:condolenceId` — auth required, ownership verified (403 if not author, 404 if not found). Frontend: `useDeleteTribute` / `useDeleteCondolence` hooks; trash icon button rendered only when `post.user_id === user.id`.
+
 **Supported locales:** `en` (default) · `ar` (RTL) · `ms` · `fr` · `es` · `hi`. Locale stored in `localStorage` via `localeStore`. `<html dir>` set to `rtl` for Arabic only.
 
 **i18n rules — mandatory:**

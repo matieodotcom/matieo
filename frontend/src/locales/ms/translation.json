@@ -362,7 +362,8 @@
     "photoViewer": "Pemapar foto",
     "goBack": "Kembali",
     "back_label": "Kembali",
-    "tributeVisibility": "Penghormatan anda akan kelihatan kepada semua orang"
+    "tributeVisibility": "Penghormatan anda akan kelihatan kepada semua orang",
+    "deleteTribute": "Padam penghormatan"
   },
   "publicObituary": {
     "notFound": {
@@ -395,7 +396,8 @@
     "back_label": "Kembali",
     "biography": "Biografi",
     "noBiography": "Tiada biografi ditambah lagi.",
-    "familyMembers": "Ahli Keluarga"
+    "familyMembers": "Ahli Keluarga",
+    "deleteCondolence": "Padam takziah"
   },
   "common": {
     "cancel": "Batal",
