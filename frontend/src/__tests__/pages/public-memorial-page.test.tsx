@@ -283,7 +283,7 @@ describe('PublicMemorialPage — Tributes section', () => {
       expect((screen.getByLabelText(/write a tribute/i) as HTMLTextAreaElement).value).toBe('Hello😊')
     })
 
-    it('shows delete button only on own tributes', async () => {
+    it('shows delete button only on own tributes (not others)', async () => {
       const { apiFetch } = await import('@/lib/apiClient')
       const ownTribute = { ...mockTributes[0], user_id: mockUser().id }
       const otherTribute = { id: 'tribute-2', memorial_id: 'mem-1', user_id: 'other-user', author_name: 'Bob', message: 'Hi', created_at: new Date().toISOString() }
@@ -298,6 +298,24 @@ describe('PublicMemorialPage — Tributes section', () => {
       await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument(), { timeout: 3000 })
       // Only one delete button (for own post)
       expect(screen.getAllByRole('button', { name: /delete tribute/i })).toHaveLength(1)
+    })
+
+    it('shows delete button on all tributes when user is the page owner', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      // logged-in user is the memorial creator
+      const pageOwnerMemorial = { ...mockMemorial, created_by: mockUser().id }
+      const tribute1 = { ...mockTributes[0], user_id: 'user-a' }
+      const tribute2 = { id: 'tribute-2', memorial_id: 'mem-1', user_id: 'user-b', author_name: 'Bob', message: 'Hi', created_at: new Date().toISOString() }
+      vi.mocked(apiFetch).mockImplementation((url: string) =>
+        Promise.resolve(
+          (url as string).includes('/tributes')
+            ? { data: [tribute1, tribute2], error: null }
+            : { data: pageOwnerMemorial, error: null },
+        ),
+      )
+      renderPage()
+      await waitFor(() => expect(screen.getByText('Jane Smith')).toBeInTheDocument(), { timeout: 3000 })
+      expect(screen.getAllByRole('button', { name: /delete tribute/i })).toHaveLength(2)
     })
 
     it('calls DELETE when delete tribute button clicked', async () => {

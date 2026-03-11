@@ -542,7 +542,7 @@ export default function PublicMemorialPage() {
                                 {tribute.message}
                               </p>
                             </div>
-                            {user && tribute.user_id === user.id && (
+                            {user && (tribute.user_id === user.id || memorial.created_by === user.id) && (
                               <button
                                 type="button"
                                 aria-label={t('publicMemorial.deleteTribute')}

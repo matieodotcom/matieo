@@ -520,7 +520,7 @@ export default function PublicObituaryPage() {
                               {c.message}
                             </p>
                           </div>
-                          {user && c.user_id === user.id && (
+                          {user && (c.user_id === user.id || obituary.created_by === user.id) && (
                             <button
                               type="button"
                               aria-label={t('publicObituary.deleteCondolence')}

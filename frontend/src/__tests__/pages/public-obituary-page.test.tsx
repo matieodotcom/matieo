@@ -281,7 +281,7 @@ describe('PublicObituaryPage — Condolences section', () => {
       expect((screen.getByLabelText(/write a condolence/i) as HTMLTextAreaElement).value).toBe('Hello😊')
     })
 
-    it('shows delete button only on own condolences', async () => {
+    it('shows delete button only on own condolences (not others)', async () => {
       const { apiFetch } = await import('@/lib/apiClient')
       const ownCondolence = { ...mockCondolences[0], user_id: mockUser().id }
       const otherCondolence = { id: 'condolence-2', obituary_id: 'obit-1', user_id: 'other-user', author_name: 'Bob', message: 'Hi', created_at: new Date().toISOString() }
@@ -295,6 +295,23 @@ describe('PublicObituaryPage — Condolences section', () => {
       renderPage()
       await waitFor(() => expect(screen.getByText('Alice Wong')).toBeInTheDocument(), { timeout: 3000 })
       expect(screen.getAllByRole('button', { name: /delete condolence/i })).toHaveLength(1)
+    })
+
+    it('shows delete button on all condolences when user is the page owner', async () => {
+      const { apiFetch } = await import('@/lib/apiClient')
+      const pageOwnerObituary = { ...mockObituary, created_by: mockUser().id }
+      const cond1 = { ...mockCondolences[0], user_id: 'user-a' }
+      const cond2 = { id: 'condolence-2', obituary_id: 'obit-1', user_id: 'user-b', author_name: 'Bob', message: 'Hi', created_at: new Date().toISOString() }
+      vi.mocked(apiFetch).mockImplementation((url: string) =>
+        Promise.resolve(
+          (url as string).includes('/condolences')
+            ? { data: [cond1, cond2], error: null }
+            : { data: pageOwnerObituary, error: null },
+        ),
+      )
+      renderPage()
+      await waitFor(() => expect(screen.getByText('Alice Wong')).toBeInTheDocument(), { timeout: 3000 })
+      expect(screen.getAllByRole('button', { name: /delete condolence/i })).toHaveLength(2)
     })
 
     it('calls DELETE when delete condolence button clicked', async () => {

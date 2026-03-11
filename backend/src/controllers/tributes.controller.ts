@@ -9,21 +9,23 @@ export async function deleteTribute(
 ): Promise<void> {
   try {
     const authReq = req as AuthenticatedRequest
-    const { tributeId } = req.params
+    const { id: memorialId, tributeId } = req.params
 
-    // Fetch to verify ownership
-    const { data: tribute, error: fetchError } = await supabaseAdmin
-      .from('tributes')
-      .select('user_id')
-      .eq('id', tributeId)
-      .single()
+    // Fetch tribute + memorial owner in parallel
+    const [tributeResult, memorialResult] = await Promise.all([
+      supabaseAdmin.from('tributes').select('user_id').eq('id', tributeId).single(),
+      supabaseAdmin.from('memorials').select('created_by').eq('id', memorialId).single(),
+    ])
 
-    if (fetchError || !tribute) {
+    if (tributeResult.error || !tributeResult.data) {
       res.status(404).json({ data: null, error: 'Tribute not found' })
       return
     }
 
-    if (tribute.user_id !== authReq.user.id) {
+    const isAuthor = tributeResult.data.user_id === authReq.user.id
+    const isPageOwner = memorialResult.data?.created_by === authReq.user.id
+
+    if (!isAuthor && !isPageOwner) {
       res.status(403).json({ data: null, error: 'Not authorised to delete this tribute' })
       return
     }

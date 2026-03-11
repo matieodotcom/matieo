@@ -9,20 +9,22 @@ export async function deleteCondolence(
 ): Promise<void> {
   try {
     const authReq = req as AuthenticatedRequest
-    const { condolenceId } = req.params
+    const { id: obituaryId, condolenceId } = req.params
 
-    const { data: condolence, error: fetchError } = await supabaseAdmin
-      .from('condolences')
-      .select('user_id')
-      .eq('id', condolenceId)
-      .single()
+    const [condolenceResult, obituaryResult] = await Promise.all([
+      supabaseAdmin.from('condolences').select('user_id').eq('id', condolenceId).single(),
+      supabaseAdmin.from('obituaries').select('created_by').eq('id', obituaryId).single(),
+    ])
 
-    if (fetchError || !condolence) {
+    if (condolenceResult.error || !condolenceResult.data) {
       res.status(404).json({ data: null, error: 'Condolence not found' })
       return
     }
 
-    if (condolence.user_id !== authReq.user.id) {
+    const isAuthor = condolenceResult.data.user_id === authReq.user.id
+    const isPageOwner = obituaryResult.data?.created_by === authReq.user.id
+
+    if (!isAuthor && !isPageOwner) {
       res.status(403).json({ data: null, error: 'Not authorised to delete this condolence' })
       return
     }
