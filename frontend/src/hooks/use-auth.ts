@@ -242,15 +242,20 @@ export function useGoogleAuth(options?: { redirectTo?: string }) {
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleGoogleAuth = async (accountType: 'individual' | 'organization') => {
+  const handleGoogleAuth = async (accountType?: 'individual' | 'organization') => {
     setIsPending(true)
     setError(null)
 
-    localStorage.setItem('pending_account_type', accountType)
+    // Only persist account type when explicitly provided (sign-up flows only).
+    // Sign-in flows must NOT set this — the button onClick would otherwise pass
+    // a MouseEvent which corrupts the profile's account_type column in the DB.
+    if (accountType) {
+      localStorage.setItem('pending_account_type', accountType)
+    }
 
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: options?.redirectTo ?? window.location.origin + '/' },
+      options: { redirectTo: options?.redirectTo ?? window.location.href },
     })
 
     if (authError) {

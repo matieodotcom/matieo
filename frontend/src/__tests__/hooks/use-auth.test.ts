@@ -613,6 +613,22 @@ describe('useGoogleAuth', () => {
     expect(localStorage.setItem).toHaveBeenCalledWith('pending_account_type', 'organization')
   })
 
+  it('does NOT store accountType in localStorage when called without accountType (sign-in flows)', async () => {
+    vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValueOnce({
+      data: { provider: 'google', url: 'https://google.com' },
+      error: null,
+    } as never)
+
+    const { useGoogleAuth } = await getModule()
+    const { result } = renderHook(() => useGoogleAuth())
+
+    await act(async () => {
+      await result.current.handleGoogleAuth()
+    })
+
+    expect(localStorage.setItem).not.toHaveBeenCalledWith('pending_account_type', expect.anything())
+  })
+
   it('sets error state on auth error', async () => {
     vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValueOnce({
       data: { provider: 'google', url: null },

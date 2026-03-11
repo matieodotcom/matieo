@@ -49,7 +49,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
     isPending: googlePending,
     error: googleError,
   } = useGoogleAuth({
-    redirectTo: window.location.origin + '/memorials/create',
+    redirectTo: window.location.href,
   })
 
   const {
@@ -163,7 +163,7 @@ export function SignInModal({ open, onOpenChange, onSuccess }: SignInModalProps)
           {/* Google */}
           <button
             type="button"
-            onClick={handleGoogleAuth}
+            onClick={() => handleGoogleAuth()}
             disabled={googlePending || isPending}
             className="w-full flex items-center justify-center gap-3 bg-neutral-100
               hover:bg-neutral-200 text-sm font-medium text-neutral-700 py-2.5 rounded-lg
