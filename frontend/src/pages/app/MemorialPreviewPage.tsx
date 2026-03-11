@@ -156,7 +156,7 @@ export default function MemorialPreviewPage() {
       <div className="-m-4 sm:-m-6 lg:-m-8 bg-neutral-50 dark:bg-neutral-950">
 
         {/* ── Cover ── */}
-        <div className="h-52 w-full overflow-hidden">
+        <div className="h-80 w-full overflow-hidden">
           {v.coverPhoto ? (
             <img src={v.coverPhoto.url} alt={t('common.cover')} className="h-full w-full object-cover" />
           ) : customColor ? (

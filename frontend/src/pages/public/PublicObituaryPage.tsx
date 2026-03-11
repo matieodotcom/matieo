@@ -65,7 +65,7 @@ function timeAgo(raw: string, t: TFunction): string {
 function Skeleton() {
   return (
     <div className="animate-pulse bg-neutral-50 dark:bg-neutral-950 min-h-screen">
-      <div className="h-52 w-full bg-neutral-200 dark:bg-neutral-800" />
+      <div className="h-80 w-full bg-neutral-200 dark:bg-neutral-800" />
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="flex items-start gap-6">
           <div className="-mt-16 sm:-mt-20 h-40 w-40 sm:h-52 sm:w-52 shrink-0 rounded-full bg-neutral-200 dark:bg-neutral-700 border-4 border-neutral-50 dark:border-neutral-950" />
@@ -246,7 +246,7 @@ export default function PublicObituaryPage() {
         {!isPending && !error && obituary && (
           <>
             {/* ── Cover photo ── */}
-            <div className="h-52 w-full overflow-hidden">
+            <div className="h-80 w-full overflow-hidden">
               {obituary.cover_url ? (
                 <img src={obituary.cover_url} alt="Cover" className="h-full w-full object-cover" />
               ) : (
