@@ -518,7 +518,6 @@
     "sectionMessage": "Mesej Peringatan (Pilihan)",
     "sectionDeathCert": "Sijil Kematian (Pilihan)",
     "fieldObitPhoto": "Foto Obituari",
-    "fieldPlaceOfDeath": "Tempat Kematian",
     "fieldCauseOfPassing": "Sebab Kematian",
     "consentLabel": "Saya bersetuju maklumat ini digunakan secara tanpa nama untuk penyelidikan wawasan kematian",
     "funeralName": "Nama",
@@ -550,7 +549,6 @@
     "contactNamePlaceholder": "Nama penuh orang hubungan",
     "biographyPlaceholder": "Kongsikan kisah hidup, kenangan, dan warisan orang tersayang anda...",
     "memberNamePlaceholder": "Nama ahli keluarga",
-    "selectPlaceOfDeath": "Pilih tempat kematian",
     "selectCauseOfPassing": "Pilih sebab kematian",
     "publishBtn": "Terbitkan Obituari",
     "updateBtn": "Kemaskini Obituari"

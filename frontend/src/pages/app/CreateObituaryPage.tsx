@@ -142,13 +142,6 @@ const CAUSE_OF_PASSING_OPTIONS = [
   { value: 'Other', label: 'Other' },
 ]
 
-const PLACE_OF_DEATH_OPTIONS = [
-  { value: 'Hospital', label: 'Hospital' },
-  { value: 'Home', label: 'Home' },
-  { value: 'Nursing home', label: 'Nursing home' },
-  { value: 'Hospice', label: 'Hospice' },
-  { value: 'Other', label: 'Other' },
-]
 
 const RELATIONSHIP_OPTIONS = [
   { value: 'Spouse', label: 'Spouse' },
@@ -470,23 +463,6 @@ export default function CreateObituaryPage() {
               {errors.state && <ErrorMessage message={errors.state.message!} />}
             </div>
 
-            <div>
-              <FieldLabel htmlFor="placeOfDeath" required>{t('createObituary.fieldPlaceOfDeath')}</FieldLabel>
-              <Controller
-                control={control}
-                name="placeOfDeath"
-                render={({ field }) => (
-                  <Select
-                    id="placeOfDeath"
-                    placeholder={t('createObituary.selectPlaceOfDeath')}
-                    options={PLACE_OF_DEATH_OPTIONS}
-                    value={field.value ?? ''}
-                    onValueChange={field.onChange}
-                  />
-                )}
-              />
-              {errors.placeOfDeath && <ErrorMessage message={errors.placeOfDeath.message!} />}
-            </div>
 
             <div>
               <FieldLabel htmlFor="gender" required>{t('form.gender')}</FieldLabel>

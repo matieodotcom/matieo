@@ -518,7 +518,6 @@
     "sectionMessage": "رسالة تذكارية (اختياري)",
     "sectionDeathCert": "شهادة الوفاة (اختياري)",
     "fieldObitPhoto": "صورة النعي",
-    "fieldPlaceOfDeath": "مكان الوفاة",
     "fieldCauseOfPassing": "سبب الوفاة",
     "consentLabel": "أوافق على استخدام هذه المعلومات بشكل مجهول لأبحاث رؤى الوفيات",
     "funeralName": "الاسم",
@@ -550,7 +549,6 @@
     "contactNamePlaceholder": "الاسم الكامل لشخص التواصل",
     "biographyPlaceholder": "شارك قصة الحياة والذكريات وإرث عزيزك...",
     "memberNamePlaceholder": "اسم فرد الأسرة",
-    "selectPlaceOfDeath": "اختر مكان الوفاة",
     "selectCauseOfPassing": "اختر سبب الوفاة",
     "publishBtn": "نشر النعي",
     "updateBtn": "تحديث النعي"

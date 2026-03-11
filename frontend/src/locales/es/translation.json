@@ -518,7 +518,6 @@
     "sectionMessage": "Mensaje Conmemorativo (Opcional)",
     "sectionDeathCert": "Certificado de Defunción (Opcional)",
     "fieldObitPhoto": "Foto del Obituario",
-    "fieldPlaceOfDeath": "Lugar de Fallecimiento",
     "fieldCauseOfPassing": "Causa del Fallecimiento",
     "consentLabel": "Consiento que esta información se utilice de forma anónima para la investigación sobre datos de mortalidad",
     "funeralName": "Nombre",
@@ -550,7 +549,6 @@
     "contactNamePlaceholder": "Nombre completo de la persona de contacto",
     "biographyPlaceholder": "Comparte la historia de vida, recuerdos y legado de tu ser querido...",
     "memberNamePlaceholder": "Nombre del miembro de la familia",
-    "selectPlaceOfDeath": "Seleccionar lugar de fallecimiento",
     "selectCauseOfPassing": "Seleccionar causa del fallecimiento",
     "publishBtn": "Publicar Obituario",
     "updateBtn": "Actualizar Obituario"

@@ -44,7 +44,6 @@ const baseValues: ObituaryFormValues = {
   raceEthnicity: 'Nigerian',
   country: 'Nigeria',
   state: 'Lagos',
-  placeOfDeath: 'Hospital',
   causeOfPassing: 'Natural causes',
   causeOfPassingConsented: false,
   contactPersonName: 'Ibrahim Bello',

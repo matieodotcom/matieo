@@ -518,7 +518,6 @@
     "sectionMessage": "स्मारक संदेश (वैकल्पिक)",
     "sectionDeathCert": "मृत्यु प्रमाण पत्र (वैकल्पिक)",
     "fieldObitPhoto": "श्रद्धांजलि फोटो",
-    "fieldPlaceOfDeath": "मृत्यु का स्थान",
     "fieldCauseOfPassing": "निधन का कारण",
     "consentLabel": "मैं इस जानकारी का उपयोग मृत्यु दर अंतर्दृष्टि अनुसंधान के लिए गुमनाम रूप से किए जाने की सहमति देता/देती हूं",
     "funeralName": "नाम",
@@ -550,7 +549,6 @@
     "contactNamePlaceholder": "संपर्क व्यक्ति का पूरा नाम",
     "biographyPlaceholder": "अपने प्रियजन की जीवन कहानी, यादें और विरासत साझा करें...",
     "memberNamePlaceholder": "परिवार के सदस्य का नाम",
-    "selectPlaceOfDeath": "मृत्यु का स्थान चुनें",
     "selectCauseOfPassing": "निधन का कारण चुनें",
     "publishBtn": "श्रद्धांजलि प्रकाशित करें",
     "updateBtn": "श्रद्धांजलि अपडेट करें"

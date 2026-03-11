@@ -518,7 +518,6 @@
     "sectionMessage": "Memorial Message (Optional)",
     "sectionDeathCert": "Death Certificate (Optional)",
     "fieldObitPhoto": "Obituary Photo",
-    "fieldPlaceOfDeath": "Place of Death",
     "fieldCauseOfPassing": "Cause of Passing",
     "consentLabel": "I consent to this information being used anonymously for mortality insights research",
     "funeralName": "Name",
@@ -550,7 +549,6 @@
     "contactNamePlaceholder": "Contact person's full name",
     "biographyPlaceholder": "Share the life story, memories, and legacy of your loved one...",
     "memberNamePlaceholder": "Family member name",
-    "selectPlaceOfDeath": "Select place of death",
     "selectCauseOfPassing": "Select cause of passing",
     "publishBtn": "Publish Obituary",
     "updateBtn": "Update Obituary"
