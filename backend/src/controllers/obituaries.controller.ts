@@ -107,7 +107,26 @@ export async function getBySlug(
       return
     }
 
-    res.json({ data: stripPrivateFields(data), error: null })
+    // Optionally enrich with user_liked if a valid Bearer token is present
+    let userLiked = false
+    const token = req.headers.authorization?.startsWith('Bearer ')
+      ? req.headers.authorization.slice(7)
+      : null
+
+    if (token) {
+      const { data: authData } = await supabaseAdmin.auth.getUser(token)
+      if (authData?.user) {
+        const { data: like } = await supabaseAdmin
+          .from('obituary_likes')
+          .select('id')
+          .eq('obituary_id', data.id)
+          .eq('user_id', authData.user.id)
+          .maybeSingle()
+        userLiked = !!like
+      }
+    }
+
+    res.json({ data: { ...stripPrivateFields(data), user_liked: userLiked }, error: null })
   } catch (err) {
     next(err)
   }

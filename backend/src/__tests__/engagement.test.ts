@@ -8,6 +8,7 @@ import request from 'supertest'
 // ── Supabase mock ─────────────────────────────────────────────────────────────
 
 const mockMaybeSingle = jest.fn()
+const mockGetUser = jest.fn()
 
 function makeChain() {
   const obj: Record<string, jest.Mock> = {
@@ -31,6 +32,7 @@ let currentChain = makeChain()
 jest.mock('@/lib/supabaseAdmin', () => ({
   supabaseAdmin: {
     from: jest.fn(() => currentChain),
+    auth: { getUser: mockGetUser },
   },
 }))
 
@@ -48,6 +50,7 @@ beforeEach(() => {
   const { supabaseAdmin } = jest.requireMock('@/lib/supabaseAdmin')
   supabaseAdmin.from.mockReturnValue(currentChain)
   mockMaybeSingle.mockReset()
+  mockGetUser.mockReset()
 })
 
 // ── Memorial view tracking ─────────────────────────────────────────────────────
@@ -167,5 +170,108 @@ describe('POST /api/obituaries/:id/like', () => {
     expect(res.status).toBe(200)
     expect(res.body.data.like_count).toBe(4)
     expect(res.body.data.user_liked).toBe(false)
+  })
+})
+
+// ── getBySlug user_liked enrichment ───────────────────────────────────────────
+
+describe('GET /api/memorials/by-slug/:slug — user_liked enrichment', () => {
+  const memorialRow = {
+    id: 'mem-1',
+    slug: 'john-doe-2024',
+    status: 'published',
+    full_name: 'John Doe',
+    like_count: 3,
+    view_count: 10,
+    memorial_photos: [],
+  }
+
+  it('returns user_liked: true when authenticated user has liked', async () => {
+    // 1st: fetch memorial by slug
+    mockMaybeSingle.mockResolvedValueOnce({ data: memorialRow, error: null })
+    // auth.getUser returns a valid user
+    mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } }, error: null })
+    // 2nd: like check → found
+    mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'like-1' }, error: null })
+
+    const res = await request(app)
+      .get('/api/memorials/by-slug/john-doe-2024')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.user_liked).toBe(true)
+  })
+
+  it('returns user_liked: false when authenticated user has not liked', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: memorialRow, error: null })
+    mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } }, error: null })
+    // like check → not found
+    mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null })
+
+    const res = await request(app)
+      .get('/api/memorials/by-slug/john-doe-2024')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.user_liked).toBe(false)
+  })
+
+  it('returns user_liked: false when no auth token provided', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: memorialRow, error: null })
+
+    const res = await request(app).get('/api/memorials/by-slug/john-doe-2024')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.user_liked).toBe(false)
+    expect(mockGetUser).not.toHaveBeenCalled()
+  })
+})
+
+describe('GET /api/obituaries/by-slug/:slug — user_liked enrichment', () => {
+  const obituaryRow = {
+    id: 'obit-1',
+    slug: 'jane-doe-2024',
+    status: 'published',
+    full_name: 'Jane Doe',
+    like_count: 2,
+    view_count: 7,
+    cause_of_passing: 'private',
+    cause_of_passing_consented: false,
+    death_cert_url: 'https://example.com/cert',
+    death_cert_cloudinary_public_id: 'cert-id',
+  }
+
+  it('returns user_liked: true when authenticated user has liked', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: obituaryRow, error: null })
+    mockGetUser.mockResolvedValueOnce({ data: { user: { id: 'user-123' } }, error: null })
+    mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'obit-like-1' }, error: null })
+
+    const res = await request(app)
+      .get('/api/obituaries/by-slug/jane-doe-2024')
+      .set('Authorization', 'Bearer valid-token')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.user_liked).toBe(true)
+  })
+
+  it('returns user_liked: false when no auth token', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: obituaryRow, error: null })
+
+    const res = await request(app).get('/api/obituaries/by-slug/jane-doe-2024')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.user_liked).toBe(false)
+    expect(mockGetUser).not.toHaveBeenCalled()
+  })
+
+  it('strips private fields regardless of auth', async () => {
+    mockMaybeSingle.mockResolvedValueOnce({ data: obituaryRow, error: null })
+
+    const res = await request(app).get('/api/obituaries/by-slug/jane-doe-2024')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.cause_of_passing).toBeNull()
+    expect(res.body.data.death_cert_url).toBeNull()
+    expect(res.body.data.death_cert_cloudinary_public_id).toBeNull()
   })
 })
