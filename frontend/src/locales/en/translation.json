@@ -403,7 +403,10 @@
     "biography": "Biography",
     "noBiography": "No biography added yet.",
     "familyMembers": "Family Members",
-    "deleteCondolence": "Delete condolence"
+    "deleteCondolence": "Delete condolence",
+    "gateHeading": "Sign in to view this obituary",
+    "gateMessage": "This page is only available to signed-in members.",
+    "gateBtn": "Sign In"
   },
   "common": {
     "cancel": "Cancel",

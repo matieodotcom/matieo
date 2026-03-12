@@ -403,7 +403,10 @@
     "biography": "Biografía",
     "noBiography": "No se ha añadido ninguna biografía todavía.",
     "familyMembers": "Miembros de la familia",
-    "deleteCondolence": "Eliminar condolencia"
+    "deleteCondolence": "Eliminar condolencia",
+    "gateHeading": "Inicia sesión para ver este obituario",
+    "gateMessage": "Esta página solo está disponible para miembros registrados.",
+    "gateBtn": "Iniciar sesión"
   },
   "common": {
     "cancel": "Cancelar",

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
-import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users, Trash2 } from 'lucide-react'
+import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users, Trash2, Lock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -208,6 +208,7 @@ export default function PublicObituaryPage() {
   const { slug } = useParams<{ slug: string }>()
   const { data: response, isPending, error } = usePublicObituary(slug ?? '')
   const user = useAuthStore((s) => s.user)
+  const isAuthLoading = useAuthStore((s) => s.isLoading)
   const [condolenceText, setCondolenceText] = useState('')
   const [signInOpen, setSignInOpen] = useState(false)
 
@@ -241,6 +242,35 @@ export default function PublicObituaryPage() {
     .join(' · ')
 
   const location = [obituary?.state, obituary?.country].filter(Boolean).join(', ')
+
+  if (!isAuthLoading && !user) {
+    return (
+      <>
+        <ObituaryHeader />
+        <main className="min-h-screen flex items-center justify-center bg-white dark:bg-neutral-950 px-4">
+          <div className="max-w-sm w-full text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-brand-primaryLight flex items-center justify-center mx-auto">
+              <Lock size={28} className="text-brand-primary" strokeWidth={1.5} />
+            </div>
+            <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+              {t('publicObituary.gateHeading')}
+            </h1>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              {t('publicObituary.gateMessage')}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSignInOpen(true)}
+              className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm py-2.5 rounded-lg transition-colors"
+            >
+              {t('publicObituary.gateBtn')}
+            </button>
+          </div>
+        </main>
+        <SignInModal open={signInOpen} onOpenChange={setSignInOpen} onSuccess={() => setSignInOpen(false)} />
+      </>
+    )
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
