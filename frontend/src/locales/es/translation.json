@@ -506,6 +506,7 @@
     "photoHint": "Recomendado 360×360px, hasta 10MB",
     "coverLabel": "Fondo de Portada",
     "coverHint": "Recomendado 1216×282px, hasta 10MB",
+    "coverGradientHint": "Elige un preestablecido o personaliza los colores abajo.",
     "coverUploadText": "Haz clic o arrastra para subir / seleccionar degradado",
     "gradientPresets": "Preestablecidos",
     "gradientCustom": "Degradado Personalizado",

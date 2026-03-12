@@ -506,6 +506,7 @@
     "photoHint": "Disyorkan 360×360px, sehingga 10MB",
     "coverLabel": "Latar Belakang Kulit",
     "coverHint": "Disyorkan 1216×282px, sehingga 10MB",
+    "coverGradientHint": "Pilih pratetap atau sesuaikan warna di bawah.",
     "coverUploadText": "Klik atau seret untuk muat naik / pilih kecerunan",
     "gradientPresets": "Pratetap",
     "gradientCustom": "Kecerunan Tersuai",

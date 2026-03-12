@@ -506,6 +506,7 @@
     "photoHint": "Recommandé 360×360px, jusqu'à 10Mo",
     "coverLabel": "Arrière-plan de Couverture",
     "coverHint": "Recommandé 1216×282px, jusqu'à 10Mo",
+    "coverGradientHint": "Choisissez un préréglage ou personnalisez les couleurs ci-dessous.",
     "coverUploadText": "Cliquer ou glisser pour télécharger / sélectionner un dégradé",
     "gradientPresets": "Préréglages",
     "gradientCustom": "Dégradé Personnalisé",

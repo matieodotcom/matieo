@@ -506,6 +506,7 @@
     "photoHint": "अनुशंसित 360×360px, 10MB तक",
     "coverLabel": "कवर बैकग्राउंड",
     "coverHint": "अनुशंसित 1216×282px, 10MB तक",
+    "coverGradientHint": "नीचे एक प्रीसेट चुनें या रंग अनुकूलित करें।",
     "coverUploadText": "अपलोड करने के लिए क्लिक करें या ड्रैग करें / ग्रेडिएंट चुनें",
     "gradientPresets": "प्रीसेट",
     "gradientCustom": "कस्टम ग्रेडिएंट",

@@ -430,6 +430,7 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
       ) : gradientActive ? (
         <div>
           <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('createMemorial.coverLabel')}</p>
+          <p className="mb-2 text-xs text-neutral-400">{t('createMemorial.coverGradientHint')}</p>
           <div className="relative h-40 w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             {preset
               ? <div className={`h-full w-full bg-gradient-to-r ${preset.tw}`} />
@@ -460,21 +461,33 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
         <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-4 space-y-4">
           {/* Tab header */}
           <div className="flex items-center justify-end gap-3">
-            <div className="flex rounded-lg bg-neutral-100 dark:bg-neutral-800 p-0.5 gap-0.5">
-              {(['presets', 'custom'] as const).map((tabKey) => (
-                <button
-                  key={tabKey}
-                  type="button"
-                  onClick={() => switchTab(tabKey)}
-                  className={`rounded-md px-3 py-1 text-xs font-medium transition-all ${
-                    tab === tabKey
-                      ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 shadow-sm'
-                      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200'
-                  }`}
-                >
-                  {tabKey === 'presets' ? t('createMemorial.gradientPresets') : t('createMemorial.gradientCustom')}
-                </button>
-              ))}
+            <div
+              role="group"
+              aria-label="Cover style"
+              className="flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-full p-1 gap-0.5"
+            >
+              <button
+                type="button"
+                onClick={() => switchTab('presets')}
+                className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-200 ${
+                  tab === 'presets'
+                    ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 shadow-sm'
+                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200'
+                }`}
+              >
+                {t('createMemorial.gradientPresets')}
+              </button>
+              <button
+                type="button"
+                onClick={() => switchTab('custom')}
+                className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap transition-all duration-200 ${
+                  tab === 'custom'
+                    ? 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 shadow-sm'
+                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200'
+                }`}
+              >
+                {t('createMemorial.gradientCustom')}
+              </button>
             </div>
           </div>
 
@@ -516,82 +529,72 @@ export function CoverPhotoField({ coverPhoto, onCoverPhotoChange, coverGradient,
               ))}
             </div>
           ) : (
-            <div className="space-y-4">
-              {/* Direction */}
-              <div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                  {t('createMemorial.gradientDirection')}
-                </p>
-                <div className="flex gap-1.5">
-                  {GRADIENT_DIRECTIONS.map((d) => (
-                    <button
-                      key={d.value}
-                      type="button"
-                      onClick={() => handleDirectionChange(d.value)}
-                      aria-label={`Direction ${d.label}`}
-                      aria-pressed={direction === d.value}
-                      className={`flex h-9 w-9 items-center justify-center rounded-lg text-base font-medium transition-all
-                        ${direction === d.value
-                          ? 'bg-brand-primary text-white shadow-sm'
-                          : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-brand-primaryLight hover:text-brand-primary dark:hover:bg-brand-primary/20'
-                        }`}
-                    >
-                      {d.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {/* Direction buttons */}
+              {GRADIENT_DIRECTIONS.map((d) => (
+                <button
+                  key={d.value}
+                  type="button"
+                  onClick={() => handleDirectionChange(d.value)}
+                  aria-label={`Direction ${d.label}`}
+                  aria-pressed={direction === d.value}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg text-base font-medium transition-all
+                    ${direction === d.value
+                      ? 'bg-brand-primary text-white shadow-sm'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-brand-primaryLight hover:text-brand-primary dark:hover:bg-brand-primary/20'
+                    }`}
+                >
+                  {d.label}
+                </button>
+              ))}
 
-              {/* Color pickers */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                    {t('createMemorial.gradientFrom')}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => fromInputRef.current?.click()}
-                    className="flex w-full items-center gap-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 transition-colors hover:border-brand-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40"
-                  >
-                    <span className="text-sm font-mono text-neutral-700 dark:text-neutral-300">
-                      {fromColor.toUpperCase()}
-                    </span>
-                  </button>
-                  <input
-                    ref={fromInputRef}
-                    type="color"
-                    value={fromColor}
-                    onChange={(e) => handleFromChange(e.target.value)}
-                    className="sr-only"
-                    aria-hidden="true"
-                    tabIndex={-1}
-                  />
-                </div>
+              <div className="h-5 w-px bg-neutral-200 dark:bg-neutral-700 mx-1" />
 
-                <div>
-                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                    {t('createMemorial.gradientTo')}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => toInputRef.current?.click()}
-                    className="flex w-full items-center gap-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 transition-colors hover:border-brand-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40"
-                  >
-                    <span className="text-sm font-mono text-neutral-700 dark:text-neutral-300">
-                      {toColor.toUpperCase()}
-                    </span>
-                  </button>
-                  <input
-                    ref={toInputRef}
-                    type="color"
-                    value={toColor}
-                    onChange={(e) => handleToChange(e.target.value)}
-                    className="sr-only"
-                    aria-hidden="true"
-                    tabIndex={-1}
-                  />
-                </div>
-              </div>
+              {/* From color */}
+              <button
+                type="button"
+                onClick={() => fromInputRef.current?.click()}
+                className="flex items-center gap-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2.5 py-1.5 transition-colors hover:border-brand-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40"
+              >
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                  {t('createMemorial.gradientFrom')}
+                </span>
+                <span className="text-xs font-mono text-neutral-700 dark:text-neutral-300">
+                  {fromColor.toUpperCase()}
+                </span>
+              </button>
+              <input
+                ref={fromInputRef}
+                type="color"
+                value={fromColor}
+                onChange={(e) => handleFromChange(e.target.value)}
+                className="sr-only"
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+
+              {/* To color */}
+              <button
+                type="button"
+                onClick={() => toInputRef.current?.click()}
+                className="flex items-center gap-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2.5 py-1.5 transition-colors hover:border-brand-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40"
+              >
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                  {t('createMemorial.gradientTo')}
+                </span>
+                <span className="text-xs font-mono text-neutral-700 dark:text-neutral-300">
+                  {toColor.toUpperCase()}
+                </span>
+              </button>
+              <input
+                ref={toInputRef}
+                type="color"
+                value={toColor}
+                onChange={(e) => handleToChange(e.target.value)}
+                className="sr-only"
+                aria-hidden="true"
+                tabIndex={-1}
+              />
             </div>
           )}
         </div>

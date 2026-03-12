@@ -506,6 +506,7 @@
     "photoHint": "Recommended 360×360px, up to 10MB",
     "coverLabel": "Cover Background",
     "coverHint": "Recommended 1216×282px, up to 10MB",
+    "coverGradientHint": "Pick a preset or customise the colours below.",
     "coverUploadText": "Click or drag to upload / select gradient",
     "gradientPresets": "Presets",
     "gradientCustom": "Custom Gradient",
