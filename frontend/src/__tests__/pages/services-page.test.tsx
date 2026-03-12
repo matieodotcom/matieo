@@ -78,8 +78,8 @@ describe('ServicesPage', () => {
     expect(screen.getByText('List Your Services')).toBeInTheDocument()
   })
 
-  it('renders the Sign Up as a Service Provider link', () => {
+  it('renders the Sign Up as a Service Provider link pointing to /signup?type=organization', () => {
     renderPage()
-    expect(screen.getByRole('link', { name: /sign up as a service provider/i })).toHaveAttribute('href', '/signup')
+    expect(screen.getByRole('link', { name: /sign up as a service provider/i })).toHaveAttribute('href', '/signup?type=organization')
   })
 })

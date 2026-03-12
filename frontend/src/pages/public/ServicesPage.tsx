@@ -185,7 +185,7 @@ function ListServicesCta() {
         {t('services.listCta.description')}
       </p>
       <Link
-        to="/signup"
+        to="/signup?type=organization"
         className="inline-flex items-center gap-2 bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm px-6 py-2.5 rounded-lg transition-colors"
       >
         {t('services.listCta.button')}
