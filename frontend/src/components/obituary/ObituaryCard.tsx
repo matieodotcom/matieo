@@ -64,7 +64,7 @@ export function ObituaryCard({ obituary, onDelete, onUnpublish, showPublisher, s
       : `/obituary/${slug ?? obituary.id}`
 
   return (
-    <article className="relative bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+    <article className="relative bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col">
       {profile_url ? (
         <img
           src={profile_url}
@@ -77,7 +77,7 @@ export function ObituaryCard({ obituary, onDelete, onUnpublish, showPublisher, s
         </div>
       )}
 
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-2 mb-2">
           <Link
             to={href}
@@ -150,7 +150,7 @@ export function ObituaryCard({ obituary, onDelete, onUnpublish, showPublisher, s
         )}
 
         {showPublisher && creator_name && (
-          <p className="text-xs text-neutral-400 dark:text-neutral-500 text-right">
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 text-right mt-auto pt-2">
             {t('card.by', { name: creator_name })}
           </p>
         )}
