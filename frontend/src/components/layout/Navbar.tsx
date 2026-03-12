@@ -19,9 +19,7 @@ const NAV_LINK_KEYS = [
   { key: 'nav.memorials', to: '/memorials' },
   { key: 'nav.obituary', to: '/obituary' },
   { key: 'nav.services', to: '/services' },
-  { key: 'nav.insights', to: '/insights' },
   { key: 'nav.features', to: '/features' },
-  { key: 'nav.pricing', to: '/pricing' },
   { key: 'nav.about', to: '/about' },
 ] as const
 

@@ -26,10 +26,11 @@ describe('Navbar — signed out', () => {
     renderNavbar()
     expect(screen.getByText('Memorials')).toBeInTheDocument()
     expect(screen.getByText('Obituary')).toBeInTheDocument()
-    expect(screen.getByText('Insights')).toBeInTheDocument()
+    expect(screen.getByText('Services')).toBeInTheDocument()
     expect(screen.getByText('Features')).toBeInTheDocument()
-    expect(screen.getByText('Pricing')).toBeInTheDocument()
     expect(screen.getByText('About')).toBeInTheDocument()
+    expect(screen.queryByText('Insights')).not.toBeInTheDocument()
+    expect(screen.queryByText('Pricing')).not.toBeInTheDocument()
   })
 
   it('does not show Dashboard link when signed out', () => {
@@ -80,10 +81,11 @@ describe('Navbar — hamburger menu', () => {
     expect(mobileNav).toBeInTheDocument()
     expect(mobileNav).toHaveTextContent('Memorials')
     expect(mobileNav).toHaveTextContent('Obituary')
-    expect(mobileNav).toHaveTextContent('Insights')
+    expect(mobileNav).toHaveTextContent('Services')
     expect(mobileNav).toHaveTextContent('Features')
-    expect(mobileNav).toHaveTextContent('Pricing')
     expect(mobileNav).toHaveTextContent('About')
+    expect(mobileNav).not.toHaveTextContent('Insights')
+    expect(mobileNav).not.toHaveTextContent('Pricing')
   })
 
   it('clicking hamburger again closes mobile nav', async () => {
