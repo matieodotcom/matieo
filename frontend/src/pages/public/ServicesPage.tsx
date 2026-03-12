@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Flower2,
@@ -15,10 +15,11 @@ import {
   Camera,
   Trees,
   Wind,
-  Phone,
-  Globe,
   ArrowRight,
   Search,
+  ChevronLeft,
+  ChevronRight,
+  ImageIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
@@ -43,76 +44,98 @@ const CATEGORIES = [
   { key: 'fengShui',       icon: Wind,            color: 'from-yellow-400 to-amber-500',    providers: 4  },
 ] as const
 
-// ── Hero ──────────────────────────────────────────────────────────────────────
+// ── Hero Carousel ─────────────────────────────────────────────────────────────
+
+const SLIDES = [
+  {
+    gradient: 'from-brand-secondary via-brand-primary to-indigo-500',
+    label: 'Funeral Services',
+  },
+  {
+    gradient: 'from-slate-700 via-slate-600 to-slate-500',
+    label: 'Memorial Parks',
+  },
+  {
+    gradient: 'from-teal-700 via-teal-600 to-emerald-500',
+    label: 'Grief Counselling',
+  },
+  {
+    gradient: 'from-violet-700 via-purple-600 to-indigo-500',
+    label: 'Prayer Services',
+  },
+] as const
 
 function HeroBanner() {
   const { t } = useTranslation()
-  return (
-    <div className="bg-gradient-to-r from-brand-secondary to-brand-primary text-white overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex items-center gap-8">
-        {/* Left content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
-              <Building2 size={24} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold leading-tight">
-                {t('services.hero.heading')}
-              </h1>
-              <p className="text-white/80 text-sm mt-0.5">{t('services.hero.tagline')}</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-4 text-sm text-white/80">
-            <a href="tel:+601234567890" className="flex items-center gap-1.5 hover:text-white transition-colors">
-              <Phone size={14} />
-              +60 12-345 6789
-            </a>
-            <a href="https://matieo.com" className="flex items-center gap-1.5 hover:text-white transition-colors">
-              <Globe size={14} />
-              www.matieo.com
-            </a>
-          </div>
-        </div>
+  const [current, setCurrent] = useState(0)
+  const total = SLIDES.length
 
-        {/* Right illustration */}
-        <div className="hidden sm:flex items-end gap-3 shrink-0 opacity-90">
-          {/* Simple stylised building illustration */}
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-2 h-8 bg-white/40 rounded-t-full" />
-            <div className="w-12 h-16 bg-white/20 rounded-t-xl border border-white/30 flex items-end justify-center pb-1">
-              <div className="w-4 h-6 bg-white/30 rounded-t-sm" />
-            </div>
-            <div className="w-14 h-3 bg-white/30 rounded" />
-          </div>
-          <div className="flex flex-col items-center gap-1 mb-4">
-            <div className="relative">
-              <div className="w-2 h-12 bg-white/50 rounded-t-full mx-auto" />
-              <div className="w-16 h-20 bg-white/25 rounded-t-2xl border border-white/40 flex items-end justify-center pb-2">
-                <div className="w-5 h-8 bg-white/35 rounded-t-sm" />
-              </div>
-            </div>
-            <div className="w-18 h-3 bg-white/30 rounded" />
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-2 h-6 bg-white/40 rounded-t-full" />
-            <div className="w-10 h-12 bg-white/20 rounded-t-xl border border-white/30 flex items-end justify-center pb-1">
-              <div className="w-3 h-5 bg-white/30 rounded-t-sm" />
-            </div>
-            <div className="w-12 h-3 bg-white/30 rounded" />
-          </div>
-          {/* People silhouettes */}
-          <div className="mb-3 flex items-end gap-1">
-            <div className="flex flex-col items-center gap-0.5">
-              <div className="w-4 h-4 rounded-full bg-white/50" />
-              <div className="w-3 h-6 bg-white/40 rounded-sm" />
-            </div>
-            <div className="flex flex-col items-center gap-0.5">
-              <div className="w-3 h-3 rounded-full bg-white/40" />
-              <div className="w-2.5 h-5 bg-white/30 rounded-sm" />
-            </div>
-          </div>
-        </div>
+  const prev = useCallback(() => setCurrent((i) => (i - 1 + total) % total), [total])
+  const next = useCallback(() => setCurrent((i) => (i + 1) % total), [total])
+
+  // Auto-advance every 4 s
+  useEffect(() => {
+    const id = setInterval(next, 4000)
+    return () => clearInterval(id)
+  }, [next])
+
+  const slide = SLIDES[current]
+
+  return (
+    <div className="relative w-full h-64 sm:h-80 overflow-hidden select-none">
+      {/* Slide background */}
+      <div
+        key={current}
+        className={`absolute inset-0 bg-gradient-to-br ${slide.gradient} transition-opacity duration-700`}
+      />
+
+      {/* Placeholder content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/30 pointer-events-none">
+        <ImageIcon size={48} strokeWidth={1} />
+        <span className="text-xs font-medium tracking-widest uppercase">{slide.label}</span>
+      </div>
+
+      {/* Overlay: heading + tagline */}
+      <div className="absolute inset-0 flex flex-col items-center justify-end pb-10 px-4 text-center pointer-events-none">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white drop-shadow-md leading-tight">
+          {t('services.hero.heading')}
+        </h1>
+        <p className="text-white/80 text-sm mt-1 drop-shadow">{t('services.hero.tagline')}</p>
+      </div>
+
+      {/* Prev / Next arrows */}
+      <button
+        type="button"
+        aria-label="Previous slide"
+        onClick={prev}
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-colors"
+      >
+        <ChevronLeft size={20} />
+      </button>
+      <button
+        type="button"
+        aria-label="Next slide"
+        onClick={next}
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-colors"
+      >
+        <ChevronRight size={20} />
+      </button>
+
+      {/* Dot indicators */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
+        {SLIDES.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to slide ${i + 1}`}
+            onClick={() => setCurrent(i)}
+            className={`rounded-full transition-all duration-300 ${
+              i === current
+                ? 'w-5 h-2 bg-white'
+                : 'w-2 h-2 bg-white/50 hover:bg-white/80'
+            }`}
+          />
+        ))}
       </div>
     </div>
   )

@@ -25,7 +25,7 @@ describe('ServicesPage', () => {
 
   it('renders the Funeral Services section heading', () => {
     renderPage()
-    expect(screen.getByText('Funeral Services')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: /funeral services/i })).toBeInTheDocument()
   })
 
   it('renders all 14 category cards', () => {
