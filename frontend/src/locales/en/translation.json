@@ -3,6 +3,7 @@
     "memorials": "Memorials",
     "obituary": "Obituary",
     "insights": "Insights",
+    "services": "Services",
     "features": "Features",
     "pricing": "Pricing",
     "about": "About",
@@ -788,5 +789,81 @@
     "s9Heading": "9. Contact Us",
     "viewTerms": "View Terms of Service",
     "viewCookie": "View Cookie Policy"
+  },
+  "services": {
+    "hero": {
+      "heading": "Funeral Home Services",
+      "tagline": "We handle funeral services for you and your family"
+    },
+    "categories": {
+      "heading": "Funeral Services",
+      "subheading": "Browse trusted providers for all your funeral service needs",
+      "searchPlaceholder": "Search services…",
+      "providers": "{{count}} Providers",
+      "noResults": "No services match your search."
+    },
+    "category": {
+      "florists": {
+        "name": "Florists",
+        "description": "Beautiful floral arrangements and sympathy flowers for services."
+      },
+      "casketUrn": {
+        "name": "Casket & Urn Sellers",
+        "description": "Quality caskets and cremation urns for every tradition."
+      },
+      "transportation": {
+        "name": "Transportation",
+        "description": "Professional funeral transportation services."
+      },
+      "counselling": {
+        "name": "Counselling",
+        "description": "Grief counselling and bereavement support services."
+      },
+      "undertakers": {
+        "name": "Funeral Undertakers",
+        "description": "Compassionate funeral directors for planning services."
+      },
+      "caterers": {
+        "name": "Caterers",
+        "description": "Catering services for memorial and funeral gatherings."
+      },
+      "prayerServices": {
+        "name": "Prayer Services",
+        "description": "Religious and spiritual services to honour the deceased."
+      },
+      "funeralParlour": {
+        "name": "Funeral Parlour",
+        "description": "Dedicated funeral homes and viewing facilities."
+      },
+      "crematorium": {
+        "name": "Crematorium",
+        "description": "Professional cremation services and facilities."
+      },
+      "canopy": {
+        "name": "Canopy",
+        "description": "Canopy and marquee rental for outdoor ceremonies."
+      },
+      "burialServices": {
+        "name": "Burial Services",
+        "description": "Full burial services and cemetery arrangements."
+      },
+      "photography": {
+        "name": "Photography",
+        "description": "Respectful memorial photography and videography."
+      },
+      "memorialParks": {
+        "name": "Memorial Parks",
+        "description": "Peaceful memorial parks and garden of remembrance."
+      },
+      "fengShui": {
+        "name": "Feng Shui",
+        "description": "Traditional feng shui consultation for burial sites."
+      }
+    },
+    "listCta": {
+      "heading": "List Your Services",
+      "description": "We welcome partners to list their services and advertise with us.",
+      "button": "Sign Up as a Service Provider"
+    }
   }
 }

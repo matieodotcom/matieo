@@ -3,6 +3,7 @@
     "memorials": "النصب التذكارية",
     "obituary": "نعي",
     "insights": "رؤى",
+    "services": "الخدمات",
     "features": "الميزات",
     "pricing": "الأسعار",
     "about": "حول",
@@ -788,5 +789,39 @@
     "s9Heading": "9. Contact Us",
     "viewTerms": "View Terms of Service",
     "viewCookie": "عرض سياسة ملفات تعريف الارتباط"
+  },
+  "services": {
+    "hero": {
+      "heading": "خدمات دار العزاء",
+      "tagline": "نتولى خدمات الجنازة لك ولعائلتك"
+    },
+    "categories": {
+      "heading": "خدمات الجنازة",
+      "subheading": "تصفح مزودي الخدمات الموثوقين لجميع احتياجات خدمات الجنازة",
+      "searchPlaceholder": "ابحث عن خدمات…",
+      "providers": "{{count}} مزود",
+      "noResults": "لا توجد خدمات تطابق بحثك."
+    },
+    "category": {
+      "florists": { "name": "محلات الزهور", "description": "ترتيبات زهور جميلة وزهور التعازي للمراسم." },
+      "casketUrn": { "name": "بائعو التوابيت والجرار", "description": "توابيت وجرار حرق عالية الجودة لكل تقليد." },
+      "transportation": { "name": "النقل", "description": "خدمات نقل الجنازة المهنية." },
+      "counselling": { "name": "الإرشاد النفسي", "description": "خدمات إرشاد الحزن ودعم الفقد." },
+      "undertakers": { "name": "مديرو الجنازات", "description": "مديرو جنازات رحيمون لتخطيط الخدمات." },
+      "caterers": { "name": "خدمات الضيافة", "description": "خدمات تقديم الطعام لتجمعات العزاء والجنازة." },
+      "prayerServices": { "name": "خدمات الصلاة", "description": "خدمات دينية وروحية لتكريم المتوفى." },
+      "funeralParlour": { "name": "صالة الجنازة", "description": "دور جنازة ومرافق العرض المخصصة." },
+      "crematorium": { "name": "محرقة الجثث", "description": "خدمات ومرافق الحرق المهنية." },
+      "canopy": { "name": "المظلة", "description": "تأجير المظلات والخيام للمراسم الخارجية." },
+      "burialServices": { "name": "خدمات الدفن", "description": "خدمات الدفن الكاملة وترتيبات المقبرة." },
+      "photography": { "name": "التصوير", "description": "تصوير ومصورة جنازة محترمة." },
+      "memorialParks": { "name": "حدائق التذكار", "description": "حدائق تذكارية هادئة وحدائق الذكرى." },
+      "fengShui": { "name": "الفنغ شوي", "description": "استشارة الفنغ شوي التقليدية لمواقع الدفن." }
+    },
+    "listCta": {
+      "heading": "أدرج خدماتك",
+      "description": "نرحب بالشركاء لإدراج خدماتهم والإعلان معنا.",
+      "button": "سجل كمزود خدمة"
+    }
   }
 }

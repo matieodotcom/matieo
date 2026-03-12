@@ -3,6 +3,7 @@
     "memorials": "Mémoriaux",
     "obituary": "Nécrologie",
     "insights": "Analyses",
+    "services": "Services",
     "features": "Fonctionnalités",
     "pricing": "Tarifs",
     "about": "À propos",
@@ -788,5 +789,39 @@
     "s9Heading": "9. Contact Us",
     "viewTerms": "View Terms of Service",
     "viewCookie": "Voir la Politique de Cookies"
+  },
+  "services": {
+    "hero": {
+      "heading": "Services Funéraires",
+      "tagline": "Nous prenons en charge les services funéraires pour vous et votre famille"
+    },
+    "categories": {
+      "heading": "Services Funéraires",
+      "subheading": "Trouvez des prestataires de confiance pour tous vos besoins funéraires",
+      "searchPlaceholder": "Rechercher des services…",
+      "providers": "{{count}} Prestataires",
+      "noResults": "Aucun service ne correspond à votre recherche."
+    },
+    "category": {
+      "florists": { "name": "Fleuristes", "description": "Compositions florales et fleurs de condoléances pour les cérémonies." },
+      "casketUrn": { "name": "Cercueils & Urnes", "description": "Cercueils et urnes funéraires de qualité pour chaque tradition." },
+      "transportation": { "name": "Transport", "description": "Services de transport funéraire professionnels." },
+      "counselling": { "name": "Soutien psychologique", "description": "Aide au deuil et soutien en cas de perte." },
+      "undertakers": { "name": "Pompes Funèbres", "description": "Directeurs de funérailles compatissants pour organiser les services." },
+      "caterers": { "name": "Traiteurs", "description": "Services de restauration pour les réceptions funéraires." },
+      "prayerServices": { "name": "Services Religieux", "description": "Services religieux et spirituels pour honorer le défunt." },
+      "funeralParlour": { "name": "Chambre Funéraire", "description": "Maisons funéraires et salons de présentation dédiés." },
+      "crematorium": { "name": "Crématorium", "description": "Services et installations de crémation professionnels." },
+      "canopy": { "name": "Chapiteaux", "description": "Location de chapiteaux et tentes pour les cérémonies en plein air." },
+      "burialServices": { "name": "Services d'Inhumation", "description": "Services d'inhumation complets et arrangements cimetière." },
+      "photography": { "name": "Photographie", "description": "Photographie et vidéographie commémoratives respectueuses." },
+      "memorialParks": { "name": "Parcs Mémoriaux", "description": "Parcs mémoriaux paisibles et jardins du souvenir." },
+      "fengShui": { "name": "Feng Shui", "description": "Consultation feng shui traditionnelle pour les sites funéraires." }
+    },
+    "listCta": {
+      "heading": "Référencez Vos Services",
+      "description": "Nous accueillons les partenaires souhaitant référencer leurs services et faire de la publicité avec nous.",
+      "button": "S'inscrire comme Prestataire"
+    }
   }
 }

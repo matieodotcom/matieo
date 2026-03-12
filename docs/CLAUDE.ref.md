@@ -811,6 +811,7 @@ CLOUDINARY_API_SECRET
 | Insights (public) | `/insights` | ✅ Complete | docs/pages/insights-public.md |
 | Obituaries (public list) | `/obituary` | ✅ Complete | docs/pages/obituaries.md |
 | Public Obituary | `/obituary/:slug` | ✅ Complete | docs/pages/obituaries.md | Auth-gated: unauthenticated visitors see blurred teaser + SignInModal gate |
+| Services | `/services` | ✅ Complete | docs/pages/services.md | Public funeral services directory; 14 categories, search filter, provider CTA |
 | Pricing (public) | `/pricing` | ✅ Complete | docs/pages/pricing.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |

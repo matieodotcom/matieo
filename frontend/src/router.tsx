@@ -7,6 +7,7 @@ import InsightsPage from '@/pages/public/InsightsPage'
 import ObituaryPage from '@/pages/public/ObituaryPage'
 import PublicObituaryPage from '@/pages/public/PublicObituaryPage'
 import PricingPage from '@/pages/public/PricingPage'
+import ServicesPage from '@/pages/public/ServicesPage'
 import TermsPage from '@/pages/legal/TermsPage'
 import PrivacyPage from '@/pages/legal/PrivacyPage'
 import CookiePage from '@/pages/legal/CookiePage'
@@ -64,6 +65,12 @@ const router = createBrowserRouter([
       {
         path: '/reset-password',
         element: <ResetPasswordPage />,
+      },
+
+      // Services
+      {
+        path: '/services',
+        element: <ServicesPage />,
       },
 
       // Features

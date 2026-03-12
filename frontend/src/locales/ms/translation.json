@@ -3,6 +3,7 @@
     "memorials": "Peringatan",
     "obituary": "Obituari",
     "insights": "Wawasan",
+    "services": "Perkhidmatan",
     "features": "Ciri-ciri",
     "pricing": "Harga",
     "about": "Tentang",
@@ -788,5 +789,39 @@
     "s9Heading": "9. Contact Us",
     "viewTerms": "View Terms of Service",
     "viewCookie": "Lihat Polisi Kuki"
+  },
+  "services": {
+    "hero": {
+      "heading": "Perkhidmatan Rumah Pengkebumian",
+      "tagline": "Kami menguruskan perkhidmatan pengkebumian untuk anda dan keluarga"
+    },
+    "categories": {
+      "heading": "Perkhidmatan Pengkebumian",
+      "subheading": "Semak penyedia perkhidmatan yang dipercayai untuk semua keperluan pengkebumian anda",
+      "searchPlaceholder": "Cari perkhidmatan…",
+      "providers": "{{count}} Penyedia",
+      "noResults": "Tiada perkhidmatan yang sepadan dengan carian anda."
+    },
+    "category": {
+      "florists": { "name": "Kedai Bunga", "description": "Susunan bunga yang indah dan bunga simpati untuk upacara." },
+      "casketUrn": { "name": "Penjual Keranda & Guci", "description": "Keranda dan guci pembakaran berkualiti untuk setiap tradisi." },
+      "transportation": { "name": "Pengangkutan", "description": "Perkhidmatan pengangkutan pengkebumian profesional." },
+      "counselling": { "name": "Kaunseling", "description": "Kaunseling dukacita dan sokongan perkabungan." },
+      "undertakers": { "name": "Pengurus Pengebumian", "description": "Pengarah pengebumian yang prihatin untuk merancang perkhidmatan." },
+      "caterers": { "name": "Penyedia Katering", "description": "Perkhidmatan katering untuk majlis peringatan dan pengebumian." },
+      "prayerServices": { "name": "Perkhidmatan Doa", "description": "Perkhidmatan keagamaan dan rohani untuk menghormati si mati." },
+      "funeralParlour": { "name": "Parlour Pengebumian", "description": "Rumah pengebumian dan kemudahan tontonan khusus." },
+      "crematorium": { "name": "Krematorium", "description": "Perkhidmatan dan kemudahan kremasi profesional." },
+      "canopy": { "name": "Khemah", "description": "Sewa khemah dan canopi untuk upacara luar." },
+      "burialServices": { "name": "Perkhidmatan Pengebumian", "description": "Perkhidmatan pengebumian penuh dan urusan perkuburan." },
+      "photography": { "name": "Fotografi", "description": "Fotografi dan videografi peringatan yang hormat." },
+      "memorialParks": { "name": "Taman Peringatan", "description": "Taman peringatan yang aman dan taman kenangan." },
+      "fengShui": { "name": "Feng Shui", "description": "Perundingan feng shui tradisional untuk tapak pengebumian." }
+    },
+    "listCta": {
+      "heading": "Senaraikan Perkhidmatan Anda",
+      "description": "Kami mengalu-alukan rakan kongsi untuk menyenaraikan perkhidmatan dan beriklan bersama kami.",
+      "button": "Daftar sebagai Penyedia Perkhidmatan"
+    }
   }
 }
