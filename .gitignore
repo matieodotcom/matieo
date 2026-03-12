@@ -34,6 +34,9 @@ claude_desktop_config.json
 #design files
 design/
 
+# Supabase CLI cache
+supabase/.temp/
+
 .claude/
 !.claude/commands/
 !.claude/commands/**
