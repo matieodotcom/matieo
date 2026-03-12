@@ -15,6 +15,10 @@ router.post('/', requireAuth as unknown as RequestHandler, memorials.create as u
 // /mine must come before /:id so Express doesn't treat "mine" as an id
 router.get('/mine', requireAuth as unknown as RequestHandler, memorials.list as unknown as RequestHandler)
 
+// Engagement — must be before /:id catch-all
+router.post('/:id/view', memorials.trackMemorialView as unknown as RequestHandler)
+router.post('/:id/like', requireAuth as unknown as RequestHandler, memorials.likeMemorial as unknown as RequestHandler)
+
 // Tributes — must be before /:id catch-all
 router.get('/:id/tributes', tributes.listTributes as unknown as RequestHandler)
 router.post('/:id/tributes', requireAuth as unknown as RequestHandler, tributes.createTribute as unknown as RequestHandler)

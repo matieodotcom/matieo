@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/DropdownMenu'
 import { toast } from '@/lib/toast'
 import { usePublicMemorial } from '@/hooks/use-public-memorial'
+import { useTrackMemorialView, useLikeMemorial } from '@/hooks/use-memorial-engagement'
 import { useTributes, usePostTribute, useDeleteTribute } from '@/hooks/use-tributes'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
@@ -240,6 +241,9 @@ export default function PublicMemorialPage() {
 
   const memorial = response?.data
 
+  useTrackMemorialView(memorial?.id ?? '')
+  const { mutate: likeMutate, isPending: liking } = useLikeMemorial(memorial?.id ?? '', slug ?? '')
+
   const { data: tributesRes } = useTributes(memorial?.id ?? '')
   const { mutate: postTribute, isPending: posting } = usePostTribute(memorial?.id ?? '')
   const { mutate: deleteTribute } = useDeleteTribute(memorial?.id ?? '')
@@ -413,15 +417,28 @@ export default function PublicMemorialPage() {
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      aria-label="Like"
-                      className="flex items-center gap-1.5 text-sm text-neutral-400 dark:text-neutral-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                      aria-label={memorial.user_liked ? t('common.unlike') : t('common.like')}
+                      disabled={liking}
+                      onClick={() => {
+                        if (!user) { setSignInOpen(true); return }
+                        likeMutate()
+                      }}
+                      className={`flex items-center gap-1.5 text-sm transition-colors disabled:opacity-60 ${
+                        memorial.user_liked
+                          ? 'text-rose-500 dark:text-rose-400'
+                          : 'text-neutral-400 dark:text-neutral-500 hover:text-rose-500 dark:hover:text-rose-400'
+                      }`}
                     >
-                      <Heart className="h-5 w-5 shrink-0" aria-hidden="true" />
-                      <span>—</span>
+                      <Heart
+                        className="h-5 w-5 shrink-0"
+                        aria-hidden="true"
+                        fill={memorial.user_liked ? 'currentColor' : 'none'}
+                      />
+                      <span>{memorial.like_count}</span>
                     </button>
                     <div className="flex items-center gap-1.5 text-sm text-neutral-400 dark:text-neutral-500 select-none">
                       <Eye className="h-5 w-5 shrink-0" aria-hidden="true" />
-                      <span>—</span>
+                      <span>{memorial.view_count}</span>
                     </div>
                   </div>
 

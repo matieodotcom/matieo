@@ -1,7 +1,7 @@
 -- =============================================================
 -- MATIEO — Full Schema Snapshot
 -- Keep this file in sync with supabase/migrations/
--- Last updated: 2026-03-11 (create notifications table)
+-- Last updated: 2026-03-12 (engagement: like/view tracking tables)
 -- =============================================================
 
 -- Migrations applied:
@@ -15,6 +15,7 @@
 -- [x] 20260309_create_tributes_condolences.sql
 -- [x] 20260310_add_account_type_to_profiles.sql
 -- [x] 20260311_create_notifications.sql
+-- [x] 20260312_engagement.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.
@@ -32,6 +33,10 @@
 --   public.obituaries             — Obituaries (full obit with funeral/burial/family/contact jsonb)
 --   public.tributes               — Community tributes per memorial (auth insert, public read)
 --   public.condolences            — Community condolences per obituary (auth insert, public read)
+--   public.memorial_likes         — Per-user likes on memorials (auth, toggleable)
+--   public.obituary_likes         — Per-user likes on obituaries (auth, toggleable)
+--   public.memorial_views         — Deduplicated view tracking for memorials (IP hash)
+--   public.obituary_views         — Deduplicated view tracking for obituaries (IP hash)
 
 -- ── notifications ─────────────────────────────────────────────────────────────
 CREATE TYPE public.notification_type AS ENUM (
@@ -71,3 +76,60 @@ CREATE POLICY "Users can delete own notifications"
   ON public.notifications FOR DELETE
   USING (auth.uid() = user_id);
 -- Service role bypasses RLS — no INSERT policy needed.
+
+-- ── engagement (20260312) ──────────────────────────────────────────────────────
+-- Counter caches on parent tables (added via ALTER TABLE in migration)
+-- ALTER TABLE public.memorials ADD COLUMN like_count INTEGER NOT NULL DEFAULT 0;
+-- ALTER TABLE public.memorials ADD COLUMN view_count INTEGER NOT NULL DEFAULT 0;
+-- ALTER TABLE public.obituaries ADD COLUMN like_count INTEGER NOT NULL DEFAULT 0;
+-- ALTER TABLE public.obituaries ADD COLUMN view_count INTEGER NOT NULL DEFAULT 0;
+
+CREATE TABLE public.memorial_likes (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  memorial_id UUID NOT NULL REFERENCES public.memorials(id) ON DELETE CASCADE,
+  user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at  TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (memorial_id, user_id)
+);
+CREATE INDEX idx_memorial_likes_memorial_id ON public.memorial_likes(memorial_id);
+CREATE INDEX idx_memorial_likes_user_id     ON public.memorial_likes(user_id);
+ALTER TABLE public.memorial_likes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can view memorial likes" ON public.memorial_likes FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert own memorial like" ON public.memorial_likes FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Authenticated users can delete own memorial like" ON public.memorial_likes FOR DELETE USING (auth.uid() = user_id);
+
+CREATE TABLE public.obituary_likes (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  obituary_id UUID NOT NULL REFERENCES public.obituaries(id) ON DELETE CASCADE,
+  user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at  TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (obituary_id, user_id)
+);
+CREATE INDEX idx_obituary_likes_obituary_id ON public.obituary_likes(obituary_id);
+CREATE INDEX idx_obituary_likes_user_id     ON public.obituary_likes(user_id);
+ALTER TABLE public.obituary_likes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can view obituary likes" ON public.obituary_likes FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert own obituary like" ON public.obituary_likes FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Authenticated users can delete own obituary like" ON public.obituary_likes FOR DELETE USING (auth.uid() = user_id);
+
+CREATE TABLE public.memorial_views (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  memorial_id UUID NOT NULL REFERENCES public.memorials(id) ON DELETE CASCADE,
+  ip_hash     TEXT NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (memorial_id, ip_hash)
+);
+CREATE INDEX idx_memorial_views_memorial_id ON public.memorial_views(memorial_id);
+ALTER TABLE public.memorial_views ENABLE ROW LEVEL SECURITY;
+-- Service role bypasses RLS — backend writes only.
+
+CREATE TABLE public.obituary_views (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  obituary_id UUID NOT NULL REFERENCES public.obituaries(id) ON DELETE CASCADE,
+  ip_hash     TEXT NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (obituary_id, ip_hash)
+);
+CREATE INDEX idx_obituary_views_obituary_id ON public.obituary_views(obituary_id);
+ALTER TABLE public.obituary_views ENABLE ROW LEVEL SECURITY;
+-- Service role bypasses RLS — backend writes only.

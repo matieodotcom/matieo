@@ -433,7 +433,9 @@
     "comingSoon": "قريبًا",
     "insertEmoji": "إدراج رمز تعبيري",
     "share": "مشاركة",
-    "shareCopied": "تم نسخ الرابط إلى الحافظة"
+    "shareCopied": "تم نسخ الرابط إلى الحافظة",
+    "like": "إعجاب",
+    "unlike": "إلغاء الإعجاب"
   },
   "language": {
     "label": "اللغة",

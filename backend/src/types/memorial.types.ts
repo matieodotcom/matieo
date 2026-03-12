@@ -27,6 +27,8 @@ export interface MemorialRow {
   slug: string | null
   full_memorial_url: string | null
   cover_gradient: string | null
+  like_count: number
+  view_count: number
   status: 'draft' | 'published'
   deleted_at: string | null
   created_at: string

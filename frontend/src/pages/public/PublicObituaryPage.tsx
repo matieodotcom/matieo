@@ -18,6 +18,7 @@ import { apiFetch } from '@/lib/apiClient'
 import { useAuthStore } from '@/store/authStore'
 import { useSignOut } from '@/hooks/use-auth'
 import { useCondolences, usePostCondolence, useDeleteCondolence } from '@/hooks/use-condolences'
+import { useTrackObituaryView, useLikeObituary } from '@/hooks/use-obituary-engagement'
 import { SignInModal } from '@/components/auth/SignInModal'
 import { useLocaleStore } from '@/store/localeStore'
 import { EmojiPickerButton } from '@/components/ui/EmojiPickerButton'
@@ -219,6 +220,9 @@ export default function PublicObituaryPage() {
 
   const obituary = response?.data
 
+  useTrackObituaryView(obituary?.id ?? '')
+  const { mutate: likeMutate, isPending: liking } = useLikeObituary(obituary?.id ?? '', slug ?? '')
+
   const { data: condolencesRes } = useCondolences(obituary?.id ?? '')
   const { mutate: postCondolence, isPending: posting } = usePostCondolence(obituary?.id ?? '')
   const { mutate: deleteCondolence } = useDeleteCondolence(obituary?.id ?? '')
@@ -390,15 +394,28 @@ export default function PublicObituaryPage() {
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    aria-label="Like"
-                    className="flex items-center gap-1.5 text-sm text-neutral-400 dark:text-neutral-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                    aria-label={obituary.user_liked ? t('common.unlike') : t('common.like')}
+                    disabled={liking}
+                    onClick={() => {
+                      if (!user) { setSignInOpen(true); return }
+                      likeMutate()
+                    }}
+                    className={`flex items-center gap-1.5 text-sm transition-colors disabled:opacity-60 ${
+                      obituary.user_liked
+                        ? 'text-rose-500 dark:text-rose-400'
+                        : 'text-neutral-400 dark:text-neutral-500 hover:text-rose-500 dark:hover:text-rose-400'
+                    }`}
                   >
-                    <Heart className="h-5 w-5 shrink-0" aria-hidden="true" />
-                    <span>—</span>
+                    <Heart
+                      className="h-5 w-5 shrink-0"
+                      aria-hidden="true"
+                      fill={obituary.user_liked ? 'currentColor' : 'none'}
+                    />
+                    <span>{obituary.like_count}</span>
                   </button>
                   <div className="flex items-center gap-1.5 text-sm text-neutral-400 dark:text-neutral-500 select-none">
                     <Eye className="h-5 w-5 shrink-0" aria-hidden="true" />
-                    <span>—</span>
+                    <span>{obituary.view_count}</span>
                   </div>
                 </div>
 

@@ -39,6 +39,14 @@ Public-facing obituary browsing and individual obituary display. Allows anyone t
 - Auth-conditional header: `<Navbar>` when logged out, minimal back+avatar when logged in
 - Cover photo (or gradient fallback)
 - Profile photo square (rounded-2xl) with name, date range, location, age
+- **Action bar** (below profile zone, above body) — `border-neutral-200` divider with:
+  - Left: Heart (like) button + live `like_count` · Eye icon + live `view_count` — wired to backend engagement endpoints
+    - Heart fills (`fill="currentColor"`, `text-rose-500`) when `user_liked === true`
+    - Click → `useLikeObituary` toggle mutation; unauthenticated click opens `<SignInModal>`
+    - View tracked on mount via `useTrackObituaryView` (fire-and-forget, IP-deduplicated)
+  - Right: solid `bg-brand-primary` Share button — `navigator.share` with clipboard fallback + `toast.success`
+- Engagement hooks: `useTrackObituaryView`, `useLikeObituary` in `hooks/use-obituary-engagement.ts`
+- Engagement API routes: `POST /api/obituaries/:id/view` (public) · `POST /api/obituaries/:id/like` (auth)
 - Section cards:
   - Obituary (biography)
   - Funeral / Prayer Service (if funeral_details set)

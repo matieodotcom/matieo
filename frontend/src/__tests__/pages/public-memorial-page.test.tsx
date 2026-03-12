@@ -13,6 +13,11 @@ vi.mock('@/lib/toast', () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }))
 
+vi.mock('@/hooks/use-memorial-engagement', () => ({
+  useTrackMemorialView: () => {},
+  useLikeMemorial: () => ({ mutate: () => {}, isPending: false }),
+}))
+
 vi.mock('react-router-dom', async (importActual) => {
   const actual = await importActual<typeof import('react-router-dom')>()
   return { ...actual, useParams: () => ({ slug: 'john-doe-2024' }) }
@@ -49,6 +54,8 @@ const mockMemorial = {
   created_at: '2024-01-15T00:00:00Z',
   updated_at: '2024-01-15T00:00:00Z',
   memorial_photos: [],
+  like_count: 0,
+  view_count: 0,
 }
 
 const mockTributes = [

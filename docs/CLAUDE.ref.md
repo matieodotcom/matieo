@@ -116,6 +116,8 @@ export function ErrorMessage({ message }: { message: string }) {
 - `hooks/use-unpublish-obituary.ts` — `useUnpublishObituary()` mutation: `POST /api/obituaries/:id/unpublish`, invalidates `['my-obituaries']`
 - `hooks/use-tributes.ts` — `useTributes(memorialId)` query: `GET /api/memorials/:id/tributes`, public; `usePostTribute(memorialId)` mutation: `POST /api/memorials/:id/tributes`, auth required; invalidates `['tributes', id]`
 - `hooks/use-condolences.ts` — `useCondolences(obituaryId)` query: `GET /api/obituaries/:id/condolences`, public; `usePostCondolence(obituaryId)` mutation: `POST /api/obituaries/:id/condolences`, auth required; invalidates `['condolences', id]`
+- `hooks/use-memorial-engagement.ts` — `useTrackMemorialView(id)` effect: fire-and-forget `POST /api/memorials/:id/view` on mount (IP-deduplicated); `useLikeMemorial(id, slug)` mutation: `POST /api/memorials/:id/like` (auth required), updates `['memorial', slug]` cache with new `like_count`+`user_liked`
+- `hooks/use-obituary-engagement.ts` — `useTrackObituaryView(id)` effect: fire-and-forget `POST /api/obituaries/:id/view` on mount (IP-deduplicated); `useLikeObituary(id, slug)` mutation: `POST /api/obituaries/:id/like` (auth required), updates `['public-obituary', slug]` cache
 - `store/memorialDraftStore.ts` — Zustand store: `draft: MemorialFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists memorial form across preview navigation
 - `store/obituaryDraftStore.ts` — Zustand store: `draft: ObituaryFormValues | null`, `coverGradient: string`; `saveDraft(values, coverGradient)` / `clearDraft()`; persists obituary form across preview navigation
 - `store/themeStore.ts` — Zustand dark-mode store (`isDark`, `toggle`, `init`). `toggle` flips state + writes `localStorage('theme')`. `init` reads localStorage → falls back to `window.matchMedia`. DOM class sync is handled reactively via `useLayoutEffect` in `ThemeInitializer` (App.tsx). `index.html` has a blocking inline script that applies `dark` class before React loads (prevents flash). Tailwind: `darkMode: 'class'` in `tailwind.config.ts`. Preference is **localStorage only** — not synced to Supabase.
@@ -213,8 +215,12 @@ auth.users
   │           ├─1:N─ family_members
   │           ├─1:N─ memorial_photos
   │           └─1:N─ tributes
+  │           ├─1:N─ memorial_likes  (auth, toggleable, unique per user)
+  │           └─1:N─ memorial_views  (IP-hash deduplicated, service-role only)
   ├─1:N─ obituaries  (jsonb: funeral_details, burial_details, contact_person, family_members)
-  │           └─1:N─ condolences
+  │           ├─1:N─ condolences
+  │           ├─1:N─ obituary_likes  (auth, toggleable, unique per user)
+  │           └─1:N─ obituary_views  (IP-hash deduplicated, service-role only)
   └─1:N─ notifications
 
 mortality_data  (standalone, admin-populated)
@@ -240,11 +246,12 @@ memorials
   country(text), state(text), creator_relationship(text), quote(text),
   cause_of_death(text), biography(text), tribute_message(text),
   slug(text,unique), full_memorial_url(text),
+  like_count(int,NOT NULL,default:0), view_count(int,NOT NULL,default:0),
   status(draft|published,default:draft), deleted_at(ts,soft-delete),
   created_at(ts), updated_at(ts,trigger)
   RLS: public→published only; owner→all
   IDX: created_by, slug, status
-  Migrations: 20260303_add_location_to_memorials.sql, 20260304_create_memorial_additions.sql, 20260305_add_cover_gradient.sql, 20260306_add_creator_name_to_memorials.sql
+  Migrations: 20260303_add_location_to_memorials.sql, 20260304_create_memorial_additions.sql, 20260305_add_cover_gradient.sql, 20260306_add_creator_name_to_memorials.sql, 20260312_engagement.sql
 
 funeral_details
   id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),
@@ -309,6 +316,7 @@ obituaries
   contact_person(jsonb: {name,relationship,phone,email}),
   family_members(jsonb: [{name,relationship}]),
   slug(text,unique), full_obituary_url(text),
+  like_count(int,NOT NULL,default:0), view_count(int,NOT NULL,default:0),
   status(draft|published,default:draft), deleted_at(ts,soft-delete),
   created_at(ts), updated_at(ts,trigger)
   RLS: public→published only (cause_of_passing stripped by controller); owner→all
@@ -331,6 +339,42 @@ condolences
   RLS: public SELECT; authenticated INSERT (uid=user_id); owner DELETE
   IDX: obituary_id
   Migration: 20260309_create_tributes_condolences.sql
+
+memorial_likes
+  id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),
+  user_id(uuid,fk→auth.users,cascade), created_at(ts)
+  UNIQUE: (memorial_id, user_id)
+  RLS: public SELECT; authenticated INSERT (uid=user_id); authenticated DELETE (uid=user_id)
+  IDX: memorial_id, user_id
+  Counter cache: memorials.like_count incremented/decremented by controller (not DB trigger)
+  Migration: 20260312_engagement.sql
+
+obituary_likes
+  id(uuid,pk), obituary_id(uuid,fk→obituaries,cascade),
+  user_id(uuid,fk→auth.users,cascade), created_at(ts)
+  UNIQUE: (obituary_id, user_id)
+  RLS: public SELECT; authenticated INSERT (uid=user_id); authenticated DELETE (uid=user_id)
+  IDX: obituary_id, user_id
+  Counter cache: obituaries.like_count incremented/decremented by controller
+  Migration: 20260312_engagement.sql
+
+memorial_views
+  id(uuid,pk), memorial_id(uuid,fk→memorials,cascade),
+  ip_hash(text,req), created_at(ts)
+  UNIQUE: (memorial_id, ip_hash)
+  RLS: enabled — no public SELECT; service role only (backend writes)
+  IDX: memorial_id
+  Counter cache: memorials.view_count incremented by controller only on INSERT (not conflict)
+  Migration: 20260312_engagement.sql
+
+obituary_views
+  id(uuid,pk), obituary_id(uuid,fk→obituaries,cascade),
+  ip_hash(text,req), created_at(ts)
+  UNIQUE: (obituary_id, ip_hash)
+  RLS: enabled — no public SELECT; service role only (backend writes)
+  IDX: obituary_id
+  Counter cache: obituaries.view_count incremented by controller only on INSERT (not conflict)
+  Migration: 20260312_engagement.sql
 
 notifications
   id(uuid,pk), user_id(uuid,fk→auth.users,cascade),

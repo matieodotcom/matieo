@@ -433,7 +433,9 @@
     "comingSoon": "Coming soon",
     "insertEmoji": "Insert emoji",
     "share": "Share",
-    "shareCopied": "Link copied to clipboard"
+    "shareCopied": "Link copied to clipboard",
+    "like": "Like",
+    "unlike": "Unlike"
   },
   "language": {
     "label": "Language",

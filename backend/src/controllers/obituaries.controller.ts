@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
+import { createHash } from 'crypto'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { cloudinary } from '@/lib/cloudinary'
 import { sendObituaryPublished } from '@/lib/emailClient'
@@ -408,6 +409,110 @@ export async function publish(
       resourceId:   data.id,
       resourceSlug: data.slug,
     }).catch((err) => console.error('[notification] createNotification (obituary) failed', err))
+  } catch (err) {
+    next(err)
+  }
+}
+
+// ── Engagement ────────────────────────────────────────────────────────────────
+
+export async function trackObituaryView(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+    const ip = req.ip ?? req.socket.remoteAddress ?? 'unknown'
+    const ipHash = createHash('sha256').update(ip).digest('hex')
+
+    const { error: insertError } = await supabaseAdmin
+      .from('obituary_views')
+      .insert({ obituary_id: id, ip_hash: ipHash })
+
+    const isNewView = !insertError
+
+    if (insertError && insertError.code !== '23505') throw insertError
+
+    if (isNewView) {
+      const { data: current } = await supabaseAdmin
+        .from('obituaries')
+        .select('view_count')
+        .eq('id', id)
+        .maybeSingle()
+
+      if (current !== null) {
+        await supabaseAdmin
+          .from('obituaries')
+          .update({ view_count: (current?.view_count ?? 0) + 1 })
+          .eq('id', id)
+      }
+    }
+
+    const { data: obituary, error: fetchError } = await supabaseAdmin
+      .from('obituaries')
+      .select('view_count')
+      .eq('id', id)
+      .maybeSingle()
+
+    if (fetchError) throw fetchError
+
+    res.json({ data: { view_count: obituary?.view_count ?? 0 }, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function likeObituary(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+    const userId = req.user.id
+
+    const { data: existing } = await supabaseAdmin
+      .from('obituary_likes')
+      .select('id')
+      .eq('obituary_id', id)
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    const { data: current } = await supabaseAdmin
+      .from('obituaries')
+      .select('like_count')
+      .eq('id', id)
+      .maybeSingle()
+
+    const currentCount = current?.like_count ?? 0
+    let likeCount: number
+    let userLiked: boolean
+
+    if (existing) {
+      await supabaseAdmin
+        .from('obituary_likes')
+        .delete()
+        .eq('obituary_id', id)
+        .eq('user_id', userId)
+
+      likeCount = Math.max(0, currentCount - 1)
+      userLiked = false
+    } else {
+      await supabaseAdmin
+        .from('obituary_likes')
+        .insert({ obituary_id: id, user_id: userId })
+
+      likeCount = currentCount + 1
+      userLiked = true
+    }
+
+    await supabaseAdmin
+      .from('obituaries')
+      .update({ like_count: likeCount })
+      .eq('id', id)
+
+    res.json({ data: { like_count: likeCount, user_liked: userLiked }, error: null })
   } catch (err) {
     next(err)
   }

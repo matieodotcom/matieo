@@ -43,3 +43,11 @@ Hook: `usePublicMemorial(slug)` in `hooks/use-public-memorial.ts`.
 - Photo Gallery section (above Biography)
 - Biography section
 - Tributes section (post tribute textarea — functional, not disabled)
+- **Action bar** (below profile zone, above body) — `border-neutral-200` divider line with:
+  - Left: Heart (like) button + live `like_count` · Eye icon + live `view_count` — wired to backend engagement endpoints
+    - Heart fills (`fill="currentColor"`, `text-rose-500`) when `user_liked === true`
+    - Click → `useLikeMemorial` toggle mutation; unauthenticated click opens `<SignInModal>`
+    - View tracked on mount via `useTrackMemorialView` (fire-and-forget, IP-deduplicated)
+  - Right: solid `bg-brand-primary` Share button — `navigator.share` with clipboard fallback + `toast.success`
+- Engagement hooks: `useTrackMemorialView`, `useLikeMemorial` in `hooks/use-memorial-engagement.ts`
+- Engagement API routes: `POST /api/memorials/:id/view` (public) · `POST /api/memorials/:id/like` (auth)

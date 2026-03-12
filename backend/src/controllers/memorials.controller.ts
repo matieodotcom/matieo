@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
+import { createHash } from 'crypto'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { cloudinary } from '@/lib/cloudinary'
 import { sendMemorialPublished } from '@/lib/emailClient'
@@ -429,6 +430,112 @@ export async function publish(
       resourceId:   data.id,
       resourceSlug: data.slug,
     }).catch((err) => console.error('[notification] createNotification (memorial) failed', err))
+  } catch (err) {
+    next(err)
+  }
+}
+
+// ── Engagement ────────────────────────────────────────────────────────────────
+
+export async function trackMemorialView(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+    const ip = req.ip ?? req.socket.remoteAddress ?? 'unknown'
+    const ipHash = createHash('sha256').update(ip).digest('hex')
+
+    // Insert deduplication row — ON CONFLICT DO NOTHING via unique constraint
+    const { error: insertError } = await supabaseAdmin
+      .from('memorial_views')
+      .insert({ memorial_id: id, ip_hash: ipHash })
+
+    const isNewView = !insertError
+
+    if (insertError && insertError.code !== '23505') throw insertError
+
+    // Only increment counter on first view from this IP
+    if (isNewView) {
+      const { data: current } = await supabaseAdmin
+        .from('memorials')
+        .select('view_count')
+        .eq('id', id)
+        .maybeSingle()
+
+      if (current !== null) {
+        await supabaseAdmin
+          .from('memorials')
+          .update({ view_count: (current?.view_count ?? 0) + 1 })
+          .eq('id', id)
+      }
+    }
+
+    const { data: memorial, error: fetchError } = await supabaseAdmin
+      .from('memorials')
+      .select('view_count')
+      .eq('id', id)
+      .maybeSingle()
+
+    if (fetchError) throw fetchError
+
+    res.json({ data: { view_count: memorial?.view_count ?? 0 }, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function likeMemorial(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+    const userId = req.user.id
+
+    const { data: existing } = await supabaseAdmin
+      .from('memorial_likes')
+      .select('id')
+      .eq('memorial_id', id)
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    const { data: current } = await supabaseAdmin
+      .from('memorials')
+      .select('like_count')
+      .eq('id', id)
+      .maybeSingle()
+
+    const currentCount = current?.like_count ?? 0
+    let likeCount: number
+    let userLiked: boolean
+
+    if (existing) {
+      await supabaseAdmin
+        .from('memorial_likes')
+        .delete()
+        .eq('memorial_id', id)
+        .eq('user_id', userId)
+
+      likeCount = Math.max(0, currentCount - 1)
+      userLiked = false
+    } else {
+      await supabaseAdmin
+        .from('memorial_likes')
+        .insert({ memorial_id: id, user_id: userId })
+
+      likeCount = currentCount + 1
+      userLiked = true
+    }
+
+    await supabaseAdmin
+      .from('memorials')
+      .update({ like_count: likeCount })
+      .eq('id', id)
+
+    res.json({ data: { like_count: likeCount, user_liked: userLiked }, error: null })
   } catch (err) {
     next(err)
   }

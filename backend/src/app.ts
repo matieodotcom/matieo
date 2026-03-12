@@ -17,6 +17,9 @@ import { errorHandler } from './middleware/error.middleware'
 
 const app = express()
 
+// Trust one proxy hop so req.ip resolves the real client IP behind load balancers/Nginx
+app.set('trust proxy', 1)
+
 // ── Security middleware ──────────────────────────────────────────────────────
 app.use(helmet())
 app.use(cors({

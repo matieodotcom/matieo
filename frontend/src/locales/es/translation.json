@@ -433,7 +433,9 @@
     "comingSoon": "Próximamente",
     "insertEmoji": "Insertar emoji",
     "share": "Compartir",
-    "shareCopied": "Enlace copiado al portapapeles"
+    "shareCopied": "Enlace copiado al portapapeles",
+    "like": "Me gusta",
+    "unlike": "Ya no me gusta"
   },
   "language": {
     "label": "Idioma",

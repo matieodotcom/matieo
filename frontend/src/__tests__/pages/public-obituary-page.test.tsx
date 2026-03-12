@@ -13,6 +13,11 @@ vi.mock('@/lib/toast', () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }))
 
+vi.mock('@/hooks/use-obituary-engagement', () => ({
+  useTrackObituaryView: () => {},
+  useLikeObituary: () => ({ mutate: () => {}, isPending: false }),
+}))
+
 vi.mock('react-router-dom', async (importActual) => {
   const actual = await importActual<typeof import('react-router-dom')>()
   return { ...actual, useParams: () => ({ slug: 'jane-doe-2024' }) }
@@ -49,6 +54,8 @@ const mockObituary = {
   },
   created_at: '2024-02-25T00:00:00Z',
   updated_at: '2024-02-25T00:00:00Z',
+  like_count: 0,
+  view_count: 0,
 }
 
 const mockCondolences = [

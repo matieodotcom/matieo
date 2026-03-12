@@ -56,6 +56,8 @@ export interface ObituaryRow {
   family_members: FamilyMember[] | null
   slug: string | null
   full_obituary_url: string | null
+  like_count: number
+  view_count: number
   status: 'draft' | 'published'
   deleted_at: string | null
   created_at: string

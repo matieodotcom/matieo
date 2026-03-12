@@ -433,7 +433,9 @@
     "comingSoon": "Akan datang",
     "insertEmoji": "Masukkan emoji",
     "share": "Kongsi",
-    "shareCopied": "Pautan disalin ke papan klip"
+    "shareCopied": "Pautan disalin ke papan klip",
+    "like": "Suka",
+    "unlike": "Nyahsuka"
   },
   "language": {
     "label": "Bahasa",
