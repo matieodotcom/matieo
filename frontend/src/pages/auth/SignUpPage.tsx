@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useSignUp, useGoogleAuth } from '@/hooks/use-auth'
@@ -113,6 +113,9 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  const [searchParams] = useSearchParams()
+  const forceOrg = searchParams.get('type') === 'organization'
+
   const { form, onSubmit, isPending, error, emailSent, submittedEmail } = useSignUp()
   const { handleGoogleAuth, isPending: googlePending, error: googleError } = useGoogleAuth()
 
@@ -125,6 +128,10 @@ export default function SignUpPage() {
 
   const accountType = watch('accountType')
   const combinedError = error ?? googleError
+
+  useEffect(() => {
+    if (forceOrg) setValue('accountType', 'organization')
+  }, [forceOrg, setValue])
 
   return (
     <main className="min-h-screen flex">
@@ -143,31 +150,55 @@ export default function SignUpPage() {
             {t('auth.signUp.subheading')}
           </p>
 
-          {/* Account type selector */}
-          <div className="grid grid-cols-2 gap-2 mb-5" role="group" aria-label="Account type">
-            <button
-              type="button"
-              onClick={() => setValue('accountType', 'individual')}
-              className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
-                accountType === 'individual'
-                  ? 'bg-brand-primary text-white'
-                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-              }`}
+          {/* Account type selector — segmented pill */}
+          {!forceOrg ? (
+            <div
+              role="group"
+              aria-label="Account type"
+              className="relative flex items-center bg-neutral-100 rounded-full p-1 mb-5"
             >
-              {t('auth.signUp.individual')}
-            </button>
-            <button
-              type="button"
-              onClick={() => setValue('accountType', 'organization')}
-              className={`py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
-                accountType === 'organization'
-                  ? 'bg-brand-primary text-white'
-                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-              }`}
-            >
-              {t('auth.signUp.organization')}
-            </button>
-          </div>
+              {/* Sliding white pill */}
+              <div
+                aria-hidden="true"
+                className={`absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full shadow-sm transition-transform duration-200 ease-in-out ${
+                  accountType === 'organization' ? 'translate-x-full' : 'translate-x-0'
+                }`}
+              />
+              {/* Individual button */}
+              <button
+                type="button"
+                onClick={() => setValue('accountType', 'individual')}
+                className={`relative z-10 flex-1 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${
+                  accountType === 'individual'
+                    ? 'text-neutral-900'
+                    : 'text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                {t('auth.signUp.individual')}
+              </button>
+              {/* Organization button */}
+              <button
+                type="button"
+                onClick={() => setValue('accountType', 'organization')}
+                className={`relative z-10 flex-1 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${
+                  accountType === 'organization'
+                    ? 'text-neutral-900'
+                    : 'text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                {t('auth.signUp.organization')}
+              </button>
+            </div>
+          ) : (
+            /* forceOrg: single full-width pill, no toggle */
+            <div className="mb-5">
+              <div className="flex items-center bg-neutral-100 rounded-full p-1">
+                <div className="flex-1 py-2 text-sm font-medium text-center text-neutral-900 bg-white rounded-full shadow-sm">
+                  {t('auth.signUp.organization')}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Google button */}
           <button

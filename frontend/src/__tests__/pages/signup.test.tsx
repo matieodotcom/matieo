@@ -285,4 +285,23 @@ describe('SignUpPage', () => {
     renderWithProviders(<SignUpPage />)
     expect(screen.getByText(/a modern way to remember/i)).toBeInTheDocument()
   })
+
+  describe('?type=organization (service provider flow)', () => {
+    it('hides the Individual button and shows only Organization', () => {
+      renderWithProviders(<SignUpPage />, { initialRoute: '/signup?type=organization' })
+      expect(screen.queryByRole('button', { name: /sign up as individual/i })).not.toBeInTheDocument()
+      expect(screen.getByText(/sign up as organization/i)).toBeInTheDocument()
+    })
+
+    it('pre-selects Organization — Organization Name field visible immediately', () => {
+      renderWithProviders(<SignUpPage />, { initialRoute: '/signup?type=organization' })
+      expect(screen.getByLabelText('Organization Name')).toBeInTheDocument()
+      expect(screen.queryByLabelText('First name')).not.toBeInTheDocument()
+    })
+
+    it('submit button is enabled (organization pre-selected)', () => {
+      renderWithProviders(<SignUpPage />, { initialRoute: '/signup?type=organization' })
+      expect(screen.getByRole('button', { name: /^sign up$/i })).not.toBeDisabled()
+    })
+  })
 })
