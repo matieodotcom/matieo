@@ -89,18 +89,15 @@ function HeroBanner() {
         className={`absolute inset-0 bg-gradient-to-br ${slide.gradient} transition-opacity duration-700`}
       />
 
-      {/* Placeholder content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/30 pointer-events-none">
-        <ImageIcon size={48} strokeWidth={1} />
-        <span className="text-xs font-medium tracking-widest uppercase">{slide.label}</span>
-      </div>
-
-      {/* Overlay: heading + tagline */}
-      <div className="absolute inset-0 flex flex-col items-center justify-end pb-10 px-4 text-center pointer-events-none">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white drop-shadow-md leading-tight">
-          {t('services.hero.heading')}
-        </h1>
-        <p className="text-white/80 text-sm mt-1 drop-shadow">{t('services.hero.tagline')}</p>
+      {/* Centred content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4 text-center pointer-events-none">
+        <ImageIcon size={40} strokeWidth={1} className="text-white/30" />
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white drop-shadow-md leading-tight">
+            {t('services.hero.heading')}
+          </h1>
+          <p className="text-white/80 text-sm mt-1 drop-shadow">{t('services.hero.tagline')}</p>
+        </div>
       </div>
 
       {/* Prev / Next arrows */}
