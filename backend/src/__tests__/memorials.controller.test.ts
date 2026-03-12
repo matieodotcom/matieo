@@ -47,6 +47,10 @@ jest.mock('@/middleware/auth.middleware', () => ({
     req.user = { id: 'user-123', email: 'test@matieo.com', role: 'user' }
     next()
   },
+  requireAdmin: (req: { user: unknown }, _res: unknown, next: () => void) => {
+    req.user = { id: 'admin-123', email: 'admin@matieo.com', role: 'admin' }
+    next()
+  },
 }))
 
 // Import app AFTER mocks are set up

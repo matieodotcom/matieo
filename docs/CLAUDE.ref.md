@@ -554,6 +554,7 @@ If nothing fits → plain HTML + Tailwind + ARIA. Never force a bad primitive.
 | Popover.tsx | Popover | `@radix-ui/react-popover` | DatePicker.tsx (standalone wrapper with Portal) |
 | DatePicker.tsx | DatePicker | `react-day-picker` v9 + `date-fns` v4 | CreateMemorialPage (dateOfBirth / dateOfDeath) — YYYY-MM-DD string; `disableFuture` prop disables future days; custom `CalendarSelect` for fully-themed month/year dropdowns |
 | EmojiPickerButton.tsx | Custom popover (no Radix) | `emoji-picker-react` | PublicMemorialPage (tribute input), PublicObituaryPage (condolence input) — `onEmojiSelect(emoji: string)` appends emoji to parent text state; closes on outside click |
+| Badge.tsx | Pure HTML span (no Radix) | — | AdminOverviewPage, AdminUsersPage, AdminMemorialsPage, AdminObituariesPage — variants: default, success, warning, info, danger |
 
 ### Dark mode patterns
 - Toggle: `darkMode: 'class'` in `tailwind.config.ts`. Class `dark` on `<html>` element.
@@ -875,6 +876,13 @@ CLOUDINARY_API_SECRET
 | Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
 | Public Memorial | `/memorial/:slug` | ✅ Complete | docs/pages/public-memorial.md — auth-conditional header: Navbar when logged out, minimal back+avatar when logged in |
 | Settings | `/settings` | ⬜ Not started | docs/pages/settings.md |
+| Admin Overview | `/admin` | ✅ Complete | docs/pages/admin.md |
+| Admin Users | `/admin/users` | ✅ Complete | docs/pages/admin.md |
+| Admin Memorials | `/admin/memorials` | ✅ Complete | docs/pages/admin.md |
+| Admin Obituaries | `/admin/obituaries` | ✅ Complete | docs/pages/admin.md |
+| Admin Tributes | `/admin/tributes` | ✅ Complete | docs/pages/admin.md |
+| Admin Condolences | `/admin/condolences` | ✅ Complete | docs/pages/admin.md |
+| Admin Waitlist | `/admin/waitlist` | ✅ Complete | docs/pages/admin.md |
 
 **Status key:** ⬜ Not started · 🔄 In progress · ✅ Complete
 

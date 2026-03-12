@@ -25,6 +25,15 @@ import MyObituariesPage from '@/pages/app/MyObituariesPage'
 import CreateObituaryPage from '@/pages/app/CreateObituaryPage'
 import ObituaryPreviewPage from '@/pages/app/ObituaryPreviewPage'
 import PublicMemorialPage from '@/pages/public/PublicMemorialPage'
+import { AdminGuard } from '@/components/layout/AdminGuard'
+import { AdminLayout } from '@/components/layout/AdminLayout'
+import AdminOverviewPage from '@/pages/admin/AdminOverviewPage'
+import AdminUsersPage from '@/pages/admin/AdminUsersPage'
+import AdminMemorialsPage from '@/pages/admin/AdminMemorialsPage'
+import AdminObituariesPage from '@/pages/admin/AdminObituariesPage'
+import AdminTributesPage from '@/pages/admin/AdminTributesPage'
+import AdminCondolencesPage from '@/pages/admin/AdminCondolencesPage'
+import AdminWaitlistPage from '@/pages/admin/AdminWaitlistPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -148,6 +157,26 @@ const router = createBrowserRouter([
       {
         path: '/settings',
         element: <Placeholder name="Settings" />,
+      },
+
+      // Admin
+      {
+        path: '/admin',
+        element: <AdminGuard />,
+        children: [
+          {
+            element: <AdminLayout />,
+            children: [
+              { index: true,              element: <AdminOverviewPage /> },
+              { path: 'users',            element: <AdminUsersPage /> },
+              { path: 'memorials',        element: <AdminMemorialsPage /> },
+              { path: 'obituaries',       element: <AdminObituariesPage /> },
+              { path: 'tributes',         element: <AdminTributesPage /> },
+              { path: 'condolences',      element: <AdminCondolencesPage /> },
+              { path: 'waitlist',         element: <AdminWaitlistPage /> },
+            ],
+          },
+        ],
       },
 
       // Fallback

@@ -32,3 +32,33 @@ export async function requireAuth(
 
   next()
 }
+
+export async function requireAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  await requireAuth(req, res, async () => {
+    const userId = (req as AuthenticatedRequest).user.id
+
+    const { data: profile, error } = await supabaseAdmin
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single()
+
+    if (error || !profile) {
+      res.status(403).json({ data: null, error: 'Forbidden' })
+      return
+    }
+
+    if (profile.role !== 'admin') {
+      res.status(403).json({ data: null, error: 'Forbidden' })
+      return
+    }
+
+    // Sync the role on the request object so controllers see the DB value
+    ;(req as AuthenticatedRequest).user.role = 'admin'
+    next()
+  })
+}

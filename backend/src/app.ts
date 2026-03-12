@@ -13,6 +13,7 @@ import cloudinaryRouter from './routes/cloudinary.routes'
 import waitlistRouter from './routes/waitlist.routes'
 import notificationsRouter from './routes/notifications.routes'
 import authRouter from './routes/auth.routes'
+import adminRouter from './routes/admin.routes'
 import { errorHandler } from './middleware/error.middleware'
 
 const app = express()
@@ -48,6 +49,7 @@ app.use('/api/cloudinary', cloudinaryRouter)
 app.use('/api/waitlist', waitlistRouter)
 app.use('/api/notifications', notificationsRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/admin', adminRouter)
 
 // ── Error handler (must be last) ─────────────────────────────────────────────
 app.use(errorHandler)

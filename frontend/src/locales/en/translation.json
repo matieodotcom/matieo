@@ -870,5 +870,111 @@
       "description": "We welcome partners to list their services and advertise with us.",
       "button": "Sign Up as a Service Provider"
     }
+  },
+  "admin": {
+    "overview": {
+      "title": "Overview",
+      "users": "Users",
+      "memorials": "Memorials",
+      "obituaries": "Obituaries",
+      "tributes": "Tributes",
+      "condolences": "Condolences",
+      "waitlist": "Waitlist",
+      "admins": "admins",
+      "researchers": "researchers",
+      "published": "published",
+      "draft": "draft"
+    },
+    "users": {
+      "title": "Users",
+      "searchPlaceholder": "Search name or email…",
+      "allRoles": "All roles",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "accountType": "Account Type",
+        "joined": "Joined",
+        "changeRole": "Change Role"
+      },
+      "empty": "No users found.",
+      "total": "users total",
+      "roleUpdateError": "Failed to update role. Please try again."
+    },
+    "memorials": {
+      "title": "Memorials",
+      "columns": {
+        "fullName": "Full Name",
+        "status": "Status",
+        "slug": "Slug",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "deleteTitle": "Delete Memorial",
+      "deleteConfirm": "Are you sure you want to permanently delete this memorial? This action cannot be undone.",
+      "empty": "No memorials found.",
+      "total": "memorials total",
+      "statusError": "Failed to update status.",
+      "deleteError": "Failed to delete memorial."
+    },
+    "obituaries": {
+      "title": "Obituaries",
+      "deleteTitle": "Delete Obituary",
+      "deleteConfirm": "Are you sure you want to permanently delete this obituary? This action cannot be undone.",
+      "empty": "No obituaries found.",
+      "total": "obituaries total",
+      "statusError": "Failed to update status.",
+      "deleteError": "Failed to delete obituary."
+    },
+    "tributes": {
+      "title": "Tributes",
+      "columns": {
+        "author": "Author",
+        "content": "Content",
+        "memorialId": "Memorial ID",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "deleteTitle": "Delete Tribute",
+      "deleteConfirm": "Are you sure you want to permanently delete this tribute? This action cannot be undone.",
+      "empty": "No tributes found.",
+      "total": "tributes total",
+      "deleteError": "Failed to delete tribute."
+    },
+    "condolences": {
+      "title": "Condolences",
+      "columns": {
+        "author": "Author",
+        "message": "Message",
+        "obituaryId": "Obituary ID",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "deleteTitle": "Delete Condolence",
+      "deleteConfirm": "Are you sure you want to permanently delete this condolence message? This action cannot be undone.",
+      "empty": "No condolences found.",
+      "total": "condolences total",
+      "deleteError": "Failed to delete condolence."
+    },
+    "waitlist": {
+      "title": "Waitlist",
+      "columns": {
+        "email": "Email",
+        "name": "Name",
+        "joined": "Joined"
+      },
+      "empty": "No waitlist entries found.",
+      "total": "entries total"
+    },
+    "common": {
+      "previous": "Previous",
+      "next": "Next",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "anonymous": "Anonymous",
+      "loadError": "Failed to load data. Please refresh."
+    }
   }
 }
