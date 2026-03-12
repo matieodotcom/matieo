@@ -105,6 +105,7 @@ describe('useObituaryForm', () => {
     await act(async () => {
       result.current.form.setValue('firstName', 'Jane')
       result.current.form.setValue('lastName', 'Doe')
+      result.current.form.setValue('ageAtDeath', '73')
       result.current.form.setValue('gender', 'female')
       result.current.form.setValue('raceEthnicity', 'Malay')
       result.current.form.setValue('country', 'Malaysia')

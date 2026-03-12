@@ -409,7 +409,7 @@ export default function CreateObituaryPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="ageAtDeath">{t('form.ageAtDeath')}</FieldLabel>
+              <FieldLabel htmlFor="ageAtDeath" required>{t('form.ageAtDeath')}</FieldLabel>
               <Controller
                 control={control}
                 name="ageAtDeath"

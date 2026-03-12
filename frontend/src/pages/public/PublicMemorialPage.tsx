@@ -54,7 +54,7 @@ function timeAgo(raw: string, t: TFunction): string {
 
 function Skeleton() {
   return (
-    <div className="animate-pulse bg-neutral-50 dark:bg-neutral-950 min-h-screen">
+    <div className="animate-pulse bg-neutral-50 dark:bg-neutral-950">
       <div className="h-80 w-full bg-neutral-200 dark:bg-neutral-800" />
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="flex items-start gap-6">

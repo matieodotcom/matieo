@@ -65,7 +65,7 @@ function timeAgo(raw: string, t: TFunction): string {
 
 function Skeleton() {
   return (
-    <div className="animate-pulse bg-neutral-50 dark:bg-neutral-950 min-h-screen">
+    <div className="animate-pulse bg-neutral-50 dark:bg-neutral-950">
       <div className="h-80 w-full bg-neutral-200 dark:bg-neutral-800" />
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="flex items-start gap-6">
@@ -245,30 +245,72 @@ export default function PublicObituaryPage() {
 
   if (!isAuthLoading && !user) {
     return (
-      <>
+      <div className="flex flex-col min-h-screen bg-white dark:bg-neutral-950">
         <ObituaryHeader />
-        <main className="min-h-screen flex items-center justify-center bg-white dark:bg-neutral-950 px-4">
-          <div className="max-w-sm w-full text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-brand-primaryLight flex items-center justify-center mx-auto">
-              <Lock size={28} className="text-brand-primary" strokeWidth={1.5} />
+
+        {/* ── Hero: blurred bg + name + card all in one fixed-height container ── */}
+        <main className="relative min-h-[32rem] sm:min-h-[38rem] overflow-hidden">
+          {/* blurred background */}
+          {obituary?.cover_url ? (
+            <img
+              src={obituary.cover_url}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover scale-105 blur-sm"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-secondary via-brand-primary to-indigo-500" />
+          )}
+          {/* dim overlay */}
+          <div className="absolute inset-0 bg-black/50" />
+          {/* edge fades — blends into page background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white dark:to-neutral-950" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-transparent to-white/40 dark:from-neutral-950/40 dark:to-neutral-950/40" />
+
+          {/* content stack: name above, card below */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 py-10 gap-8">
+            {/* name + dates */}
+            {fullName && (
+              <div className="text-white text-center">
+                <p className="text-xs font-semibold uppercase tracking-widest opacity-70 mb-2">
+                  {t('publicObituary.gateInMemoryOf')}
+                </p>
+                <h1 className="text-2xl sm:text-3xl font-bold drop-shadow">{fullName}</h1>
+                {dateRange && (
+                  <p className="mt-2 text-sm opacity-75 flex items-center justify-center gap-1.5">
+                    <Calendar size={13} aria-hidden="true" />
+                    {dateRange}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* gate card */}
+            <div className="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800 px-8 py-8 text-center space-y-4">
+              <div className="w-12 h-12 rounded-full bg-brand-primaryLight flex items-center justify-center mx-auto">
+                <Lock size={22} className="text-brand-primary" strokeWidth={1.5} />
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
+                  {t('publicObituary.gateHeading')}
+                </p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {t('publicObituary.gateMessage')}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSignInOpen(true)}
+                className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm py-2.5 rounded-lg transition-colors"
+              >
+                {t('publicObituary.gateBtn')}
+              </button>
             </div>
-            <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-              {t('publicObituary.gateHeading')}
-            </h1>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              {t('publicObituary.gateMessage')}
-            </p>
-            <button
-              type="button"
-              onClick={() => setSignInOpen(true)}
-              className="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-medium text-sm py-2.5 rounded-lg transition-colors"
-            >
-              {t('publicObituary.gateBtn')}
-            </button>
           </div>
         </main>
+
         <SignInModal open={signInOpen} onOpenChange={setSignInOpen} onSuccess={() => setSignInOpen(false)} />
-      </>
+      </div>
     )
   }
 

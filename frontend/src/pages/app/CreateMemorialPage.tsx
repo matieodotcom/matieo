@@ -796,7 +796,7 @@ export default function CreateMemorialPage() {
 
             {/* Age at Death */}
             <div>
-              <FieldLabel htmlFor="ageAtDeath">{t('form.ageAtDeath')}</FieldLabel>
+              <FieldLabel htmlFor="ageAtDeath" required>{t('form.ageAtDeath')}</FieldLabel>
               <Controller
                 name="ageAtDeath"
                 control={control}
@@ -810,6 +810,7 @@ export default function CreateMemorialPage() {
                   />
                 )}
               />
+              {errors.ageAtDeath && <ErrorMessage message={errors.ageAtDeath.message!} />}
             </div>
 
             {/* Gender */}

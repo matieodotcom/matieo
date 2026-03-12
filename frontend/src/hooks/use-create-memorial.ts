@@ -150,6 +150,7 @@ const draftBase = z.object({
 const publishBase = draftBase.extend({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
+  ageAtDeath: z.string().min(1, 'Age is required'),
   gender: z.string().min(1, 'Gender is required'),
   raceEthnicity: z.string().min(1, 'Race/ethnicity is required'),
   country: z.string().min(1, 'Country is required'),

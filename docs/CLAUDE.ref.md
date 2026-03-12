@@ -233,7 +233,7 @@ profiles
 
 memorials
   id(uuid,pk), created_by(uuid,fk→auth.users), creator_name(text,denorm),
-  full_name(text,req), age_at_death(int), date_of_birth(date), date_of_death(date),
+  full_name(text,req), age_at_death(int,req-for-publish), date_of_birth(date), date_of_death(date),
   gender(male|female|non-binary|prefer_not_to_say), race_ethnicity(text),
   location(text), cover_cloudinary_public_id(text), cover_url(text),
   cover_gradient(text), profile_cloudinary_public_id(text), profile_url(text),
@@ -296,7 +296,7 @@ waitlist_subscribers
 
 obituaries
   id(uuid,pk), created_by(uuid,fk→auth.users,nullable), creator_name(text,denorm),
-  full_name(text,req), age_at_death(int), date_of_birth(date), date_of_death(date),
+  full_name(text,req), age_at_death(int,req-for-publish), date_of_birth(date), date_of_death(date),
   gender(male|female|non-binary|prefer_not_to_say), race_ethnicity(text),
   country(text), state(text), place_of_death(text),
   cause_of_passing(text,PRIVATE), cause_of_passing_consented(bool,default:false),
@@ -810,7 +810,7 @@ CLOUDINARY_API_SECRET
 | Cookie Policy | `/cookie-policy` | ✅ Complete | docs/pages/cookie-policy.md |
 | Insights (public) | `/insights` | ✅ Complete | docs/pages/insights-public.md |
 | Obituaries (public list) | `/obituary` | ✅ Complete | docs/pages/obituaries.md |
-| Public Obituary | `/obituary/:slug` | ✅ Complete | docs/pages/obituaries.md |
+| Public Obituary | `/obituary/:slug` | ✅ Complete | docs/pages/obituaries.md | Auth-gated: unauthenticated visitors see blurred teaser + SignInModal gate |
 | Pricing (public) | `/pricing` | ✅ Complete | docs/pages/pricing.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |

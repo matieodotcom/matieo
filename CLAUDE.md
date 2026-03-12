@@ -69,6 +69,7 @@ Every task is incomplete until affected files are updated.
 [ ] Policy date changed?     → update src/config/policy-versions.ts only
 [ ] Anything changed?        → relevant .env.example + ref.md updated
 [ ] New feature adds a user event?  → docs/email-trigger-map.md updated + send function added + test written
+[ ] ref.md scan done?        → open docs/CLAUDE.ref.md and verify every affected section (§DB §Stack §Pages §Radix §ML §ErrorHandling) is current — NEVER commit without this scan
 [ ] All of the above done?   → commit + push to dev (automatic, no prompting)
 ```
 
@@ -164,7 +165,17 @@ NEVER ask the user whether to commit — always commit when task is complete
 NEVER leave uncommitted work at the end of a session
 ```
 
-Flow: check branch → build → tests pass → `git add .` → commit → `git push origin dev` → confirm.
+Flow: check branch → build → tests pass → **ref.md scan** → `git add .` → commit → `git push origin dev` → confirm.
+
+**ref.md scan (mandatory before every commit):**
+Open `docs/CLAUDE.ref.md` and check every section touched by this task:
+- Changed DB?      → §DB schema table current?
+- Changed stack?   → §Stack deps / key lib files current?
+- Added page?      → §Pages table row added + status set?
+- Added component? → §Radix log entry added?
+- Changed ML?      → §ML roadmap current?
+- Changed errors?  → §ErrorHandling patterns current?
+If any section is stale — update it before staging files.
 
 Commit format: `feat(scope): description — N tests passing`
 Scopes: `auth`, `memorial`, `insights`, `ml`, `backend`, `db`, `e2e`, `ci`
@@ -191,6 +202,7 @@ NEVER  skip tests                          → part of the task
 NEVER  toast on validation errors          → inline field errors only
 NEVER  use div for interactive elements    → semantic HTML first
 NEVER  skip id/htmlFor on form fields      → accessibility non-negotiable
+NEVER  commit without scanning ref.md      → check every affected section first
 NEVER  finish without updating docs        → self-maintenance checklist
 NEVER  leave orphaned docs behind          → rename/delete with the feature
 NEVER  navigate to /signin for user-triggered actions → show <SignInModal> instead

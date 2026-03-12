@@ -77,19 +77,25 @@ describe('PublicObituaryPage — Auth gate', () => {
     vi.mocked(apiFetch).mockResolvedValue({ data: mockObituary, error: null })
     renderPage()
     await waitFor(() =>
-      expect(screen.getByRole('heading', { level: 1, name: /sign in to view this obituary/i })).toBeInTheDocument(),
+      expect(screen.getByText(/sign in to view this obituary/i)).toBeInTheDocument(),
     )
     expect(screen.getByRole('button', { name: /^sign in$/i })).toBeInTheDocument()
   })
 
-  it('does not render obituary content when logged out', async () => {
+  it('shows deceased name in teaser when obituary data loads', async () => {
     const { apiFetch } = await import('@/lib/apiClient')
     vi.mocked(apiFetch).mockResolvedValue({ data: mockObituary, error: null })
     renderPage()
     await waitFor(() =>
-      expect(screen.getByRole('heading', { level: 1, name: /sign in to view this obituary/i })).toBeInTheDocument(),
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Jane Doe'),
     )
-    expect(screen.queryByText('Jane Doe')).not.toBeInTheDocument()
+  })
+
+  it('does not render obituary body content when logged out', async () => {
+    const { apiFetch } = await import('@/lib/apiClient')
+    vi.mocked(apiFetch).mockResolvedValue({ data: mockObituary, error: null })
+    renderPage()
+    await waitFor(() => screen.getByText(/sign in to view this obituary/i))
     expect(screen.queryByText('A beloved mother and grandmother.')).not.toBeInTheDocument()
   })
 
