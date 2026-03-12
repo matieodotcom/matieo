@@ -23,7 +23,6 @@ interface ObituaryApiPayload {
   state?: string
   place_of_death?: string
   cause_of_passing?: string
-  cause_of_passing_consented?: boolean
   profile_cloudinary_public_id?: string | null
   profile_url?: string | null
   cover_cloudinary_public_id?: string | null
@@ -155,7 +154,6 @@ const draftBase = z.object({
   country: z.string().optional().default(''),
   state: z.string().optional().default(''),
   causeOfPassing: z.string().optional().default(''),
-  causeOfPassingConsented: z.boolean().optional().default(false),
   // Contact person
   contactPersonName: z.string().optional().default(''),
   contactPersonRelationship: z.string().optional().default(''),
@@ -238,7 +236,6 @@ function rowToFormValues(row: ObituaryRow): Partial<ObituaryFormValues> {
     country: row.country ?? '',
     state: row.state ?? '',
     causeOfPassing: row.cause_of_passing ?? '',
-    causeOfPassingConsented: row.cause_of_passing_consented ?? false,
     contactPersonName: row.contact_person?.name ?? '',
     contactPersonRelationship: row.contact_person?.relationship ?? '',
     contactPersonPhone: row.contact_person?.phone ?? '',
@@ -326,7 +323,6 @@ function buildPayload(values: ObituaryFormValues, status: 'draft' | 'published')
     country: values.country || undefined,
     state: values.state || undefined,
     cause_of_passing: values.causeOfPassing || undefined,
-    cause_of_passing_consented: values.causeOfPassingConsented ?? false,
     profile_cloudinary_public_id: values.profilePhoto?.public_id ?? null,
     profile_url: values.profilePhoto?.url ?? null,
     cover_cloudinary_public_id: values.coverPhoto?.public_id ?? null,
@@ -374,7 +370,6 @@ export function useObituaryForm(obituaryId?: string) {
       country: '',
       state: '',
       causeOfPassing: '',
-      causeOfPassingConsented: false,
       contactPersonName: '',
       contactPersonRelationship: '',
       contactPersonPhone: '',

@@ -502,46 +502,24 @@ export default function CreateObituaryPage() {
           </div>
         </Section>
 
-        {/* ── Cause of Passing (Private) ── */}
+        {/* ── Cause of Passing ── */}
         <Section title={t('createObituary.sectionCauseOfPassing')}>
-          <div className="mb-4 p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg border border-neutral-100 dark:border-neutral-700">
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              {t('createObituary.causePrivateNote')}
-            </p>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <FieldLabel htmlFor="causeOfPassing">{t('createObituary.fieldCauseOfPassing')}</FieldLabel>
-              <Controller
-                control={control}
-                name="causeOfPassing"
-                render={({ field }) => (
-                  <Select
-                    id="causeOfPassing"
-                    placeholder={t('createObituary.selectCauseOfPassing')}
-                    options={CAUSE_OF_PASSING_OPTIONS}
-                    value={field.value ?? ''}
-                    onValueChange={field.onChange}
-                  />
-                )}
-              />
-              {errors.causeOfPassing && <ErrorMessage message={errors.causeOfPassing.message!} />}
-            </div>
-
-            <div className="flex items-start gap-2">
-              <input
-                id="causeOfPassingConsented"
-                type="checkbox"
-                className="mt-0.5 h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 text-brand-primary focus:ring-brand-primary"
-                {...register('causeOfPassingConsented')}
-              />
-              <label
-                htmlFor="causeOfPassingConsented"
-                className="text-sm text-neutral-600 dark:text-neutral-400"
-              >
-                {t('createObituary.consentLabel')}
-              </label>
-            </div>
+          <div>
+            <FieldLabel htmlFor="causeOfPassing">{t('createObituary.fieldCauseOfPassing')}</FieldLabel>
+            <Controller
+              control={control}
+              name="causeOfPassing"
+              render={({ field }) => (
+                <Select
+                  id="causeOfPassing"
+                  placeholder={t('createObituary.selectCauseOfPassing')}
+                  options={CAUSE_OF_PASSING_OPTIONS}
+                  value={field.value ?? ''}
+                  onValueChange={field.onChange}
+                />
+              )}
+            />
+            {errors.causeOfPassing && <ErrorMessage message={errors.causeOfPassing.message!} />}
           </div>
         </Section>
 
