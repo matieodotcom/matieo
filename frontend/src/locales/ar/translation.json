@@ -431,7 +431,9 @@
     "you": "أنت",
     "noNameProvided": "لم يُقدَّم اسم",
     "comingSoon": "قريبًا",
-    "insertEmoji": "إدراج رمز تعبيري"
+    "insertEmoji": "إدراج رمز تعبيري",
+    "share": "مشاركة",
+    "shareCopied": "تم نسخ الرابط إلى الحافظة"
   },
   "language": {
     "label": "اللغة",

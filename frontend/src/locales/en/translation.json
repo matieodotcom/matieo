@@ -431,7 +431,9 @@
     "you": "You",
     "noNameProvided": "No name provided",
     "comingSoon": "Coming soon",
-    "insertEmoji": "Insert emoji"
+    "insertEmoji": "Insert emoji",
+    "share": "Share",
+    "shareCopied": "Link copied to clipboard"
   },
   "language": {
     "label": "Language",

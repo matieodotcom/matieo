@@ -431,7 +431,9 @@
     "you": "Anda",
     "noNameProvided": "Nama tidak diberikan",
     "comingSoon": "Akan datang",
-    "insertEmoji": "Masukkan emoji"
+    "insertEmoji": "Masukkan emoji",
+    "share": "Kongsi",
+    "shareCopied": "Pautan disalin ke papan klip"
   },
   "language": {
     "label": "Bahasa",

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
-import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users, Trash2, Lock } from 'lucide-react'
+import { Calendar, MapPin, User, Phone, Mail, ArrowLeft, Users, Trash2, Lock, Share2, Eye, Heart } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/DropdownMenu'
+import { toast } from '@/lib/toast'
 import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '@/lib/apiClient'
 import { useAuthStore } from '@/store/authStore'
@@ -379,6 +380,47 @@ export default function PublicObituaryPage() {
                     </p>
                   )}
                 </div>
+              </div>
+            </div>
+
+            {/* ── Action bar ── */}
+            <div className="mx-auto max-w-3xl px-4 sm:px-6 mt-5">
+              <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 flex items-center">
+                {/* Like + Views — left */}
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    aria-label="Like"
+                    className="flex items-center gap-1.5 text-sm text-neutral-400 dark:text-neutral-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                  >
+                    <Heart className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <span>—</span>
+                  </button>
+                  <div className="flex items-center gap-1.5 text-sm text-neutral-400 dark:text-neutral-500 select-none">
+                    <Eye className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <span>—</span>
+                  </div>
+                </div>
+
+                <div className="flex-1" />
+
+                {/* Share */}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const url = window.location.href
+                    if (navigator.share) {
+                      await navigator.share({ title: fullName ?? '', url })
+                    } else {
+                      await navigator.clipboard.writeText(url)
+                      toast.success(t('common.shareCopied'))
+                    }
+                  }}
+                  className="flex items-center gap-1.5 bg-brand-primary hover:bg-brand-primaryHover text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors"
+                >
+                  <Share2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  {t('common.share')}
+                </button>
               </div>
             </div>
 

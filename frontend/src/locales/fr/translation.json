@@ -431,7 +431,9 @@
     "you": "Vous",
     "noNameProvided": "Aucun nom fourni",
     "comingSoon": "Bientôt disponible",
-    "insertEmoji": "Insérer un emoji"
+    "insertEmoji": "Insérer un emoji",
+    "share": "Partager",
+    "shareCopied": "Lien copié dans le presse-papiers"
   },
   "language": {
     "label": "Langue",

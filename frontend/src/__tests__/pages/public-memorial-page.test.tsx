@@ -363,4 +363,47 @@ describe('PublicMemorialPage — Tributes section', () => {
       expect(screen.queryByText('Author 11')).not.toBeInTheDocument()
     })
   })
+
+  describe('Share button', () => {
+    beforeEach(() => {
+      Object.defineProperty(navigator, 'share', { value: undefined, writable: true, configurable: true })
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: vi.fn().mockResolvedValue(undefined) },
+        writable: true,
+        configurable: true,
+      })
+    })
+
+    async function renderLoaded() {
+      const { apiFetch } = await import('@/lib/apiClient')
+      vi.mocked(apiFetch)
+        .mockResolvedValueOnce({ data: mockMemorial, error: null })
+        .mockResolvedValueOnce({ data: [], error: null })
+      renderPage()
+      await waitFor(() => screen.getByRole('heading', { level: 1 }))
+    }
+
+    it('renders a Share button', async () => {
+      await renderLoaded()
+      expect(screen.getByRole('button', { name: /share/i })).toBeInTheDocument()
+    })
+
+    it('copies URL to clipboard and shows toast when navigator.share is unavailable', async () => {
+      const { toast } = await import('@/lib/toast')
+      await renderLoaded()
+      await userEvent.click(screen.getByRole('button', { name: /share/i }))
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(window.location.href)
+      expect(toast.success).toHaveBeenCalledWith(expect.stringMatching(/copied/i))
+    })
+
+    it('calls navigator.share when available', async () => {
+      const shareMock = vi.fn().mockResolvedValue(undefined)
+      Object.defineProperty(navigator, 'share', { value: shareMock, writable: true, configurable: true })
+      await renderLoaded()
+      await userEvent.click(screen.getByRole('button', { name: /share/i }))
+      expect(shareMock).toHaveBeenCalledWith(
+        expect.objectContaining({ url: window.location.href }),
+      )
+    })
+  })
 })

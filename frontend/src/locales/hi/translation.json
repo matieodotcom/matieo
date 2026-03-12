@@ -431,7 +431,9 @@
     "you": "आप",
     "noNameProvided": "कोई नाम नहीं दिया गया",
     "comingSoon": "जल्द आ रहा है",
-    "insertEmoji": "इमोजी डालें"
+    "insertEmoji": "इमोजी डालें",
+    "share": "साझा करें",
+    "shareCopied": "लिंक क्लिपबोर्ड पर कॉपी किया गया"
   },
   "language": {
     "label": "भाषा",
