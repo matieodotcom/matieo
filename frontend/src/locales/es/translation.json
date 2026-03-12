@@ -243,7 +243,12 @@
       "confirmPasswordPlaceholder": "Repita su contraseña",
       "submit": "Actualizar contraseña",
       "submitting": "Actualizando…",
-      "backToSignIn": "Volver a iniciar sesión"
+      "backToSignIn": "Volver a iniciar sesión",
+      "invalidLink": {
+        "heading": "Enlace inválido o expirado",
+        "message": "Este enlace de restablecimiento de contraseña ha caducado o ya ha sido utilizado. Por favor, solicita uno nuevo.",
+        "request": "Solicitar un nuevo enlace"
+      }
     }
   },
   "dashboard": {

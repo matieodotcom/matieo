@@ -243,7 +243,12 @@
       "confirmPasswordPlaceholder": "Repeat your password",
       "submit": "Update Password",
       "submitting": "Updating…",
-      "backToSignIn": "Back to Sign in"
+      "backToSignIn": "Back to Sign in",
+      "invalidLink": {
+        "heading": "Link invalid or expired",
+        "message": "This password reset link has expired or already been used. Please request a new one.",
+        "request": "Request a new link"
+      }
     }
   },
   "dashboard": {

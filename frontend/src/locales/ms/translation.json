@@ -243,7 +243,12 @@
       "confirmPasswordPlaceholder": "Ulang kata laluan anda",
       "submit": "Kemaskini Kata Laluan",
       "submitting": "Mengemaskini…",
-      "backToSignIn": "Kembali ke Log Masuk"
+      "backToSignIn": "Kembali ke Log Masuk",
+      "invalidLink": {
+        "heading": "Pautan tidak sah atau tamat tempoh",
+        "message": "Pautan tetapan semula kata laluan ini telah tamat tempoh atau telah digunakan. Sila minta pautan baharu.",
+        "request": "Minta pautan baharu"
+      }
     }
   },
   "dashboard": {

@@ -243,7 +243,12 @@
       "confirmPasswordPlaceholder": "Répétez votre mot de passe",
       "submit": "Mettre à jour le mot de passe",
       "submitting": "Mise à jour…",
-      "backToSignIn": "Retour à la connexion"
+      "backToSignIn": "Retour à la connexion",
+      "invalidLink": {
+        "heading": "Lien invalide ou expiré",
+        "message": "Ce lien de réinitialisation de mot de passe a expiré ou a déjà été utilisé. Veuillez en demander un nouveau.",
+        "request": "Demander un nouveau lien"
+      }
     }
   },
   "dashboard": {

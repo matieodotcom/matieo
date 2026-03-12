@@ -756,6 +756,10 @@ describe('useResetPassword', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('success → toast.success called and navigate invoked', async () => {
+    vi.mocked(supabase.auth.getSession).mockResolvedValueOnce({
+      data: { session: { access_token: 'tok' } as never },
+      error: null,
+    } as never)
     vi.mocked(supabase.auth.updateUser).mockResolvedValueOnce({
       data: { user: {} as never },
       error: null,
@@ -779,6 +783,10 @@ describe('useResetPassword', () => {
   })
 
   it('auth error → error state set, no toast', async () => {
+    vi.mocked(supabase.auth.getSession).mockResolvedValueOnce({
+      data: { session: null },
+      error: null,
+    } as never)
     vi.mocked(supabase.auth.updateUser).mockResolvedValueOnce({
       data: { user: null },
       error: { message: 'Auth session missing' } as never,

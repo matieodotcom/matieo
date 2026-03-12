@@ -28,6 +28,7 @@ Sent via `backend/src/lib/emailClient.ts`. Use `buildEmailHtml` + `getEmailForUs
 | Event constant | Trigger | Recipient | Send function |
 |---|---|---|---|
 | `waitlist.confirmation` | User joins waitlist | Submitter (email passed directly) | `sendWaitlistConfirmation` |
+| `auth.password.reset.confirmation` | Password reset completed (`POST /api/auth/password-reset-confirmation`) | User who reset | `sendPasswordResetConfirmation` |
 | `memorial.published` | Memorial status → published | Creator | `sendMemorialPublished` |
 | `obituary.published` | Obituary status → published | Creator | `sendObituaryPublished` |
 | `tribute.posted` | New tribute posted | Page owner (skip if self) | `sendTributePosted` |

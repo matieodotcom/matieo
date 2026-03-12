@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/__tests__/utils'
@@ -10,10 +10,29 @@ vi.mock('@/lib/toast', () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
 }))
 
+// Simulate arriving via a valid recovery link (?code=xxx in the URL)
+function setValidUrl() {
+  Object.defineProperty(window, 'location', {
+    value: { ...window.location, search: '?code=test-code', hash: '' },
+    writable: true,
+  })
+}
+
+function clearUrl() {
+  Object.defineProperty(window, 'location', {
+    value: { ...window.location, search: '', hash: '' },
+    writable: true,
+  })
+}
+
 // ── Render ────────────────────────────────────────────────────────────────────
 
-describe('ResetPasswordPage — render', () => {
-  beforeEach(() => vi.clearAllMocks())
+describe('ResetPasswordPage — render (valid link)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    setValidUrl()
+  })
+  afterEach(() => clearUrl())
 
   it('renders without crashing', () => {
     renderWithProviders(<ResetPasswordPage />)
@@ -65,10 +84,38 @@ describe('ResetPasswordPage — render', () => {
   })
 })
 
+// ── Invalid link screen ───────────────────────────────────────────────────────
+
+describe('ResetPasswordPage — invalid link screen', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    clearUrl()
+  })
+
+  it('shows invalid link heading when no code in URL', () => {
+    renderWithProviders(<ResetPasswordPage />)
+    expect(screen.getByRole('heading', { name: /link invalid or expired/i })).toBeInTheDocument()
+  })
+
+  it('shows "Request a new link" button pointing to /forgot-password', () => {
+    renderWithProviders(<ResetPasswordPage />)
+    const link = screen.getByRole('link', { name: /request a new link/i })
+    expect(link).toHaveAttribute('href', '/forgot-password')
+  })
+})
+
 // ── Behaviour ─────────────────────────────────────────────────────────────────
 
 describe('ResetPasswordPage — behaviour', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    vi.clearAllMocks()
+    setValidUrl()
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: { session: { access_token: 'tok' } as never },
+      error: null,
+    } as never)
+  })
+  afterEach(() => clearUrl())
 
   it('empty submit shows field errors and does not call supabase', async () => {
     renderWithProviders(<ResetPasswordPage />)

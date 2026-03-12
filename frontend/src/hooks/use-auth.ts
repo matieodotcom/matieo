@@ -355,6 +355,13 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>
 export function useResetPassword() {
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Detect valid recovery link synchronously from URL (code is still present on first render)
+  // then also catch the PASSWORD_RECOVERY event as a fallback via useEffect
+  const [isValidLink, setIsValidLink] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    const hash = window.location.hash
+    return params.has('code') || hash.includes('type=recovery')
+  })
   const navigate = useNavigate()
 
   const form = useForm<ResetPasswordFormValues>({
@@ -362,10 +369,19 @@ export function useResetPassword() {
     defaultValues: { password: '', confirmPassword: '' },
   })
 
+  useEffect(() => {
+    // Fallback: catch PASSWORD_RECOVERY event in case Supabase fires it after mount
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') setIsValidLink(true)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
   const onSubmit = form.handleSubmit(async (values) => {
     setIsPending(true)
     setError(null)
 
+    const { data: { session } } = await supabase.auth.getSession()
     const { error: authError } = await supabase.auth.updateUser({
       password: values.password,
     })
@@ -377,11 +393,21 @@ export function useResetPassword() {
       return
     }
 
+    // Fire confirmation email (fire-and-forget — don't block UX on delivery)
+    if (session?.access_token) {
+      fetch(`${import.meta.env.VITE_API_URL}/api/auth/password-reset-confirmation`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      }).catch(() => { /* non-critical */ })
+    }
+
+    // Invalidate the recovery session immediately — prevents any reuse of the same link
+    await supabase.auth.signOut()
     toast.success('Password updated successfully')
     navigate('/signin')
   })
 
-  return { form, onSubmit, isPending, error }
+  return { form, onSubmit, isPending, error, isValidLink }
 }
 
 // ── useSignOut ────────────────────────────────────────────────────────────────

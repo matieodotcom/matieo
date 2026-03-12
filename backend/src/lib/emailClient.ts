@@ -24,11 +24,12 @@ export const EMAIL_EVENTS = {
   PASSWORD_RESET:       'auth.password.reset',        // supabase/templates/reset-password.html
 
   // ── Resend (custom send functions below) ────────────────────────────────────
-  WAITLIST_CONFIRMATION: 'waitlist.confirmation',
-  MEMORIAL_PUBLISHED:    'memorial.published',
-  OBITUARY_PUBLISHED:    'obituary.published',
-  TRIBUTE_POSTED:        'tribute.posted',
-  CONDOLENCE_POSTED:     'condolence.posted',
+  WAITLIST_CONFIRMATION:       'waitlist.confirmation',
+  PASSWORD_RESET_CONFIRMATION: 'auth.password.reset.confirmation',
+  MEMORIAL_PUBLISHED:          'memorial.published',
+  OBITUARY_PUBLISHED:          'obituary.published',
+  TRIBUTE_POSTED:              'tribute.posted',
+  CONDOLENCE_POSTED:           'condolence.posted',
 } as const satisfies Record<string, string>
 
 // ── Shared helpers ─────────────────────────────────────────────────────────────
@@ -81,6 +82,30 @@ export async function getEmailForUser(userId: string): Promise<string | null> {
 }
 
 // ── Send functions ─────────────────────────────────────────────────────────────
+
+export async function sendPasswordResetConfirmation(userId: string): Promise<void> {
+  const email = await getEmailForUser(userId)
+  if (!email) return
+
+  await resend.emails.send({
+    from: `MATIEO <${FROM_EMAIL}>`,
+    to: email,
+    subject: 'Your MATIEO password has been changed',
+    html: buildEmailHtml(`
+      <p style="margin:0 0 16px;font-size:16px;color:#1a1a2e;font-weight:600;">Password changed</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#4a5568;line-height:1.6;">
+        Your MATIEO account password was successfully updated.
+      </p>
+      <p style="margin:0 0 32px;font-size:15px;color:#4a5568;line-height:1.6;">
+        If you did not make this change, please contact us immediately by replying to this email.
+      </p>
+      <a href="${FRONTEND_URL}/signin"
+         style="display:inline-block;background:#3B5BFF;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;">
+        Sign in to MATIEO
+      </a>
+    `),
+  })
+}
 
 export async function sendWaitlistConfirmation(name: string, email: string): Promise<void> {
   await resend.emails.send({

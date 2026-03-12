@@ -36,9 +36,10 @@ jest.mock('@/lib/notificationsClient', () => ({
 
 jest.mock('@/lib/emailClient', () => ({
   resend: {},
-  sendWaitlistConfirmation:  jest.fn().mockImplementation(() => Promise.resolve()),
-  sendMemorialPublished:     jest.fn().mockImplementation(() => Promise.resolve()),
-  sendObituaryPublished:     jest.fn().mockImplementation(() => Promise.resolve()),
-  sendTributePosted:         jest.fn().mockImplementation(() => Promise.resolve()),
-  sendCondolencePosted:      jest.fn().mockImplementation(() => Promise.resolve()),
+  sendWaitlistConfirmation:       jest.fn().mockImplementation(() => Promise.resolve()),
+  sendPasswordResetConfirmation:  jest.fn().mockImplementation(() => Promise.resolve()),
+  sendMemorialPublished:          jest.fn().mockImplementation(() => Promise.resolve()),
+  sendObituaryPublished:          jest.fn().mockImplementation(() => Promise.resolve()),
+  sendTributePosted:              jest.fn().mockImplementation(() => Promise.resolve()),
+  sendCondolencePosted:           jest.fn().mockImplementation(() => Promise.resolve()),
 }))

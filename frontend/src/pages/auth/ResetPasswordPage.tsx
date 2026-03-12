@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Lock, Eye, EyeOff, ChevronLeft } from 'lucide-react'
+import { Lock, Eye, EyeOff, ChevronLeft, ShieldAlert } from 'lucide-react'
 import { useResetPassword } from '@/hooks/use-auth'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
@@ -9,7 +9,7 @@ import { ErrorMessage } from '@/components/shared/ErrorMessage'
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation()
-  const { form, onSubmit, isPending, error } = useResetPassword()
+  const { form, onSubmit, isPending, error, isValidLink } = useResetPassword()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
@@ -27,6 +27,30 @@ export default function ResetPasswordPage() {
           <span className="text-brand-primary font-bold text-lg tracking-tight">MATIEO</span>
         </Link>
 
+        {!isValidLink ? (
+          /* ── Invalid / expired link ── */
+          <>
+            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
+              <ShieldAlert size={32} className="text-red-500" strokeWidth={1.5} />
+            </div>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-neutral-900">
+                {t('auth.resetPassword.invalidLink.heading')}
+              </h1>
+              <p className="text-sm text-neutral-500 mt-1">
+                {t('auth.resetPassword.invalidLink.message')}
+              </p>
+            </div>
+            <Link
+              to="/forgot-password"
+              className="w-full text-center bg-brand-primary hover:bg-brand-primaryHover text-white
+                font-medium text-sm py-2.5 rounded-lg transition-colors"
+            >
+              {t('auth.resetPassword.invalidLink.request')}
+            </Link>
+          </>
+        ) : (
+          <>
         {/* Heading */}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-neutral-900">{t('auth.resetPassword.heading')}</h1>
@@ -132,6 +156,8 @@ export default function ResetPasswordPage() {
           {/* Auth error */}
           {error && <ErrorMessage message={error} />}
         </form>
+          </>
+        )}
 
         {/* Back to Sign in */}
         <Link
