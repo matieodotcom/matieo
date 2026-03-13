@@ -264,6 +264,45 @@
       "insightsDesc": "تحليلات الوفيات",
       "services": "الخدمات",
       "servicesDesc": "خدمات الجنازة والدعم"
+    },
+    "services": {
+      "title": "خدماتي",
+      "addButton": "إضافة خدمة",
+      "editButton": "تعديل",
+      "columns": {
+        "name": "اسم الخدمة",
+        "category": "الفئة",
+        "location": "الموقع",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "statusActive": "نشط",
+      "statusInactive": "غير نشط",
+      "form": {
+        "category": "الفئة",
+        "categoryPlaceholder": "اختر فئة",
+        "name": "اسم الخدمة",
+        "namePlaceholder": "اسم عملك التجاري",
+        "description": "الوصف",
+        "phone": "الهاتف",
+        "email": "البريد الإلكتروني",
+        "website": "الموقع الإلكتروني",
+        "address": "العنوان",
+        "city": "المدينة",
+        "country": "الدولة",
+        "isActive": "نشط",
+        "addTitle": "إضافة قائمة خدمات",
+        "editTitle": "تعديل قائمة خدمات",
+        "saveButton": "حفظ",
+        "cancelButton": "إلغاء"
+      },
+      "deleteTitle": "إزالة الخدمة",
+      "deleteConfirm": "إزالة \"{{name}}\" من قوائمك؟",
+      "empty": "لم تُدرج أي خدمات بعد.",
+      "emptyAction": "أضف خدمتك الأولى",
+      "total": "{{count}} خدمات",
+      "loadError": "فشل تحميل خدماتك.",
+      "orgOnly": "هذه الصفحة متاحة فقط لحسابات المؤسسات."
     }
   },
   "layout": {
@@ -827,6 +866,53 @@
       "heading": "أدرج خدماتك",
       "description": "نرحب بالشركاء لإدراج خدماتهم والإعلان معنا.",
       "button": "سجل كمزود خدمة"
+    }
+  },
+  "admin": {
+    "serviceCategories": {
+      "title": "فئات الخدمات",
+      "addButton": "إضافة فئة",
+      "editButton": "تعديل",
+      "columns": {
+        "name": "الاسم",
+        "slug": "المعرف",
+        "description": "الوصف",
+        "sortOrder": "الترتيب",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "statusActive": "نشط",
+      "statusInactive": "غير نشط",
+      "form": {
+        "name": "الاسم",
+        "namePlaceholder": "مثال: محلات الزهور",
+        "description": "الوصف",
+        "descriptionRequired": "الوصف مطلوب.",
+        "imageRequired": "صورة الفئة مطلوبة.",
+        "slug": "المعرف",
+        "slugPlaceholder": "مثال: florists",
+        "icon": "مفتاح الأيقونة",
+        "sortOrder": "ترتيب العرض",
+        "image": "صورة الفئة",
+        "imageUploadButton": "رفع صورة",
+        "imageUploading": "جارٍ الرفع…",
+        "imageHint": "يُعرض في صفحة الخدمات العامة. يوصى باستخدام: 800×600 بكسل.",
+        "isActive": "نشط",
+        "addTitle": "إضافة فئة خدمات",
+        "editTitle": "تعديل فئة خدمات",
+        "saveButton": "حفظ",
+        "cancelButton": "إلغاء"
+      },
+      "deleteTitle": "حذف الفئة",
+      "deleteConfirm": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا.",
+      "deleteHasServices": "لا يمكن الحذف — هذه الفئة تحتوي على قوائم خدمات نشطة.",
+      "empty": "لا توجد فئات خدمات بعد.",
+      "total": "{{count}} فئات",
+      "dragHint": "اسحب الصفوف لإعادة ترتيب ترتيب العرض.",
+      "loadError": "فشل تحميل الفئات.",
+      "createError": "فشل إنشاء الفئة.",
+      "updateError": "فشل تحديث الفئة.",
+      "deleteError": "فشل حذف الفئة."
     }
   }
 }

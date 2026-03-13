@@ -264,6 +264,45 @@
       "insightsDesc": "Análisis de mortalidad",
       "services": "Servicios",
       "servicesDesc": "Servicios funerarios y de apoyo"
+    },
+    "services": {
+      "title": "Mis Servicios",
+      "addButton": "Agregar Servicio",
+      "editButton": "Editar",
+      "columns": {
+        "name": "Nombre del Servicio",
+        "category": "Categoría",
+        "location": "Ubicación",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "statusActive": "Activo",
+      "statusInactive": "Inactivo",
+      "form": {
+        "category": "Categoría",
+        "categoryPlaceholder": "Seleccionar una categoría",
+        "name": "Nombre del Servicio",
+        "namePlaceholder": "Nombre de tu empresa",
+        "description": "Descripción",
+        "phone": "Teléfono",
+        "email": "Correo Electrónico",
+        "website": "Sitio Web",
+        "address": "Dirección",
+        "city": "Ciudad",
+        "country": "País",
+        "isActive": "Activo",
+        "addTitle": "Agregar Servicio",
+        "editTitle": "Editar Servicio",
+        "saveButton": "Guardar",
+        "cancelButton": "Cancelar"
+      },
+      "deleteTitle": "Eliminar Servicio",
+      "deleteConfirm": "¿Eliminar \"{{name}}\" de tus anuncios?",
+      "empty": "Aún no has listado ningún servicio.",
+      "emptyAction": "Agrega tu primer servicio",
+      "total": "{{count}} servicios",
+      "loadError": "Error al cargar tus servicios.",
+      "orgOnly": "Esta página solo está disponible para cuentas de organización."
     }
   },
   "layout": {
@@ -827,6 +866,53 @@
       "heading": "Publica tus Servicios",
       "description": "Damos la bienvenida a socios para publicar sus servicios y anunciarse con nosotros.",
       "button": "Registrarse como Proveedor de Servicios"
+    }
+  },
+  "admin": {
+    "serviceCategories": {
+      "title": "Categorías de Servicios",
+      "addButton": "Agregar Categoría",
+      "editButton": "Editar",
+      "columns": {
+        "name": "Nombre",
+        "slug": "Slug",
+        "description": "Descripción",
+        "sortOrder": "Orden",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "statusActive": "Activo",
+      "statusInactive": "Inactivo",
+      "form": {
+        "name": "Nombre",
+        "namePlaceholder": "ej. Floristas",
+        "description": "Descripción",
+        "descriptionRequired": "La descripción es obligatoria.",
+        "imageRequired": "Se requiere una imagen de categoría.",
+        "slug": "Slug",
+        "slugPlaceholder": "ej. florists",
+        "icon": "Clave de Ícono",
+        "sortOrder": "Orden de Visualización",
+        "image": "Imagen de Categoría",
+        "imageUploadButton": "Subir Imagen",
+        "imageUploading": "Subiendo…",
+        "imageHint": "Se muestra en la página pública de servicios. Recomendado: 800×600px.",
+        "isActive": "Activo",
+        "addTitle": "Agregar Categoría de Servicio",
+        "editTitle": "Editar Categoría de Servicio",
+        "saveButton": "Guardar",
+        "cancelButton": "Cancelar"
+      },
+      "deleteTitle": "Eliminar Categoría",
+      "deleteConfirm": "¿Estás seguro de eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "deleteHasServices": "No se puede eliminar — esta categoría tiene anuncios de servicios activos.",
+      "empty": "Aún no hay categorías de servicios.",
+      "total": "{{count}} categorías",
+      "dragHint": "Arrastra las filas para reordenar el orden de visualización.",
+      "loadError": "Error al cargar las categorías.",
+      "createError": "Error al crear la categoría.",
+      "updateError": "Error al actualizar la categoría.",
+      "deleteError": "Error al eliminar la categoría."
     }
   }
 }

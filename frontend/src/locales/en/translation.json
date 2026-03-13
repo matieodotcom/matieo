@@ -264,6 +264,45 @@
       "insightsDesc": "Mortality analytics",
       "services": "Services",
       "servicesDesc": "Funeral & support services"
+    },
+    "services": {
+      "title": "My Services",
+      "addButton": "Add Service",
+      "editButton": "Edit",
+      "columns": {
+        "name": "Service Name",
+        "category": "Category",
+        "location": "Location",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "form": {
+        "category": "Category",
+        "categoryPlaceholder": "Select a category",
+        "name": "Service Name",
+        "namePlaceholder": "Your business name",
+        "description": "Description",
+        "phone": "Phone",
+        "email": "Email",
+        "website": "Website",
+        "address": "Address",
+        "city": "City",
+        "country": "Country",
+        "isActive": "Active",
+        "addTitle": "Add Service Listing",
+        "editTitle": "Edit Service Listing",
+        "saveButton": "Save",
+        "cancelButton": "Cancel"
+      },
+      "deleteTitle": "Remove Service",
+      "deleteConfirm": "Remove \"{{name}}\" from your listings?",
+      "empty": "You haven't listed any services yet.",
+      "emptyAction": "Add your first service",
+      "total": "{{count}} services",
+      "loadError": "Failed to load your services.",
+      "orgOnly": "This page is only available to organisation accounts."
     }
   },
   "layout": {
@@ -975,6 +1014,51 @@
       "delete": "Delete",
       "anonymous": "Anonymous",
       "loadError": "Failed to load data. Please refresh."
+    },
+    "serviceCategories": {
+      "title": "Service Categories",
+      "addButton": "Add Category",
+      "editButton": "Edit",
+      "columns": {
+        "name": "Name",
+        "slug": "Slug",
+        "description": "Description",
+        "sortOrder": "Order",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "e.g. Florists",
+        "description": "Description",
+        "descriptionRequired": "Description is required.",
+        "imageRequired": "A category image is required.",
+        "slug": "Slug",
+        "slugPlaceholder": "e.g. florists",
+        "icon": "Icon Key",
+        "sortOrder": "Sort Order",
+        "image": "Category Image",
+        "imageUploadButton": "Upload Image",
+        "imageUploading": "Uploading…",
+        "imageHint": "Displayed on the public services page. Recommended: 800×600px.",
+        "isActive": "Active",
+        "addTitle": "Add Service Category",
+        "editTitle": "Edit Service Category",
+        "saveButton": "Save",
+        "cancelButton": "Cancel"
+      },
+      "deleteTitle": "Delete Category",
+      "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This cannot be undone.",
+      "deleteHasServices": "Cannot delete — this category has active service listings.",
+      "empty": "No service categories yet.",
+      "total": "{{count}} categories",
+      "dragHint": "Drag rows to reorder display order.",
+      "loadError": "Failed to load categories.",
+      "createError": "Failed to create category.",
+      "updateError": "Failed to update category.",
+      "deleteError": "Failed to delete category."
     }
   }
 }

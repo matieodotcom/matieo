@@ -11,7 +11,7 @@
 |---------|------|-------|----------|
 | 🔴 Blockers | 0 | 3 | ░░░░░░░░░░ 0% |
 | 🟡 Important | 0 | 4 | ░░░░░░░░░░ 0% |
-| 🟢 Phase 2 | 0 | 6 | ░░░░░░░░░░ 0% |
+| 🟢 Phase 2 | 1 | 6 | ██░░░░░░░░ 17% |
 | ✅ Infrastructure | 0 | 7 | ░░░░░░░░░░ 0% |
 
 ---
@@ -42,7 +42,7 @@
 | # | Status | Item |
 |---|--------|------|
 | P1 | ⬜ TODO | **Dashboard Insights page** (`/dashboard/insights`) — mortality data visualisation |
-| P2 | ⬜ TODO | **Dashboard Services page** (`/dashboard/services`) — funeral/related services directory |
+| P2 | ✅ Done | **Dashboard Services page** (`/dashboard/services`) — funeral/related services directory + Admin service categories CRUD (`/admin/service-categories`) |
 | P3 | ⬜ TODO | **ML service** — Python FastAPI mortality prediction (model, endpoints, Node proxy) |
 | P4 | ⬜ TODO | **Backend lint script** — add ESLint config + CI gate for backend code |
 | P5 | ⬜ TODO | **Translation quality pass** — native-speaker review of ar, ms, fr, es, hi locale files |

@@ -21,4 +21,10 @@ router.get('/condolences',               requireAdmin as unknown as RequestHandl
 router.delete('/condolences/:id',        requireAdmin as unknown as RequestHandler, admin.deleteCondolence as unknown as RequestHandler)
 router.get('/waitlist',                  requireAdmin as unknown as RequestHandler, admin.listWaitlist as unknown as RequestHandler)
 
+router.get('/service-categories',               requireAdmin as unknown as RequestHandler, admin.listServiceCategories as unknown as RequestHandler)
+router.post('/service-categories',              requireAdmin as unknown as RequestHandler, admin.createServiceCategory as unknown as RequestHandler)
+router.put('/service-categories/reorder',       requireAdmin as unknown as RequestHandler, admin.reorderServiceCategories as unknown as RequestHandler)
+router.patch('/service-categories/:id',         requireAdmin as unknown as RequestHandler, admin.updateServiceCategory as unknown as RequestHandler)
+router.delete('/service-categories/:id',        requireAdmin as unknown as RequestHandler, admin.deleteServiceCategory as unknown as RequestHandler)
+
 export default router

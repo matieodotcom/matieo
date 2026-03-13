@@ -8,6 +8,7 @@ import {
   MessageCircle,
   MessageSquare,
   Mail,
+  Briefcase,
   Menu,
   Moon,
   Sun,
@@ -31,7 +32,8 @@ const ADMIN_NAV_LINKS = [
   { label: 'Obituaries',   to: '/admin/obituaries',  icon: ScrollText      },
   { label: 'Tributes',     to: '/admin/tributes',    icon: MessageCircle   },
   { label: 'Condolences',  to: '/admin/condolences', icon: MessageSquare   },
-  { label: 'Waitlist',     to: '/admin/waitlist',    icon: Mail            },
+  { label: 'Waitlist',          to: '/admin/waitlist',            icon: Mail      },
+  { label: 'Service Categories', to: '/admin/service-categories', icon: Briefcase },
 ] as const
 
 export function AdminLayout() {

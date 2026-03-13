@@ -264,6 +264,45 @@
       "insightsDesc": "Analyses de mortalité",
       "services": "Services",
       "servicesDesc": "Services funèbres & soutien"
+    },
+    "services": {
+      "title": "Mes Services",
+      "addButton": "Ajouter un Service",
+      "editButton": "Modifier",
+      "columns": {
+        "name": "Nom du Service",
+        "category": "Catégorie",
+        "location": "Lieu",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "statusActive": "Actif",
+      "statusInactive": "Inactif",
+      "form": {
+        "category": "Catégorie",
+        "categoryPlaceholder": "Sélectionner une catégorie",
+        "name": "Nom du Service",
+        "namePlaceholder": "Nom de votre entreprise",
+        "description": "Description",
+        "phone": "Téléphone",
+        "email": "E-mail",
+        "website": "Site Web",
+        "address": "Adresse",
+        "city": "Ville",
+        "country": "Pays",
+        "isActive": "Actif",
+        "addTitle": "Ajouter un Service",
+        "editTitle": "Modifier le Service",
+        "saveButton": "Enregistrer",
+        "cancelButton": "Annuler"
+      },
+      "deleteTitle": "Supprimer le Service",
+      "deleteConfirm": "Supprimer \"{{name}}\" de vos annonces ?",
+      "empty": "Vous n'avez encore aucun service répertorié.",
+      "emptyAction": "Ajoutez votre premier service",
+      "total": "{{count}} services",
+      "loadError": "Impossible de charger vos services.",
+      "orgOnly": "Cette page est uniquement disponible pour les comptes d'organisation."
     }
   },
   "layout": {
@@ -827,6 +866,53 @@
       "heading": "Référencez Vos Services",
       "description": "Nous accueillons les partenaires souhaitant référencer leurs services et faire de la publicité avec nous.",
       "button": "S'inscrire comme Prestataire"
+    }
+  },
+  "admin": {
+    "serviceCategories": {
+      "title": "Catégories de Services",
+      "addButton": "Ajouter une Catégorie",
+      "editButton": "Modifier",
+      "columns": {
+        "name": "Nom",
+        "slug": "Slug",
+        "description": "Description",
+        "sortOrder": "Ordre",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "statusActive": "Actif",
+      "statusInactive": "Inactif",
+      "form": {
+        "name": "Nom",
+        "namePlaceholder": "ex. Fleuristes",
+        "description": "Description",
+        "descriptionRequired": "La description est obligatoire.",
+        "imageRequired": "Une image de catégorie est obligatoire.",
+        "slug": "Slug",
+        "slugPlaceholder": "ex. florists",
+        "icon": "Clé d'Icône",
+        "sortOrder": "Ordre d'Affichage",
+        "image": "Image de la Catégorie",
+        "imageUploadButton": "Télécharger une Image",
+        "imageUploading": "Téléchargement…",
+        "imageHint": "Affiché sur la page publique des services. Recommandé : 800×600px.",
+        "isActive": "Actif",
+        "addTitle": "Ajouter une Catégorie",
+        "editTitle": "Modifier la Catégorie",
+        "saveButton": "Enregistrer",
+        "cancelButton": "Annuler"
+      },
+      "deleteTitle": "Supprimer la Catégorie",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ? Cette action est irréversible.",
+      "deleteHasServices": "Impossible de supprimer — cette catégorie contient des annonces actives.",
+      "empty": "Aucune catégorie de service pour l'instant.",
+      "total": "{{count}} catégories",
+      "dragHint": "Faites glisser les lignes pour réorganiser l'ordre d'affichage.",
+      "loadError": "Impossible de charger les catégories.",
+      "createError": "Impossible de créer la catégorie.",
+      "updateError": "Impossible de mettre à jour la catégorie.",
+      "deleteError": "Impossible de supprimer la catégorie."
     }
   }
 }

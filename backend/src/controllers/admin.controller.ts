@@ -381,3 +381,178 @@ export async function listWaitlist(
     next(err)
   }
 }
+
+// ── Service Categories ────────────────────────────────────────────────────────
+
+export async function listServiceCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { page, limit, offset } = parsePagination(req.query as Record<string, string>)
+    const { q } = req.query as Record<string, string>
+
+    let query = supabaseAdmin
+      .from('service_categories')
+      .select('id, name, slug, description, icon, image_cloudinary_public_id, image_url, is_active, sort_order, created_at', { count: 'exact' })
+      .order('sort_order', { ascending: true })
+      .order('name', { ascending: true })
+
+    if (q?.trim()) query = query.ilike('name', `%${q.trim()}%`)
+
+    const { data, error, count } = await query.range(offset, offset + limit - 1)
+    if (error) throw error
+
+    res.json({ data: { items: data ?? [], total: count ?? 0, page, limit } })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function createServiceCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { name, description, slug, icon, image_cloudinary_public_id, image_url, is_active, sort_order } = req.body as {
+      name?: string
+      description?: string
+      slug?: string
+      icon?: string
+      image_cloudinary_public_id?: string
+      image_url?: string
+      is_active?: boolean
+      sort_order?: number
+    }
+
+    if (!name?.trim()) {
+      res.status(400).json({ data: null, error: 'name is required' })
+      return
+    }
+    if (!description?.trim()) {
+      res.status(400).json({ data: null, error: 'description is required' })
+      return
+    }
+    if (!image_url?.trim()) {
+      res.status(400).json({ data: null, error: 'image is required' })
+      return
+    }
+
+    const derivedSlug = slug?.trim() || name.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+
+    const { data, error } = await supabaseAdmin
+      .from('service_categories')
+      .insert({
+        name: name.trim(),
+        description: description?.trim() ?? null,
+        slug: derivedSlug,
+        icon: icon?.trim() ?? null,
+        image_cloudinary_public_id: image_cloudinary_public_id ?? null,
+        image_url: image_url ?? null,
+        is_active: is_active ?? true,
+        sort_order: sort_order ?? 0,
+      })
+      .select()
+      .single()
+
+    if (error) throw error
+
+    res.status(201).json({ data, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function updateServiceCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+    const updates = req.body as Record<string, unknown>
+
+    if ('name' in updates && !String(updates.name ?? '').trim()) {
+      res.status(400).json({ data: null, error: 'name cannot be blank' })
+      return
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('service_categories')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    res.json({ data, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function reorderServiceCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { items } = req.body as { items?: Array<{ id: string; sort_order: number }> }
+
+    if (!Array.isArray(items) || items.length === 0) {
+      res.status(400).json({ data: null, error: 'items array is required' })
+      return
+    }
+
+    await Promise.all(
+      items.map(({ id, sort_order }) =>
+        supabaseAdmin
+          .from('service_categories')
+          .update({ sort_order })
+          .eq('id', id),
+      ),
+    )
+
+    res.json({ data: null, error: null })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function deleteServiceCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { id } = req.params
+
+    // Check for active org services in this category
+    const { count, error: countErr } = await supabaseAdmin
+      .from('organization_services')
+      .select('*', { count: 'exact', head: true })
+      .eq('category_id', id)
+      .eq('is_active', true)
+
+    if (countErr) throw countErr
+
+    if ((count ?? 0) > 0) {
+      res.status(409).json({ data: null, error: 'Cannot delete — this category has active service listings.' })
+      return
+    }
+
+    const { error } = await supabaseAdmin
+      .from('service_categories')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+
+    res.status(204).send()
+  } catch (err) {
+    next(err)
+  }
+}

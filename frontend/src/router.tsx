@@ -34,6 +34,8 @@ import AdminObituariesPage from '@/pages/admin/AdminObituariesPage'
 import AdminTributesPage from '@/pages/admin/AdminTributesPage'
 import AdminCondolencesPage from '@/pages/admin/AdminCondolencesPage'
 import AdminWaitlistPage from '@/pages/admin/AdminWaitlistPage'
+import AdminServiceCategoriesPage from '@/pages/admin/AdminServiceCategoriesPage'
+import DashboardServicesPage from '@/pages/app/DashboardServicesPage'
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -151,7 +153,7 @@ const router = createBrowserRouter([
           { path: 'obituary/create',           element: <CreateObituaryPage /> },
           { path: 'obituary/:id/edit',         element: <CreateObituaryPage /> },
           { path: 'obituary/preview',          element: <ObituaryPreviewPage /> },
-          { path: 'services',                  element: <Placeholder name="Services" /> },
+          { path: 'services',                  element: <DashboardServicesPage /> },
         ],
       },
       {
@@ -174,6 +176,7 @@ const router = createBrowserRouter([
               { path: 'tributes',         element: <AdminTributesPage /> },
               { path: 'condolences',      element: <AdminCondolencesPage /> },
               { path: 'waitlist',         element: <AdminWaitlistPage /> },
+              { path: 'service-categories', element: <AdminServiceCategoriesPage /> },
             ],
           },
         ],

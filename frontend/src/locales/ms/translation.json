@@ -264,6 +264,45 @@
       "insightsDesc": "Analitik kematian",
       "services": "Perkhidmatan",
       "servicesDesc": "Perkhidmatan pengebumian & sokongan"
+    },
+    "services": {
+      "title": "Perkhidmatan Saya",
+      "addButton": "Tambah Perkhidmatan",
+      "editButton": "Sunting",
+      "columns": {
+        "name": "Nama Perkhidmatan",
+        "category": "Kategori",
+        "location": "Lokasi",
+        "status": "Status",
+        "actions": "Tindakan"
+      },
+      "statusActive": "Aktif",
+      "statusInactive": "Tidak Aktif",
+      "form": {
+        "category": "Kategori",
+        "categoryPlaceholder": "Pilih kategori",
+        "name": "Nama Perkhidmatan",
+        "namePlaceholder": "Nama perniagaan anda",
+        "description": "Keterangan",
+        "phone": "Telefon",
+        "email": "E-mel",
+        "website": "Laman Web",
+        "address": "Alamat",
+        "city": "Bandar",
+        "country": "Negara",
+        "isActive": "Aktif",
+        "addTitle": "Tambah Penyenaraian Perkhidmatan",
+        "editTitle": "Sunting Penyenaraian Perkhidmatan",
+        "saveButton": "Simpan",
+        "cancelButton": "Batal"
+      },
+      "deleteTitle": "Buang Perkhidmatan",
+      "deleteConfirm": "Buang \"{{name}}\" daripada senarai anda?",
+      "empty": "Anda belum menyenaraikan sebarang perkhidmatan.",
+      "emptyAction": "Tambah perkhidmatan pertama anda",
+      "total": "{{count}} perkhidmatan",
+      "loadError": "Gagal memuatkan perkhidmatan anda.",
+      "orgOnly": "Halaman ini hanya tersedia untuk akaun organisasi."
     }
   },
   "layout": {
@@ -827,6 +866,53 @@
       "heading": "Senaraikan Perkhidmatan Anda",
       "description": "Kami mengalu-alukan rakan kongsi untuk menyenaraikan perkhidmatan dan beriklan bersama kami.",
       "button": "Daftar sebagai Penyedia Perkhidmatan"
+    }
+  },
+  "admin": {
+    "serviceCategories": {
+      "title": "Kategori Perkhidmatan",
+      "addButton": "Tambah Kategori",
+      "editButton": "Sunting",
+      "columns": {
+        "name": "Nama",
+        "slug": "Slug",
+        "description": "Keterangan",
+        "sortOrder": "Urutan",
+        "status": "Status",
+        "actions": "Tindakan"
+      },
+      "statusActive": "Aktif",
+      "statusInactive": "Tidak Aktif",
+      "form": {
+        "name": "Nama",
+        "namePlaceholder": "cth. Penjual Bunga",
+        "description": "Keterangan",
+        "descriptionRequired": "Keterangan diperlukan.",
+        "imageRequired": "Imej kategori diperlukan.",
+        "slug": "Slug",
+        "slugPlaceholder": "cth. florists",
+        "icon": "Kunci Ikon",
+        "sortOrder": "Susunan",
+        "image": "Imej Kategori",
+        "imageUploadButton": "Muat Naik Imej",
+        "imageUploading": "Memuat naik…",
+        "imageHint": "Dipaparkan di halaman perkhidmatan awam. Disyorkan: 800×600px.",
+        "isActive": "Aktif",
+        "addTitle": "Tambah Kategori Perkhidmatan",
+        "editTitle": "Sunting Kategori Perkhidmatan",
+        "saveButton": "Simpan",
+        "cancelButton": "Batal"
+      },
+      "deleteTitle": "Padam Kategori",
+      "deleteConfirm": "Adakah anda pasti mahu memadamkan \"{{name}}\"? Ini tidak boleh dibuat asal.",
+      "deleteHasServices": "Tidak boleh dipadam — kategori ini mempunyai penyenaraian perkhidmatan aktif.",
+      "empty": "Tiada kategori perkhidmatan lagi.",
+      "total": "{{count}} kategori",
+      "dragHint": "Seret baris untuk menyusun semula susunan paparan.",
+      "loadError": "Gagal memuatkan kategori.",
+      "createError": "Gagal mencipta kategori.",
+      "updateError": "Gagal mengemas kini kategori.",
+      "deleteError": "Gagal memadamkan kategori."
     }
   }
 }

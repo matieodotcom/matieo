@@ -24,25 +24,31 @@ import {
 import { useTranslation } from 'react-i18next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { usePublicServiceCategories } from '@/hooks/use-services'
 
-// ── Category data ─────────────────────────────────────────────────────────────
+// ── Icon map (slug → lucide component) ───────────────────────────────────────
 
-const CATEGORIES = [
-  { key: 'florists',       icon: Flower2,        color: 'from-pink-400 to-rose-500',       providers: 73 },
-  { key: 'casketUrn',      icon: Package,         color: 'from-stone-400 to-stone-600',     providers: 8  },
-  { key: 'transportation', icon: Car,             color: 'from-sky-400 to-blue-500',        providers: 6  },
-  { key: 'counselling',    icon: HeartHandshake,  color: 'from-violet-400 to-purple-500',   providers: 79 },
-  { key: 'undertakers',    icon: Building2,       color: 'from-slate-400 to-slate-600',     providers: 14 },
-  { key: 'caterers',       icon: UtensilsCrossed, color: 'from-orange-400 to-amber-500',    providers: 21 },
-  { key: 'prayerServices', icon: BookOpen,        color: 'from-indigo-400 to-indigo-600',   providers: 9  },
-  { key: 'funeralParlour', icon: Home,            color: 'from-teal-400 to-teal-600',       providers: 5  },
-  { key: 'crematorium',    icon: Flame,           color: 'from-red-400 to-red-600',         providers: 2  },
-  { key: 'canopy',         icon: Tent,            color: 'from-emerald-400 to-green-500',   providers: 3  },
-  { key: 'burialServices', icon: Mountain,        color: 'from-lime-400 to-green-600',      providers: 6  },
-  { key: 'photography',    icon: Camera,          color: 'from-cyan-400 to-cyan-600',       providers: 10 },
-  { key: 'memorialParks',  icon: Trees,           color: 'from-green-400 to-emerald-600',   providers: 3  },
-  { key: 'fengShui',       icon: Wind,            color: 'from-yellow-400 to-amber-500',    providers: 4  },
-] as const
+const ICON_MAP: Record<string, React.ElementType> = {
+  Flower2, Package, Car, HeartHandshake, Building2, UtensilsCrossed,
+  BookOpen, Home, Flame, Tent, Mountain, Camera, Trees, Wind,
+}
+
+const COLOR_MAP: Record<string, string> = {
+  florists:        'from-pink-400 to-rose-500',
+  casketUrn:       'from-stone-400 to-stone-600',
+  transportation:  'from-sky-400 to-blue-500',
+  counselling:     'from-violet-400 to-purple-500',
+  undertakers:     'from-slate-400 to-slate-600',
+  caterers:        'from-orange-400 to-amber-500',
+  prayerServices:  'from-indigo-400 to-indigo-600',
+  funeralParlour:  'from-teal-400 to-teal-600',
+  crematorium:     'from-red-400 to-red-600',
+  canopy:          'from-emerald-400 to-green-500',
+  burialServices:  'from-lime-400 to-green-600',
+  photography:     'from-cyan-400 to-cyan-600',
+  memorialParks:   'from-green-400 to-emerald-600',
+  fengShui:        'from-yellow-400 to-amber-500',
+}
 
 // ── Hero Carousel ─────────────────────────────────────────────────────────────
 
@@ -140,26 +146,31 @@ function HeroBanner() {
 
 // ── Category card ─────────────────────────────────────────────────────────────
 
-function CategoryCard({ categoryKey, icon: Icon, color, providers }: {
+function CategoryCard({ categoryKey, icon: Icon, color, imageUrl, providers }: {
   categoryKey: string
   icon: React.ElementType
   color: string
+  imageUrl?: string | null
   providers: number
 }) {
   const { t } = useTranslation()
   return (
     <article className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer group">
       {/* Thumbnail */}
-      <div className={`h-32 bg-gradient-to-br ${color} flex items-center justify-center`}>
-        <Icon size={40} className="text-white/90 group-hover:scale-110 transition-transform duration-200" strokeWidth={1.5} />
+      <div className={`h-32 bg-gradient-to-br ${color} flex items-center justify-center overflow-hidden`}>
+        {imageUrl ? (
+          <img src={imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+        ) : (
+          <Icon size={40} className="text-white/90 group-hover:scale-110 transition-transform duration-200" strokeWidth={1.5} />
+        )}
       </div>
       {/* Content */}
       <div className="p-4">
         <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 mb-1">
-          {t(`services.category.${categoryKey}.name`)}
+          {t(`services.category.${categoryKey}.name`, { defaultValue: categoryKey })}
         </h3>
         <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mb-3 line-clamp-2">
-          {t(`services.category.${categoryKey}.description`)}
+          {t(`services.category.${categoryKey}.description`, { defaultValue: '' })}
         </p>
         <p className="text-xs font-medium text-brand-primary">
           {t('services.categories.providers', { count: providers })}
@@ -200,15 +211,17 @@ function ListServicesCta() {
 export default function ServicesPage() {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
+  const { data, isLoading } = usePublicServiceCategories()
+  const categories = data?.data ?? []
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim()
-    if (!q) return CATEGORIES
-    return CATEGORIES.filter((c) =>
-      t(`services.category.${c.key}.name`).toLowerCase().includes(q) ||
-      t(`services.category.${c.key}.description`).toLowerCase().includes(q),
+    if (!q) return categories
+    return categories.filter((c) =>
+      t(`services.category.${c.slug}.name`, { defaultValue: c.name }).toLowerCase().includes(q) ||
+      t(`services.category.${c.slug}.description`, { defaultValue: c.description ?? '' }).toLowerCase().includes(q),
     )
-  }, [search, t])
+  }, [search, t, categories])
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950">
@@ -242,22 +255,35 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* Grid */}
-          {filtered.length > 0 ? (
+          {/* Skeleton */}
+          {isLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {filtered.map((c) => (
-                <CategoryCard
-                  key={c.key}
-                  categoryKey={c.key}
-                  icon={c.icon}
-                  color={c.color}
-                  providers={c.providers}
-                />
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse h-48" />
               ))}
+            </div>
+          ) : filtered.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filtered.map((c) => {
+                const Icon = (c.icon && ICON_MAP[c.icon]) ? ICON_MAP[c.icon] : Building2
+                const color = COLOR_MAP[c.slug] ?? 'from-neutral-400 to-neutral-600'
+                return (
+                  <CategoryCard
+                    key={c.id}
+                    categoryKey={c.slug}
+                    icon={Icon}
+                    color={color}
+                    imageUrl={c.image_url}
+                    providers={c.service_count}
+                  />
+                )
+              })}
             </div>
           ) : (
             <div className="py-20 text-center text-neutral-400 text-sm">
-              {t('services.categories.noResults')}
+              {categories.length === 0
+                ? t('services.categories.noResults')
+                : t('services.categories.noResults')}
             </div>
           )}
         </section>

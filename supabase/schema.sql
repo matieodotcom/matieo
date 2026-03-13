@@ -1,7 +1,7 @@
 -- =============================================================
 -- MATIEO — Full Schema Snapshot
 -- Keep this file in sync with supabase/migrations/
--- Last updated: 2026-03-12 (engagement: like/view tracking tables)
+-- Last updated: 2026-03-13 (service_categories + organization_services)
 -- =============================================================
 
 -- Migrations applied:
@@ -16,6 +16,7 @@
 -- [x] 20260310_add_account_type_to_profiles.sql
 -- [x] 20260311_create_notifications.sql
 -- [x] 20260312_engagement.sql
+-- [x] 20260313_service_categories_and_org_services.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.
@@ -37,6 +38,8 @@
 --   public.obituary_likes         — Per-user likes on obituaries (auth, toggleable)
 --   public.memorial_views         — Deduplicated view tracking for memorials (IP hash)
 --   public.obituary_views         — Deduplicated view tracking for obituaries (IP hash)
+--   public.service_categories     — Admin-managed funeral service categories
+--   public.organization_services  — Service listings by organisation users
 
 -- ── notifications ─────────────────────────────────────────────────────────────
 CREATE TYPE public.notification_type AS ENUM (
@@ -133,3 +136,67 @@ CREATE TABLE public.obituary_views (
 CREATE INDEX idx_obituary_views_obituary_id ON public.obituary_views(obituary_id);
 ALTER TABLE public.obituary_views ENABLE ROW LEVEL SECURITY;
 -- Service role bypasses RLS — backend writes only.
+
+-- ── service_categories (20260313) ─────────────────────────────────────────────
+
+CREATE TABLE public.service_categories (
+  id                          uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
+  name                        text        NOT NULL,
+  description                 text,
+  slug                        text        UNIQUE NOT NULL,
+  icon                        text,
+  image_cloudinary_public_id  text,
+  image_url                   text,
+  is_active                   boolean     NOT NULL DEFAULT true,
+  sort_order                  integer     NOT NULL DEFAULT 0,
+  created_at                  timestamptz NOT NULL DEFAULT now(),
+  updated_at                  timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TRIGGER update_service_categories_updated_at
+  BEFORE UPDATE ON public.service_categories
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+ALTER TABLE public.service_categories ENABLE ROW LEVEL SECURITY;
+
+-- Public read (active only)
+CREATE POLICY "public_read_active_service_categories"
+  ON public.service_categories FOR SELECT
+  USING (is_active = true);
+
+-- ── organization_services (20260313) ──────────────────────────────────────────
+
+CREATE TABLE public.organization_services (
+  id              uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id uuid        NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  category_id     uuid        NOT NULL REFERENCES public.service_categories(id) ON DELETE RESTRICT,
+  name            text        NOT NULL,
+  description     text,
+  phone           text,
+  email           text,
+  website         text,
+  address         text,
+  city            text,
+  country         text,
+  is_active       boolean     NOT NULL DEFAULT true,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  updated_at      timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TRIGGER update_organization_services_updated_at
+  BEFORE UPDATE ON public.organization_services
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+ALTER TABLE public.organization_services ENABLE ROW LEVEL SECURITY;
+
+-- Public read (active only)
+CREATE POLICY "public_read_active_org_services"
+  ON public.organization_services FOR SELECT
+  USING (is_active = true);
+
+-- Authenticated org user: full CRUD on own listings
+CREATE POLICY "org_user_manage_own_services"
+  ON public.organization_services FOR ALL
+  TO authenticated
+  USING (organization_id = auth.uid())
+  WITH CHECK (organization_id = auth.uid());

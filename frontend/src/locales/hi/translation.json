@@ -264,6 +264,45 @@
       "insightsDesc": "मृत्यु दर विश्लेषण",
       "services": "सेवाएं",
       "servicesDesc": "अंत्येष्टि और सहायता सेवाएं"
+    },
+    "services": {
+      "title": "मेरी सेवाएँ",
+      "addButton": "सेवा जोड़ें",
+      "editButton": "संपादित करें",
+      "columns": {
+        "name": "सेवा का नाम",
+        "category": "श्रेणी",
+        "location": "स्थान",
+        "status": "स्थिति",
+        "actions": "कार्रवाई"
+      },
+      "statusActive": "सक्रिय",
+      "statusInactive": "निष्क्रिय",
+      "form": {
+        "category": "श्रेणी",
+        "categoryPlaceholder": "एक श्रेणी चुनें",
+        "name": "सेवा का नाम",
+        "namePlaceholder": "आपके व्यवसाय का नाम",
+        "description": "विवरण",
+        "phone": "फ़ोन",
+        "email": "ईमेल",
+        "website": "वेबसाइट",
+        "address": "पता",
+        "city": "शहर",
+        "country": "देश",
+        "isActive": "सक्रिय",
+        "addTitle": "सेवा सूचीकरण जोड़ें",
+        "editTitle": "सेवा सूचीकरण संपादित करें",
+        "saveButton": "सहेजें",
+        "cancelButton": "रद्द करें"
+      },
+      "deleteTitle": "सेवा हटाएँ",
+      "deleteConfirm": "अपनी सूचियों से \"{{name}}\" हटाएँ?",
+      "empty": "आपने अभी तक कोई सेवा सूचीबद्ध नहीं की है।",
+      "emptyAction": "अपनी पहली सेवा जोड़ें",
+      "total": "{{count}} सेवाएँ",
+      "loadError": "आपकी सेवाएँ लोड करने में विफल।",
+      "orgOnly": "यह पृष्ठ केवल संगठन खातों के लिए उपलब्ध है।"
     }
   },
   "layout": {
@@ -827,6 +866,53 @@
       "heading": "अपनी सेवाएं सूचीबद्ध करें",
       "description": "हम भागीदारों का स्वागत करते हैं जो अपनी सेवाएं सूचीबद्ध करना और हमारे साथ विज्ञापन देना चाहते हैं।",
       "button": "सेवा प्रदाता के रूप में साइन अप करें"
+    }
+  },
+  "admin": {
+    "serviceCategories": {
+      "title": "सेवा श्रेणियाँ",
+      "addButton": "श्रेणी जोड़ें",
+      "editButton": "संपादित करें",
+      "columns": {
+        "name": "नाम",
+        "slug": "स्लग",
+        "description": "विवरण",
+        "sortOrder": "क्रम",
+        "status": "स्थिति",
+        "actions": "कार्रवाई"
+      },
+      "statusActive": "सक्रिय",
+      "statusInactive": "निष्क्रिय",
+      "form": {
+        "name": "नाम",
+        "namePlaceholder": "उदा. फूलवाले",
+        "description": "विवरण",
+        "descriptionRequired": "विवरण आवश्यक है।",
+        "imageRequired": "श्रेणी छवि आवश्यक है।",
+        "slug": "स्लग",
+        "slugPlaceholder": "उदा. florists",
+        "icon": "आइकन कुंजी",
+        "sortOrder": "प्रदर्शन क्रम",
+        "image": "श्रेणी छवि",
+        "imageUploadButton": "छवि अपलोड करें",
+        "imageUploading": "अपलोड हो रहा है…",
+        "imageHint": "सार्वजनिक सेवाएँ पृष्ठ पर प्रदर्शित होगा। अनुशंसित: 800×600px।",
+        "isActive": "सक्रिय",
+        "addTitle": "सेवा श्रेणी जोड़ें",
+        "editTitle": "सेवा श्रेणी संपादित करें",
+        "saveButton": "सहेजें",
+        "cancelButton": "रद्द करें"
+      },
+      "deleteTitle": "श्रेणी हटाएँ",
+      "deleteConfirm": "क्या आप \"{{name}}\" को हटाना चाहते हैं? इसे वापस नहीं किया जा सकता।",
+      "deleteHasServices": "हटाया नहीं जा सकता — इस श्रेणी में सक्रिय सेवा सूचियाँ हैं।",
+      "empty": "अभी तक कोई सेवा श्रेणियाँ नहीं हैं।",
+      "total": "{{count}} श्रेणियाँ",
+      "dragHint": "प्रदर्शन क्रम पुनर्व्यवस्थित करने के लिए पंक्तियों को खींचें।",
+      "loadError": "श्रेणियाँ लोड करने में विफल।",
+      "createError": "श्रेणी बनाने में विफल।",
+      "updateError": "श्रेणी अपडेट करने में विफल।",
+      "deleteError": "श्रेणी हटाने में विफल।"
     }
   }
 }

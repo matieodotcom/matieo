@@ -14,6 +14,7 @@ import waitlistRouter from './routes/waitlist.routes'
 import notificationsRouter from './routes/notifications.routes'
 import authRouter from './routes/auth.routes'
 import adminRouter from './routes/admin.routes'
+import servicesRouter from './routes/services.routes'
 import { errorHandler } from './middleware/error.middleware'
 
 const app = express()
@@ -50,6 +51,7 @@ app.use('/api/waitlist', waitlistRouter)
 app.use('/api/notifications', notificationsRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/admin', adminRouter)
+app.use('/api/services', servicesRouter)
 
 // ── Error handler (must be last) ─────────────────────────────────────────────
 app.use(errorHandler)
