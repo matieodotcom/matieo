@@ -52,6 +52,7 @@ Every task is incomplete until affected files are updated.
 | **New language added** | **Create `frontend/src/locales/{code}/translation.json` with EVERY existing key fully translated — no English placeholders. Register in `lib/i18n.ts` resources. Add locale type to `localeStore.ts`. Add option to `LanguageSwitcher.tsx`. Add `language.{code}` entry to all existing locale files. Set `dir="rtl"` in `localeStore.ts` if RTL.** |
 | **Policy content or date changed** | **`frontend/src/config/policy-versions.ts` — update the date only. No locale files needed.** |
 | **New feature with user-visible event** | **Check `docs/email-trigger-map.md`; add row + send function in `emailClient.ts` + fire-and-forget in controller + test if email is warranted** |
+| **Prod release item completed** | **`docs/prod-release.md` — mark item ✅ Done, update Progress Summary counts and feature matrix** |
 
 **Self-check before closing any task:**
 ```
@@ -69,6 +70,7 @@ Every task is incomplete until affected files are updated.
 [ ] Policy date changed?     → update src/config/policy-versions.ts only
 [ ] Anything changed?        → relevant .env.example + ref.md updated
 [ ] New feature adds a user event?  → docs/email-trigger-map.md updated + send function added + test written
+[ ] Prod release item completed? → mark ✅ Done in docs/prod-release.md + update progress count + feature matrix
 [ ] ref.md scan done?        → open docs/CLAUDE.ref.md and verify every affected section (§DB §Stack §Pages §Radix §ML §ErrorHandling) is current — NEVER commit without this scan
 [ ] All of the above done?   → commit + push to dev (automatic, no prompting)
 ```
