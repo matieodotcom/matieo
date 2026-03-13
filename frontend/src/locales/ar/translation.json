@@ -281,8 +281,10 @@
       "form": {
         "category": "الفئة",
         "categoryPlaceholder": "اختر فئة",
+        "categoryRequired": "يرجى اختيار فئة.",
         "name": "اسم الخدمة",
         "namePlaceholder": "اسم عملك التجاري",
+        "nameRequired": "اسم الخدمة مطلوب.",
         "description": "الوصف",
         "phone": "الهاتف",
         "email": "البريد الإلكتروني",

@@ -281,8 +281,10 @@
       "form": {
         "category": "श्रेणी",
         "categoryPlaceholder": "एक श्रेणी चुनें",
+        "categoryRequired": "कृपया एक श्रेणी चुनें।",
         "name": "सेवा का नाम",
         "namePlaceholder": "आपके व्यवसाय का नाम",
+        "nameRequired": "सेवा का नाम आवश्यक है।",
         "description": "विवरण",
         "phone": "फ़ोन",
         "email": "ईमेल",

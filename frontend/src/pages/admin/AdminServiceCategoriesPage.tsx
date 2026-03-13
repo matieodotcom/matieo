@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Plus, Pencil, Trash2, Search, GripVertical, ImageIcon } from 'lucide-react'
 import {
   DndContext,
@@ -56,7 +55,6 @@ interface CategoryFormProps {
 }
 
 function CategoryForm({ initial, onSave, onCancel, saving, error }: CategoryFormProps) {
-  const { t } = useTranslation()
   const [name, setName] = useState(initial?.name ?? '')
   const [description, setDescription] = useState(initial?.description ?? '')
   const [isActive, setIsActive] = useState(initial?.is_active ?? true)
@@ -65,17 +63,18 @@ function CategoryForm({ initial, onSave, onCancel, saving, error }: CategoryForm
       ? { public_id: initial.image_cloudinary_public_id, url: initial.image_url }
       : null
   )
-  const [fieldErrors, setFieldErrors] = useState<{ description?: string; image?: string }>({})
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; description?: string; image?: string }>({})
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const errs: { description?: string; image?: string } = {}
-    if (!description.trim()) errs.description = t('admin.serviceCategories.form.descriptionRequired')
-    if (!image) errs.image = t('admin.serviceCategories.form.imageRequired')
+    const errs: { name?: string; description?: string; image?: string } = {}
+    if (!name.trim()) errs.name = 'Name is required.'
+    if (!description.trim()) errs.description = 'Description is required.'
+    if (!image) errs.image = 'A category image is required.'
     if (Object.keys(errs).length) { setFieldErrors(errs); return }
     setFieldErrors({})
     onSave({
-      name,
+      name: name.trim(),
       description: description.trim(),
       is_active: isActive,
       image_cloudinary_public_id: image!.public_id,
@@ -83,42 +82,44 @@ function CategoryForm({ initial, onSave, onCancel, saving, error }: CategoryForm
     })
   }
 
-  const inputCls = 'w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary'
+  const base = 'w-full rounded-lg border bg-white dark:bg-neutral-900 px-3 py-2 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-2'
+  const inputCls = (hasError?: boolean) =>
+    `${base} ${hasError ? 'border-red-400 focus:ring-red-400/40 focus:border-red-400' : 'border-neutral-200 dark:border-neutral-700 focus:ring-brand-primary/40 focus:border-brand-primary'}`
   const labelCls = 'block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1'
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-4">
       {error && <ErrorMessage message={error} />}
 
       <div>
-        <label htmlFor="cat-name" className={labelCls}>{t('admin.serviceCategories.form.name')} *</label>
+        <label htmlFor="cat-name" className={labelCls}>Name *</label>
         <input
           id="cat-name"
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder={t('admin.serviceCategories.form.namePlaceholder')}
-          required
-          className={inputCls}
+          onChange={(e) => { setName(e.target.value); setFieldErrors((p) => ({ ...p, name: undefined })) }}
+          placeholder="e.g. Florists"
+          className={inputCls(!!fieldErrors.name)}
         />
+        {fieldErrors.name && <p className="mt-1 text-xs text-red-500">{fieldErrors.name}</p>}
       </div>
 
       <div>
-        <label htmlFor="cat-description" className={labelCls}>{t('admin.serviceCategories.form.description')} *</label>
+        <label htmlFor="cat-description" className={labelCls}>Description *</label>
         <textarea
           id="cat-description"
           value={description}
           onChange={(e) => { setDescription(e.target.value); setFieldErrors((p) => ({ ...p, description: undefined })) }}
           rows={2}
-          className={inputCls + ' resize-none' + (fieldErrors.description ? ' border-red-400 focus:ring-red-400/40' : '')}
+          className={inputCls(!!fieldErrors.description) + ' resize-none'}
         />
         {fieldErrors.description && <p className="mt-1 text-xs text-red-500">{fieldErrors.description}</p>}
       </div>
 
       <div>
         <PhotoUpload
-          label={`${t('admin.serviceCategories.form.image')} *`}
-          hint={t('admin.serviceCategories.form.imageHint')}
+          label="Category Image *"
+          hint="Displayed on the public services page. Recommended: 800×600px."
           value={image}
           onChange={(v) => { setImage(v); setFieldErrors((p) => ({ ...p, image: undefined })) }}
         />
@@ -134,7 +135,7 @@ function CategoryForm({ initial, onSave, onCancel, saving, error }: CategoryForm
           className="h-4 w-4 rounded border-neutral-300 text-brand-primary focus:ring-brand-primary"
         />
         <label htmlFor="cat-active" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer">
-          {t('admin.serviceCategories.form.isActive')}
+          Active
         </label>
       </div>
 
@@ -144,14 +145,14 @@ function CategoryForm({ initial, onSave, onCancel, saving, error }: CategoryForm
           onClick={onCancel}
           className="px-4 py-2 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
         >
-          {t('admin.serviceCategories.form.cancelButton')}
+          Cancel
         </button>
         <button
           type="submit"
           disabled={saving}
           className="px-4 py-2 text-sm rounded-lg bg-brand-primary hover:bg-brand-primaryHover text-white font-medium transition-colors disabled:opacity-50"
         >
-          {saving ? '…' : t('admin.serviceCategories.form.saveButton')}
+          {saving ? '…' : 'Save'}
         </button>
       </div>
     </form>
@@ -167,7 +168,6 @@ interface SortableRowProps {
 }
 
 function SortableRow({ cat, onEdit, onDelete }: SortableRowProps) {
-  const { t } = useTranslation()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: cat.id })
 
   const style = {
@@ -209,14 +209,14 @@ function SortableRow({ cat, onEdit, onDelete }: SortableRowProps) {
       <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400 max-w-xs truncate hidden lg:table-cell">{cat.description ?? '—'}</td>
       <td className="px-4 py-3 text-center">
         <Badge variant={cat.is_active ? 'success' : 'default'}>
-          {cat.is_active ? t('admin.serviceCategories.statusActive') : t('admin.serviceCategories.statusInactive')}
+          {cat.is_active ? 'Active' : 'Inactive'}
         </Badge>
       </td>
       <td className="px-4 py-3 text-right">
         <div className="flex items-center justify-end gap-1">
           <button
             type="button"
-            aria-label={t('admin.serviceCategories.editButton')}
+            aria-label="Edit"
             onClick={() => onEdit(cat)}
             className="p-1.5 rounded-lg text-neutral-400 hover:text-brand-primary hover:bg-brand-primaryLight dark:hover:bg-brand-primary/20 transition-colors"
           >
@@ -224,7 +224,7 @@ function SortableRow({ cat, onEdit, onDelete }: SortableRowProps) {
           </button>
           <button
             type="button"
-            aria-label={t('admin.serviceCategories.deleteTitle')}
+            aria-label="Delete"
             onClick={() => onDelete(cat)}
             className="p-1.5 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
@@ -239,7 +239,6 @@ function SortableRow({ cat, onEdit, onDelete }: SortableRowProps) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AdminServiceCategoriesPage() {
-  const { t } = useTranslation()
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -295,13 +294,13 @@ export default function AdminServiceCategoriesPage() {
     setFormError(null)
     if (editTarget) {
       update({ id: editTarget.id, ...payload }, {
-        onSuccess: () => { setDialogOpen(false); toast(t('admin.serviceCategories.editButton') + ' ✓') },
-        onError: (err) => setFormError((err as Error).message || t('admin.serviceCategories.updateError')),
+        onSuccess: () => { setDialogOpen(false); toast('Saved ✓') },
+        onError: (err) => setFormError((err as Error).message || 'Failed to update category.'),
       })
     } else {
       create(payload, {
-        onSuccess: () => { setDialogOpen(false); toast(t('admin.serviceCategories.addButton') + ' ✓') },
-        onError: (err) => setFormError((err as Error).message || t('admin.serviceCategories.createError')),
+        onSuccess: () => { setDialogOpen(false); toast('Category added ✓') },
+        onError: (err) => setFormError((err as Error).message || 'Failed to create category.'),
       })
     }
   }
@@ -312,9 +311,9 @@ export default function AdminServiceCategoriesPage() {
     remove(deleteTarget.id, {
       onSuccess: () => { setDeleteTarget(null); toast('Deleted') },
       onError: (err) => {
-        const msg = (err as Error).message || t('admin.serviceCategories.deleteError')
+        const msg = (err as Error).message || 'Failed to delete category.'
         if (msg.toLowerCase().includes('active service listings')) {
-          setDeleteError(t('admin.serviceCategories.deleteHasServices'))
+          setDeleteError('Cannot delete — this category has active service listings.')
         } else {
           setDeleteError(msg)
         }
@@ -326,7 +325,7 @@ export default function AdminServiceCategoriesPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-          {t('admin.serviceCategories.title')}
+          Service Categories
         </h1>
         <button
           type="button"
@@ -334,7 +333,7 @@ export default function AdminServiceCategoriesPage() {
           className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-brand-primary hover:bg-brand-primaryHover text-white font-medium transition-colors"
         >
           <Plus size={15} />
-          {t('admin.serviceCategories.addButton')}
+          Add Category
         </button>
       </div>
 
@@ -346,12 +345,12 @@ export default function AdminServiceCategoriesPage() {
           type="search"
           value={search}
           onChange={handleSearch}
-          placeholder={t('admin.serviceCategories.columns.name') + '…'}
+          placeholder="Search by name…"
           className="w-full pl-9 pr-4 py-2.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary"
         />
       </div>
 
-      {error && <ErrorMessage message={t('admin.serviceCategories.loadError')} />}
+      {error && <ErrorMessage message="Failed to load categories." />}
 
       {isLoading ? (
         <div className="space-y-2">
@@ -361,23 +360,23 @@ export default function AdminServiceCategoriesPage() {
         </div>
       ) : orderedItems.length === 0 ? (
         <div className="py-20 text-center text-neutral-400 text-sm">
-          {t('admin.serviceCategories.empty')}
+          No service categories yet.
         </div>
       ) : (
         <>
           <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-2">
-            {t('admin.serviceCategories.dragHint')}
+            Drag rows to reorder display order.
           </p>
           <div className="overflow-x-auto rounded-xl border border-neutral-100 dark:border-neutral-800">
             <table className="w-full text-sm">
               <thead className="bg-neutral-50 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-wide">
                 <tr>
                   <th className="px-3 py-3 w-8" />
-                  <th className="px-4 py-3 text-left font-medium">{t('admin.serviceCategories.columns.name')}</th>
-                  <th className="px-4 py-3 text-left font-medium hidden md:table-cell">{t('admin.serviceCategories.columns.slug')}</th>
-                  <th className="px-4 py-3 text-left font-medium hidden lg:table-cell">{t('admin.serviceCategories.columns.description')}</th>
-                  <th className="px-4 py-3 text-center font-medium">{t('admin.serviceCategories.columns.status')}</th>
-                  <th className="px-4 py-3 text-right font-medium">{t('admin.serviceCategories.columns.actions')}</th>
+                  <th className="px-4 py-3 text-left font-medium">Name</th>
+                  <th className="px-4 py-3 text-left font-medium hidden md:table-cell">Slug</th>
+                  <th className="px-4 py-3 text-left font-medium hidden lg:table-cell">Description</th>
+                  <th className="px-4 py-3 text-center font-medium">Status</th>
+                  <th className="px-4 py-3 text-right font-medium">Actions</th>
                 </tr>
               </thead>
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -399,16 +398,16 @@ export default function AdminServiceCategoriesPage() {
 
           {pages > 1 && (
             <div className="flex items-center justify-between mt-4 text-sm text-neutral-600 dark:text-neutral-400">
-              <span>{t('admin.serviceCategories.total', { count: total })}</span>
+              <span>{total} categories</span>
               <div className="flex gap-2">
                 <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}
                   className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 disabled:opacity-40 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                  {t('admin.common.previous')}
+                  Previous
                 </button>
                 <span className="px-3 py-1.5">{page} / {pages}</span>
                 <button onClick={() => setPage((p) => Math.min(pages, p + 1))} disabled={page === pages}
                   className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 disabled:opacity-40 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                  {t('admin.common.next')}
+                  Next
                 </button>
               </div>
             </div>
@@ -420,9 +419,7 @@ export default function AdminServiceCategoriesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="dark:bg-neutral-900">
           <DialogTitle className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-            {editTarget
-              ? t('admin.serviceCategories.form.editTitle')
-              : t('admin.serviceCategories.form.addTitle')}
+            {editTarget ? 'Edit Service Category' : 'Add Service Category'}
           </DialogTitle>
           <CategoryForm
             initial={editTarget}
@@ -438,18 +435,18 @@ export default function AdminServiceCategoriesPage() {
       <AlertDialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null) }}>
         <AlertDialogContent>
           <AlertDialogTitle className="text-base font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-            {t('admin.serviceCategories.deleteTitle')}
+            Delete Category
           </AlertDialogTitle>
           <AlertDialogDescription className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
-            {deleteTarget && t('admin.serviceCategories.deleteConfirm', { name: deleteTarget.name })}
+            {deleteTarget && `Are you sure you want to delete "${deleteTarget.name}"? This cannot be undone.`}
           </AlertDialogDescription>
           {deleteError && <p className="text-sm text-red-600 mb-3">{deleteError}</p>}
           <div className="flex justify-end gap-2">
             <AlertDialogCancel onClick={() => setDeleteTarget(null)}>
-              {t('admin.common.cancel')}
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={deleting}>
-              {deleting ? '…' : t('admin.common.delete')}
+              {deleting ? '…' : 'Delete'}
             </AlertDialogAction>
           </div>
         </AlertDialogContent>

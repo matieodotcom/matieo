@@ -281,8 +281,10 @@
       "form": {
         "category": "Catégorie",
         "categoryPlaceholder": "Sélectionner une catégorie",
+        "categoryRequired": "Veuillez sélectionner une catégorie.",
         "name": "Nom du Service",
         "namePlaceholder": "Nom de votre entreprise",
+        "nameRequired": "Le nom du service est obligatoire.",
         "description": "Description",
         "phone": "Téléphone",
         "email": "E-mail",

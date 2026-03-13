@@ -281,8 +281,10 @@
       "form": {
         "category": "Kategori",
         "categoryPlaceholder": "Pilih kategori",
+        "categoryRequired": "Sila pilih kategori.",
         "name": "Nama Perkhidmatan",
         "namePlaceholder": "Nama perniagaan anda",
+        "nameRequired": "Nama perkhidmatan diperlukan.",
         "description": "Keterangan",
         "phone": "Telefon",
         "email": "E-mel",

@@ -54,12 +54,18 @@ function ServiceForm({ initial, onSave, onCancel, saving, error }: ServiceFormPr
   const [city, setCity] = useState(initial?.city ?? '')
   const [country, setCountry] = useState(initial?.country ?? '')
   const [isActive, setIsActive] = useState(initial?.is_active ?? true)
+  const [fieldErrors, setFieldErrors] = useState<{ categoryId?: string; name?: string }>({})
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    const errs: { categoryId?: string; name?: string } = {}
+    if (!categoryId) errs.categoryId = t('dashboard.services.form.categoryRequired')
+    if (!name.trim()) errs.name = t('dashboard.services.form.nameRequired')
+    if (Object.keys(errs).length) { setFieldErrors(errs); return }
+    setFieldErrors({})
     onSave({
       category_id: categoryId,
-      name,
+      name: name.trim(),
       description: description || undefined,
       phone: phone || undefined,
       email: email || undefined,
@@ -71,11 +77,15 @@ function ServiceForm({ initial, onSave, onCancel, saving, error }: ServiceFormPr
     })
   }
 
-  const inputCls = 'w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary'
+  const base = 'w-full rounded-lg border bg-white dark:bg-neutral-900 px-3 py-2 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:ring-2'
+  const inputCls = (hasError?: boolean) =>
+    `${base} ${hasError
+      ? 'border-red-400 focus:ring-red-400/40 focus:border-red-400'
+      : 'border-neutral-200 dark:border-neutral-700 focus:ring-brand-primary/40 focus:border-brand-primary'}`
   const labelCls = 'block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1'
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+    <form onSubmit={handleSubmit} noValidate className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
       {error && <ErrorMessage message={error} />}
 
       <div>
@@ -83,15 +93,15 @@ function ServiceForm({ initial, onSave, onCancel, saving, error }: ServiceFormPr
         <select
           id="svc-category"
           value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-          required
-          className={inputCls}
+          onChange={(e) => { setCategoryId(e.target.value); setFieldErrors((p) => ({ ...p, categoryId: undefined })) }}
+          className={inputCls(!!fieldErrors.categoryId)}
         >
           <option value="">{t('dashboard.services.form.categoryPlaceholder')}</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
+        {fieldErrors.categoryId && <p className="mt-1 text-xs text-red-500">{fieldErrors.categoryId}</p>}
       </div>
 
       <div>
@@ -100,62 +110,60 @@ function ServiceForm({ initial, onSave, onCancel, saving, error }: ServiceFormPr
           id="svc-name"
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => { setName(e.target.value); setFieldErrors((p) => ({ ...p, name: undefined })) }}
           placeholder={t('dashboard.services.form.namePlaceholder')}
-          required
-          className={inputCls}
+          className={inputCls(!!fieldErrors.name)}
         />
+        {fieldErrors.name && <p className="mt-1 text-xs text-red-500">{fieldErrors.name}</p>}
       </div>
 
       <div>
         <label htmlFor="svc-description" className={labelCls}>{t('dashboard.services.form.description')}</label>
-        <textarea id="svc-description" value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className={inputCls + ' resize-none'} />
+        <textarea id="svc-description" value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className={inputCls() + ' resize-none'} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label htmlFor="svc-phone" className={labelCls}>{t('dashboard.services.form.phone')}</label>
-          <input id="svc-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} />
+          <input id="svc-phone" type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls()} />
         </div>
         <div>
           <label htmlFor="svc-email" className={labelCls}>{t('dashboard.services.form.email')}</label>
-          <input id="svc-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} />
+          <input id="svc-email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls()} />
         </div>
       </div>
 
       <div>
         <label htmlFor="svc-website" className={labelCls}>{t('dashboard.services.form.website')}</label>
-        <input id="svc-website" type="url" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://" className={inputCls} />
+        <input id="svc-website" type="text" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://" className={inputCls()} />
       </div>
 
       <div>
         <label htmlFor="svc-address" className={labelCls}>{t('dashboard.services.form.address')}</label>
-        <input id="svc-address" type="text" value={address} onChange={(e) => setAddress(e.target.value)} className={inputCls} />
+        <input id="svc-address" type="text" value={address} onChange={(e) => setAddress(e.target.value)} className={inputCls()} />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label htmlFor="svc-city" className={labelCls}>{t('dashboard.services.form.city')}</label>
-          <input id="svc-city" type="text" value={city} onChange={(e) => setCity(e.target.value)} className={inputCls} />
+          <input id="svc-city" type="text" value={city} onChange={(e) => setCity(e.target.value)} className={inputCls()} />
         </div>
         <div>
           <label htmlFor="svc-country" className={labelCls}>{t('dashboard.services.form.country')}</label>
-          <input id="svc-country" type="text" value={country} onChange={(e) => setCountry(e.target.value)} className={inputCls} />
+          <input id="svc-country" type="text" value={country} onChange={(e) => setCountry(e.target.value)} className={inputCls()} />
         </div>
       </div>
 
-      <div>
-        <label htmlFor="svc-active" className="flex items-center gap-2 cursor-pointer">
-          <input
-            id="svc-active"
-            type="checkbox"
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-            className="h-4 w-4 rounded border-neutral-300 text-brand-primary focus:ring-brand-primary"
-          />
-          <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-            {t('dashboard.services.form.isActive')}
-          </span>
+      <div className="flex items-center gap-2">
+        <input
+          id="svc-active"
+          type="checkbox"
+          checked={isActive}
+          onChange={(e) => setIsActive(e.target.checked)}
+          className="h-4 w-4 rounded border-neutral-300 text-brand-primary focus:ring-brand-primary"
+        />
+        <label htmlFor="svc-active" className="text-sm font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer">
+          {t('dashboard.services.form.isActive')}
         </label>
       </div>
 

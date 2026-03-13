@@ -281,8 +281,10 @@
       "form": {
         "category": "Category",
         "categoryPlaceholder": "Select a category",
+        "categoryRequired": "Please select a category.",
         "name": "Service Name",
         "namePlaceholder": "Your business name",
+        "nameRequired": "Service name is required.",
         "description": "Description",
         "phone": "Phone",
         "email": "Email",
