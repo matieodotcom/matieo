@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Trash2, Eye, Building2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Building2, MoreVertical } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useProfile } from '@/hooks/use-profile'
 import {
   useMyServices,
@@ -18,6 +19,12 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from '@/components/ui/AlertDialog'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/DropdownMenu'
 import { toast } from '@/lib/toast'
 
 // ── Skeleton card ─────────────────────────────────────────────────────────────
@@ -47,8 +54,14 @@ function ServiceCard({ service, onEdit, onDelete }: ServiceCardProps) {
   const { t } = useTranslation()
   const image = service.gallery_urls?.[0] ?? service.icon_url ?? null
   const categorySlug = service.service_categories?.slug
-  const previewHref = categorySlug ? `/services/${categorySlug}/${service.id}` : null
   const location = [service.city, service.country].filter(Boolean).join(', ')
+
+  // Draft → edit page; published → public listing (fallback to edit if no slug)
+  const href = service.is_draft
+    ? `/dashboard/services/${service.id}/edit`
+    : categorySlug
+      ? `/services/${categorySlug}/${service.id}`
+      : `/dashboard/services/${service.id}/edit`
 
   const statusLabel = service.is_draft
     ? t('dashboard.services.isDraft')
@@ -73,12 +86,47 @@ function ServiceCard({ service, onEdit, onDelete }: ServiceCardProps) {
       )}
 
       <div className="p-4 flex flex-col flex-1">
-        {/* Name + status */}
+        {/* Name (full-card click overlay) + status badge */}
         <div className="flex items-start justify-between gap-2 mb-2">
-          <span className="font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+          <Link
+            to={href}
+            className="font-semibold text-neutral-900 dark:text-neutral-100 leading-snug after:absolute after:inset-0 after:rounded-xl"
+          >
             {service.name}
-          </span>
-          <Badge variant={statusVariant} className="shrink-0">{statusLabel}</Badge>
+          </Link>
+          <div className="relative z-10 flex items-center gap-1.5 shrink-0">
+            <Badge variant={statusVariant}>{statusLabel}</Badge>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Service options"
+                  className="flex items-center justify-center h-8 w-8 rounded-lg text-neutral-400
+                    hover:text-neutral-600 dark:hover:text-neutral-300
+                    hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors
+                    focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                >
+                  <MoreVertical size={15} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {service.is_draft ? (
+                  <DropdownMenuItem
+                    className="text-red-600 dark:text-red-400 focus:text-red-600"
+                    onSelect={() => onDelete(service)}
+                  >
+                    <Trash2 size={14} className="mr-2 shrink-0" />
+                    {t('dashboard.services.deleteTitle')}
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onSelect={() => onEdit(service)}>
+                    <Pencil size={14} className="mr-2 shrink-0" />
+                    {t('dashboard.services.editButton')}
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         {/* Category */}
@@ -95,42 +143,10 @@ function ServiceCard({ service, onEdit, onDelete }: ServiceCardProps) {
 
         {/* Description */}
         {service.description && (
-          <p className="text-xs text-neutral-400 dark:text-neutral-500 line-clamp-2 mb-3">
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 line-clamp-2">
             {service.description}
           </p>
         )}
-
-        {/* Actions */}
-        <div className="relative z-10 flex items-center gap-1.5 mt-auto pt-3 border-t border-neutral-100 dark:border-neutral-700">
-          {previewHref && (
-            <Link
-              to={previewHref}
-              aria-label="Preview"
-              className="flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-            >
-              <Eye size={13} />
-              Preview
-            </Link>
-          )}
-          <div className="flex items-center gap-1 ml-auto">
-            <button
-              type="button"
-              aria-label={t('dashboard.services.editButton')}
-              onClick={() => onEdit(service)}
-              className="p-1.5 rounded-lg text-neutral-400 hover:text-brand-primary hover:bg-brand-primaryLight dark:hover:bg-brand-primary/20 transition-colors"
-            >
-              <Pencil size={14} />
-            </button>
-            <button
-              type="button"
-              aria-label={t('dashboard.services.deleteTitle')}
-              onClick={() => onDelete(service)}
-              className="p-1.5 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-            >
-              <Trash2 size={14} />
-            </button>
-          </div>
-        </div>
       </div>
     </article>
   )
