@@ -155,9 +155,11 @@ interface GalleryUploadProps {
   values: PhotoValue[]
   onChange: (values: PhotoValue[]) => void
   max?: number
+  tileSizeClass?: string
+  emptyStateClassName?: string
 }
 
-export function GalleryUpload({ values, onChange, max = 5 }: GalleryUploadProps) {
+export function GalleryUpload({ values, onChange, max = 5, tileSizeClass = 'h-24 w-24', emptyStateClassName = 'h-32' }: GalleryUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const sessionUploads = useRef(new Set<string>())
   const [isUploading, setIsUploading] = useState(false)
@@ -202,44 +204,71 @@ export function GalleryUpload({ values, onChange, max = 5 }: GalleryUploadProps)
 
   return (
     <div>
-      <div className="flex flex-wrap gap-3">
-        {values.map((photo, i) => (
-          <div key={photo.public_id} className="relative h-24 w-24 overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-700">
-            <img src={photo.url} alt={`Gallery photo ${i + 1}`} className="h-full w-full object-cover" />
+      {/* Empty state: full-width drop zone */}
+      {values.length === 0 && (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={isUploading}
+          aria-label="Add photo"
+          className={`flex w-full ${emptyStateClassName} flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed
+            border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50
+            hover:border-brand-primary/60 hover:bg-brand-primaryLight/20 transition-colors
+            disabled:opacity-50 disabled:cursor-not-allowed`}
+        >
+          {isUploading ? (
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
+          ) : (
+            <>
+              <Upload className="h-6 w-6 text-neutral-400" />
+              <span className="text-sm text-neutral-500 dark:text-neutral-400">Click or drag to upload photos</span>
+            </>
+          )}
+        </button>
+      )}
+
+      {/* Filled state: tiles + add button */}
+      {values.length > 0 && (
+        <div className="flex flex-wrap gap-3">
+          {values.map((photo, i) => (
+            <div key={photo.public_id} className={`relative ${tileSizeClass} overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700`}>
+              <img src={photo.url} alt={`Gallery photo ${i + 1}`} className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => remove(i)}
+                aria-label={`Remove photo ${i + 1}`}
+                className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full
+                  bg-neutral-900/70 text-white hover:bg-neutral-900 transition-colors"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+
+          {values.length < max && (
             <button
               type="button"
-              onClick={() => remove(i)}
-              aria-label={`Remove photo ${i + 1}`}
-              className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full
-                bg-neutral-900/70 text-white hover:bg-neutral-900 transition-colors"
+              onClick={() => inputRef.current?.click()}
+              disabled={isUploading}
+              aria-label="Add photo"
+              className={`flex ${tileSizeClass} flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed
+                border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50
+                hover:border-brand-primary/60 hover:bg-brand-primaryLight/20 transition-colors
+                disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-              <X className="h-3 w-3" />
+              {isUploading ? (
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
+              ) : (
+                <>
+                  <Upload className="h-5 w-5 text-neutral-400" />
+                  <span className="text-xs text-neutral-400">Add photo</span>
+                </>
+              )}
             </button>
-          </div>
-        ))}
+          )}
+        </div>
+      )}
 
-        {values.length < max && (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={isUploading}
-            aria-label="Add photo"
-            className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed
-              border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50
-              hover:border-brand-primary/60 hover:bg-brand-primaryLight/20 transition-colors
-              disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isUploading ? (
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
-            ) : (
-              <>
-                <Upload className="h-5 w-5 text-neutral-400" />
-                <span className="text-xs text-neutral-400">Add photo</span>
-              </>
-            )}
-          </button>
-        )}
-      </div>
 
       <input
         ref={inputRef}

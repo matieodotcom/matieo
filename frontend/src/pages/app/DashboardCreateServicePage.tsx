@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Eye } from 'lucide-react'
+import { ArrowRight, Eye, ChevronDown } from 'lucide-react'
 import type { ServicePreviewValues } from '@/pages/app/ServicePreviewPage'
 import { PhotoUpload, GalleryUpload, type PhotoValue } from '@/components/ui/PhotoUpload'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
@@ -253,23 +253,35 @@ export default function DashboardServiceFormPage() {
       <div className="space-y-6">
 
         {/* ── Media ───────────────────────────────────────────────────────── */}
-        <Section title={t('dashboard.services.uploadIcon')}>
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-            <div className="w-full sm:w-64 sm:shrink-0">
+        <Section title={t('dashboard.services.sectionMedia')}>
+          <div className="flex flex-col sm:flex-row gap-6 sm:items-start">
+            {/* Left: company logo */}
+            <div className="w-full sm:w-44 shrink-0">
+              <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                {t('dashboard.services.uploadIcon')}
+              </p>
+              <p className="mb-2 min-h-8 text-xs text-neutral-400">{t('dashboard.services.uploadIconHint')}</p>
               <PhotoUpload
-                label={t('dashboard.services.uploadIcon')}
-                hint={t('dashboard.services.uploadIconHint')}
+                label=""
                 value={icon}
                 onChange={setIcon}
-                uploadAreaClassName="h-48 sm:h-64"
+                uploadAreaClassName="h-44"
               />
             </div>
-            <div className="min-w-0 flex-1">
+
+            {/* Right: photo gallery */}
+            <div className="flex-1 min-w-0">
               <p className="mb-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 {t('dashboard.services.uploadGallery')}
               </p>
-              <p className="mb-3 text-xs text-neutral-400">{t('dashboard.services.uploadGalleryHint')}</p>
-              <GalleryUpload values={gallery} onChange={setGallery} max={6} />
+              <p className="mb-2 min-h-8 text-xs text-neutral-400">{t('dashboard.services.uploadGalleryHint')}</p>
+              <GalleryUpload
+                values={gallery}
+                onChange={setGallery}
+                max={6}
+                tileSizeClass="h-28 w-28"
+                emptyStateClassName="h-44"
+              />
             </div>
           </div>
         </Section>
@@ -326,17 +338,20 @@ export default function DashboardServiceFormPage() {
 
             <div className="sm:col-span-2">
               <FieldLabel htmlFor="svc-category" required>{t('dashboard.services.form.category')}</FieldLabel>
-              <select
-                id="svc-category"
-                value={categoryId}
-                onChange={(e) => { setCategoryId(e.target.value); clearErr('categoryId') }}
-                className={fieldErrors.categoryId ? inputErrorClass : inputClass}
-              >
-                <option value="">{t('dashboard.services.form.categoryPlaceholder')}</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="svc-category"
+                  value={categoryId}
+                  onChange={(e) => { setCategoryId(e.target.value); clearErr('categoryId') }}
+                  className={`${fieldErrors.categoryId ? inputErrorClass : inputClass} appearance-none pr-9`}
+                >
+                  <option value="">{t('dashboard.services.form.categoryPlaceholder')}</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+                <ChevronDown size={15} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden="true" />
+              </div>
               {fieldErrors.categoryId && <ErrorMessage message={fieldErrors.categoryId} />}
             </div>
 
