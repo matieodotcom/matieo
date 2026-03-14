@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Eye } from 'lucide-react'
+import type { ServicePreviewValues } from '@/pages/app/ServicePreviewPage'
 import { PhotoUpload, GalleryUpload, type PhotoValue } from '@/components/ui/PhotoUpload'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import {
@@ -155,6 +156,27 @@ export default function DashboardServiceFormPage() {
       is_draft: isDraft,
       is_active: !isDraft,
     }
+  }
+
+  function handlePreview() {
+    const categoryName = categories.find((c) => c.id === categoryId)?.name ?? ''
+    const values: ServicePreviewValues = {
+      name: name.trim(),
+      phone: contactNo.trim(),
+      email: email.trim(),
+      website: website.trim(),
+      address: address.trim(),
+      city: city.trim(),
+      country: country.trim(),
+      about: about.trim(),
+      description: shortDesc.trim(),
+      categoryName,
+      iconUrl: icon?.url ?? null,
+      galleryUrls: gallery.map((g) => g.url),
+    }
+    navigate('/dashboard/services/preview', {
+      state: { values, fromId: id },
+    })
   }
 
   function submit(isDraft: boolean) {
@@ -399,7 +421,7 @@ export default function DashboardServiceFormPage() {
             {!isPending && <ArrowRight className="h-4 w-4" />}
           </button>
 
-          {/* Save as Draft */}
+          {/* Save as Draft + Preview */}
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -408,6 +430,15 @@ export default function DashboardServiceFormPage() {
               className="flex-1 rounded-lg border border-neutral-200 dark:border-neutral-700 px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors sm:flex-none"
             >
               {t('dashboard.services.saveAsDraft')}
+            </button>
+            <button
+              type="button"
+              onClick={handlePreview}
+              disabled={isPending}
+              className="flex items-center gap-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+            >
+              <Eye size={14} />
+              {t('dashboard.services.previewButton')}
             </button>
           </div>
 

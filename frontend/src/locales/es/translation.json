@@ -326,7 +326,8 @@
       "contactRequired": "El número de contacto es obligatorio.",
       "addressRequired": "La dirección es obligatoria.",
       "aboutRequired": "La información de la empresa es obligatoria.",
-      "isDraft": "Borrador"
+      "isDraft": "Borrador",
+      "previewButton": "Vista previa"
     }
   },
   "layout": {
@@ -908,7 +909,8 @@
       "commentPublic": "Tu comentario será visible para todos.",
       "postComment": "Publicar Comentario",
       "noComments": "Sé el primero en dejar un comentario.",
-      "notFound": "Proveedor no encontrado."
+      "notFound": "Proveedor no encontrado.",
+      "previewBanner": "Esta es una vista previa — tu anuncio aún no ha sido publicado."
     }
   },
   "admin": {

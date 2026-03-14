@@ -909,8 +909,9 @@ CLOUDINARY_API_SECRET
 | Edit Obituary | `/dashboard/obituary/:id/edit` | ✅ Complete | docs/pages/create-obituary.md |
 | Obituary Preview | `/dashboard/obituary/preview` | ✅ Complete | docs/pages/create-obituary.md |
 | Dashboard Services | `/dashboard/services` | ✅ Complete | docs/pages/dashboard-services.md | Org-users only; CRUD service listings within admin-managed categories |
-| Create Service | `/dashboard/services/create` | ✅ Complete | docs/pages/dashboard-create-service.md | Org full-page form: icon, gallery, company info, draft/publish |
-| Edit Service | `/dashboard/services/:id/edit` | ✅ Complete | docs/pages/dashboard-edit-service.md | Org edit form: pre-fills existing data, same layout as create |
+| Create Service | `/dashboard/services/create` | ✅ Complete | docs/pages/dashboard-create-service.md | Org full-page form: icon, gallery, company info, draft/publish; Preview button navigates to service preview |
+| Service Preview | `/dashboard/services/preview` | ✅ Complete | docs/pages/dashboard-create-service.md | Client-side preview of service listing before publish; mirrors ServiceProviderPage layout |
+| Edit Service | `/dashboard/services/:id/edit` | ✅ Complete | docs/pages/dashboard-edit-service.md | Org edit form: pre-fills existing data, same layout as create; Preview button navigates to service preview |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
 | Public Memorial | `/memorial/:slug` | ✅ Complete | docs/pages/public-memorial.md — auth-conditional header: Navbar when logged out, minimal back+avatar when logged in |

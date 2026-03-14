@@ -37,6 +37,7 @@ import AdminWaitlistPage from '@/pages/admin/AdminWaitlistPage'
 import AdminServiceCategoriesPage from '@/pages/admin/AdminServiceCategoriesPage'
 import DashboardServicesPage from '@/pages/app/DashboardServicesPage'
 import DashboardServiceFormPage from '@/pages/app/DashboardCreateServicePage'
+import ServicePreviewPage from '@/pages/app/ServicePreviewPage'
 import ServiceCategoryPage from '@/pages/public/ServiceCategoryPage'
 import ServiceProviderPage from '@/pages/public/ServiceProviderPage'
 
@@ -172,6 +173,7 @@ const router = createBrowserRouter([
           { path: 'obituary/preview',          element: <ObituaryPreviewPage /> },
           { path: 'services',                  element: <DashboardServicesPage /> },
           { path: 'services/create',           element: <ServiceFormRoute /> },
+          { path: 'services/preview',          element: <ServicePreviewPage /> },
           { path: 'services/:id/edit',         element: <ServiceFormRoute /> },
         ],
       },

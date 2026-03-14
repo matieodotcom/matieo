@@ -326,7 +326,8 @@
       "contactRequired": "Contact number is required.",
       "addressRequired": "Address is required.",
       "aboutRequired": "About Company is required.",
-      "isDraft": "Draft"
+      "isDraft": "Draft",
+      "previewButton": "Preview"
     }
   },
   "layout": {
@@ -950,7 +951,8 @@
       "commentPublic": "Your comment will be visible to everyone.",
       "postComment": "Post Comment",
       "noComments": "Be the first to leave a comment.",
-      "notFound": "Provider not found."
+      "notFound": "Provider not found.",
+      "previewBanner": "This is a preview — your listing hasn't been published yet."
     }
   },
   "admin": {

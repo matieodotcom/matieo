@@ -326,7 +326,8 @@
       "contactRequired": "رقم التواصل مطلوب.",
       "addressRequired": "العنوان مطلوب.",
       "aboutRequired": "معلومات الشركة مطلوبة.",
-      "isDraft": "مسودة"
+      "isDraft": "مسودة",
+      "previewButton": "معاينة"
     }
   },
   "layout": {
@@ -908,7 +909,8 @@
       "commentPublic": "سيكون تعليقك مرئيًا للجميع.",
       "postComment": "نشر تعليق",
       "noComments": "كن أول من يترك تعليقًا.",
-      "notFound": "المزود غير موجود."
+      "notFound": "المزود غير موجود.",
+      "previewBanner": "هذه معاينة — لم يتم نشر قائمتك بعد."
     }
   },
   "admin": {

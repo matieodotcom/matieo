@@ -326,7 +326,8 @@
       "contactRequired": "Le numéro de contact est requis.",
       "addressRequired": "L'adresse est requise.",
       "aboutRequired": "Les informations sur l'entreprise sont requises.",
-      "isDraft": "Brouillon"
+      "isDraft": "Brouillon",
+      "previewButton": "Aperçu"
     }
   },
   "layout": {
@@ -908,7 +909,8 @@
       "commentPublic": "Votre commentaire sera visible par tous.",
       "postComment": "Publier un Commentaire",
       "noComments": "Soyez le premier à laisser un commentaire.",
-      "notFound": "Prestataire introuvable."
+      "notFound": "Prestataire introuvable.",
+      "previewBanner": "Ceci est un aperçu — votre annonce n'a pas encore été publiée."
     }
   },
   "admin": {

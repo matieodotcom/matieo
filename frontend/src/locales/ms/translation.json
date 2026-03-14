@@ -326,7 +326,8 @@
       "contactRequired": "Nombor hubungi diperlukan.",
       "addressRequired": "Alamat diperlukan.",
       "aboutRequired": "Maklumat syarikat diperlukan.",
-      "isDraft": "Draf"
+      "isDraft": "Draf",
+      "previewButton": "Pratonton"
     }
   },
   "layout": {
@@ -908,7 +909,8 @@
       "commentPublic": "Komen anda akan kelihatan kepada semua orang.",
       "postComment": "Hantar Komen",
       "noComments": "Jadilah yang pertama meninggalkan komen.",
-      "notFound": "Pembekal tidak dijumpai."
+      "notFound": "Pembekal tidak dijumpai.",
+      "previewBanner": "Ini adalah pratonton — penyenaraian anda belum diterbitkan."
     }
   },
   "admin": {
