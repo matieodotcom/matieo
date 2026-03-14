@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Eye, ChevronDown } from 'lucide-react'
+import { ArrowRight, Eye } from 'lucide-react'
 import type { ServicePreviewValues } from '@/pages/app/ServicePreviewPage'
 import { PhotoUpload, GalleryUpload, type PhotoValue } from '@/components/ui/PhotoUpload'
+import { Select as SelectField } from '@/components/ui/Select'
 import { ErrorMessage } from '@/components/shared/ErrorMessage'
 import {
   useMyService,
@@ -338,20 +339,14 @@ export default function DashboardServiceFormPage() {
 
             <div className="sm:col-span-2">
               <FieldLabel htmlFor="svc-category" required>{t('dashboard.services.form.category')}</FieldLabel>
-              <div className="relative">
-                <select
-                  id="svc-category"
-                  value={categoryId}
-                  onChange={(e) => { setCategoryId(e.target.value); clearErr('categoryId') }}
-                  className={`${fieldErrors.categoryId ? inputErrorClass : inputClass} appearance-none pr-9`}
-                >
-                  <option value="">{t('dashboard.services.form.categoryPlaceholder')}</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-                <ChevronDown size={15} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden="true" />
-              </div>
+              <SelectField
+                id="svc-category"
+                value={categoryId}
+                onValueChange={(v) => { setCategoryId(v); clearErr('categoryId') }}
+                placeholder={t('dashboard.services.form.categoryPlaceholder')}
+                options={categories.map((c) => ({ value: c.id, label: c.name }))}
+                className={fieldErrors.categoryId ? 'border-red-400 focus:ring-red-400/40' : ''}
+              />
               {fieldErrors.categoryId && <ErrorMessage message={fieldErrors.categoryId} />}
             </div>
 
