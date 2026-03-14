@@ -48,6 +48,11 @@ export function DashboardLayout() {
   const isObituaryCreateOrEdit =
     pathname === '/dashboard/obituary/create' ||
     /^\/dashboard\/obituary\/[^/]+\/edit$/.test(pathname)
+  const isServiceCreateOrEdit =
+    pathname === '/dashboard/services/create' ||
+    /^\/dashboard\/services\/[^/]+\/edit$/.test(pathname)
+  const isServicePreview =
+    pathname === '/dashboard/services/preview'
   const mainRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -114,6 +119,23 @@ export function DashboardLayout() {
             >
               <ArrowLeft size={15} />
               <span className="hidden sm:inline">{t('layout.myObituaries')}</span>
+            </Link>
+          ) : isServicePreview ? (
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+            >
+              <ArrowLeft size={15} />
+              <span className="hidden sm:inline">{t('layout.backToEditing')}</span>
+            </button>
+          ) : isServiceCreateOrEdit ? (
+            <Link
+              to="/dashboard/services"
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+            >
+              <ArrowLeft size={15} />
+              <span className="hidden sm:inline">{t('layout.myServices')}</span>
             </Link>
           ) : (
             <Link

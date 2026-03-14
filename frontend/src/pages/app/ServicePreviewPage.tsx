@@ -1,6 +1,6 @@
-import { useLocation, Navigate, useNavigate } from 'react-router-dom'
+import { useLocation, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { MapPin, Phone, Mail, ExternalLink, Building2, ArrowLeft, Eye } from 'lucide-react'
+import { MapPin, Phone, Mail, ExternalLink, Building2 } from 'lucide-react'
 
 export interface ServicePreviewValues {
   name: string
@@ -53,7 +53,6 @@ function GalleryGrid({ urls }: { urls: string[] }) {
 
 export default function ServicePreviewPage() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { state } = useLocation() as { state: PreviewState | null }
 
   if (!state?.values) {
@@ -63,28 +62,9 @@ export default function ServicePreviewPage() {
   const v = state.values
   const location = [v.address, v.city, v.country].filter(Boolean).join(', ')
   const mapQuery = v.address ? encodeURIComponent(v.address) : null
-  const backHref = state.fromId
-    ? `/dashboard/services/${state.fromId}/edit`
-    : '/dashboard/services/create'
 
   return (
     <div className="-m-4 sm:-m-6 lg:-m-8 bg-neutral-50 dark:bg-neutral-950 min-h-screen">
-
-      {/* ── Preview banner ── */}
-      <div className="sticky top-0 z-20 flex items-center justify-between gap-3 bg-brand-primary px-4 py-2.5 sm:px-6">
-        <div className="flex items-center gap-2 text-white text-sm font-medium">
-          <Eye size={15} aria-hidden="true" />
-          {t('services.provider.previewBanner')}
-        </div>
-        <button
-          type="button"
-          onClick={() => navigate(backHref)}
-          className="flex items-center gap-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-medium px-3 py-1.5 transition-colors"
-        >
-          <ArrowLeft size={13} />
-          {t('layout.backToEditing')}
-        </button>
-      </div>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10">
 

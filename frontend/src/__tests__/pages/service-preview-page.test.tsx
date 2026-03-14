@@ -8,7 +8,6 @@ import testI18n from '@/lib/i18n-test'
 import ServicePreviewPage from '@/pages/app/ServicePreviewPage'
 import type { ServicePreviewValues } from '@/pages/app/ServicePreviewPage'
 
-const mockNavigate = vi.fn()
 let mockLocationState: { values: ServicePreviewValues; fromId?: string } | null = null
 
 vi.mock('react-router-dom', async (importActual) => {
@@ -16,7 +15,6 @@ vi.mock('react-router-dom', async (importActual) => {
   return {
     ...actual,
     useLocation: () => ({ state: mockLocationState, pathname: '/dashboard/services/preview' }),
-    useNavigate: () => mockNavigate,
   }
 })
 
@@ -126,11 +124,6 @@ describe('ServicePreviewPage', () => {
     expect(screen.getByText('SU')).toBeInTheDocument()
   })
 
-  it('renders the preview banner', () => {
-    renderPage()
-    expect(screen.getByText(/This is a preview/)).toBeInTheDocument()
-  })
-
   it('Contact Us button is disabled in preview', () => {
     renderPage()
     const btn = screen.getByRole('button', { name: /Contact Us/i })
@@ -146,21 +139,6 @@ describe('ServicePreviewPage', () => {
   it('comment textarea is disabled in preview', () => {
     renderPage()
     expect(screen.getByRole('textbox', { name: /Share your comment/i })).toBeDisabled()
-  })
-
-  it('back button navigates to create page when no fromId', async () => {
-    const user = userEvent.setup()
-    renderPage()
-    await user.click(screen.getByRole('button', { name: /Back to editing/i }))
-    expect(mockNavigate).toHaveBeenCalledWith('/dashboard/services/create')
-  })
-
-  it('back button navigates to edit page when fromId is provided', async () => {
-    const user = userEvent.setup()
-    mockLocationState = { values: baseValues, fromId: 'abc-123' }
-    renderPage()
-    await user.click(screen.getByRole('button', { name: /Back to editing/i }))
-    expect(mockNavigate).toHaveBeenCalledWith('/dashboard/services/abc-123/edit')
   })
 
   it('does not show Contact Us button when no phone or email', () => {

@@ -164,6 +164,39 @@ describe('DashboardLayout — preview route', () => {
   })
 })
 
+describe('DashboardLayout — services routes', () => {
+  beforeEach(() => {
+    useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
+    vi.mocked(useProfile).mockReturnValue({
+      data: mockProfile({ account_type: 'organization' }) as never,
+      isLoading: false,
+      error: null,
+    } as never)
+    vi.clearAllMocks()
+  })
+
+  it('shows "My Services" back link on services create route', () => {
+    renderLayout('/dashboard/services/create')
+    const link = screen.getByRole('link', { name: /my services/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/dashboard/services')
+    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+  })
+
+  it('shows "My Services" back link on services edit route', () => {
+    renderLayout('/dashboard/services/abc/edit')
+    const link = screen.getByRole('link', { name: /my services/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/dashboard/services')
+  })
+
+  it('shows "Back to editing" button on services preview route', () => {
+    renderLayout('/dashboard/services/preview')
+    expect(screen.getByRole('button', { name: /back to editing/i })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+  })
+})
+
 describe('DashboardLayout — mobile drawer', () => {
   beforeEach(() => {
     useAuthStore.setState({ user: mockUser, session: {} as never, isLoading: false })
