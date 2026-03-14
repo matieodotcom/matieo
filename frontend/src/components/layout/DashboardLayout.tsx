@@ -53,6 +53,7 @@ export function DashboardLayout() {
     /^\/dashboard\/services\/[^/]+\/edit$/.test(pathname)
   const isServicePreview =
     pathname === '/dashboard/services/preview'
+  const isDashboardHome = pathname === '/dashboard'
   const mainRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -137,13 +138,21 @@ export function DashboardLayout() {
               <ArrowLeft size={15} />
               <span className="hidden sm:inline">{t('layout.myServices')}</span>
             </Link>
-          ) : (
+          ) : isDashboardHome ? (
             <Link
               to="/"
               className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
             >
               <ArrowLeft size={15} />
               <span className="hidden sm:inline">{t('layout.home')}</span>
+            </Link>
+          ) : (
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+            >
+              <ArrowLeft size={15} />
+              <span className="hidden sm:inline">{t('nav.dashboard')}</span>
             </Link>
           )}
         </div>

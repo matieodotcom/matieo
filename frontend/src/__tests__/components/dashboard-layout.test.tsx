@@ -63,9 +63,18 @@ describe('DashboardLayout — authenticated', () => {
     expect(btn).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('renders Home back link', () => {
-    renderLayout()
-    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument()
+  it('renders Home back link on /dashboard', () => {
+    renderLayout('/dashboard')
+    const link = screen.getByRole('link', { name: /^home$/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/')
+  })
+
+  it('renders Dashboard back link on sub-routes', () => {
+    renderLayout('/dashboard/insights')
+    const link = screen.getByRole('link', { name: /^dashboard$/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/dashboard')
   })
 
   it('renders user avatar button', () => {
@@ -136,15 +145,15 @@ describe('DashboardLayout — preview route', () => {
     vi.clearAllMocks()
   })
 
-  it('shows "Back to editing" button instead of Home link on preview route', () => {
+  it('shows "Back to editing" button instead of Dashboard link on preview route', () => {
     renderLayout('/dashboard/memorials/preview')
     expect(screen.getByRole('button', { name: /back to editing/i })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
   })
 
-  it('shows Home link on non-preview, non-create/edit routes', () => {
+  it('shows Dashboard link on non-preview, non-create/edit routes', () => {
     renderLayout('/dashboard/memorials')
-    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /back to editing/i })).not.toBeInTheDocument()
   })
 
@@ -153,7 +162,7 @@ describe('DashboardLayout — preview route', () => {
     const link = screen.getByRole('link', { name: /my memorials/i })
     expect(link).toBeInTheDocument()
     expect(link).toHaveAttribute('href', '/dashboard/memorials')
-    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
   })
 
   it('shows "My Memorials" back link on edit route', () => {
@@ -180,7 +189,7 @@ describe('DashboardLayout — services routes', () => {
     const link = screen.getByRole('link', { name: /my services/i })
     expect(link).toBeInTheDocument()
     expect(link).toHaveAttribute('href', '/dashboard/services')
-    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
   })
 
   it('shows "My Services" back link on services edit route', () => {
@@ -193,7 +202,7 @@ describe('DashboardLayout — services routes', () => {
   it('shows "Back to editing" button on services preview route', () => {
     renderLayout('/dashboard/services/preview')
     expect(screen.getByRole('button', { name: /back to editing/i })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /home/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
   })
 })
 

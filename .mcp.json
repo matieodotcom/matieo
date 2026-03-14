@@ -48,6 +48,10 @@
         "RESEND_API_KEY": "${RESEND_API_KEY}"
       },
       "description": "Resend — send transactional emails, manage contacts, domains, broadcasts"
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
     }
   }
 }

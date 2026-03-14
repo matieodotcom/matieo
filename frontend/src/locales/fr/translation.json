@@ -311,6 +311,7 @@
       "uploadIconHint": "360×360px PNG/JPG, jusqu'à 10 Mo",
       "uploadGallery": "Télécharger la galerie photos",
       "uploadGalleryHint": "Jusqu'à 6 images, PNG/JPG, jusqu'à 10 Mo chacune",
+      "sectionMedia": "Médias",
       "sectionCompany": "Informations sur l'entreprise",
       "sectionDescriptions": "Descriptions",
       "companyName": "Nom de l'entreprise",

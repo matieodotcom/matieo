@@ -28,4 +28,4 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$REPO_ROOT\fr
 
 Write-Host ""
 Write-Host "🚀 Starting Claude Code..."
-claude
+claude --chrome
