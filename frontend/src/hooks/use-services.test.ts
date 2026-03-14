@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook, waitFor, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createElement } from 'react'
 import type { ReactNode } from 'react'
@@ -16,6 +16,10 @@ import {
   useCreateMyService,
   useUpdateMyService,
   useDeleteMyService,
+  useServiceCategory,
+  useServiceProvider,
+  useServiceProviderComments,
+  useCreateProviderComment,
 } from './use-services'
 
 function makeWrapper() {
@@ -84,6 +88,92 @@ describe('useDeleteMyService', () => {
     expect(vi.mocked(apiFetch)).toHaveBeenCalledWith(
       '/api/services/my/s1',
       expect.objectContaining({ method: 'DELETE' }),
+    )
+  })
+})
+
+// ── New hooks ──────────────────────────────────────────────────────────────────
+
+describe('useServiceCategory', () => {
+  it('fetches category with providers by slug', async () => {
+    const mockData = {
+      data: {
+        category: { id: 'c1', name: 'Florists', slug: 'florists', service_count: 2 },
+        providers: [
+          { id: 's1', name: 'Rose Shop', city: 'KL', country: 'Malaysia' },
+          { id: 's2', name: 'Lily Garden', city: 'PJ', country: 'Malaysia' },
+        ],
+        total: 2,
+      },
+      error: null,
+    }
+    vi.mocked(apiFetch).mockResolvedValue(mockData)
+    const { result } = renderHook(() => useServiceCategory('florists'), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(result.current.data?.data.providers).toHaveLength(2)
+    expect(result.current.data?.data.category.slug).toBe('florists')
+    expect(vi.mocked(apiFetch)).toHaveBeenCalledWith('/api/services/categories/florists')
+  })
+
+  it('does not fetch when slug is empty', () => {
+    const { result } = renderHook(() => useServiceCategory(''), { wrapper: makeWrapper() })
+    expect(result.current.fetchStatus).toBe('idle')
+    expect(vi.mocked(apiFetch)).not.toHaveBeenCalled()
+  })
+})
+
+describe('useServiceProvider', () => {
+  it('fetches a single provider by id', async () => {
+    const mockData = {
+      data: { id: 's1', name: 'Rose Shop', city: 'KL', country: 'Malaysia', gallery_urls: [] },
+      error: null,
+    }
+    vi.mocked(apiFetch).mockResolvedValue(mockData)
+    const { result } = renderHook(() => useServiceProvider('s1'), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(result.current.data?.data.name).toBe('Rose Shop')
+    expect(vi.mocked(apiFetch)).toHaveBeenCalledWith('/api/services/providers/s1')
+  })
+
+  it('does not fetch when id is empty', () => {
+    const { result } = renderHook(() => useServiceProvider(''), { wrapper: makeWrapper() })
+    expect(result.current.fetchStatus).toBe('idle')
+    expect(vi.mocked(apiFetch)).not.toHaveBeenCalled()
+  })
+})
+
+describe('useServiceProviderComments', () => {
+  it('fetches comments for a provider', async () => {
+    const mockData = {
+      data: [
+        { id: 'cm1', service_id: 's1', user_id: 'u1', content: 'Great service', created_at: '2026-01-01', profiles: { full_name: 'Ali' } },
+      ],
+      error: null,
+    }
+    vi.mocked(apiFetch).mockResolvedValue(mockData)
+    const { result } = renderHook(() => useServiceProviderComments('s1'), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(result.current.data?.data).toHaveLength(1)
+    expect(result.current.data?.data[0].content).toBe('Great service')
+    expect(vi.mocked(apiFetch)).toHaveBeenCalledWith('/api/services/providers/s1/comments')
+  })
+
+  it('does not fetch when id is empty', () => {
+    const { result } = renderHook(() => useServiceProviderComments(''), { wrapper: makeWrapper() })
+    expect(result.current.fetchStatus).toBe('idle')
+    expect(vi.mocked(apiFetch)).not.toHaveBeenCalled()
+  })
+})
+
+describe('useCreateProviderComment', () => {
+  it('posts a comment to the provider', async () => {
+    vi.mocked(apiFetch).mockResolvedValue({ data: { id: 'cm2', content: 'Nice' }, error: null })
+    const { result } = renderHook(() => useCreateProviderComment('s1'), { wrapper: makeWrapper() })
+    act(() => { result.current.mutate('Nice') })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(vi.mocked(apiFetch)).toHaveBeenCalledWith(
+      '/api/services/providers/s1/comments',
+      expect.objectContaining({ method: 'POST', body: JSON.stringify({ content: 'Nice' }) }),
     )
   })
 })

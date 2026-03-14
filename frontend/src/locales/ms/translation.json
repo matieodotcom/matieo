@@ -304,7 +304,29 @@
       "emptyAction": "Tambah perkhidmatan pertama anda",
       "total": "{{count}} perkhidmatan",
       "loadError": "Gagal memuatkan perkhidmatan anda.",
-      "orgOnly": "Halaman ini hanya tersedia untuk akaun organisasi."
+      "orgOnly": "Halaman ini hanya tersedia untuk akaun organisasi.",
+      "createTitle": "Cipta Senarai Perkhidmatan",
+      "editTitle": "Edit Senarai Perkhidmatan",
+      "uploadIcon": "Muat Naik Ikon",
+      "uploadIconHint": "360×360px PNG/JPG, sehingga 10MB",
+      "uploadGallery": "Muat Naik Galeri Foto",
+      "uploadGalleryHint": "Sehingga 6 imej, PNG/JPG, sehingga 10MB setiap satu",
+      "sectionCompany": "Maklumat Syarikat",
+      "sectionDescriptions": "Perihalan",
+      "companyName": "Nama Syarikat",
+      "contactNo": "No. Hubungi",
+      "address": "Alamat atau Lokasi",
+      "about": "Tentang Syarikat",
+      "aboutPlaceholder": "Beritahu kami tentang syarikat anda...",
+      "shortDescription": "Penerangan Ringkas",
+      "shortDescriptionPlaceholder": "Penerangan ringkas tentang syarikat anda",
+      "saveAsDraft": "Simpan sebagai Draf",
+      "createService": "Cipta Perkhidmatan",
+      "saveChanges": "Simpan Perubahan",
+      "contactRequired": "Nombor hubungi diperlukan.",
+      "addressRequired": "Alamat diperlukan.",
+      "aboutRequired": "Maklumat syarikat diperlukan.",
+      "isDraft": "Draf"
     }
   },
   "layout": {
@@ -868,6 +890,25 @@
       "heading": "Senaraikan Perkhidmatan Anda",
       "description": "Kami mengalu-alukan rakan kongsi untuk menyenaraikan perkhidmatan dan beriklan bersama kami.",
       "button": "Daftar sebagai Penyedia Perkhidmatan"
+    },
+    "category": {
+      "available": "{{count}} pembekal perkhidmatan tersedia",
+      "searchProviders": "Cari pembekal...",
+      "emptyProviders": "Tiada pembekal dalam kategori ini lagi.",
+      "notFound": "Kategori tidak dijumpai."
+    },
+    "provider": {
+      "servicesOffered": "Perkhidmatan Ditawarkan",
+      "contactUs": "Hubungi Kami",
+      "gallery": "Galeri Foto",
+      "about": "Tentang",
+      "noGallery": "Tiada foto lagi.",
+      "comments": "Komen ({{count}})",
+      "commentPlaceholder": "Kongsi komen anda...",
+      "commentPublic": "Komen anda akan kelihatan kepada semua orang.",
+      "postComment": "Hantar Komen",
+      "noComments": "Jadilah yang pertama meninggalkan komen.",
+      "notFound": "Pembekal tidak dijumpai."
     }
   },
   "admin": {

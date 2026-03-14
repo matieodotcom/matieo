@@ -304,7 +304,29 @@
       "emptyAction": "अपनी पहली सेवा जोड़ें",
       "total": "{{count}} सेवाएँ",
       "loadError": "आपकी सेवाएँ लोड करने में विफल।",
-      "orgOnly": "यह पृष्ठ केवल संगठन खातों के लिए उपलब्ध है।"
+      "orgOnly": "यह पृष्ठ केवल संगठन खातों के लिए उपलब्ध है।",
+      "createTitle": "सेवा लिस्टिंग बनाएं",
+      "editTitle": "सेवा लिस्टिंग संपादित करें",
+      "uploadIcon": "आइकन अपलोड करें",
+      "uploadIconHint": "360×360px PNG/JPG, 10MB तक",
+      "uploadGallery": "फोटो गैलरी अपलोड करें",
+      "uploadGalleryHint": "6 छवियाँ तक, PNG/JPG, प्रत्येक 10MB तक",
+      "sectionCompany": "कंपनी की जानकारी",
+      "sectionDescriptions": "विवरण",
+      "companyName": "कंपनी का नाम",
+      "contactNo": "संपर्क नंबर",
+      "address": "पता या स्थान",
+      "about": "कंपनी के बारे में",
+      "aboutPlaceholder": "हमें अपनी कंपनी के बारे में बताएं...",
+      "shortDescription": "संक्षिप्त विवरण",
+      "shortDescriptionPlaceholder": "अपनी कंपनी का संक्षिप्त विवरण",
+      "saveAsDraft": "ड्राफ्ट के रूप में सहेजें",
+      "createService": "सेवा बनाएं",
+      "saveChanges": "परिवर्तन सहेजें",
+      "contactRequired": "संपर्क नंबर आवश्यक है।",
+      "addressRequired": "पता आवश्यक है।",
+      "aboutRequired": "कंपनी की जानकारी आवश्यक है।",
+      "isDraft": "ड्राफ्ट"
     }
   },
   "layout": {
@@ -868,6 +890,25 @@
       "heading": "अपनी सेवाएं सूचीबद्ध करें",
       "description": "हम भागीदारों का स्वागत करते हैं जो अपनी सेवाएं सूचीबद्ध करना और हमारे साथ विज्ञापन देना चाहते हैं।",
       "button": "सेवा प्रदाता के रूप में साइन अप करें"
+    },
+    "category": {
+      "available": "{{count}} सेवा प्रदाता उपलब्ध",
+      "searchProviders": "प्रदाता खोजें...",
+      "emptyProviders": "इस श्रेणी में अभी कोई प्रदाता नहीं है।",
+      "notFound": "श्रेणी नहीं मिली।"
+    },
+    "provider": {
+      "servicesOffered": "प्रदान की जाने वाली सेवाएँ",
+      "contactUs": "संपर्क करें",
+      "gallery": "फोटो गैलरी",
+      "about": "के बारे में",
+      "noGallery": "अभी कोई फोटो नहीं।",
+      "comments": "टिप्पणियाँ ({{count}})",
+      "commentPlaceholder": "अपनी टिप्पणी साझा करें...",
+      "commentPublic": "आपकी टिप्पणी सभी को दिखाई देगी।",
+      "postComment": "टिप्पणी पोस्ट करें",
+      "noComments": "पहले टिप्पणी छोड़ने वाले बनें।",
+      "notFound": "प्रदाता नहीं मिला।"
     }
   },
   "admin": {

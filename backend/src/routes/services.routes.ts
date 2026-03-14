@@ -5,7 +5,11 @@ import * as services from '@/controllers/services.controller'
 
 const router = Router()
 
-router.get('/categories',  services.listPublicCategories as unknown as RequestHandler)
+router.get('/categories',            services.listPublicCategories as unknown as RequestHandler)
+router.get('/categories/:slug',      services.getCategoryWithProviders as unknown as RequestHandler)
+router.get('/providers/:id',         services.getProviderDetail as unknown as RequestHandler)
+router.get('/providers/:id/comments', services.getProviderComments as unknown as RequestHandler)
+router.post('/providers/:id/comments', requireAuth as unknown as RequestHandler, services.createProviderComment as unknown as RequestHandler)
 router.get('/my',          requireAuth as unknown as RequestHandler, services.listMyServices as unknown as RequestHandler)
 router.post('/my',         requireAuth as unknown as RequestHandler, services.createMyService as unknown as RequestHandler)
 router.patch('/my/:id',    requireAuth as unknown as RequestHandler, services.updateMyService as unknown as RequestHandler)

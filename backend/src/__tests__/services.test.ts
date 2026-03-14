@@ -39,8 +39,14 @@ jest.mock('@/lib/supabaseAdmin', () => ({
   },
 }))
 
+let authEnabled = true
+
 jest.mock('@/middleware/auth.middleware', () => ({
-  requireAuth: (req: { user: unknown }, _res: unknown, next: () => void) => {
+  requireAuth: (req: { user: unknown; headers: Record<string, string> }, res: { status: (n: number) => { json: (b: unknown) => void } }, next: () => void) => {
+    if (!authEnabled) {
+      res.status(401).json({ data: null, error: 'Unauthorized' })
+      return
+    }
     req.user = { id: 'org-user-123', email: 'org@example.com', role: 'user' }
     next()
   },
@@ -61,6 +67,7 @@ beforeEach(() => {
   getFromMock().mockReturnValue(currentChain)
   mockSingle.mockReset()
   mockMaybeSingle.mockReset()
+  authEnabled = true
 })
 
 // ── GET /api/services/categories (public) ─────────────────────────────────────
@@ -168,6 +175,41 @@ describe('POST /api/services/my', () => {
     expect(res.body.data.name).toBe('New Service')
   })
 
+  it('creates a service with new fields (icon, gallery, about, is_draft)', async () => {
+    const profileChain = makeChain()
+    const created = {
+      id: 'svc-3', name: 'Full Service', category_id: 'cat-1',
+      icon_url: 'https://img.example.com/icon.png', about: 'About us', is_draft: true,
+      gallery_urls: ['https://img.example.com/1.png'],
+    }
+    mockSingle
+      .mockResolvedValueOnce({ data: { account_type: 'organization' }, error: null })
+      .mockResolvedValueOnce({ data: created, error: null })
+
+    const insertChain = makeChain()
+
+    getFromMock().mockImplementation((table: string) => {
+      if (table === 'profiles') return profileChain
+      if (table === 'organization_services') return insertChain
+      return currentChain
+    })
+
+    const res = await request(app)
+      .post('/api/services/my')
+      .set('Authorization', 'Bearer org-token')
+      .send({
+        name: 'Full Service', category_id: 'cat-1',
+        icon_public_id: 'icon-pid', icon_url: 'https://img.example.com/icon.png',
+        gallery_public_ids: ['gal-pid-1'], gallery_urls: ['https://img.example.com/1.png'],
+        about: 'About us', is_draft: true,
+      })
+
+    expect(res.status).toBe(201)
+    expect(res.body.data.icon_url).toBe('https://img.example.com/icon.png')
+    expect(res.body.data.about).toBe('About us')
+    expect(res.body.data.is_draft).toBe(true)
+  })
+
   it('returns 400 when name is missing', async () => {
     const profileChain = makeChain()
     mockSingle.mockResolvedValueOnce({ data: { account_type: 'organization' }, error: null })
@@ -229,5 +271,193 @@ describe('DELETE /api/services/my/:id', () => {
       .set('Authorization', 'Bearer org-token')
 
     expect(res.status).toBe(403)
+  })
+})
+
+// ── GET /api/services/categories/:slug ──────────────────────────────────────
+
+describe('GET /api/services/categories/:slug', () => {
+  it('returns category with providers', async () => {
+    const catChain = makeChain()
+    mockSingle.mockResolvedValueOnce({
+      data: { id: 'cat-1', name: 'Florists', slug: 'florists', description: null, icon: null, image_url: null },
+      error: null,
+    })
+
+    const provChain = makeChain()
+    provChain.range.mockResolvedValue({
+      data: [{ id: 'svc-1', name: 'Best Florist', icon_url: null, city: 'KL', country: 'MY' }],
+      error: null,
+      count: 1,
+    })
+
+    getFromMock().mockImplementation((table: string) => {
+      if (table === 'service_categories') return catChain
+      if (table === 'organization_services') return provChain
+      return currentChain
+    })
+
+    const res = await request(app).get('/api/services/categories/florists')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.category.slug).toBe('florists')
+    expect(res.body.data.providers).toHaveLength(1)
+    expect(res.body.data.total).toBe(1)
+  })
+
+  it('returns 404 for unknown slug', async () => {
+    const catChain = makeChain()
+    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } })
+
+    getFromMock().mockImplementation((table: string) => {
+      if (table === 'service_categories') return catChain
+      return currentChain
+    })
+
+    const res = await request(app).get('/api/services/categories/nonexistent')
+
+    expect(res.status).toBe(404)
+  })
+})
+
+// ── GET /api/services/providers/:id ─────────────────────────────────────────
+
+describe('GET /api/services/providers/:id', () => {
+  it('returns provider detail', async () => {
+    const provider = {
+      id: 'svc-1', name: 'Best Florist', is_draft: false, is_active: true,
+      gallery_urls: ['https://img.example.com/1.png'], about: 'Great service',
+      service_categories: { id: 'cat-1', name: 'Florists', slug: 'florists', icon: null },
+    }
+    mockSingle.mockResolvedValueOnce({ data: provider, error: null })
+
+    const res = await request(app).get('/api/services/providers/svc-1')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.name).toBe('Best Florist')
+    expect(res.body.data.about).toBe('Great service')
+  })
+
+  it('returns 404 for unknown provider', async () => {
+    mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } })
+
+    const res = await request(app).get('/api/services/providers/unknown-id')
+
+    expect(res.status).toBe(404)
+  })
+
+  it('returns 404 for draft provider', async () => {
+    const provider = { id: 'svc-draft', name: 'Draft Service', is_draft: true }
+    mockSingle.mockResolvedValueOnce({ data: provider, error: null })
+
+    const res = await request(app).get('/api/services/providers/svc-draft')
+
+    expect(res.status).toBe(404)
+  })
+})
+
+// ── GET /api/services/providers/:id/comments ────────────────────────────────
+
+describe('GET /api/services/providers/:id/comments', () => {
+  it('returns comments array', async () => {
+    const commentsChain = makeChain()
+    commentsChain.range.mockResolvedValue({
+      data: [{ id: 'c-1', content: 'Great!', created_at: '2026-03-13', user_id: 'u-1', profiles: { full_name: 'John' } }],
+      error: null,
+      count: 1,
+    })
+
+    getFromMock().mockImplementation((table: string) => {
+      if (table === 'service_provider_comments') return commentsChain
+      return currentChain
+    })
+
+    const res = await request(app).get('/api/services/providers/svc-1/comments')
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.comments).toHaveLength(1)
+    expect(res.body.data.total).toBe(1)
+  })
+})
+
+// ── POST /api/services/providers/:id/comments ───────────────────────────────
+
+describe('POST /api/services/providers/:id/comments', () => {
+  it('creates a comment → 201', async () => {
+    const comment = { id: 'c-2', content: 'Nice service', service_id: 'svc-1', user_id: 'org-user-123', created_at: '2026-03-13' }
+    mockSingle.mockResolvedValueOnce({ data: comment, error: null })
+
+    const res = await request(app)
+      .post('/api/services/providers/svc-1/comments')
+      .set('Authorization', 'Bearer org-token')
+      .send({ content: 'Nice service' })
+
+    expect(res.status).toBe(201)
+    expect(res.body.data.content).toBe('Nice service')
+  })
+
+  it('returns 400 for blank content', async () => {
+    const res = await request(app)
+      .post('/api/services/providers/svc-1/comments')
+      .set('Authorization', 'Bearer org-token')
+      .send({ content: '   ' })
+
+    expect(res.status).toBe(400)
+  })
+
+  it('returns 400 for missing content', async () => {
+    const res = await request(app)
+      .post('/api/services/providers/svc-1/comments')
+      .set('Authorization', 'Bearer org-token')
+      .send({})
+
+    expect(res.status).toBe(400)
+  })
+
+  it('returns 401 when unauthenticated', async () => {
+    authEnabled = false
+
+    const res = await request(app)
+      .post('/api/services/providers/svc-1/comments')
+      .send({ content: 'Test' })
+
+    expect(res.status).toBe(401)
+  })
+})
+
+// ── PATCH /api/services/my/:id (update with new fields) ────────────────────
+
+describe('PATCH /api/services/my/:id', () => {
+  it('updates a service with new fields', async () => {
+    const profileChain = makeChain()
+    const updated = {
+      id: 'svc-1', name: 'Updated Service', about: 'Updated about', is_draft: false,
+      icon_url: 'https://img.example.com/icon2.png',
+      gallery_urls: ['https://img.example.com/2.png'],
+    }
+    mockSingle
+      .mockResolvedValueOnce({ data: { organization_id: 'org-user-123' }, error: null })
+      .mockResolvedValueOnce({ data: updated, error: null })
+
+    const fetchChain = makeChain()
+    const updateChain = makeChain()
+
+    let callCount = 0
+    getFromMock().mockImplementation((table: string) => {
+      if (table === 'profiles') return profileChain
+      if (table === 'organization_services') {
+        callCount++
+        return callCount === 1 ? fetchChain : updateChain
+      }
+      return currentChain
+    })
+
+    const res = await request(app)
+      .patch('/api/services/my/svc-1')
+      .set('Authorization', 'Bearer org-token')
+      .send({ about: 'Updated about', icon_url: 'https://img.example.com/icon2.png', is_draft: false })
+
+    expect(res.status).toBe(200)
+    expect(res.body.data.about).toBe('Updated about')
   })
 })

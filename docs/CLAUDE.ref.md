@@ -126,7 +126,7 @@ export function ErrorMessage({ message }: { message: string }) {
 - `lib/i18n-test.ts` — minimal i18next instance for Vitest (en only, `initImmediate: false`). Used in `__tests__/utils.tsx` via `<I18nextProvider>`.
 - `store/localeStore.ts` — Zustand + persist store: `locale: 'en'|'ar'|'ms'|'fr'|'es'|'hi'`, `setLocale(l)`. `setLocale` calls `i18n.changeLanguage`, sets `document.documentElement.lang`, sets `document.documentElement.dir` (`rtl` for `ar`, `ltr` for all others). Persisted as `matieo-locale` in localStorage. `index.html` has blocking inline script to set `dir`/`lang` before React hydrates (prevents RTL flash).
 - `components/ui/LanguageSwitcher.tsx` — Radix DropdownMenu; shows flag emoji + language name; calls `useLocaleStore().setLocale(locale)`. Rendered in `Navbar.tsx` (desktop) and `DashboardLayout.tsx` (sidebar).
-- `hooks/use-services.ts` — `usePublicServiceCategories()` query: `GET /api/services/categories` (public, returns categories with `service_count`); `useMyServices()`, `useCreateMyService()`, `useUpdateMyService()`, `useDeleteMyService()` — org user CRUD for `/api/services/my`
+- `hooks/use-services.ts` — `usePublicServiceCategories()` query: `GET /api/services/categories` (public, returns categories with `service_count`); `useMyServices()`, `useMyService(id)`, `useCreateMyService()`, `useUpdateMyService()`, `useDeleteMyService()` — org user CRUD for `/api/services/my`; `useServiceCategory(slug)` query: `GET /api/services/categories/:slug` (public, returns category + providers); `useServiceProvider(id)` query: `GET /api/services/:id` (public, returns provider detail); `useServiceProviderComments(id)` query: `GET /api/services/:id/comments` (public); `useCreateProviderComment(serviceId)` mutation: `POST /api/services/:id/comments` (auth required)
 - `hooks/use-notifications.ts` — `useNotifications(userId)` query: `GET /api/notifications` + Supabase Realtime channel (`notifications:{userId}`) invalidates cache on INSERT; `useMarkNotificationRead`, `useMarkAllRead`, `useDeleteNotification` mutations. `useNotifications` is enabled only when `userId != null`.
 - `components/shared/NotificationBell.tsx` — Bell icon with unread count badge; opens Radix Dialog slide-in-from-right panel listing notifications. Rendered in `Navbar.tsx` (authenticated branch) and `DashboardLayout.tsx` header. Returns null when not authenticated.
 
@@ -228,7 +228,9 @@ mortality_data  (standalone, admin-populated)
 
 service_categories  (admin-managed)
   └─1:N─ organization_services (org user listings)
-             └─N:1─ profiles (organization_id)
+             ├─N:1─ profiles (organization_id)
+             └─1:N─ service_provider_comments
+                      └─N:1─ auth.users (user_id)
 ```
 
 **Compact schema** — `col(type,constraint)`:
@@ -405,9 +407,18 @@ organization_services
   category_id(uuid,fk→service_categories,RESTRICT),
   name(text,req), description(text), phone(text), email(text), website(text),
   address(text), city(text), country(text),
+  icon_public_id(text), icon_url(text),
+  gallery_public_ids(jsonb,default:[]), gallery_urls(jsonb,default:[]),
+  about(text), is_draft(bool,default:false),
   is_active(bool,default:true), created_at(ts), updated_at(ts,trigger)
   RLS: public SELECT where is_active=true; org user full CRUD where organization_id=auth.uid()
-  Migration: 20260313_service_categories_and_org_services.sql
+  Migration: 20260313_service_categories_and_org_services.sql + 20260314_org_services_gallery_comments.sql
+
+service_provider_comments
+  id(uuid,pk), service_id(uuid,fk→organization_services,cascade),
+  user_id(uuid,fk→auth.users,cascade), content(text,req), created_at(ts)
+  RLS: public SELECT; auth INSERT where uid=user_id; owner DELETE
+  Migration: 20260314_org_services_gallery_comments.sql
 ```
 
 **Migrations applied:**
@@ -420,6 +431,7 @@ organization_services
 - `20260309_create_tributes_condolences.sql` — tributes + condolences tables, RLS, indexes
 - `20260311_create_notifications.sql` — notifications table + notification_type enum + RLS
 - `20260313_service_categories_and_org_services.sql` — service_categories + organization_services tables, RLS, 14 seeded categories
+- `20260314_org_services_gallery_comments.sql` — 6 new columns on organization_services (icon, gallery, about, is_draft) + service_provider_comments table with RLS
 
 ---
 
@@ -880,6 +892,8 @@ CLOUDINARY_API_SECRET
 | Obituaries (public list) | `/obituary` | ✅ Complete | docs/pages/obituaries.md |
 | Public Obituary | `/obituary/:slug` | ✅ Complete | docs/pages/obituaries.md | Auth-gated: unauthenticated visitors see blurred teaser + SignInModal gate |
 | Services | `/services` | ✅ Complete | docs/pages/services.md | Public funeral services directory; 14 categories, search filter, provider CTA |
+| Service Category | `/services/:slug` | ✅ Complete | docs/pages/service-category.md | Public category page; hero banner, provider search, 3-col grid |
+| Service Provider | `/services/:slug/:id` | ✅ Complete | docs/pages/service-provider.md | Public provider detail; gallery, contact, maps, comments |
 | Pricing (public) | `/pricing` | ✅ Complete | docs/pages/pricing.md |
 | Sign In | `/signin` | ✅ Complete | docs/pages/auth.md |
 | Sign Up | `/signup` | ✅ Complete | docs/pages/auth.md |
@@ -895,6 +909,8 @@ CLOUDINARY_API_SECRET
 | Edit Obituary | `/dashboard/obituary/:id/edit` | ✅ Complete | docs/pages/create-obituary.md |
 | Obituary Preview | `/dashboard/obituary/preview` | ✅ Complete | docs/pages/create-obituary.md |
 | Dashboard Services | `/dashboard/services` | ✅ Complete | docs/pages/dashboard-services.md | Org-users only; CRUD service listings within admin-managed categories |
+| Create Service | `/dashboard/services/create` | ✅ Complete | docs/pages/dashboard-create-service.md | Org full-page form: icon, gallery, company info, draft/publish |
+| Edit Service | `/dashboard/services/:id/edit` | ✅ Complete | docs/pages/dashboard-edit-service.md | Org edit form: pre-fills existing data, same layout as create |
 | View Memorials | `/memorials` | ✅ Complete | docs/pages/view-memorials.md |
 | Edit Memorial | `/dashboard/memorials/:id/edit` | ⬜ Not started | docs/pages/create-memorial.md |
 | Public Memorial | `/memorial/:slug` | ✅ Complete | docs/pages/public-memorial.md — auth-conditional header: Navbar when logged out, minimal back+avatar when logged in |

@@ -304,7 +304,29 @@
       "emptyAction": "Ajoutez votre premier service",
       "total": "{{count}} services",
       "loadError": "Impossible de charger vos services.",
-      "orgOnly": "Cette page est uniquement disponible pour les comptes d'organisation."
+      "orgOnly": "Cette page est uniquement disponible pour les comptes d'organisation.",
+      "createTitle": "Créer une annonce de service",
+      "editTitle": "Modifier l'annonce de service",
+      "uploadIcon": "Télécharger l'icône",
+      "uploadIconHint": "360×360px PNG/JPG, jusqu'à 10 Mo",
+      "uploadGallery": "Télécharger la galerie photos",
+      "uploadGalleryHint": "Jusqu'à 6 images, PNG/JPG, jusqu'à 10 Mo chacune",
+      "sectionCompany": "Informations sur l'entreprise",
+      "sectionDescriptions": "Descriptions",
+      "companyName": "Nom de l'entreprise",
+      "contactNo": "N° de contact",
+      "address": "Adresse ou localisation",
+      "about": "À propos de l'entreprise",
+      "aboutPlaceholder": "Parlez-nous de votre entreprise...",
+      "shortDescription": "Description courte",
+      "shortDescriptionPlaceholder": "Courte description de votre entreprise",
+      "saveAsDraft": "Enregistrer comme brouillon",
+      "createService": "Créer le service",
+      "saveChanges": "Enregistrer les modifications",
+      "contactRequired": "Le numéro de contact est requis.",
+      "addressRequired": "L'adresse est requise.",
+      "aboutRequired": "Les informations sur l'entreprise sont requises.",
+      "isDraft": "Brouillon"
     }
   },
   "layout": {
@@ -868,6 +890,25 @@
       "heading": "Référencez Vos Services",
       "description": "Nous accueillons les partenaires souhaitant référencer leurs services et faire de la publicité avec nous.",
       "button": "S'inscrire comme Prestataire"
+    },
+    "category": {
+      "available": "{{count}} prestataires disponibles",
+      "searchProviders": "Rechercher des prestataires...",
+      "emptyProviders": "Aucun prestataire trouvé dans cette catégorie.",
+      "notFound": "Catégorie introuvable."
+    },
+    "provider": {
+      "servicesOffered": "Services Proposés",
+      "contactUs": "Nous Contacter",
+      "gallery": "Galerie Photos",
+      "about": "À Propos",
+      "noGallery": "Aucune photo pour l'instant.",
+      "comments": "Commentaires ({{count}})",
+      "commentPlaceholder": "Partagez votre commentaire...",
+      "commentPublic": "Votre commentaire sera visible par tous.",
+      "postComment": "Publier un Commentaire",
+      "noComments": "Soyez le premier à laisser un commentaire.",
+      "notFound": "Prestataire introuvable."
     }
   },
   "admin": {

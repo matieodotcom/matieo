@@ -29,6 +29,27 @@ export interface OrganisationService {
   is_active: boolean
   created_at: string
   service_categories?: Pick<ServiceCategory, 'id' | 'name' | 'slug' | 'icon'> | null
+  icon_public_id?: string
+  icon_url?: string
+  gallery_public_ids: string[]
+  gallery_urls: string[]
+  about?: string
+  is_draft: boolean
+}
+
+export interface ServiceProviderComment {
+  id: string
+  service_id: string
+  user_id: string
+  content: string
+  created_at: string
+  profiles?: { full_name: string }
+}
+
+export interface CategoryWithProviders {
+  category: ServiceCategory
+  providers: OrganisationService[]
+  total: number
 }
 
 export interface CreateServicePayload {
@@ -42,6 +63,12 @@ export interface CreateServicePayload {
   city?: string
   country?: string
   is_active?: boolean
+  icon_public_id?: string
+  icon_url?: string
+  gallery_public_ids?: string[]
+  gallery_urls?: string[]
+  about?: string
+  is_draft?: boolean
 }
 
 export interface UpdateServicePayload extends Partial<CreateServicePayload> {}
@@ -56,11 +83,55 @@ export function usePublicServiceCategories() {
   })
 }
 
+export function useServiceCategory(slug: string) {
+  return useQuery<{ data: CategoryWithProviders; error: null }>({
+    queryKey: ['services', 'categories', slug],
+    queryFn: () => apiFetch(`/api/services/categories/${slug}`),
+    enabled: !!slug,
+  })
+}
+
+export function useServiceProvider(id: string) {
+  return useQuery<{ data: OrganisationService; error: null }>({
+    queryKey: ['services', 'providers', id],
+    queryFn: () => apiFetch(`/api/services/providers/${id}`),
+    enabled: !!id,
+  })
+}
+
+export function useServiceProviderComments(id: string) {
+  return useQuery<{ data: ServiceProviderComment[]; error: null }>({
+    queryKey: ['services', 'providers', id, 'comments'],
+    queryFn: () => apiFetch(`/api/services/providers/${id}/comments`),
+    enabled: !!id,
+  })
+}
+
+export function useCreateProviderComment(serviceId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (content: string) =>
+      apiFetch(`/api/services/providers/${serviceId}/comments`, {
+        method: 'POST',
+        body: JSON.stringify({ content }),
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['services', 'providers', serviceId, 'comments'] })
+    },
+  })
+}
+
 export function useMyServices() {
   return useQuery<{ data: OrganisationService[]; error: null }>({
     queryKey: ['services', 'my'],
     queryFn: () => apiFetch('/api/services/my'),
   })
+}
+
+export function useMyService(id: string) {
+  const { data, ...rest } = useMyServices()
+  const service = data?.data?.find((s) => s.id === id) ?? null
+  return { data: service, ...rest }
 }
 
 export function useCreateMyService() {

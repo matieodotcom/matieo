@@ -304,7 +304,29 @@
       "emptyAction": "Agrega tu primer servicio",
       "total": "{{count}} servicios",
       "loadError": "Error al cargar tus servicios.",
-      "orgOnly": "Esta página solo está disponible para cuentas de organización."
+      "orgOnly": "Esta página solo está disponible para cuentas de organización.",
+      "createTitle": "Crear Anuncio de Servicio",
+      "editTitle": "Editar Anuncio de Servicio",
+      "uploadIcon": "Subir Ícono",
+      "uploadIconHint": "360×360px PNG/JPG, hasta 10MB",
+      "uploadGallery": "Subir Galería de Fotos",
+      "uploadGalleryHint": "Hasta 6 imágenes, PNG/JPG, hasta 10MB cada una",
+      "sectionCompany": "Información de la Empresa",
+      "sectionDescriptions": "Descripciones",
+      "companyName": "Nombre de la Empresa",
+      "contactNo": "N.º de Contacto",
+      "address": "Dirección o Ubicación",
+      "about": "Acerca de la Empresa",
+      "aboutPlaceholder": "Cuéntenos sobre su empresa...",
+      "shortDescription": "Descripción Corta",
+      "shortDescriptionPlaceholder": "Descripción breve de su empresa",
+      "saveAsDraft": "Guardar como borrador",
+      "createService": "Crear Servicio",
+      "saveChanges": "Guardar Cambios",
+      "contactRequired": "El número de contacto es obligatorio.",
+      "addressRequired": "La dirección es obligatoria.",
+      "aboutRequired": "La información de la empresa es obligatoria.",
+      "isDraft": "Borrador"
     }
   },
   "layout": {
@@ -868,6 +890,25 @@
       "heading": "Publica tus Servicios",
       "description": "Damos la bienvenida a socios para publicar sus servicios y anunciarse con nosotros.",
       "button": "Registrarse como Proveedor de Servicios"
+    },
+    "category": {
+      "available": "{{count}} proveedores de servicios disponibles",
+      "searchProviders": "Buscar proveedores...",
+      "emptyProviders": "No se encontraron proveedores en esta categoría.",
+      "notFound": "Categoría no encontrada."
+    },
+    "provider": {
+      "servicesOffered": "Servicios Ofrecidos",
+      "contactUs": "Contáctenos",
+      "gallery": "Galería de Fotos",
+      "about": "Acerca de",
+      "noGallery": "Sin fotos aún.",
+      "comments": "Comentarios ({{count}})",
+      "commentPlaceholder": "Comparte tu comentario...",
+      "commentPublic": "Tu comentario será visible para todos.",
+      "postComment": "Publicar Comentario",
+      "noComments": "Sé el primero en dejar un comentario.",
+      "notFound": "Proveedor no encontrado."
     }
   },
   "admin": {

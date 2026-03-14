@@ -1,7 +1,7 @@
 -- =============================================================
 -- MATIEO — Full Schema Snapshot
 -- Keep this file in sync with supabase/migrations/
--- Last updated: 2026-03-13 (service_categories + organization_services)
+-- Last updated: 2026-03-14 (org_services gallery/comments)
 -- =============================================================
 
 -- Migrations applied:
@@ -17,6 +17,7 @@
 -- [x] 20260311_create_notifications.sql
 -- [x] 20260312_engagement.sql
 -- [x] 20260313_service_categories_and_org_services.sql
+-- [x] 20260314_org_services_gallery_comments.sql
 
 -- See supabase/migrations/20260101_initial_schema.sql for the
 -- full annotated DDL including RLS policies, triggers, and indexes.
@@ -38,8 +39,9 @@
 --   public.obituary_likes         — Per-user likes on obituaries (auth, toggleable)
 --   public.memorial_views         — Deduplicated view tracking for memorials (IP hash)
 --   public.obituary_views         — Deduplicated view tracking for obituaries (IP hash)
---   public.service_categories     — Admin-managed funeral service categories
---   public.organization_services  — Service listings by organisation users
+--   public.service_categories          — Admin-managed funeral service categories
+--   public.organization_services       — Service listings by organisation users
+--   public.service_provider_comments   — User comments on service providers
 
 -- ── notifications ─────────────────────────────────────────────────────────────
 CREATE TYPE public.notification_type AS ENUM (
@@ -178,6 +180,12 @@ CREATE TABLE public.organization_services (
   address         text,
   city            text,
   country         text,
+  icon_public_id  text,
+  icon_url        text,
+  gallery_public_ids jsonb    DEFAULT '[]'::jsonb,
+  gallery_urls    jsonb       DEFAULT '[]'::jsonb,
+  about           text,
+  is_draft        boolean     DEFAULT false,
   is_active       boolean     NOT NULL DEFAULT true,
   created_at      timestamptz NOT NULL DEFAULT now(),
   updated_at      timestamptz NOT NULL DEFAULT now()
@@ -200,3 +208,27 @@ CREATE POLICY "org_user_manage_own_services"
   TO authenticated
   USING (organization_id = auth.uid())
   WITH CHECK (organization_id = auth.uid());
+
+-- ── service_provider_comments (20260314) ────────────────────────────────────
+
+CREATE TABLE public.service_provider_comments (
+  id          uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
+  service_id  uuid        NOT NULL REFERENCES public.organization_services(id) ON DELETE CASCADE,
+  user_id     uuid        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  content     text        NOT NULL,
+  created_at  timestamptz DEFAULT now()
+);
+
+ALTER TABLE public.service_provider_comments ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "public can read comments"
+  ON public.service_provider_comments FOR SELECT
+  USING (true);
+
+CREATE POLICY "auth users can comment"
+  ON public.service_provider_comments FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "users can delete own comments"
+  ON public.service_provider_comments FOR DELETE
+  USING (auth.uid() = user_id);

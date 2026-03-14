@@ -104,8 +104,10 @@ describe('ServicesPage', () => {
     expect(screen.getByText('List Your Services')).toBeInTheDocument()
   })
 
-  it('renders the Sign Up as a Service Provider link pointing to /signup?type=organization', () => {
+  it('renders Sign Up as a Service Provider links pointing to /signup?type=organization', () => {
     renderPage()
-    expect(screen.getByRole('link', { name: /sign up as a service provider/i })).toHaveAttribute('href', '/signup?type=organization')
+    const links = screen.getAllByRole('link', { name: /sign up as a service provider/i })
+    expect(links.length).toBeGreaterThanOrEqual(1)
+    links.forEach((link) => expect(link).toHaveAttribute('href', '/signup?type=organization'))
   })
 })

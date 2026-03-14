@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate, useParams } from 'react-router-dom'
 import { ScrollToTop } from '@/components/layout/ScrollToTop'
 import LandingPage from '@/pages/landing/LandingPage'
 import FeaturesPage from '@/pages/features/FeaturesPage'
@@ -36,6 +36,15 @@ import AdminCondolencesPage from '@/pages/admin/AdminCondolencesPage'
 import AdminWaitlistPage from '@/pages/admin/AdminWaitlistPage'
 import AdminServiceCategoriesPage from '@/pages/admin/AdminServiceCategoriesPage'
 import DashboardServicesPage from '@/pages/app/DashboardServicesPage'
+import DashboardServiceFormPage from '@/pages/app/DashboardCreateServicePage'
+import ServiceCategoryPage from '@/pages/public/ServiceCategoryPage'
+import ServiceProviderPage from '@/pages/public/ServiceProviderPage'
+
+// ── Service form route wrapper — keys by id so the form remounts clean ────────
+function ServiceFormRoute() {
+  const { id } = useParams<{ id: string }>()
+  return <DashboardServiceFormPage key={id ?? 'create'} />
+}
 
 // ── Placeholder page component ───────────────────────────────────────────────
 function Placeholder({ name }: { name: string }) {
@@ -82,6 +91,14 @@ const router = createBrowserRouter([
       {
         path: '/services',
         element: <ServicesPage />,
+      },
+      {
+        path: '/services/:slug',
+        element: <ServiceCategoryPage />,
+      },
+      {
+        path: '/services/:slug/:id',
+        element: <ServiceProviderPage />,
       },
 
       // Features
@@ -154,6 +171,8 @@ const router = createBrowserRouter([
           { path: 'obituary/:id/edit',         element: <CreateObituaryPage /> },
           { path: 'obituary/preview',          element: <ObituaryPreviewPage /> },
           { path: 'services',                  element: <DashboardServicesPage /> },
+          { path: 'services/create',           element: <ServiceFormRoute /> },
+          { path: 'services/:id/edit',         element: <ServiceFormRoute /> },
         ],
       },
       {

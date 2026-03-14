@@ -1,24 +1,9 @@
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Flower2,
-  Package,
-  Car,
-  HeartHandshake,
   Building2,
-  UtensilsCrossed,
-  BookOpen,
-  Home,
-  Flame,
-  Tent,
-  Mountain,
-  Camera,
-  Trees,
-  Wind,
   ArrowRight,
   Search,
-  ChevronLeft,
-  ChevronRight,
   ImageIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -26,77 +11,13 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { usePublicServiceCategories } from '@/hooks/use-services'
 
-// ── Icon map (slug → lucide component) ───────────────────────────────────────
-
-const ICON_MAP: Record<string, React.ElementType> = {
-  Flower2, Package, Car, HeartHandshake, Building2, UtensilsCrossed,
-  BookOpen, Home, Flame, Tent, Mountain, Camera, Trees, Wind,
-}
-
-const COLOR_MAP: Record<string, string> = {
-  florists:        'from-pink-400 to-rose-500',
-  casketUrn:       'from-stone-400 to-stone-600',
-  transportation:  'from-sky-400 to-blue-500',
-  counselling:     'from-violet-400 to-purple-500',
-  undertakers:     'from-slate-400 to-slate-600',
-  caterers:        'from-orange-400 to-amber-500',
-  prayerServices:  'from-indigo-400 to-indigo-600',
-  funeralParlour:  'from-teal-400 to-teal-600',
-  crematorium:     'from-red-400 to-red-600',
-  canopy:          'from-emerald-400 to-green-500',
-  burialServices:  'from-lime-400 to-green-600',
-  photography:     'from-cyan-400 to-cyan-600',
-  memorialParks:   'from-green-400 to-emerald-600',
-  fengShui:        'from-yellow-400 to-amber-500',
-}
-
-// ── Hero Carousel ─────────────────────────────────────────────────────────────
-
-const SLIDES = [
-  {
-    gradient: 'from-brand-secondary via-brand-primary to-indigo-500',
-    label: 'Funeral Services',
-  },
-  {
-    gradient: 'from-slate-700 via-slate-600 to-slate-500',
-    label: 'Memorial Parks',
-  },
-  {
-    gradient: 'from-teal-700 via-teal-600 to-emerald-500',
-    label: 'Grief Counselling',
-  },
-  {
-    gradient: 'from-violet-700 via-purple-600 to-indigo-500',
-    label: 'Prayer Services',
-  },
-] as const
+// ── Hero Banner ──────────────────────────────────────────────────────────────
 
 function HeroBanner() {
   const { t } = useTranslation()
-  const [current, setCurrent] = useState(0)
-  const total = SLIDES.length
-
-  const prev = useCallback(() => setCurrent((i) => (i - 1 + total) % total), [total])
-  const next = useCallback(() => setCurrent((i) => (i + 1) % total), [total])
-
-  // Auto-advance every 4 s
-  useEffect(() => {
-    const id = setInterval(next, 4000)
-    return () => clearInterval(id)
-  }, [next])
-
-  const slide = SLIDES[current]
-
   return (
-    <div className="relative w-full h-64 sm:h-80 overflow-hidden select-none">
-      {/* Slide background */}
-      <div
-        key={current}
-        className={`absolute inset-0 bg-gradient-to-br ${slide.gradient} transition-opacity duration-700`}
-      />
-
-      {/* Centred content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4 text-center pointer-events-none">
+    <div className="relative w-full h-64 sm:h-80 overflow-hidden bg-brand-primary">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4 text-center">
         <ImageIcon size={40} strokeWidth={1} className="text-white/30" />
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white drop-shadow-md leading-tight">
@@ -104,83 +25,57 @@ function HeroBanner() {
           </h1>
           <p className="text-white/80 text-sm mt-1 drop-shadow">{t('services.hero.tagline')}</p>
         </div>
-      </div>
-
-      {/* Prev / Next arrows */}
-      <button
-        type="button"
-        aria-label="Previous slide"
-        onClick={prev}
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-colors"
-      >
-        <ChevronLeft size={20} />
-      </button>
-      <button
-        type="button"
-        aria-label="Next slide"
-        onClick={next}
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-colors"
-      >
-        <ChevronRight size={20} />
-      </button>
-
-      {/* Dot indicators */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Go to slide ${i + 1}`}
-            onClick={() => setCurrent(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === current
-                ? 'w-5 h-2 bg-white'
-                : 'w-2 h-2 bg-white/50 hover:bg-white/80'
-            }`}
-          />
-        ))}
+        <Link
+          to="/signup?type=organization"
+          className="mt-3 inline-flex items-center gap-2 bg-white text-brand-primary font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-white/90 transition-colors"
+        >
+          {t('services.listCta.button')}
+          <ArrowRight size={15} />
+        </Link>
       </div>
     </div>
   )
 }
 
-// ── Category card ─────────────────────────────────────────────────────────────
+// ── Category card ────────────────────────────────────────────────────────────
 
-function CategoryCard({ categoryKey, icon: Icon, color, imageUrl, providers }: {
-  categoryKey: string
-  icon: React.ElementType
-  color: string
-  imageUrl?: string | null
-  providers: number
-}) {
+function CategoryCard({ category }: { category: { id: string; slug: string; name: string; description: string | null; image_url: string | null; service_count: number } }) {
   const { t } = useTranslation()
   return (
-    <article className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer group">
-      {/* Thumbnail */}
-      <div className={`h-32 bg-gradient-to-br ${color} flex items-center justify-center overflow-hidden`}>
-        {imageUrl ? (
-          <img src={imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
-        ) : (
-          <Icon size={40} className="text-white/90 group-hover:scale-110 transition-transform duration-200" strokeWidth={1.5} />
-        )}
-      </div>
-      {/* Content */}
-      <div className="p-4">
-        <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 mb-1">
-          {t(`services.category.${categoryKey}.name`, { defaultValue: categoryKey })}
-        </h3>
-        <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mb-3 line-clamp-2">
-          {t(`services.category.${categoryKey}.description`, { defaultValue: '' })}
-        </p>
-        <p className="text-xs font-medium text-brand-primary">
-          {t('services.categories.providers', { count: providers })}
-        </p>
-      </div>
-    </article>
+    <Link to={`/services/${category.slug}`}>
+      <article className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-100 dark:border-neutral-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer group">
+        {/* Thumbnail */}
+        <div className="h-40 bg-neutral-100 dark:bg-neutral-700 overflow-hidden">
+          {category.image_url ? (
+            <img
+              src={category.image_url}
+              alt={t(`services.category.${category.slug}.name`, { defaultValue: category.name })}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-600 dark:to-neutral-700">
+              <Building2 size={40} className="text-neutral-400 dark:text-neutral-500" strokeWidth={1.5} />
+            </div>
+          )}
+        </div>
+        {/* Content */}
+        <div className="p-4">
+          <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 mb-1">
+            {t(`services.category.${category.slug}.name`, { defaultValue: category.name })}
+          </h3>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mb-3 line-clamp-2">
+            {t(`services.category.${category.slug}.description`, { defaultValue: category.description ?? '' })}
+          </p>
+          <span className="inline-flex items-center text-xs font-medium text-brand-primary bg-brand-primaryLight dark:bg-brand-primary/20 px-2 py-0.5 rounded-full">
+            {t('services.categories.providers', { count: category.service_count })}
+          </span>
+        </div>
+      </article>
+    </Link>
   )
 }
 
-// ── List Your Services CTA ────────────────────────────────────────────────────
+// ── List Your Services CTA ───────────────────────────────────────────────────
 
 function ListServicesCta() {
   const { t } = useTranslation()
@@ -259,31 +154,18 @@ export default function ServicesPage() {
           {isLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse h-48" />
+                <div key={i} className="rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse h-64" />
               ))}
             </div>
           ) : filtered.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {filtered.map((c) => {
-                const Icon = (c.icon && ICON_MAP[c.icon]) ? ICON_MAP[c.icon] : Building2
-                const color = COLOR_MAP[c.slug] ?? 'from-neutral-400 to-neutral-600'
-                return (
-                  <CategoryCard
-                    key={c.id}
-                    categoryKey={c.slug}
-                    icon={Icon}
-                    color={color}
-                    imageUrl={c.image_url}
-                    providers={c.service_count}
-                  />
-                )
-              })}
+              {filtered.map((c) => (
+                <CategoryCard key={c.id} category={c} />
+              ))}
             </div>
           ) : (
             <div className="py-20 text-center text-neutral-400 text-sm">
-              {categories.length === 0
-                ? t('services.categories.noResults')
-                : t('services.categories.noResults')}
+              {t('services.categories.noResults')}
             </div>
           )}
         </section>
